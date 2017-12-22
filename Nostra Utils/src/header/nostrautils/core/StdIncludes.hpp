@@ -1,6 +1,10 @@
 #ifndef NOU_CORE_STD_INCLUDES_HPP
 #define NOU_CORE_STD_INCLUDES_HPP
 
+#include <cstddef>
+#include <cstdint>
+#include <type_traits>
+
 /**
 \brief The name of the main namespace of NOU. All components of NOU are nested in sub-namespaces of this 
        namespace.
@@ -444,5 +448,68 @@ and replace * with the compiler name.
 #ifndef NOU_FUNC
 #define NOU_FUNC NOU_CLASS
 #endif
+
+namespace NOU::NOU_CORE
+{
+	/**
+	\return (In the member type "type") The type that was chosen.
+
+	\brief Chooses from the available floating point types <tt>float</tt>, <tt>float</tt> and <tt>long 
+	       double</tt> one that has a size of 32 bit. If none of the have a size of 32 bit, long double will 
+		   be chosen.
+	*/
+	struct NOU_CLASS ChooseFloat32 :
+		std::conditional<sizeof(float) == 4,
+		float,
+		typename std::conditional_t<sizeof(double) == 4,
+		double,
+		long double
+		>
+		> {};
+
+	/**
+	\return (In the member type "type") The type that was chosen.
+
+	\brief Chooses from the available floating point types <tt>float</tt>, <tt>float</tt> and <tt>long
+		   double</tt> one that has a size of 64 bit. If none of the have a size of 32 bit, long double will
+		   be chosen.
+	*/
+	struct NOU_CLASS ChooseFloat64 :
+		std::conditional<sizeof(float) == 8,
+		float,
+		typename std::conditional_t<sizeof(double) == 8,
+		double,
+		long double
+		>
+		> {};
+
+}
+
+namespace NOU
+{
+	using  int8 = std::int8_t;
+	using uint8 = std::uint8_t;
+
+	using  int16 = std::int16_t;
+	using uint16 = std::uint16_t;
+
+	using  int32 = std::int32_t;
+	using uint32 = std::uint32_t;
+
+	using  int64 = std::int64_t;
+	using uint64 = std::uint64_t;
+
+	using sizeType = std::size_t;
+
+	using boolean = bool;
+
+	using char8 = char;
+	using char16 = char16_t;
+	using char32 = char32_t;
+
+	using float32 = NOU_CORE::ChooseFloat32::type;
+	using float64 = NOU_CORE::ChooseFloat64::type;
+
+}
 
 #endif
