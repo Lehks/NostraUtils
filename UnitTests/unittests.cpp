@@ -1,7 +1,8 @@
-#include "nostrautils\core\StdIncludes.hpp"
 
 #include "stdafx.h"
 #include "CppUnitTest.h"
+
+#include "nostrautils\core\StdIncludes.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
