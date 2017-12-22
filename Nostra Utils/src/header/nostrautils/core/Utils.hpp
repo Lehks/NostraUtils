@@ -2,7 +2,6 @@
 #define NOU_CORE_UTILS_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
 
 namespace NOU::NOU_CORE
 {
@@ -26,10 +25,26 @@ namespace NOU::NOU_CORE
 	min is returned and if \f$t > max\f$, max is returned. This function uses the operators > and <.
 	*/
 	template<typename T>
-	NOU_FUNC typename SelectParameterType_t<T> clamp(SelectParameterType_t<T> &t, SelectParameterType_t<T> &min, SelectParameterType_t<T> &max);
+	constexpr NOU_FUNC const T& clamp(const T &t, const T &min, const T &max);
+
+	/**
+	\tparam The type of the values to clamp.
+
+	\param t   The value to clamp.
+	\param min The minimum value for \p t.
+	\param max The maximum value for \p t.
+
+	\brief Clamps a value.
+
+	\details
+	Clamps a value. If t is within the interval \f$\left[min, max\right[\f$, t is returned, if \f$ t < min\f$,
+	min is returned and if \f$t > max\f$, max is returned. This function uses the operators > and <.
+	*/
+	template<typename T>
+	constexpr NOU_FUNC T& clamp(T &t, T &min, T &max);
 
 	template<typename T>
-	SelectParameterType_t<T> clamp(SelectParameterType_t<T> t, SelectParameterType_t<T> min, SelectParameterType_t<T> max)
+	constexpr const T& clamp(const T &t, const T &min, const T &max)
 	{
 		if (t < min)
 			return min;
@@ -39,8 +54,8 @@ namespace NOU::NOU_CORE
 			return t;
 	}
 
-	template<>
-	SelectParameterType_t<int8> clamp<int8>(SelectParameterType_t<int8> t, SelectParameterType_t<int8> min, SelectParameterType_t<int8> max)
+	template<typename T>
+	constexpr T& clamp(T &t, T &min, T &max)
 	{
 		if (t < min)
 			return min;

@@ -3,6 +3,7 @@
 #include "CppUnitTest.h"
 
 #include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\core\Utils.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -35,7 +36,6 @@ namespace UnitTests
 			Assert::IsTrue(sizeof(NOU::float64) == 8 && sizeof(long double) >= 8);
 		}
 
-
 		TEST_METHOD(Versions)
 		{
 			NOU::uint32 major0 = 0;
@@ -64,6 +64,15 @@ namespace UnitTests
 			Assert::AreEqual(NOU_VERSION_MAJOR(version2), major2);
 			Assert::AreEqual(NOU_VERSION_MINOR(version2), minor2);
 			Assert::AreEqual(NOU_VERSION_PATCH(version2), patch2);
+		}
+
+		TEST_METHOD(Clamp)
+		{
+			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 1, 3), 1); //in interval
+			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 2, 3), 2); //on min border
+			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 3, 3), 3); //on max border
+			Assert::AreEqual(NOU::NOU_CORE::clamp(1, 2, 3), 2); //smaller than min
+			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
 		}
 	};
 }

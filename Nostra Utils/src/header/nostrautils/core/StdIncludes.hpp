@@ -517,21 +517,21 @@ static_cast<NOU::uint32> 									 \
 \brief The maximum value of the major part of a version when creating a version with NOU_MAKE_VERISON.
 */
 #ifndef NOU_VERSION_MAJOR_MAX
-#define NOU_VERSION_MAJOR_MAX 255
+#define NOU_VERSION_MAJOR_MAX static_cast<NOU::uint32>(255)
 #endif
 
 /**
 \brief The maximum value of the minor part of a version when creating a version with NOU_MAKE_VERISON.
 */
 #ifndef NOU_VERSION_MINOR_MAX
-#define NOU_VERSION_MINOR_MAX 511
+#define NOU_VERSION_MINOR_MAX static_cast<NOU::uint32>(511)
 #endif
 
 /**
 \brief The maximum value of the patch part of a version when creating a version with NOU_MAKE_VERISON.
 */
 #ifndef NOU_VERSION_PATCH_MAX
-#define NOU_VERSION_PATCH_MAX 32767
+#define NOU_VERSION_PATCH_MAX static_cast<NOU::uint32>(32767)
 #endif
 
 namespace NOU::NOU_CORE
