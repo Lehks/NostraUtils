@@ -14,4 +14,31 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\header\nostrautils\thread\.gitignore" />
+    <None Include="src\header\nostrautils\mem_mngt\.gitignore" />
+    <None Include="src\header\nostrautils\math\.gitignore" />
+    <None Include="src\header\nostrautils\file_mngt\.gitignore" />
+    <None Include="src\header\nostrautils\dat_alg\.gitignore" />
+    <None Include="src\header\nostrautils\core\.gitignore" />
+    <None Include="src\source\nostrautils\core\.gitignore" />
+    <None Include="src\source\nostrautils\dat_alg\.gitignore" />
+    <None Include="src\source\nostrautils\file_mngt\.gitignore" />
+    <None Include="src\source\nostrautils\math\.gitignore" />
+    <None Include="src\source\nostrautils\mem_mngt\.gitignore" />
+    <None Include="src\source\nostrautils\thread\.gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\header\nostrautils\core\Utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\source\nostrautils\core\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>
