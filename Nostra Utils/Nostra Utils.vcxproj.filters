@@ -27,6 +27,8 @@
     <None Include="src\source\nostrautils\math\.gitignore" />
     <None Include="src\source\nostrautils\mem_mngt\.gitignore" />
     <None Include="src\source\nostrautils\thread\.gitignore" />
+    <None Include="Doc\resources\Documentation.dox" />
+    <None Include="Doc\resources\Doxyfile" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp">
