@@ -185,7 +185,7 @@ value for NOU_OS_LIBRARY will not be set properly).
 
 /**
 \brief This macro should be defined by a user if the library is used as a dynamically linked library 
-(<tt>.dll<tt>) on MS Windows.
+(<tt>.dll</tt>) on MS Windows.
 
 \details
 For optimisation purposes, functions that will be imported from a DLL should be marked with

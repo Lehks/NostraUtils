@@ -1,0 +1,42 @@
+/** 
+\namespace nostra
+\brief The main namespace of all components that are related to the Nostra project.
+*/
+
+/** 
+\namespace nostra::utils
+\brief The namespace that contains all components of the Nostra Utils library.
+*/
+
+/** 
+\namespace nostra::utils::core
+\brief The namespace that contains all core components of the Nostra Utils library.
+*/
+
+/** 
+\namespace nostra::utils::dat_alg
+\brief The namespace that contains all components of the Nostra Utils library that are related to 
+	   datastructures and/or algorithms.
+*/
+
+/** 
+\namespace nostra::utils::file_mngt
+\brief The namespace that contains all components of the Nostra Utils library that are related to file 
+	   management.
+*/
+
+/** 
+\namespace nostra::utils::math
+\brief The namespace that contains all components of the Nostra Utils library that are related to math.
+*/
+
+/** 
+\namespace nostra::utils::mem_mngt
+\brief The namespace that contains all components of the Nostra Utils library that are related to memory 
+	   management.
+*/
+
+/** 
+\namespace nostra::utils::thread
+\brief The namespace that contains all components of the Nostra Utils library that are related to threading.
+*/
