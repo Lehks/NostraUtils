@@ -449,6 +449,91 @@ and replace * with the compiler name.
 #define NOU_FUNC NOU_CLASS
 #endif
 
+/**
+\param major The major part of the version.
+\param minor The minor part of the version.
+\param patch The patch part of the version.
+
+\brief Creates a 32 bit version number.
+
+\details
+Creates a 32 bit version number (more precisely a nou::uint32) that consists of the passed parameters. The 
+format is major.minor.patch.
+
+\example
+NOU_MAKE_VERISON(1, 2, 3) creates the version 1.2.3.
+
+The single parts can be read from a version using NOU_VERSION_MAJOR, NOU_VERSION_MINOR and NOU_VERSION_PATCH
+respectively.
+
+The sizes of the single parts in bit are: 
+Part  | Size | Maximum value
+----- | ---- | -------------
+major | 8    | 255
+minor | 9    | 511
+patch | 15   | 32.767
+
+\warning 
+These values should never be overflowed since in this case bits will be cut off.
+*/
+#ifndef NOU_MAKE_VERSION
+#define NOU_MAKE_VERISON(major, minor, patch) 				 \
+static_cast<NOU::uint32> 									 \
+(((major << 24) & 0b11111111000000000000000000000000)  |	 \
+ ((minor << 15) & 0b00000000111111111000000000000000)  |	 \
+  (patch &        0b00000000000000000111111111111111))
+#endif
+
+/**
+\param version The version to retrieve the major part from.
+
+\brief Retrieves the major part of a version that was made using NOU_MAKE_VERISON.
+*/
+#ifndef NOU_VERSION_MAJOR
+#define NOU_VERSION_MAJOR(version) static_cast<NOU::uint32> \
+									((version & 0b11111111000000000000000000000000) >> (24))
+#endif 
+
+/**
+\param version The version to retrieve the major part from.
+
+\brief Retrieves the minor part of a version that was made using NOU_MAKE_VERISON.
+*/
+#ifndef NOU_VERSION_MINOR
+#define NOU_VERSION_MINOR(version) static_cast<NOU::uint32> \
+									((version & 0b00000000111111111000000000000000) >> (15))
+#endif 							   
+
+/**
+\param version The version to retrieve the major part from.
+
+\brief Retrieves the patch part of a version that was made using NOU_MAKE_VERISON.
+*/
+#ifndef NOU_VERSION_PATCH
+#define NOU_VERSION_PATCH(version) static_cast<NOU::uint32>(version & 0b00000000000000000111111111111111)
+#endif 
+
+/**
+\brief The maximum value of the major part of a version when creating a version with NOU_MAKE_VERISON.
+*/
+#ifndef NOU_VERSION_MAJOR_MAX
+#define NOU_VERSION_MAJOR_MAX 255
+#endif
+
+/**
+\brief The maximum value of the minor part of a version when creating a version with NOU_MAKE_VERISON.
+*/
+#ifndef NOU_VERSION_MINOR_MAX
+#define NOU_VERSION_MINOR_MAX 511
+#endif
+
+/**
+\brief The maximum value of the patch part of a version when creating a version with NOU_MAKE_VERISON.
+*/
+#ifndef NOU_VERSION_PATCH_MAX
+#define NOU_VERSION_PATCH_MAX 32'767
+#endif
+
 namespace NOU::NOU_CORE
 {
 	/**
@@ -487,29 +572,86 @@ namespace NOU::NOU_CORE
 
 namespace NOU
 {
+	/**
+	\brief A signed integer type with a width of 8 bit.
+	*/
 	using  int8 = std::int8_t;
+
+	/**
+	\brief An unsigned integer type with a width of 8 bit.
+	*/
 	using uint8 = std::uint8_t;
 
+	/**
+	\brief A signed integer type with a width of 16 bit.
+	*/
 	using  int16 = std::int16_t;
+
+	/**
+	\brief An unsigned integer type with a width of 16 bit.
+	*/
 	using uint16 = std::uint16_t;
 
+	/**
+	\brief A signed integer type with a width of 32 bit.
+	*/
 	using  int32 = std::int32_t;
+
+	/**
+	\brief An unsigned integer type with a width of 32 bit.
+	*/
 	using uint32 = std::uint32_t;
 
+	/**
+	\brief A signed integer type with a width of 64 bit.
+	*/
 	using  int64 = std::int64_t;
+
+	/**
+	\brief An unsigned integer type with a width of 64 bit.
+	*/
 	using uint64 = std::uint64_t;
 
+	/**
+	\brief An unsigned integer type that is defined as the integer that is the maximum size of any object.
+	*/
 	using sizeType = std::size_t;
 
+	/**
+	\brief A boolean type.
+	*/
 	using boolean = bool;
 
+	/**
+	\brief A character type with a width of 8 bit.
+	*/
 	using char8 = char;
+
+	/**
+	\brief A character type with a width of 16 bit.
+	*/
 	using char16 = char16_t;
+
+	/**
+	\brief A character type with a width of 32 bit.
+	*/
 	using char32 = char32_t;
 
-	using float32 = NOU_CORE::ChooseFloat32::type;
-	using float64 = NOU_CORE::ChooseFloat64::type;
+	/**
+	\brief A floating point type with a widht of 32 bit.
 
+	\note If the compiler does not support a 32 bit float, this will be the larget floating point type 
+	      available.
+	*/
+	using float32 = NOU_CORE::ChooseFloat32::type;
+
+	/**
+	\brief A floating point type with a widht of 64 bit.
+
+	\note If the compiler does not support a 64 bit float, this will be the larget floating point type
+	available.
+	*/
+	using float64 = NOU_CORE::ChooseFloat64::type;
 }
 
 #endif
