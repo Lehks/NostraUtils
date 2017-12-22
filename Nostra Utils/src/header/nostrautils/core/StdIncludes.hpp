@@ -460,7 +460,7 @@ and replace * with the compiler name.
 Creates a 32 bit version number (more precisely a nou::uint32) that consists of the passed parameters. The 
 format is major.minor.patch.
 
-\example
+E.g:
 NOU_MAKE_VERISON(1, 2, 3) creates the version 1.2.3.
 
 The single parts can be read from a version using NOU_VERSION_MAJOR, NOU_VERSION_MINOR and NOU_VERSION_PATCH
@@ -531,7 +531,7 @@ static_cast<NOU::uint32> 									 \
 \brief The maximum value of the patch part of a version when creating a version with NOU_MAKE_VERISON.
 */
 #ifndef NOU_VERSION_PATCH_MAX
-#define NOU_VERSION_PATCH_MAX 32'767
+#define NOU_VERSION_PATCH_MAX 32767
 #endif
 
 namespace NOU::NOU_CORE
