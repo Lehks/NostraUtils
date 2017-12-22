@@ -6,7 +6,7 @@
        namespace.
 */
 #ifndef NOU
-#define NOU           nou
+#define NOU           nostra::utils
 #endif
 
 /**
