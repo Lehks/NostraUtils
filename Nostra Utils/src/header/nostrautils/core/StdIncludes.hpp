@@ -623,6 +623,11 @@ namespace NOU
 	using boolean = bool;
 
 	/**
+	\brief A type that is one byte.
+	*/
+	using byte = unsigned char;
+
+	/**
 	\brief A character type with a width of 8 bit.
 	*/
 	using char8 = char;
