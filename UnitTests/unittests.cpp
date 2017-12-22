@@ -4,6 +4,7 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
+#include "nostrautils\core\Version.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -64,11 +65,21 @@ namespace UnitTests
 			Assert::AreEqual(NOU_VERSION_MAJOR(version2), major2);
 			Assert::AreEqual(NOU_VERSION_MINOR(version2), minor2);
 			Assert::AreEqual(NOU_VERSION_PATCH(version2), patch2);
+
+			NOU::uint32 major3 = NOU_VERSION_MAJOR_MAX + 5; //overflow on purpose
+			NOU::uint32 minor3 = NOU_VERSION_MINOR_MAX + 5;
+			NOU::uint32 patch3 = NOU_VERSION_PATCH_MAX + 5;
+			NOU::NOU_CORE::Version version3(major2, minor2, patch2);
+
+			//compare with normal, not overflown values
+			Assert::AreEqual(version3.getMajor(), NOU_VERSION_MAJOR_MAX);
+			Assert::AreEqual(version3.getMinor(), NOU_VERSION_MINOR_MAX);
+			Assert::AreEqual(version3.getPatch(), NOU_VERSION_PATCH_MAX);
 		}
 
 		TEST_METHOD(Clamp)
 		{
-			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 1, 3), 1); //in interval
+			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 1, 3), 2); //in interval
 			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 2, 3), 2); //on min border
 			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 3, 3), 3); //on max border
 			Assert::AreEqual(NOU::NOU_CORE::clamp(1, 2, 3), 2); //smaller than min
