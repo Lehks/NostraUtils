@@ -294,6 +294,7 @@
   <ItemGroup>
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp" />
+    <ClInclude Include="src\header\nostrautils\core\Version.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Utils.cpp" />
