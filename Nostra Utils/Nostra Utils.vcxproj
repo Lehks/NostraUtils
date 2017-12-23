@@ -295,9 +295,11 @@
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Version.hpp" />
+    <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Utils.cpp" />
+    <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
