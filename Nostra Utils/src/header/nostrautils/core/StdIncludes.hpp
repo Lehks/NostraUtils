@@ -6,6 +6,17 @@
 #include <type_traits>
 
 /**
+\file core/StdIncludes.hpp
+
+\author  Lukas Reichmann
+\version 1.0.0
+\since   1.0.0
+
+\brief A file that should be included in all other header files of NOU. This provides, along other things, the
+       namespace macros and the primitive types.
+*/
+
+/**
 \brief The name of the main namespace of NOU. All components of NOU are nested in sub-namespaces of this 
        namespace.
 */
@@ -467,6 +478,8 @@ format is major.minor.patch.
 E.g:
 NOU_MAKE_VERSION(1, 2, 3) creates the version 1.2.3.
 
+Versions made by this macro can be compared using the usual operators (<, >, <=, >=, ==, !=).
+
 The single parts can be read from a version using NOU_VERSION_MAJOR, NOU_VERSION_MINOR and NOU_VERSION_PATCH
 respectively.
 
@@ -536,6 +549,20 @@ static_cast<NOU::uint32> 									 \
 */
 #ifndef NOU_VERSION_PATCH_MAX
 #define NOU_VERSION_PATCH_MAX static_cast<NOU::uint32>(32767)
+#endif
+
+/**
+\brief The first version of NOU.
+*/
+#ifndef NOU_VERSION_1_0_0
+#define NOU_VERSION_1_0_0 NOU_MAKE_VERSION(1, 0, 0)
+#endif
+
+/**
+\brief The current version of NOU.
+*/
+#ifndef NOU_VERSION
+#define NOU_VERSION NOU_VERSION_1_0_0
 #endif
 
 /**
