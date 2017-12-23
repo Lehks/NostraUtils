@@ -27,25 +27,24 @@ namespace NOU::NOU_DAT_ALG
 	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>
 	{
 	private:
+		NOU::NOU_MEM_MNGT::AllocationCallback<T>	&m_allocator;
+
 		/**
 		\brief A Constant for the minimal size of the Vector.
 		*/
 		static constexpr sizeType	                MIN_CAPACITY = 1;
 		/**
-		\brief The actuall size of the Vector (elements stored).
-		*/
-		sizeType								    m_size;
-		/**
 		\brief The actuall capacity of the Vector (memory allocation).
 		*/
 		sizeType								    m_capacity;
 		/**
+		\brief The actuall size of the Vector (elements stored).
+		*/
+		sizeType								    m_size;
+		/**
 		\brief A pointer to the array that stores data.
 		*/
 		T										   *m_data;
-
-
-		NOU::NOU_MEM_MNGT::GenericAllocationCallback<T>	m_allocator;
 		/**
 		\brief Allocates an memory amount for the vector.
 		*/
@@ -65,7 +64,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Standard constructor with the size.
 		*/
-		Vector<T>(sizeType size, NOU::NOU_MEM_MNGT::GenericAllocationCallback<T> &allocator); ///\todo add allocator to the stadard constructor
+		Vector<T>(sizeType size, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance()); ///\todo add allocator to the stadard constructor
 		/**
 		\param other Takes an other vector for moving.
 
@@ -180,7 +179,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	T* Vector<T>::alloc(sizeType amount)
 	{
-		return m_allocator.allocate(amount); ///\todo m_allocator var declaration.
+		return m_allocator.allocate(amount); 
 	}
 
 	template<typename T>
@@ -208,10 +207,10 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	Vector<T>::Vector(sizeType size, NOU::NOU_MEM_MNGT::GenericAllocationCallback<T> &allocator) :
-		m_capacity(NOU::NOU_CORE::max(MIN_CAPACITY, size)), ///\todo add m_allocator var.
+	Vector<T>::Vector(sizeType size, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator) :
+		m_capacity(NOU::NOU_CORE::max(MIN_CAPACITY, size)),
 		m_data(alloc(m_capacity)),
-		m_size(0),
+		m_size(m_capacity),
 		m_allocator(allocator)
 	{}
 
@@ -307,7 +306,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	T Vector<T>::popFront()
 	{
-		T element = *m_data;
+		T element = NOU_CORE::move(*m_data);
 		remove(0);
 		return element;
 	}

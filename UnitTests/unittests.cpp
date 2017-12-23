@@ -152,7 +152,26 @@ namespace UnitTests
 
 		TEST_METHOD(Vector)
 		{
-			
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
+
+			Assert::AreEqual(10, static_cast<int>(vec1.size()));
+
+			for (int i = 0; i < vec1.size(); i++)
+			{
+				vec1[i] = i;
+			}
+
+			Assert::AreEqual(0, vec1[0]);
+			Assert::AreEqual(1, vec1[1]);
+			Assert::AreEqual(2, vec1[2]);
+			Assert::AreEqual(3, vec1[3]);
+			Assert::AreEqual(4, vec1[4]);
+			Assert::AreEqual(5, vec1[5]);
+			Assert::AreEqual(6, vec1[6]);
+			Assert::AreEqual(7, vec1[7]);
+			Assert::AreEqual(8, vec1[8]);
+			Assert::AreEqual(9, vec1[9]);
+
 		}
 	};
 }
