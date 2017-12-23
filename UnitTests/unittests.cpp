@@ -6,6 +6,8 @@
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
 #include "nostrautils\core\Utils.hpp"
+#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\dat_alg\Utils.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -135,6 +137,22 @@ namespace UnitTests
 			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 3, 3), 3); //on max border
 			Assert::AreEqual(NOU::NOU_CORE::clamp(1, 2, 3), 2); //smaller than min
 			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
+		}
+
+		TEST_METHOD(Swap)
+		{
+			int a = 1;
+			int b = 2;
+
+			NOU::NOU_DAT_ALG::swap(&a, &b);
+
+			Assert::AreEqual(2,a);
+			Assert::AreEqual(1,b);
+		}
+
+		TEST_METHOD(Vector)
+		{
+			
 		}
 	};
 }

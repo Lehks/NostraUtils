@@ -3,6 +3,7 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\dat_alg\ContainerInterfaces.hpp"
+#include "nostrautils\dat_alg\Bubblesort.hpp"
 
 /** \file Vector.hpp
 \author  Dennis Franz
@@ -61,7 +62,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Standard constructor with the size.
 		*/
-		Vector<T>(sizeType size = 1); ///\todo add allocator to the stadard constructor
+		Vector<T>(sizeType size); ///\todo add allocator to the stadard constructor
 		/**
 		\param other Takes an other vector for moving.
 
@@ -200,7 +201,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	Vector<T>::Vector(sizeType size = 1) :
+	Vector<T>::Vector(sizeType size) :
 		m_capacity(NOU::NOU_CORE::max(MIN_CAPACITY, size)), ///\todo add m_allocator var.
 		m_data(alloc(m_capacity)),
 		m_size(0)
@@ -234,7 +235,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	Vector<T>::empty() const
+	boolean Vector<T>::empty() const
 	{
 		return size > 0 ? false : true;
 	}
@@ -332,6 +333,12 @@ namespace NOU::NOU_DAT_ALG
 		new (m_data + index) T(data); //copy new element into the vector
 
 		m_size++;
+	}
+
+	template<typename T>
+	void Vector<T>::sort()
+	{
+		bubbleSort(m_data, m_size);
 	}
 
 	template<typename T>

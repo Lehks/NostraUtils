@@ -24,7 +24,7 @@ namespace NOU::NOU_DAT_ALG
 
 
 	template<typename T>
-	swap(T *dataone, T *datatwo) 
+	void swap(T *dataone, T *datatwo) 
 	{
 		T tempdata = NOU_CORE::move(*dataone);
 		*dataone = NOU_CORE::move(*datatwo);

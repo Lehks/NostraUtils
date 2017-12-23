@@ -52,6 +52,9 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Utils.cpp">
