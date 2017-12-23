@@ -5,6 +5,9 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
+#include "nostrautils\dat_alg\Comparator.hpp"
+
+#include <type_traits>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -134,6 +137,48 @@ namespace UnitTests
 			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 3, 3), 3); //on max border
 			Assert::AreEqual(NOU::NOU_CORE::clamp(1, 2, 3), 2); //smaller than min
 			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
+		}
+
+		TEST_METHOD(Comparator)
+		{
+			//int as dummy type
+			Assert::IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>, 
+												decltype(&NOU::NOU_DAT_ALG::genericComparator<int>)>);
+
+			Assert::IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>,
+												decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(NOU::NOU_DAT_ALG::CompareResult::BIGGER) ==
+				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(NOU::NOU_DAT_ALG::CompareResult::EQUAL) ==
+				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(NOU::NOU_DAT_ALG::CompareResult::SMALLER) ==
+				NOU::NOU_DAT_ALG::CompareResult::BIGGER);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(1, 5) ==
+				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 5) ==
+				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 1) ==
+				NOU::NOU_DAT_ALG::CompareResult::BIGGER);
+
+
+
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'a') == 
+				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'A') ==
+				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'b') ==
+				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') ==
+				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
 		}
 	};
 }
