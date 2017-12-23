@@ -162,7 +162,7 @@ namespace UnitTests
 				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 1) ==
-				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+				NOU::NOU_DAT_ALG::CompareResult::BIGGER);
 
 
 
