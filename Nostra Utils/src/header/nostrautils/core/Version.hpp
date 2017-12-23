@@ -4,6 +4,18 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 
+/**
+\file core/Version.hpp
+
+\author  Lukas Reichmann
+\version 1.0.0
+\since   1.0.0
+
+\brief A file that contains the nostra::utils::core::Version struct.
+\see   nostra::utils::core::Version
+*/
+
+
 namespace NOU::NOU_CORE
 {
 	/**

@@ -13,6 +13,17 @@
 \brief   This file provides usefull utility funcitions.
 */
 
+/**
+\file core/Utils.hpp
+
+\author  Lukas Reichmann
+\author  Dennis Franz
+\version 0.0.1
+\since   1.0.0
+
+\brief A file that contains utility funtions that are used all over NOU.
+*/
+
 namespace NOU::NOU_CORE
 {
 	/**
