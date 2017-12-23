@@ -3,6 +3,8 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 
+#include <type_traits>
+
 namespace NOU::NOU_CORE
 {
 	/**
@@ -120,6 +122,20 @@ namespace NOU::NOU_CORE
 	*/
 	template<typename T>
 	using removeConst_t = typename removeConst<T>::type;
+
+	/**
+	\tparam The enum the the underlying type should be determined for.
+
+	\brief Determines the underlying type of an enum.
+	*/
+	template<typename T>
+	struct UnderlyingType : std::underlying_type<T> {};
+
+	/**
+	\brief The result of a call to UnderlyingType.
+	*/
+	template<typename T>
+	using UnderlyingType_t = typename UnderlyingType<T>::type;
 }
 
 #endif
