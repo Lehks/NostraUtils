@@ -73,6 +73,60 @@ namespace NOU::NOU_CORE
 		\brief Returns the major part of the version.
 		*/
 		constexpr VersionType getPatch() const;
+
+		/**
+		\param other The version to compare this one to.
+
+		\return True, if this version is bigger than \p other, false if not.
+
+		\brief Checks if this version is bigger than \p other.
+		*/
+		constexpr boolean operator > (const Version &other) const;
+
+		/**
+		\param other The version to compare this one to.
+
+		\return True, if this version is bigger than or equal to \p other, false if not.
+
+		\brief Checks if this version is bigger than or equal to \p other.
+		*/
+		constexpr boolean operator >= (const Version &other) const;
+
+		/**
+		\param other The version to compare this one to.
+
+		\return True, if this version is smaller than \p other, false if not.
+
+		\brief Checks if this version is smaller than \p other.
+		*/
+		constexpr boolean operator < (const Version &other) const;
+
+		/**
+		\param other The version to compare this one to.
+
+		\return True, if this version is smaller than or equal to \p other, false if not.
+
+		\brief Checks if this version is smaller than or equal to \p other.
+		*/
+		constexpr boolean operator <= (const Version &other) const;
+
+		/**
+		\param other The version to compare this one to.
+
+		\return True, if this version is equal to \p other, false if not.
+
+		\brief Checks if this version is equal to \p other.
+		*/
+		constexpr boolean operator == (const Version &other) const;
+
+		/**
+		\param other The version to compare this one to.
+
+		\return True, if this version is unequal to \p other, false if not.
+
+		\brief Checks if this version is unequal to \p other.
+		*/
+		constexpr boolean operator != (const Version &other) const;
 	};
 
 	constexpr Version::Version(VersionType version) :
@@ -103,6 +157,36 @@ namespace NOU::NOU_CORE
 	constexpr typename Version::VersionType Version::getPatch() const
 	{
 		return NOU_VERSION_PATCH(m_version);
+	}
+
+	constexpr boolean Version::operator > (const Version &other) const
+	{
+		return getRaw() > other.getRaw();
+	}
+
+	constexpr boolean Version::operator >= (const Version &other) const
+	{
+		return getRaw() >= other.getRaw();
+	}
+
+	constexpr boolean Version::operator < (const Version &other) const
+	{
+		return getRaw() < other.getRaw();
+	}
+
+	constexpr boolean Version::operator <= (const Version &other) const
+	{
+		return getRaw() <= other.getRaw();
+	}
+
+	constexpr boolean Version::operator == (const Version &other) const
+	{
+		return getRaw() == other.getRaw();
+	}
+
+	constexpr boolean Version::operator != (const Version &other) const
+	{
+		return getRaw() != other.getRaw();
 	}
 }
 

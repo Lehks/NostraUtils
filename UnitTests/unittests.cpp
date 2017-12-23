@@ -75,6 +75,56 @@ namespace UnitTests
 			Assert::AreEqual(version3.getMajor(), NOU_VERSION_MAJOR_MAX);
 			Assert::AreEqual(version3.getMinor(), NOU_VERSION_MINOR_MAX);
 			Assert::AreEqual(version3.getPatch(), NOU_VERSION_PATCH_MAX);
+
+			NOU::NOU_CORE::Version version4 = version3;
+
+			Assert::IsTrue(version3 == version4);
+			Assert::IsFalse(version3 != version4);
+			Assert::IsFalse(version3 > version4);
+			Assert::IsFalse(version3 < version4);
+			Assert::IsTrue(version3 >= version4);
+			Assert::IsTrue(version3 <= version4);
+
+			NOU::NOU_CORE::Version version5(1, 2, 3);
+			NOU::NOU_CORE::Version version6(1, 2, 4);
+
+			Assert::IsFalse(version5 == version6);
+			Assert::IsTrue(version5 != version6);
+			Assert::IsFalse(version5 > version6);
+			Assert::IsTrue(version5 < version6);
+			Assert::IsFalse(version5 >= version6);
+			Assert::IsTrue(version5 <= version6);
+
+			NOU::NOU_CORE::Version version7(1, 2, 3);
+			NOU::NOU_CORE::Version version8(1, 3, 3);
+
+			Assert::IsFalse(version7 == version8);
+			Assert::IsTrue(version7 != version8);
+			Assert::IsFalse(version7 > version8);
+			Assert::IsTrue(version7 < version8);
+			Assert::IsFalse(version7 >= version8);
+			Assert::IsTrue(version7 <= version8);
+
+			NOU::NOU_CORE::Version version9(1, 2, 3);
+			NOU::NOU_CORE::Version version10(2, 2, 4);
+
+			Assert::IsFalse(version9 == version10);
+			Assert::IsTrue(version9 != version10);
+			Assert::IsFalse(version9 > version10);
+			Assert::IsTrue(version9 < version10);
+			Assert::IsFalse(version9 >= version10);
+			Assert::IsTrue(version9 <= version10);
+
+			NOU::NOU_CORE::Version version11(5, 9, 4);
+			NOU::NOU_CORE::Version version12(1, 10, 4);
+			
+			Assert::IsFalse(version11 == version12);
+			Assert::IsTrue(version11 != version12);
+			Assert::IsTrue(version11 > version12);
+			Assert::IsFalse(version11 < version12);
+			Assert::IsTrue(version11 >= version12);
+			Assert::IsFalse(version11 <= version12);
+
 		}
 
 		TEST_METHOD(Clamp)
