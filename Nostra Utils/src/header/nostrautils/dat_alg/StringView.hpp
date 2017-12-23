@@ -2,6 +2,8 @@
 #define	NOU_DAT_ALG_STRING_VIEW_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\core\Meta.hpp"
+#include "nostrautils\dat_alg\Comparator.hpp"
 
 namespace NOU::NOU_DAT_ALG
 {
@@ -48,7 +50,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The same as ConstCharType, but without the const. This type is used by nou::container::String.
 		*/
-		using CharType = removeConst_t<CHAR_TYPE>;
+		using CharType = NOU_CORE::removeConst_t<CHAR_TYPE>;
 
 		/**
 		\brief The type that is used to store the single characters. Since a string view is read only, this type is
@@ -63,7 +65,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief The character that is used to seperate the decimal places from the remaining digits by stringToFloat32()
 		and stringToFloat64() by default.
 		*/
-		static constexpr ConstCharType DECIMAL_PLACE_SEPARATOR = '.'; ///todo Localize
+		static constexpr ConstCharType DECIMAL_PLACE_SEPARATOR = '.'; ///\todo Localize
 
 		/**
 		\brief The character that is used to identify a negative number when converting a string to a number.
@@ -75,38 +77,45 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		static constexpr ConstCharType NULL_TERMINATOR = 0;
 
+		/**
+		\brief An invalid index that is used to mark special indices (the usage differs from the context).
+		*/
+		static constexpr sizeType NULL_INDEX = -1;
+
 	private:
-		/**
-		\tparam OT The output type.
-		\param str The string to convert.
-		\return    The converted number.
-
-		\brief Converts a string into any signed integer.
-		*/
-		template<typename OT>
-		static OT genericStringToInt(const StringView &str);
-
-		/**
-		\tparam OT The output type.
-		\param str The string to convert.
-		\return    The converted number.
-
-		\brief Converts a string into any unsigned integer.
-		*/
-		template<typename OT>
-		static OT genericStringToUint(const StringView &str);
-
-		/**
-		\tparam OT                   The output type.
-		\param str                   The string to convert.
-		\param decimalPlaceSeparator The character that is used to seperate the decimal places.
-		\return                      The converted number.
-
-		\brief Converts a string into any floating point type number.
-		*/
-		template<typename OT>
-		static OT genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator);
-
+		
+	//Re-enable later w/ error handling
+	//	/**
+	//	\tparam OT The output type.
+	//	\param str The string to convert.
+	//	\return    The converted number.
+	//
+	//	\brief Converts a string into any signed integer.
+	//	*/
+	//	template<typename OT>
+	//	static OT genericStringToInt(const StringView &str);
+	//
+	//	/**
+	//	\tparam OT The output type.
+	//	\param str The string to convert.
+	//	\return    The converted number.
+	//
+	//	\brief Converts a string into any unsigned integer.
+	//	*/
+	//	template<typename OT>
+	//	static OT genericStringToUint(const StringView &str);
+	//
+	//	/**
+	//	\tparam OT                   The output type.
+	//	\param str                   The string to convert.
+	//	\param decimalPlaceSeparator The character that is used to seperate the decimal places.
+	//	\return                      The converted number.
+	//
+	//	\brief Converts a string into any floating point type number.
+	//	*/
+	//	template<typename OT>
+	//	static OT genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator);
+	
 		/**
 		\param multiple The multiplier.
 		\return         \f$10^{multiple}\f$
@@ -278,9 +287,9 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param str        The substring to find.
 		\param startIndex The first index at which the method will look for a matching substring.
-		\return           The first index at which the substring was found, or InitValues::SIZE_T_GENERAL_SPECIAL_INDEX,
+		\return           The first index at which the substring was found, or NULL_INDEX,
 		if the substring was not found. This value is always either
-		InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, or \>= \p startIndex.
+		NULL_INDEX, or \>= \p startIndex.
 
 		\brief Returns the index of the first occurence of \p str in the string represented by this string view that is
 		at or after the index \p startIndex.
@@ -290,9 +299,9 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param c          The character to find.
 		\param startIndex The first index at which the method will look for the character.
-		\return           The first index at which the character was found, or InitValues::SIZE_T_GENERAL_SPECIAL_INDEX,
+		\return           The first index at which the character was found, or NULL_INDEX,
 		if the character was not found. This value is always either
-		InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, or \>= \p startIndex.
+		NULL_INDEX, or \>= \p startIndex.
 
 		\brief Returns the index of the first occurence of \p c in the string represented by this string view that is at
 		or after the index \p startIndex.
@@ -302,7 +311,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param c The character to find.
 		\return  The index at which the character \p c occurs for the first time in the string, or
-		InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, if it is not present in the string.
+		NULL_INDEX, if it is not present in the string.
 
 		\brief Returns the first character that is \p c.
 		*/
@@ -311,7 +320,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param c The character to find.
 		\return  The index at which the character \p c occurs for the last time in the string, or
-		InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, if it is not present in the string.
+		NULL_INDEX, if it is not present in the string.
 
 		\brief Returns the last character that is \p c.
 		*/
@@ -319,7 +328,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param c The character to exclude.
-		\return  The index of the first character that is not \p c, or InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, if the
+		\return  The index of the first character that is not \p c, or NULL_INDEX, if the
 		entire string only consists of that character.
 
 		\brief Returns the first character that is not \p c.
@@ -328,7 +337,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param c The character to exclude.
-		\return  The index of the last character that is not \p c, or InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, if the
+		\return  The index of the last character that is not \p c, or NULL_INDEX, if the
 		entire string only consists of that character.
 
 		\brief Returns the last character that is not \p c.
@@ -415,7 +424,7 @@ namespace NOU::NOU_DAT_ALG
 		\param start The start of the interval of the characters that will be in the substring. The character at this
 		index will included in the substring.
 		\param end   The end of the interval of the characters that will be in the substring. The character at this
-		index will excluded in the substring. If this is equal to InitValues::SIZE_T_GENERAL_SPECIAL_INDEX,
+		index will excluded in the substring. If this is equal to NULL_INDEX,
 		the size of the string will be used.
 		\return      A string view that starts at the index \p start of this instance and has a size of \p end -
 		\p start.
@@ -436,7 +445,7 @@ namespace NOU::NOU_DAT_ALG
 		size() to determine the end of a string and not by those relying on a null terminator (this is due to a string
 		view being read-only by design and therefore the inability to set a new null terminator).
 		*/
-		StringView logicalSubstring(sizeType start, sizeType end = InitValues::SIZE_T_GENERAL_SPECIAL_INDEX) const;
+		StringView logicalSubstring(sizeType start, sizeType end = NULL_INDEX) const;
 
 		/**
 		\return A StringConstIterator that points to the first character in the string.
@@ -534,6 +543,8 @@ namespace NOU::NOU_DAT_ALG
 		ConstCharType operator [] (sizeType index) const;
 	};
 
+	///\todo Re-enable and exchange error handling
+	/*
 	template<typename CHAR_TYPE>
 	template<typename OT>
 	OT StringView<CHAR_TYPE>::genericStringToInt(const StringView &str)
@@ -639,6 +650,7 @@ namespace NOU::NOU_DAT_ALG
 
 		return ret;
 	}
+	*/
 
 	template<typename CHAR_TYPE>
 	uint64 StringView<CHAR_TYPE>::getMultipleOf10(uint32 multiple)
@@ -843,7 +855,7 @@ namespace NOU::NOU_DAT_ALG
 			}
 		}
 
-		return InitValues::SIZE_T_GENERAL_SPECIAL_INDEX;
+		return NULL_INDEX;
 	}
 
 	template<typename CHAR_TYPE>
@@ -853,7 +865,7 @@ namespace NOU::NOU_DAT_ALG
 			if (at(i) == c)
 				return i;
 
-		return InitValues::SIZE_T_GENERAL_SPECIAL_INDEX;
+		return NULL_INDEX;
 	}
 
 	template<typename CHAR_TYPE>
@@ -863,7 +875,7 @@ namespace NOU::NOU_DAT_ALG
 			if (at(i) == c)
 				return i;
 
-		return InitValues::SIZE_T_GENERAL_SPECIAL_INDEX;
+		return NULL_INDEX;
 	}
 
 	template<typename CHAR_TYPE>
@@ -873,7 +885,7 @@ namespace NOU::NOU_DAT_ALG
 			if (at(i) == c)
 				return i;
 
-		return InitValues::SIZE_T_GENERAL_SPECIAL_INDEX;
+		return NULL_INDEX;
 	}
 
 	template<typename CHAR_TYPE>
@@ -883,7 +895,7 @@ namespace NOU::NOU_DAT_ALG
 			if (at(i) != c)
 				return i;
 
-		return InitValues::SIZE_T_GENERAL_SPECIAL_INDEX;
+		return NULL_INDEX;
 	}
 
 	template<typename CHAR_TYPE>
@@ -893,7 +905,7 @@ namespace NOU::NOU_DAT_ALG
 			if (at(i) != c)
 				return i;
 
-		return InitValues::SIZE_T_GENERAL_SPECIAL_INDEX;
+		return NULL_INDEX;
 	}
 
 	template<typename CHAR_TYPE>
@@ -961,7 +973,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	StringView<CHAR_TYPE> StringView<CHAR_TYPE>::logicalSubstring(sizeType start, sizeType end) const
 	{
-		if (end == InitValues::SIZE_T_GENERAL_SPECIAL_INDEX)
+		if (end == NULL_INDEX)
 			end = size();
 
 		StringView<CHAR_TYPE> ret((*m_dataPtr) + start); //init ret with correct start index.
