@@ -4,6 +4,7 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\dat_alg\ContainerInterfaces.hpp"
 #include "nostrautils\dat_alg\Bubblesort.hpp"
+#include "nostrautils\mem_mngt\AllocationCallback.hpp"
 
 /** \file Vector.hpp
 \author  Dennis Franz
@@ -29,20 +30,22 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief A Constant for the minimal size of the Vector.
 		*/
-		static constexpr sizeType	 MIN_CAPACITY = 1;
+		static constexpr sizeType	                MIN_CAPACITY = 1;
 		/**
 		\brief The actuall size of the Vector (elements stored).
 		*/
-		sizeType					 m_size;
+		sizeType								    m_size;
 		/**
 		\brief The actuall capacity of the Vector (memory allocation).
 		*/
-		sizeType					 m_capacity;
+		sizeType								    m_capacity;
 		/**
 		\brief A pointer to the array that stores data.
 		*/
-		T							*m_data;
+		T										   *m_data;
 
+
+		NOU::NOU_MEM_MNGT::GenericAllocationCallback<T>	m_allocator;
 		/**
 		\brief Allocates an memory amount for the vector.
 		*/
@@ -62,7 +65,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Standard constructor with the size.
 		*/
-		Vector<T>(sizeType size); ///\todo add allocator to the stadard constructor
+		Vector<T>(sizeType size, NOU::NOU_MEM_MNGT::GenericAllocationCallback<T> &allocator); ///\todo add allocator to the stadard constructor
 		/**
 		\param other Takes an other vector for moving.
 
@@ -130,12 +133,16 @@ namespace NOU::NOU_DAT_ALG
 		\brief Inserts an element at the first position.
 		*/
 		void pushFront(const T &data) override;
+
+		void push(const T &data);
 		/**
 		\return      The elemnt at the first position.
 
 		\brief Inserts an element at the first position.
 		*/
 		T popFront() override;
+
+		T pop() override;
 		/**
 		\param index0 The first index.
 		\param index1 The second index.
@@ -156,7 +163,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Inserts an element at a given index.
 		*/
-		void insert(const T &data, sizeType index) override;
+		void insert(const T &data, sizeType index);
 		/**
 		\brief Sorts the Vector.
 		*/
@@ -191,7 +198,7 @@ namespace NOU::NOU_DAT_ALG
 
 		for (sizeType i = 0; i < m_size; i++)
 		{
-			new (newData + i) T(move(at(i))); //move data to new buffer
+			new (newData + i) T(NOU::NOU_CORE::move(at(i))); //move data to new buffer
 			at(i).~T(); //delete old objects
 		}
 
@@ -201,17 +208,19 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	Vector<T>::Vector(sizeType size) :
+	Vector<T>::Vector(sizeType size, NOU::NOU_MEM_MNGT::GenericAllocationCallback<T> &allocator) :
 		m_capacity(NOU::NOU_CORE::max(MIN_CAPACITY, size)), ///\todo add m_allocator var.
 		m_data(alloc(m_capacity)),
-		m_size(0)
+		m_size(0),
+		m_allocator(allocator)
 	{}
 
 	template<typename T>
 	Vector<T>::Vector(Vector<T>&& other) :
 		m_capacity(other.m_capacity),
 		m_data(other.m_data),
-		m_size(other.m_size)
+		m_size(other.m_size),
+		m_allocator(other.m_allocator)
 	{
 		other.m_capacity = 0; //set capacity to 0, to allow for cpy-reassingment to the other-vector.
 		other.m_data = nullptr;
@@ -222,22 +231,28 @@ namespace NOU::NOU_DAT_ALG
 	Vector<T>::Vector(const Vector<T> &other) :
 		m_capacity(other.m_capacity),
 		m_data(alloc(m_capacity)),
-		m_size(other.m_size)
-	{}
+		m_size(other.m_size),
+		m_allocator(other.m_allocator)
+	{
+		for (sizeType i = 0; i < other.m_size; i++)
+			new (m_data + i) T(other.at(i));
+	}
 
 	template<typename T>
-	Vector<T>::~Vector() ///\todo add destructor alloc var.
+	Vector<T>::~Vector() 
 	{
 		for (sizeType i = 0; i < m_size; i++)
 		{
 			at(i).~T();
 		}
+
+		m_allocator.deallocate(m_data);
 	}
 
 	template<typename T>
 	boolean Vector<T>::empty() const
 	{
-		return size > 0 ? false : true;
+		return m_size > 0 ? false : true;
 	}
 
 	template<typename T>
@@ -269,7 +284,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::expandIfNeeded(sizeType additionalCapactiy)
 	{
-		if ((size() + additionalCapactiy) > capacity())
+		if ((m_size + additionalCapactiy) > m_capacity)
 			expandCapacity(additionalCapactiy);
 	}
 
@@ -292,13 +307,27 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	T Vector<T>::popFront()
 	{
-		return remove(0);
+		T element = *m_data;
+		remove(0);
+		return element;
+	}
+
+	template<typename T>
+	void Vector<T>::push(const T &data)
+	{
+		pushBack(data);
+	}
+
+	template<typename T>
+	T Vector<T>::pop()
+	{
+		return popFront();
 	}
 
 	template<typename T>
 	void Vector<T>::swap(sizeType index0, sizeType index1)
 	{
-		swap(m_data + index0, m_data + index1);
+		swap(*m_data + index0, *m_data + index1);
 	}
 
 	template<typename T>
@@ -307,7 +336,7 @@ namespace NOU::NOU_DAT_ALG
 		for (sizeType i = index; i < m_size - 1; i++) //shift all element to the left, until the index
 		{
 			at(i).~T(); //delete old element
-			new (m_data + i) T(move(at(i + 1))); //override old element using move constr
+			new (m_data + i) T(NOU::NOU_CORE::move(at(i + 1))); //override old element using move constr
 		}
 
 		//destroy last element in the vector (it was moved and will not be overridden at this point)
