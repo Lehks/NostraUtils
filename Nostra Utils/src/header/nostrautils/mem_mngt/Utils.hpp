@@ -19,7 +19,8 @@ namespace NOU::NOU_MEM_MNGT
 	\param bytes     The amount of bytes to allocate.
 	\param alignment The alignment that the allocated memory block should have.
 
-	\return A pointer to the allocated block of memory, or nullptr if the allocation was not successful.
+	\return A pointer to the allocated block of memory, or <tt>nullptr</tt> if the allocation was not 
+	       successful.
 
 	\brief Allocates a block of memory with a certain alignment.
 	*/
@@ -30,20 +31,28 @@ namespace NOU::NOU_MEM_MNGT
 
 	\brief Deallocates the passed block of memory. This function should be used to deallocate data that was
 	       allocated using alignedAlloc().
+
+	\details 
+	Deallocates the passed block of memory. This function should be used to deallocate data that was allocated 
+	using alignedAlloc().
+
+	\note 
+	Attempting to deallocate <tt>nullptr</tt> will never fail.
 	*/
 	NOU_FUNC void alignedFree(void *data);
 
 	/**
 	\tparam The type of object to allocate.
 
-	\param The amount of objects to allocate.
+	\param amount The amount of objects to allocate.
 
-	\return A pointer to the allocated block of memory, or nullptr if the allocation was not successful.
+	\return A pointer to the allocated block of memory, or <tt>nullptr</tt> if the allocation was not 
+	        successful.
 
-	\brief Allocates a block of memory that is large enough to hold \p amount objects of the type \p t.
+	\brief Allocates a block of memory that is large enough to hold \p amount objects of the type \p T.
 
 	\details
-	Allocates a block of memory that is large enough to hold \p amount objects of the type \p t. Internally,
+	Allocates a block of memory that is large enough to hold \p amount objects of the type \p T. Internally,
 	this function uses alignedAlloc().
 
 	\warning The objects in the returned block of memory have not been constructed yet (use placement new to 
@@ -70,7 +79,7 @@ namespace NOU::NOU_MEM_MNGT
 	template<typename T>
 	NOU_FUNC T* allocateUninitialized(sizeType amount)
 	{
-		return static_cast<T*>(alignedAlloc(sizeof(T) * amount, alignof(T)));
+		return reinterpret_cast<T*>(alignedAlloc(sizeof(T) * amount, alignof(T)));
 	}
 }
 

@@ -11,7 +11,7 @@ namespace NOU::NOU_MEM_MNGT
 	byte* alignedAlloc(sizeType bytes, sizeType alignment)
 	{
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
-		return static_cast<byte*>(_aligned_malloc(bytes, alignment));
+		return reinterpret_cast<byte*>(_aligned_malloc(bytes, alignment));
 #else NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 		byte *ret;
 
