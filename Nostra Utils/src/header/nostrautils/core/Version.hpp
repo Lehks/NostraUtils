@@ -17,7 +17,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief The type of a version (which also serves as the type for the parts).
 		*/
-		using VersionType = decltype(NOU_MAKE_VERISON(0, 0, 0));
+		using VersionType = decltype(NOU_MAKE_VERSION(0, 0, 0));
 
 	private:
 		/**
@@ -134,7 +134,7 @@ namespace NOU::NOU_CORE
 	{}
 
 	constexpr Version::Version(VersionType major, VersionType minor, VersionType patch) :
-		m_version(NOU_MAKE_VERISON(clamp(major, static_cast<VersionType>(0), NOU_VERSION_MAJOR_MAX),
+		m_version(NOU_MAKE_VERSION(clamp(major, static_cast<VersionType>(0), NOU_VERSION_MAJOR_MAX),
 			clamp(minor, static_cast<VersionType>(0), NOU_VERSION_MINOR_MAX),
 			clamp(patch, static_cast<VersionType>(0), NOU_VERSION_PATCH_MAX)))
 	{}

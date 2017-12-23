@@ -42,7 +42,7 @@ namespace UnitTests
 			NOU::uint32 major0 = 0;
 			NOU::uint32 minor0 = 0;
 			NOU::uint32 patch0 = 0;
-			NOU::uint32 version0 = NOU_MAKE_VERISON(major0, minor0, patch0);
+			NOU::uint32 version0 = NOU_MAKE_VERSION(major0, minor0, patch0);
 
 			Assert::AreEqual(NOU_VERSION_MAJOR(version0), major0);
 			Assert::AreEqual(NOU_VERSION_MINOR(version0), minor0);
@@ -51,7 +51,7 @@ namespace UnitTests
 			NOU::uint32 major1 = 5;
 			NOU::uint32 minor1 = 23;
 			NOU::uint32 patch1 = 9187;
-			NOU::uint32 version1 = NOU_MAKE_VERISON(major1, minor1, patch1);
+			NOU::uint32 version1 = NOU_MAKE_VERSION(major1, minor1, patch1);
 
 			Assert::AreEqual(NOU_VERSION_MAJOR(version1), major1);
 			Assert::AreEqual(NOU_VERSION_MINOR(version1), minor1);
@@ -60,7 +60,7 @@ namespace UnitTests
 			NOU::uint32 major2 = NOU_VERSION_MAJOR_MAX;
 			NOU::uint32 minor2 = NOU_VERSION_MINOR_MAX;
 			NOU::uint32 patch2 = NOU_VERSION_PATCH_MAX;
-			NOU::uint32 version2 = NOU_MAKE_VERISON(major2, minor2, patch2);
+			NOU::uint32 version2 = NOU_MAKE_VERSION(major2, minor2, patch2);
 
 			Assert::AreEqual(NOU_VERSION_MAJOR(version2), major2);
 			Assert::AreEqual(NOU_VERSION_MINOR(version2), minor2);

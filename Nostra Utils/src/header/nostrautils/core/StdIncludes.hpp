@@ -266,6 +266,8 @@ use
 
 and replace * with the library name.
 If there is no appropriate library available, a \#error directive will be triggered.
+
+\todo Verify!
 */
 #ifndef NOU_OS_LIBRARY
 #	if NOU_OS == NOU_OS_WINDOWS
@@ -398,6 +400,8 @@ This macro is defined as the identifier of the current compiler. To check for a 
 \endcode
 
 and replace * with the compiler name.
+
+\todo Verify!
 */
 #ifndef NOU_COMPILER
 
@@ -461,7 +465,7 @@ Creates a 32 bit version number (more precisely a nou::uint32) that consists of 
 format is major.minor.patch.
 
 E.g:
-NOU_MAKE_VERISON(1, 2, 3) creates the version 1.2.3.
+NOU_MAKE_VERSION(1, 2, 3) creates the version 1.2.3.
 
 The single parts can be read from a version using NOU_VERSION_MAJOR, NOU_VERSION_MINOR and NOU_VERSION_PATCH
 respectively.
@@ -477,7 +481,7 @@ patch | 15   | 32.767
 These values should never be overflowed since in this case bits will be cut off.
 */
 #ifndef NOU_MAKE_VERSION
-#define NOU_MAKE_VERISON(major, minor, patch) 				 \
+#define NOU_MAKE_VERSION(major, minor, patch) 				 \
 static_cast<NOU::uint32> 									 \
 (((major << 24) & 0b11111111000000000000000000000000)  |	 \
  ((minor << 15) & 0b00000000111111111000000000000000)  |	 \
@@ -487,7 +491,7 @@ static_cast<NOU::uint32> 									 \
 /**
 \param version The version to retrieve the major part from.
 
-\brief Retrieves the major part of a version that was made using NOU_MAKE_VERISON.
+\brief Retrieves the major part of a version that was made using NOU_MAKE_VERSION.
 */
 #ifndef NOU_VERSION_MAJOR
 #define NOU_VERSION_MAJOR(version) static_cast<NOU::uint32> \
@@ -497,7 +501,7 @@ static_cast<NOU::uint32> 									 \
 /**
 \param version The version to retrieve the major part from.
 
-\brief Retrieves the minor part of a version that was made using NOU_MAKE_VERISON.
+\brief Retrieves the minor part of a version that was made using NOU_MAKE_VERSION.
 */
 #ifndef NOU_VERSION_MINOR
 #define NOU_VERSION_MINOR(version) static_cast<NOU::uint32> \
@@ -507,31 +511,72 @@ static_cast<NOU::uint32> 									 \
 /**
 \param version The version to retrieve the major part from.
 
-\brief Retrieves the patch part of a version that was made using NOU_MAKE_VERISON.
+\brief Retrieves the patch part of a version that was made using NOU_MAKE_VERSION.
 */
 #ifndef NOU_VERSION_PATCH
 #define NOU_VERSION_PATCH(version) static_cast<NOU::uint32>(version & 0b00000000000000000111111111111111)
 #endif 
 
 /**
-\brief The maximum value of the major part of a version when creating a version with NOU_MAKE_VERISON.
+\brief The maximum value of the major part of a version when creating a version with NOU_MAKE_VERSION.
 */
 #ifndef NOU_VERSION_MAJOR_MAX
 #define NOU_VERSION_MAJOR_MAX static_cast<NOU::uint32>(255)
 #endif
 
 /**
-\brief The maximum value of the minor part of a version when creating a version with NOU_MAKE_VERISON.
+\brief The maximum value of the minor part of a version when creating a version with NOU_MAKE_VERSION.
 */
 #ifndef NOU_VERSION_MINOR_MAX
 #define NOU_VERSION_MINOR_MAX static_cast<NOU::uint32>(511)
 #endif
 
 /**
-\brief The maximum value of the patch part of a version when creating a version with NOU_MAKE_VERISON.
+\brief The maximum value of the patch part of a version when creating a version with NOU_MAKE_VERSION.
 */
 #ifndef NOU_VERSION_PATCH_MAX
 #define NOU_VERSION_PATCH_MAX static_cast<NOU::uint32>(32767)
+#endif
+
+/**
+\brief The version of the compiler in a normalized form.
+
+\todo Verify!
+*/
+#ifndef NOU_COMPILER_VERSION
+
+#    if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
+#        if defined _MSC_FULL_VER
+			 //From this version on, an additional bit is used to determine the version
+#            if _MSC_FULL_VER >= 150030729 
+#            define NOU_COMPILER_VERSION NOU_MAKE_VERSION((_MSC_FULL_VER % 1'00'00'00000) / 1'00'00000, \
+							(_MSC_FULL_VER % 1'00'00000) / 1'00000, _MSC_FULL_VER % 1'00000)
+#            else
+#            define NOU_COMPILER_VERSION NOU_MAKE_VERSION((_MSC_FULL_VER % 100'00'0000) / 100'0000, \
+							(_MSC_FULL_VER % 100'0000) / 10000, _MSC_FULL_VER % 1000)
+#            endif
+#        else 
+#        define NOU_COMPILER_VERSION NOU_MAKE_VERSION(((_MSC_VER % 10000) / 100), (_MSC_VER % 100), 0)
+#        endif
+#    elif NOU_COMPILER == NOU_COMPILER_GCC
+#        if defined __GNUC_PATCHLEVEL__
+#        define NOU_COMPILER_VERSION NOU_MAKE_VERSION(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__)
+#        else
+#        define NOU_COMPILER_VERSION NOU_MAKE_VERSION(__GNUC__, __GNUC_MINOR__, 0)
+#        endif
+#    elif NOU_COMPILER == NOU_COMPILER_CLANG
+#    define NOU_COMPILER_VERSION NOU_MAKE_VERSION(__clang_major__, __clang_minor__, __clang_patchlevel__)
+#    elif NOU_COMPILER == NOU_COMPILER_INTEL_CPP
+#    define NOU_COMPILER_VERSION NOU_MAKE_VERSION(((__INTEL_COMPILER % 10000) / 100), \
+										(__INTEL_COMPILER % 100), 0)
+#    elif NOU_COMPILER == NOU_COMPILER_MIN_GW
+#    define NOU_COMPILER_VERSION NOU_MAKE_VERSION(__MINGW32_MAJOR_VERSION, __MINGW32_MINOR_VERSION, 0)
+#    elif NOU_COMPILER == NOU_COMPILER_DOXYGEN
+#    define NOU_COMPILER_VERSION NOU_VERSION_MIN
+#    elif NOU_COMPILER == NOU_COMPILER_UNKNOWN
+#    define NOU_COMPILER_VERSION NOU_VERSION_MAX
+#    endif
+
 #endif
 
 namespace NOU::NOU_CORE
