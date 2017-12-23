@@ -37,6 +37,9 @@
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\core\Version.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
