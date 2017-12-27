@@ -17,12 +17,6 @@
 namespace NOU::NOU_CORE
 {
 	/**
-	\brief A dummy function that does not do anything, but it forces the generation of a <tt>.lib</tt> file
-	       when making a DLL.
-	*/
-	NOU_FUNC void dummy();
-
-	/**
 	\tparam The type of the values to clamp.
 
 	\param t   The value to clamp.
