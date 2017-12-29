@@ -16,6 +16,20 @@
 namespace NOU::NOU_DAT_ALG
 {
 
+	///\cond
+	template<typename T>
+	class VectorIterator;
+
+	template<typename T>
+	class VectorReverseIterator;
+	///\endcond
+
+	template<typename T>
+	using VectorConstIterator = const VectorIterator<T>;
+
+	template<typename T>
+	using VectorReverseConstIterator = const VectorReverseIterator<T>;
+
 	/**
 	\tparam The type of the elements that will be stored in this Vector.
 
@@ -365,7 +379,7 @@ namespace NOU::NOU_DAT_ALG
 	both const and non-const iterating). This iterator is a forward iterator.
 	*/
 	template<typename T>
-	class VectorIterator
+	class NOU_CLASS VectorIterator
 	{
 		friend class Vector<T>;
 
@@ -456,7 +470,7 @@ namespace NOU::NOU_DAT_ALG
 	both const and non-const iterating). This iterator is a reverse iterator.
 	*/
 	template<typename T>
-	class VectorReverseIterator
+	class NOU_CLASS VectorReverseIterator
 	{
 		friend class Vector<T>;
 
@@ -912,7 +926,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	VectorConstIterator<T>& VectorIterator<T>::operator ++ () const
+	const VectorIterator<T>& VectorIterator<T>::operator ++ () const
 	{
 		m_index++;
 
@@ -980,7 +994,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	VectorReverseConstIterator<T>& VectorReverseIterator<T>::operator ++ () const
+	const VectorReverseIterator<T>& VectorReverseIterator<T>::operator ++ () const
 	{
 		m_index--;
 
