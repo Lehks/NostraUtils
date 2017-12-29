@@ -207,18 +207,18 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		void sort();
 		/**
-		\return A gul::container::VectorIterator that points to the first element in the vector.
+		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
-		\brief Returns a gul::container::VectorIterator that points to the first element in the
+		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the first element in the
 		vector.
 		*/
 		VectorIterator<T> begin();
 
 		/**
-		\return A gul::container::VectorIterator that points to the element after the last element
+		\return A nostra::utils::dat_alg::VectorIterator that points to the element after the last element
 		in the vector.
 
-		\brief Returns a gul::container::VectorIterator that points to the element after the last element
+		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element after the last element
 		in the vector.
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
@@ -226,25 +226,25 @@ namespace NOU::NOU_DAT_ALG
 		VectorIterator<T> end();
 
 		/**
-		\return A gul::container::VectorIterator that points to the element at the specified index.
+		\return A nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
 
-		\brief Returns a gul::container::VectorIterator that points to the element at the specified index.
+		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
 		*/
 		VectorIterator<T> indexIterator(sizeType index);
 
 		/**
-		\return A gul::container::VectorIterator that points to the first element in the vector.
+		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
-		\brief Returns a gul::container::VectorIterator that points to the first element in the
+		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the first element in the
 		vector.
 		*/
 		VectorConstIterator<T> begin() const;
 
 		/**
-		\return A gul::container::VectorIterator that points to the element after the last element
+		\return A nostra::utils::dat_alg::VectorIterator that points to the element after the last element
 		in the vector.
 
-		\brief Returns a gul::container::VectorIterator that points to the element after the last element
+		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element after the last element
 		in the vector.
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
@@ -252,25 +252,25 @@ namespace NOU::NOU_DAT_ALG
 		VectorConstIterator<T> end() const;
 
 		/**
-		\return A gul::container::VectorIterator that points to the element at the specified index.
+		\return A nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
 
-		\brief Returns a gul::container::VectorIterator that points to the element at the specified index.
+		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
 		*/
 		VectorConstIterator<T> indexIterator(sizeType index) const;
 
 		/**
-		\return A gul::container::VectorReverseIterator that points to the last element in the vector.
+		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the vector.
 
-		\brief Returns a gul::container::VectorReverseIterator that points to the last element in the
+		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the
 		vector.
 		*/
 		VectorReverseIterator<T> rbegin();
 
 		/**
-		\return A gul::container::VectorReverseIterator that points to the element before the first
+		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
 		element in the vector.
 
-		\brief Returns a gul::container::VectorReverseIterator that points to the element before the first
+		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
 		element in the vector.
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
@@ -278,26 +278,26 @@ namespace NOU::NOU_DAT_ALG
 		VectorReverseIterator<T> rend();
 
 		/**
-		\return A gul::container::VectorReverseIterator that points to the element at the specified index.
+		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified index.
 
-		\brief Returns a gul::container::VectorReverseIterator that points to the element at the specified
+		\brief Returns anostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified
 		index.
 		*/
 		VectorReverseIterator<T> rindexIterator(sizeType index);
 
 		/**
-		\return A gul::container::VectorReverseIterator that points to the last element in the vector.
+		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the vector.
 
-		\brief Returns a gul::container::VectorReverseIterator that points to the last element in the
+		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the
 		vector.
 		*/
 		VectorReverseConstIterator<T> rbegin() const;
 
 		/**
-		\return A gul::container::VectorReverseIterator that points to the element before the first
+		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
 		element in the vector.
 
-		\brief Returns a gul::container::VectorReverseIterator that points to the element before the first
+		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
 		element in the vector.
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
@@ -305,9 +305,9 @@ namespace NOU::NOU_DAT_ALG
 		VectorReverseConstIterator<T> rend() const;
 
 		/**
-		\return A gul::container::VectorReverseIterator that points to the element at the specified index.
+		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified index.
 
-		\brief Returns a gul::container::VectorReverseIterator that points to the element at the specified
+		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified
 		index.
 		*/
 		VectorReverseConstIterator<T> rindexIterator(sizeType index) const;
