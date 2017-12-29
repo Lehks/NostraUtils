@@ -5,6 +5,7 @@
 #include "nostrautils\dat_alg\ContainerInterfaces.hpp"
 #include "nostrautils\dat_alg\Bubblesort.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
+#include "nostrautils\core\Utils.hpp"
 
 /** \file Vector.hpp
 \author  Dennis Franz
@@ -681,7 +682,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::pushFront(const T &data)
 	{
-		insert(0, data);
+		insert(data, 0);
 	}
 
 	template<typename T>
@@ -707,7 +708,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::swap(sizeType index0, sizeType index1)
 	{
-		swap(*m_data + index0, *m_data + index1);
+		NOU::NOU_DAT_ALG::swap(m_data + index0, m_data + index1);
 	}
 
 	template<typename T>

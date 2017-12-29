@@ -143,8 +143,8 @@ namespace UnitTests
 
 		TEST_METHOD(Swap)
 		{
-			int a = 1;
-			int b = 2;
+			NOU::int32 a = 1;
+			NOU::int32 b = 2;
 
 			NOU::NOU_DAT_ALG::swap(&a, &b);
 
@@ -186,6 +186,19 @@ namespace UnitTests
 			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec3(10);
 			vec3 = vec1;
 			Assert::AreEqual(vec3[9], vec1[9]);
+
+			vec1.pushFront(15);
+			Assert::AreEqual(15, vec1[0]);
+
+			NOU::int32 testinteger = 0;
+			testinteger = vec1.popFront();
+			Assert::AreEqual(15, testinteger);
+
+			vec2.swap(0,1);
+			Assert::AreEqual(0, vec2[1]);
+
+			vec2.remove(0);
+			Assert::AreEqual(0, vec2[0]);
 		}
 	};
 }
