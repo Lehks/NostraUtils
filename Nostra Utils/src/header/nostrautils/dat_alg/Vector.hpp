@@ -35,6 +35,10 @@ namespace NOU::NOU_DAT_ALG
 		static constexpr sizeType	                MIN_CAPACITY = 1;
 		/**
 		\brief The actuall capacity of the Vector (memory allocation).
+
+		\details 
+		The capacity isnt the same as the size of the Vcetor even if it looks like it duedo the constructor implementation.
+		The capacity is the total amount of space the vector hase. The size is the amount of the actuall stored elements of the vector.
 		*/
 		sizeType								    m_capacity;
 		/**
@@ -47,38 +51,57 @@ namespace NOU::NOU_DAT_ALG
 		T										   *m_data;
 		/**
 		\brief Allocates an memory amount for the vector.
+
+		\see nostra::utils::mem_mngt::AllocationCallback
 		*/
 		T* alloc(sizeType amount);
 		/**
 		\brief Frees the amount of the Vector.
+
+		\see nostra::utils::mem_mngt::AllocationCallback
 		*/
 		void free(T *data);
 		/**
 		\brief Reallocate memory for the vector.
+
+		\details 
+		If a new element gets inserted to the vector it has to reallocate the memory for it.
 		*/
 		void reallocateData(sizeType capacity);
 
 	public:
 		/**
-		\param size Default set to 1.
+		\param size Initial size of the constructor.
+		\param allocator Allocator for the vector.
 
 		\brief Standard constructor with the size.
+		\details 
+		The size is inizilized by default with 1 (if no size is given or size < 1). The allocator is initialized by default 
+		with a GenericAllocation (nostra::utils::mem_mngt::GenericAllocationCallback).
+		If there is need for a custom allocator you can creat one from the interface nostra::utils::mem_mngt::AllocationCallback.
+
+		\see   nostra::utils::mem_mngt::AllocationCallback
+		\see   nostra::utils::mem_mngt::GenericAllocationCallback
 		*/
-		Vector<T>(sizeType size, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance()); ///\todo add allocator to the stadard constructor
+		Vector<T>(sizeType size = MIN_CAPACITY, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance());
 		/**
 		\param other Takes an other vector for moving.
 
-		\brief Move constructor with the size.
+		\brief For Moving the \p other Vector.
 		*/
 		Vector<T>(Vector<T> &&other);
 		/**
 		\param other Takes an other vector for copying.
 
-		\brief Copy constructor with the size.
+		\brief For Copying the \p other Vector.
 		*/
 		Vector<T>(const Vector<T> &other);
 		/**
 		\brief Standard destructor.
+
+		\details 
+		Note that the Vectors memory isnt alloced with the new keyword therefore the memory gets not dealocated with the delete keyword. 
+		For more deatils look at the implication.
 		*/
 		~Vector<T>();
 
@@ -98,14 +121,14 @@ namespace NOU::NOU_DAT_ALG
 		\param index The index of the element to remove.
 		\return      The element that was removed.
 
-		\brief Returns the object at the given index.
+		\brief Returns a reference of the object at the given index.
 		*/
 		T& at(sizeType index);
 		/**
 		\param index The index of the element to remove.
 		\return      The element that was removed.
 
-		\brief Returns the object at the given index.
+		\brief Returns a const reference of the object at the given index.
 		*/
 		const T& at(sizeType index) const;
 		/**
@@ -132,27 +155,43 @@ namespace NOU::NOU_DAT_ALG
 		\brief Inserts an element at the first position.
 		*/
 		void pushFront(const T &data) override;
+		/**
+		\param data The data to insert.
 
+		\brief Inserts an element at the last position.
+		\details 
+		This methode calls pushBack() .
+		*/
 		void push(const T &data);
 		/**
-		\return      The elemnt at the first position.
+		\return      The element at the first position.
 
-		\brief Inserts an element at the first position.
+		\brief Returns the element at the first position and delets it.
 		*/
 		T popFront() override;
+		/**
+		\return      The element at the first position.
 
+		\brief Returns the element at the first position and delets it.
+		\details 
+		This methode calls popFront() .
+		*/
 		T pop() override;
 		/**
 		\param index0 The first index.
 		\param index1 The second index.
 
 		\brief Swaps the elements at the corresponding index.
+		\details 
+		This methode calls the swap function in nostra::utils::dat_alg::utils.
+
+		\see nostra::utils::dat_alg::utils
 		*/
 		void swap(sizeType index0, sizeType index1) override;
 		/**
-		\param index Removes the data at the given index.
+		\param index Removes the element at the given index.
 
-		\brief Inserts an element at a given index.
+		\brief removes an element at a given index.
 		*/
 		void remove(sizeType index);
 
@@ -167,12 +206,340 @@ namespace NOU::NOU_DAT_ALG
 		\brief Sorts the Vector.
 		*/
 		void sort();
+		/**
+		\return A gul::container::VectorIterator that points to the first element in the vector.
 
+		\brief Returns a gul::container::VectorIterator that points to the first element in the
+		vector.
+		*/
+		VectorIterator<T> begin();
+
+		/**
+		\return A gul::container::VectorIterator that points to the element after the last element
+		in the vector.
+
+		\brief Returns a gul::container::VectorIterator that points to the element after the last element
+		in the vector.
+
+		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
+		*/
+		VectorIterator<T> end();
+
+		/**
+		\return A gul::container::VectorIterator that points to the element at the specified index.
+
+		\brief Returns a gul::container::VectorIterator that points to the element at the specified index.
+		*/
+		VectorIterator<T> indexIterator(sizeType index);
+
+		/**
+		\return A gul::container::VectorIterator that points to the first element in the vector.
+
+		\brief Returns a gul::container::VectorIterator that points to the first element in the
+		vector.
+		*/
+		VectorConstIterator<T> begin() const;
+
+		/**
+		\return A gul::container::VectorIterator that points to the element after the last element
+		in the vector.
+
+		\brief Returns a gul::container::VectorIterator that points to the element after the last element
+		in the vector.
+
+		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
+		*/
+		VectorConstIterator<T> end() const;
+
+		/**
+		\return A gul::container::VectorIterator that points to the element at the specified index.
+
+		\brief Returns a gul::container::VectorIterator that points to the element at the specified index.
+		*/
+		VectorConstIterator<T> indexIterator(sizeType index) const;
+
+		/**
+		\return A gul::container::VectorReverseIterator that points to the last element in the vector.
+
+		\brief Returns a gul::container::VectorReverseIterator that points to the last element in the
+		vector.
+		*/
+		VectorReverseIterator<T> rbegin();
+
+		/**
+		\return A gul::container::VectorReverseIterator that points to the element before the first
+		element in the vector.
+
+		\brief Returns a gul::container::VectorReverseIterator that points to the element before the first
+		element in the vector.
+
+		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
+		*/
+		VectorReverseIterator<T> rend();
+
+		/**
+		\return A gul::container::VectorReverseIterator that points to the element at the specified index.
+
+		\brief Returns a gul::container::VectorReverseIterator that points to the element at the specified
+		index.
+		*/
+		VectorReverseIterator<T> rindexIterator(sizeType index);
+
+		/**
+		\return A gul::container::VectorReverseIterator that points to the last element in the vector.
+
+		\brief Returns a gul::container::VectorReverseIterator that points to the last element in the
+		vector.
+		*/
+		VectorReverseConstIterator<T> rbegin() const;
+
+		/**
+		\return A gul::container::VectorReverseIterator that points to the element before the first
+		element in the vector.
+
+		\brief Returns a gul::container::VectorReverseIterator that points to the element before the first
+		element in the vector.
+
+		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
+		*/
+		VectorReverseConstIterator<T> rend() const;
+
+		/**
+		\return A gul::container::VectorReverseIterator that points to the element at the specified index.
+
+		\brief Returns a gul::container::VectorReverseIterator that points to the element at the specified
+		index.
+		*/
+		VectorReverseConstIterator<T> rindexIterator(sizeType index) const;
+
+		/**
+		\param other The vector to copy the data from.
+		\return The vector that the data was copied to.
+
+		\brief Copies the data from the passed vector to this one. This uses both the copy assignment
+		operator and copy constructor.
+		*/
 		Vector& operator = (const Vector &other);
+		/**
+		\param other The vector to move the data from.
+
+		\brief Moves the data from the passed vector to this one.
+
+		\details 
+		Moves the data from the passed vector to this one. The vector that the data was
+		moved from will afterwards have a size and capacity of 0. This allows it to reassingning another
+		vector to the one that the data was moved from using the copy or move assingment operators.
+		*/
 		Vector& operator = (Vector &&other);
+		/**
+		\param index The index of the element in the vector.
+		\return      The element at the passed index.
+
+		\brief Returns the element at the specified index. Same as at().
+
+		\details
+		Returns the element at the specified index. Same as at(), seet the doc of that method for further
+		information.
+
+		\see at()
+		*/
 		T& operator [] (sizeType index);
+		/**
+		\param index The index of the element in the vector.
+		\return      The element at the passed index.
+
+		\brief Returns the element at the specified index. Same as at().
+
+		\details
+		Returns the element at the specified index. Same as at(), seet the doc of that method for further
+		information.
+
+		\see at()
+		*/
 		const T& operator [] (sizeType index) const;
 
+	};
+
+	/**
+	\brief An iterator that is used to iterate over a nostra::utils::dat_alg::Vector (this iterator supports
+	both const and non-const iterating). This iterator is a forward iterator.
+	*/
+	template<typename T>
+	class VectorIterator
+	{
+		friend class Vector<T>;
+
+	private:
+		/*
+		\brief A pointer to the array that this iterator iterates over.
+		*/
+		T                **m_dataPtr;
+
+		/**
+		\brief The index of the element that will be returned the next time the operator * is called.
+		*/
+		mutable sizeType   m_index; //mutable to allow operator ++ to be const
+
+	public:
+		/**
+		\param index   The index to start at.
+		\param dataPtr A pointer to a pointer to the array that this iterator iterates over.
+
+		\brief Constructs a new instance that starts at the passed index and iterates over the passed array.
+		*/
+		VectorIterator(sizeType index, const T **dataPtr);
+
+		/**
+		\return The element that this iterator is currently pointing to.
+
+		\brief Returns the element that this iterator is currently pointing to.
+		*/
+		T& operator * ();
+
+		/**
+		\return The element that this iterator is currently pointing to.
+
+		\brief Returns the element that this iterator is currently pointing to.
+		*/
+		const T& operator * () const;
+
+		/**
+		\return The element that this iterator is currently pointing to.
+
+		\brief Returns the element that this iterator is currently pointing to.
+		*/
+		T* operator -> ();
+
+		/**
+		\return The element that this iterator is currently pointing to.
+
+		\brief Returns the element that this iterator is currently pointing to.
+		*/
+		const T* operator -> () const;
+
+		/**
+		\brief Increments the iterator to point to the next element in the vector.
+		*/
+		VectorIterator& operator ++ ();
+
+		/**
+		\brief Increments the iterator to point to the next element in the vector.
+		*/
+		const VectorIterator& operator ++ () const;
+
+		/**
+		\brief Increments the iterator to point to the next element in the vector.
+		*/
+		VectorIterator operator ++ (int) const;
+
+		/**
+		\param other The iterator to compare this iterator to.
+		\return      True, if the iterators are equal, false if not.
+
+		\brief Returns weather two iterators are equal. Two iterators qualify as equal if their internal
+		index and the vector that they point to are the same.
+		*/
+		boolean operator == (const VectorIterator &other) const;
+
+		/**
+		\param other The iterator to compare this iterator to.
+		\return      False, if the iterators are equal, true if not.
+
+		\brief Returns weather two iterators are unequal. This returns the opposite of what the operator
+		= would return.
+		*/
+		boolean operator != (const VectorIterator &other) const;
+	};
+
+	/**
+	\brief An iterator that is used to iterate over a nostra::utils::dat_alg::Vector (this iterator supports
+	both const and non-const iterating). This iterator is a reverse iterator.
+	*/
+	template<typename T>
+	class VectorReverseIterator
+	{
+		friend class Vector<T>;
+
+	private:
+		/*
+		\brief A pointer to the array that this iterator iterates over.
+		*/
+		T                **m_dataPtr;
+
+		/**
+		\brief The index of the element that will be returned the next time the operator * is called.
+		*/
+		mutable sizeType   m_index; //mutable to allow operator ++ to be const
+
+	public:
+		/**
+		\param index   The index to start at.
+		\param dataPtr A pointer to a pointer to the array that this iterator iterates over.
+
+		\brief Constructs a new instance that starts at the passed index and iterates over the passed array.
+		*/
+		VectorReverseIterator(sizeType index, const T **dataPtr);
+
+		/**
+		\return The element that this iterator is currently pointing to.
+
+		\brief Returns the element that this iterator is currently pointing to.
+		*/
+		T& operator * ();
+
+		/**
+		\return The element that this iterator is currently pointing to.
+
+		\brief Returns the element that this iterator is currently pointing to.
+		*/
+		const T& operator * () const;
+
+		/**
+		\return The element that this iterator is currently pointing to.
+
+		\brief Returns the element that this iterator is currently pointing to.
+		*/
+		T* operator -> ();
+
+		/**
+		\return The element that this iterator is currently pointing to.
+
+		\brief Returns the element that this iterator is currently pointing to.
+		*/
+		const T* operator -> () const;
+
+		/**
+		\brief Increments the iterator to point to the next element in the vector.
+		*/
+		VectorReverseIterator& operator ++ ();
+
+		/**
+		\brief Increments the iterator to point to the next element in the vector.
+		*/
+		const VectorReverseIterator& operator ++ () const;
+
+		/**
+		\brief Increments the iterator to point to the next element in the vector.
+		*/
+		VectorReverseIterator operator ++ (int) const;
+
+		/**
+		\param other The iterator to compare this iterator to.
+		\return      True, if the iterators are equal, false if not.
+
+		\brief Returns weather two iterators are equal. Two iterators qualify as equal if their internal
+		index and the vector that they point to are the same.
+		*/
+		boolean operator == (const VectorReverseIterator &other) const;
+
+		/**
+		\param other The iterator to compare this iterator to.
+		\return      False, if the iterators are equal, true if not.
+
+		\brief Returns weather two iterators are unequal. This returns the opposite of what the operator
+		= would return.
+		*/
+		boolean operator != (const VectorReverseIterator &other) const;
 	};
 
 
@@ -210,7 +577,7 @@ namespace NOU::NOU_DAT_ALG
 	Vector<T>::Vector(sizeType size, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator) :
 		m_capacity(NOU::NOU_CORE::max(MIN_CAPACITY, size)),
 		m_data(alloc(m_capacity)),
-		m_size(m_capacity),
+		m_size(0),
 		m_allocator(allocator)
 	{}
 
@@ -366,6 +733,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::sort()
 	{
+		///\todo implementing a "real" sorting alg.
 		bubbleSort(m_data, m_size);
 	}
 
@@ -393,7 +761,7 @@ namespace NOU::NOU_DAT_ALG
 		Second: Set uninitialized elements with the values from the other vector using cpy-constr
 		*/
 		//####
-		for (i = 0; i < min(m_size, other.m_size); i++) //cpy-assign part
+		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //cpy-assign part
 			at(i) = other.at(i);
 
 		for (; i < other.m_size; i++) //cpy-constr part
@@ -431,6 +799,214 @@ namespace NOU::NOU_DAT_ALG
 	const T& Vector<T>::operator [] (sizeType index) const
 	{
 		return at(index);
+	}
+
+	template<typename T>
+	VectorIterator<T> Vector<T>::begin()
+	{
+		return indexIterator(0);
+	}
+
+	template<typename T>
+	VectorIterator<T> Vector<T>::end()
+	{
+		return indexIterator(m_size);
+	}
+
+	template<typename T>
+	VectorIterator<T> Vector<T>::indexIterator(sizeType index)
+	{
+		return VectorIterator<T>(index, const_cast<const T**>(&m_data));
+	}
+
+	template<typename T>
+	VectorConstIterator<T> Vector<T>::begin()const
+	{
+		return indexIterator(0);
+	}
+
+	template<typename T>
+	VectorConstIterator<T> Vector<T>::end()const
+	{
+		return indexIterator(m_size);
+	}
+
+	template<typename T>
+	VectorConstIterator<T> Vector<T>::indexIterator(sizeType index)const
+	{
+		return VectorConstIterator<T>(index, const_cast<const T**>(&m_data));
+	}
+
+	template<typename T>
+	VectorReverseIterator<T> Vector<T>::rbegin()
+	{
+		return rindexIterator(m_size - 1);
+	}
+
+	template<typename T>
+	VectorReverseIterator<T> Vector<T>::rend()
+	{
+		return rindexIterator(0 - 1);
+	}
+
+	template<typename T>
+	VectorReverseIterator<T> Vector<T>::rindexIterator(sizeType index)
+	{
+		return VectorReverseIterator<T>(index, const_cast<const T**>(&m_data));
+	}
+
+	template<typename T>
+	VectorReverseConstIterator<T> Vector<T>::rbegin() const
+	{
+		return rindexIterator(m_size - 1);
+	}
+
+	template<typename T>
+	VectorReverseConstIterator<T> Vector<T>::rend() const
+	{
+		return rindexIterator(0 - 1);
+	}
+
+	template<typename T>
+	VectorReverseConstIterator<T> Vector<T>::rindexIterator(sizeType index) const
+	{
+		return VectorReverseConstIterator<T>(index, const_cast<const T**>(&m_data));
+	}
+
+	template<typename T>
+	VectorIterator<T>::VectorIterator(sizeType index, const T **dataPtr) :
+		m_dataPtr(const_cast<T**>(dataPtr)), //const cast is safe at this point
+		m_index(index)
+	{}
+
+		template<typename T>
+	T& VectorIterator<T>::operator * ()
+	{
+		return *((*m_dataPtr) + m_index);
+	}
+
+	template<typename T>
+	const T& VectorIterator<T>::operator * () const
+	{
+		return *((*m_dataPtr) + m_index);
+	}
+
+	template<typename T>
+	T* VectorIterator<T>::operator -> ()
+	{
+		return ((*m_dataPtr) + m_index);
+	}
+
+	template<typename T>
+	const T* VectorIterator<T>::operator -> () const
+	{
+		return ((*m_dataPtr) + m_index);
+	}
+
+	template<typename T>
+	VectorIterator<T>& VectorIterator<T>::operator ++ ()
+	{
+		m_index++;
+
+		return *this;
+	}
+
+	template<typename T>
+	VectorConstIterator<T>& VectorIterator<T>::operator ++ () const
+	{
+		m_index++;
+
+		return *this;
+	}
+
+	template<typename T>
+	VectorIterator<T> VectorIterator<T>::operator ++ (int) const
+	{
+		VectorIterator<T> ret = *this;
+
+		m_index++;
+
+		return ret;
+	}
+
+	template<typename T>
+	boolean VectorIterator<T>::operator == (const VectorIterator<T> &other) const
+	{
+		return m_dataPtr == other.m_dataPtr && m_index == other.m_index;
+	}
+
+	template<typename T>
+	boolean VectorIterator<T>::operator != (const VectorIterator<T> &other) const
+	{
+		return !(*this == other);
+	}
+
+	template<typename T>
+	VectorReverseIterator<T>::VectorReverseIterator(sizeType index, const T **dataPtr) :
+		m_dataPtr(const_cast<T**>(dataPtr)), //const cast is safe at this point
+		m_index(index)
+	{}
+
+		template<typename T>
+	T& VectorReverseIterator<T>::operator * ()
+	{
+		return *((*m_dataPtr) + m_index);
+	}
+
+	template<typename T>
+	const T& VectorReverseIterator<T>::operator * () const
+	{
+		return *((*m_dataPtr) + m_index);
+	}
+
+	template<typename T>
+	T* VectorReverseIterator<T>::operator -> ()
+	{
+		return ((*m_dataPtr) + m_index);
+	}
+
+	template<typename T>
+	const T* VectorReverseIterator<T>::operator -> () const
+	{
+		return ((*m_dataPtr) + m_index);
+	}
+
+	template<typename T>
+	VectorReverseIterator<T>& VectorReverseIterator<T>::operator ++ ()
+	{
+		m_index--;
+
+		return *this;
+	}
+
+	template<typename T>
+	VectorReverseConstIterator<T>& VectorReverseIterator<T>::operator ++ () const
+	{
+		m_index--;
+
+		return *this;
+	}
+
+	template<typename T>
+	VectorReverseIterator<T> VectorReverseIterator<T>::operator ++ (int) const
+	{
+		VectorReverseIterator<T> ret = *this;
+
+		m_index--;
+
+		return ret;
+	}
+
+	template<typename T>
+	boolean VectorReverseIterator<T>::operator == (const VectorReverseIterator<T> &other) const
+	{
+		return m_dataPtr == other.m_dataPtr && m_index == other.m_index;
+	}
+
+	template<typename T>
+	boolean VectorReverseIterator<T>::operator != (const VectorReverseIterator<T> &other) const
+	{
+		return !(*this == other);
 	}
 }
 

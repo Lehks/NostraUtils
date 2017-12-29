@@ -9,6 +9,8 @@
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\dat_alg\Utils.hpp"
 
+#include <iostream>
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTests
@@ -154,11 +156,11 @@ namespace UnitTests
 		{
 			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
 
-			Assert::AreEqual(10, static_cast<int>(vec1.size()));
+			Assert::AreEqual(static_cast<NOU::sizeType>(0), vec1.size());
 
-			for (int i = 0; i < vec1.size(); i++)
+			for (NOU::sizeType i = 0; i < 10; i++)
 			{
-				vec1[i] = i;
+				vec1.pushBack(i);
 			}
 
 			Assert::AreEqual(0, vec1[0]);
@@ -172,6 +174,18 @@ namespace UnitTests
 			Assert::AreEqual(8, vec1[8]);
 			Assert::AreEqual(9, vec1[9]);
 
+			Assert::IsFalse(vec1.empty());
+
+			vec1.pushBack(10);
+			Assert::AreEqual(10, vec1[10]);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec2(11);
+			vec2 = vec1;
+			Assert::AreEqual(vec2[9], vec1[9]);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec3(10);
+			vec3 = vec1;
+			Assert::AreEqual(vec3[9], vec1[9]);
 		}
 	};
 }
