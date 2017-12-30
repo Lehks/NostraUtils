@@ -5,6 +5,9 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
+#include "nostrautils\core\Utils.hpp"
+#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
 
 #include <type_traits>
@@ -137,6 +140,84 @@ namespace UnitTests
 			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 3, 3), 3); //on max border
 			Assert::AreEqual(NOU::NOU_CORE::clamp(1, 2, 3), 2); //smaller than min
 			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
+		}
+
+		TEST_METHOD(Swap)
+		{
+			NOU::int32 a = 1;
+			NOU::int32 b = 2;
+
+			NOU::NOU_DAT_ALG::swap(&a, &b);
+
+			Assert::AreEqual(2,a);
+			Assert::AreEqual(1,b);
+		}
+
+		TEST_METHOD(Vector)
+		{
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
+
+			Assert::AreEqual(static_cast<NOU::sizeType>(0), vec1.size());
+
+			for (NOU::sizeType i = 0; i < 10; i++)
+			{
+				vec1.pushBack(i);
+			}
+
+			Assert::AreEqual(0, vec1[0]);
+			Assert::AreEqual(1, vec1[1]);
+			Assert::AreEqual(2, vec1[2]);
+			Assert::AreEqual(3, vec1[3]);
+			Assert::AreEqual(4, vec1[4]);
+			Assert::AreEqual(5, vec1[5]);
+			Assert::AreEqual(6, vec1[6]);
+			Assert::AreEqual(7, vec1[7]);
+			Assert::AreEqual(8, vec1[8]);
+			Assert::AreEqual(9, vec1[9]);
+
+			Assert::IsFalse(vec1.empty());
+
+			vec1.pushBack(10);
+			Assert::AreEqual(10, vec1[10]);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec2(11);
+			vec2 = vec1;
+			Assert::AreEqual(vec2[9], vec1[9]);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec3(10);
+			vec3 = vec1;
+			Assert::AreEqual(vec3[9], vec1[9]);
+
+			vec1.pushFront(15);
+			Assert::AreEqual(15, vec1[0]);
+
+			NOU::int32 testinteger = 0;
+			testinteger = vec1.popFront();
+			Assert::AreEqual(15, testinteger);
+
+			vec2.swap(0,1);
+			Assert::AreEqual(0, vec2[1]);
+
+			vec2.remove(0);
+			Assert::AreEqual(0, vec2[0]);
+
+			int i = 0;
+
+			NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> iter1 = vec2.begin();
+			for (NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> it = vec2.begin(); it != vec2.end(); it++)
+			{
+				Assert::AreEqual(*it, vec2[i]);
+				i++;
+			}
+
+			i = vec2.size();
+
+			NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> iter2 = vec2.rbegin();
+			for (NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> it = vec2.rbegin(); it != vec2.rend(); it++)
+			{
+				Assert::AreEqual(*it, vec2[i]);
+				i--;
+			}
 		}
 
 		TEST_METHOD(Comparator)
