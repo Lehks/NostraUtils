@@ -7,6 +7,10 @@
 
 namespace NOU::NOU_CORE
 {
+
+	template<typename T>
+	struct remove_reference : public std::remove_reference<T> {};
+
 	/**
 	\tparam T The type that will be returned by the function.
 	\return The passed type itself.
@@ -137,5 +141,3 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	using UnderlyingType_t = typename UnderlyingType<T>::type;
 }
-
-#endif
