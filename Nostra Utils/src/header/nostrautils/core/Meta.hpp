@@ -141,3 +141,5 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	using UnderlyingType_t = typename UnderlyingType<T>::type;
 }
+
+#endif
