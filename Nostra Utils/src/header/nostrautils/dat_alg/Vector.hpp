@@ -855,13 +855,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	VectorReverseIterator<T> Vector<T>::rbegin()
 	{
-		return rindexIterator(m_size - 1);
+		return rindexIterator(m_size);
 	}
 
 	template<typename T>
 	VectorReverseIterator<T> Vector<T>::rend()
 	{
-		return rindexIterator(0 - 1);
+		return rindexIterator(0);
 	}
 
 	template<typename T>
@@ -873,13 +873,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	VectorReverseConstIterator<T> Vector<T>::rbegin() const
 	{
-		return rindexIterator(m_size - 1);
+		return rindexIterator(m_size);
 	}
 
 	template<typename T>
 	VectorReverseConstIterator<T> Vector<T>::rend() const
 	{
-		return rindexIterator(0 - 1);
+		return rindexIterator(0);
 	}
 
 	template<typename T>

@@ -199,6 +199,24 @@ namespace UnitTests
 
 			vec2.remove(0);
 			Assert::AreEqual(0, vec2[0]);
+
+			int i = 0;
+
+			NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> iter1 = vec2.begin();
+			for (NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> it = vec2.begin(); it != vec2.end(); it++)
+			{
+				Assert::AreEqual(*it, vec2[i]);
+				i++;
+			}
+
+			i = vec2.size();
+
+			NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> iter2 = vec2.rbegin();
+			for (NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> it = vec2.rbegin(); it != vec2.rend(); it++)
+			{
+				Assert::AreEqual(*it, vec2[i]);
+				i--;
+			}
 		}
 	};
 }
