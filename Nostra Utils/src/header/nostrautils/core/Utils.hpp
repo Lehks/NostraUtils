@@ -2,6 +2,9 @@
 #define NOU_CORE_UTILS_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\core\Meta.hpp"
+
+#include <utility>
 
 /**
 \file core/Utils.hpp
@@ -68,6 +71,15 @@ namespace NOU::NOU_CORE
 			return max;
 		else
 			return t;
+	}
+
+	template<typename T>
+	NOU_FUNC remove_reference<T>::type&& move(T&& t);
+
+	template<typename T>
+	remove_reference<T>::type&& move(T&& t)
+	{
+		return std::move(t);
 	}
 }
 
