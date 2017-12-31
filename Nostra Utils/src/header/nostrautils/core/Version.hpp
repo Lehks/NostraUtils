@@ -46,9 +46,9 @@ namespace NOU::NOU_CORE
 		constexpr Version(VersionType version);
 
 		/**
-		\brief major The major part of the version.
-		\brief minor The minor part of the version.
-		\brief patch The patch part of the version.
+		\param major The major part of the version.
+		\param minor The minor part of the version.
+		\param patch The patch part of the version.
 
 		\brief Constructs a new version.
 
