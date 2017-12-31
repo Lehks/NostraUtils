@@ -6,6 +6,7 @@
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
+#include "nostrautils\mem_mngt\Pointer.hpp"
 
 #include <type_traits>
 
@@ -179,6 +180,35 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') ==
 				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
 
+		}
+
+		TEST_METHOD(UniquePtr)
+		{
+			//use string for testing.
+			std::string *rawPtr = new std::string("Hello World!");
+			std::string *rawPtr1 = new std::string("Hello World! 1");
+
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr = rawPtr;
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr1 = rawPtr1;
+
+			Assert::IsTrue(uPtr.rawPtr() == rawPtr);
+			Assert::IsTrue(uPtr[0] == rawPtr[0]);
+			Assert::IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
+			Assert::IsTrue(*uPtr == *rawPtr);
+			Assert::IsTrue(uPtr);
+			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>()); //nullptr
+			Assert::IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
+			Assert::IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
+			Assert::IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
+			Assert::IsTrue((uPtr > uPtr1) == (rawPtr > rawPtr1));
+			Assert::IsTrue((uPtr == uPtr1) == (rawPtr == rawPtr1));
+			Assert::IsTrue((uPtr != uPtr1) == (rawPtr != rawPtr1));
+
+			Assert::IsTrue(uPtr.deleter() == &NOU::NOU_MEM_MNGT::defaultDeleter<std::string>);
+
+			uPtr = std::move(uPtr1);
+
+			Assert::IsTrue(uPtr.rawPtr() == rawPtr1);
 		}
 	};
 }
