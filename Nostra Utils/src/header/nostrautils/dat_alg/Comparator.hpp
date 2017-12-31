@@ -127,7 +127,7 @@ namespace NOU::NOU_DAT_ALG
 		char16 lowerCaseCharA = a >= u'A' && a <= u'Z' ? a + u'a' - u'A' : a;
 		char16 lowerCaseCharB = b >= u'A' && b <= u'Z' ? b + u'a' - u'A' : b;
 
-		return genericComparator<char16>(lowerCaseCharA, lowerCaseCharB);
+		return genericComparator<int16>(lowerCaseCharA, lowerCaseCharB);
 	}
 
 	template<>
