@@ -7,10 +7,13 @@
 #include "nostrautils\\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\\mem_mngt\Pointer.hpp"
 
+#include <new>
+
 /**
 \file core/FastQueue.hpp
 
 \author  Lukas Groﬂ
+\author  Lukas Reichmann
 \version 0.0.1
 \since   1.0.0
 
@@ -67,9 +70,11 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		NOU_MEM_MNGT::UniquePtr<Type, Deleter> m_queue;
 		
+		void copyFromTo(Type *src, Type *dst, sizeType amount);
+
 	public:
 		FastQueue(sizeType initialCapacity = MIN_SIZE, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
-			= NOU_MEM_MNGT::GenericAllocationCallback<Type>);
+			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::getInstance());
 
 		~FastQueue();
 
@@ -121,7 +126,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		sizeType capacity();
 
-		void resize(sizeType capacity);
+		void resize(sizeType additionalCapacity);
 	};
 
 	template<typename T>
@@ -136,6 +141,16 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	void FastQueue<T>::copyFromTo(Type *src, Type *dst, sizeType amount)
+	{
+		for (sizeType i = 0; i < amount; i++)
+		{
+			new (dst + i) Type(NOU_CORE::move(src[i]));
+			src->~Type();
+		}
+	}
+
+	template<typename T>
 	FastQueue<T>::FastQueue(sizeType initialCapacity, NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
 		m_allocator(allocator),
 		m_capacity(initialCapacity < MIN_SIZE ? MIN_SIZE : initialCapacity), ///\todo replace w/ max()
@@ -147,7 +162,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	FastQueue<T>::~FastQueue()
 	{
-		for (Type* i = m_queue.rawPtr() + startIndex; i != m_queue.rawPtr() + endIndex; i++)
+		for (Type* i = m_queue.rawPtr() + m_startIndex; i != m_queue.rawPtr() + m_endIndex; i++)
 		{
 			i->~Type();
 		}
@@ -168,8 +183,8 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void FastQueue<T>::pushBack(const Type &data)
 	{
-	
-		new (m_queue + m_endIndex) Type(data);
+		resize(1);
+		new (m_queue.rawPtr() + m_endIndex) Type(data);
 		m_endIndex++;
 	}
 
@@ -182,7 +197,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	typename FastQueue<T>::Type FastQueue<T>::popFront()
 	{
-		T ret = move(m_queue[m_startIndex]);
+		T ret = NOU_CORE::move(m_queue[m_startIndex]);
 
 		m_queue[m_startIndex].~Type();
 
@@ -206,7 +221,8 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void FastQueue<T>::swap(sizeType index0, sizeType index1)
 	{
-		::swap(index0, index1);
+		Type *queueStart = m_queue.rawPtr() + m_startIndex;
+		NOU_DAT_ALG::swap<Type>(queueStart + index0, queueStart + index1);
 	}
 
 	template<typename T>
@@ -216,11 +232,35 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	void FastQueue<T>::resize(sizeType capacity)
+	void FastQueue<T>::resize(sizeType additionalCapacity)
 	{
-		if (m_capacity - m_endIndex >= (m_capacity - capacity >= m_capacity ? 0 : m_capacity - capacity))
+		//The remaining size that is available after the end index, aka w/o moving or reallocation
+		sizeType remainingSize = m_capacity - m_endIndex;
+
+		if (remainingSize >= additionalCapacity)
 		{
 			return;
+		}
+
+		Type *newBuf = m_queue.rawPtr();
+		sizeType newCapacity = m_capacity;
+
+		//If reallocation is needed
+		if ((size() + additionalCapacity) > m_capacity)
+		{
+			newCapacity = m_capacity + (((m_capacity + additionalCapacity) / m_capacity) * m_capacity);
+			newBuf = m_allocator.allocate(newCapacity);
+		}
+
+		copyFromTo(m_queue.rawPtr() + m_startIndex, newBuf, size());
+
+		m_endIndex = size();
+		m_startIndex = 0;
+
+		if (newBuf != m_queue.rawPtr())
+		{
+			m_queue = newBuf;
+			m_capacity = newCapacity;
 		}
 	}
 }
