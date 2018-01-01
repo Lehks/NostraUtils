@@ -25,6 +25,9 @@ int dummyFunc1(int)
 	return 1;
 }
 
+//used in test UniquePtr
+NOU::boolean testVar = false;
+
 
 namespace UnitTests
 {		
@@ -202,15 +205,16 @@ namespace UnitTests
 			std::string *rawPtr = new std::string("Hello World!");
 			std::string *rawPtr1 = new std::string("Hello World! 1");
 
-			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr = rawPtr;
-			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr1 = rawPtr1;
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr(rawPtr, NOU::NOU_MEM_MNGT::defaultDeleter);
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr1(rawPtr1, NOU::NOU_MEM_MNGT::defaultDeleter);
 
 			Assert::IsTrue(uPtr.rawPtr() == rawPtr);
 			Assert::IsTrue(uPtr[0] == rawPtr[0]);
 			Assert::IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
 			Assert::IsTrue(*uPtr == *rawPtr);
 			Assert::IsTrue(uPtr);
-			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>()); //nullptr
+			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr, 
+						NOU::NOU_MEM_MNGT::defaultDeleter));
 			Assert::IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
 			Assert::IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
 			Assert::IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
@@ -230,13 +234,19 @@ namespace UnitTests
 			{
 				void operator () (int* i)
 				{
+					testVar = true;
 					delete i;
 				}
 			};
 
-			NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
+			{
+				//check if this compiles
+				NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
+				
+				//destructor is called here
+			}
 
-			Assert::
+			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
 		}
 
 		TEST_METHOD(AreSame)

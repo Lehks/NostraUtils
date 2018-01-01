@@ -56,7 +56,7 @@ namespace NOU::NOU_MEM_MNGT
 	{
 	public:
 		/**
-		\brief The type of the object that the pointer points to.
+		\brief The processed, actually used, type of the object that the pointer points to.
 		*/
 		using Type = T;
 
@@ -196,9 +196,11 @@ namespace NOU::NOU_MEM_MNGT
 	{
 	public:
 		/**
-		\brief The type of the object that the pointer points to.
+		\brief The processed, actually used, type of the object that the pointer points to.
 		*/
 		using Type = typename SmartPtrTempl<T>::Type;
+
+		static_assert(NOU_CORE::IsInvocable<DELETER, Type*>::value);
 
 	protected:
 		/**
@@ -225,20 +227,49 @@ namespace NOU::NOU_MEM_MNGT
 	};
 
 	/**
-	\tparam The type of the object that this smart pointer should point to.
+	\tparam T       The type of the object that this smart pointer should point to.
+	\tparam DELETER The type of the deleter. See nostra::utils::mem_mngt::ManagedPtrTemplate for the 
+	                requirements that such a deleter must obey.
+
+	\brief A smart pointer that does not allow any other smart pointers to point to it's own pointer.
 	*/
-	template<typename T, typename DELETER = void(*)(typename SmartPtrTempl<T>::Type*)>
+	template<typename T, typename DELETER = DeleterFunc<T>>
 	class NOU_CLASS UniquePtr final :  public SmartPtrTempl<T>, public ManagedPtrTemplate<T, DELETER>
 	{
 	public:
+		/**
+		\brief The processed, actually used, type of the object that the pointer points to.
+		*/
 		using Type = typename SmartPtrTempl<T>::Type;
 
 	public:
-		UniquePtr(Type *ptr = nullptr, DELETER deleter = defaultDeleter);
+		/**
+		\param ptr     The pointer that this smart pointer wraps around.
+		\param deleter The deleter that will be used to delete the data that this pointer points to.
+
+		\brief Constructs a new UniquePtr.
+		*/
+		UniquePtr(Type *ptr, DELETER deleter);
+
+		/**
+		\param other The pointer to move the data from.
+
+		\brief Move the data from \p other to this instance.
+		*/
 		UniquePtr(UniquePtr &&other);
 
+		/**
+		\brief When called, deletes the data that this pointer points to.
+		*/
 		~UniquePtr();
 
+		/**
+		\param other The pointer to move the data from.
+
+		\return A reference to the instance itself.
+
+		\brief Move the data from \p other to this instance.
+		*/
 		UniquePtr& operator = (UniquePtr &&other);
 	};
 
