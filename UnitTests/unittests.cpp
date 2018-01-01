@@ -5,12 +5,29 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
+#include "nostrautils\core\Meta.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
 
 #include <type_traits>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+
+//both functions are used in test IsInvocable
+void dummyFunc0(int)
+{
+
+}
+
+int dummyFunc1(int)
+{
+	return 1;
+}
+
+//used in test UniquePtr
+NOU::boolean testVar = false;
+
 
 namespace UnitTests
 {		
@@ -188,15 +205,16 @@ namespace UnitTests
 			std::string *rawPtr = new std::string("Hello World!");
 			std::string *rawPtr1 = new std::string("Hello World! 1");
 
-			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr = rawPtr;
-			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr1 = rawPtr1;
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr(rawPtr, NOU::NOU_MEM_MNGT::defaultDeleter);
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr1(rawPtr1, NOU::NOU_MEM_MNGT::defaultDeleter);
 
 			Assert::IsTrue(uPtr.rawPtr() == rawPtr);
 			Assert::IsTrue(uPtr[0] == rawPtr[0]);
 			Assert::IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
 			Assert::IsTrue(*uPtr == *rawPtr);
 			Assert::IsTrue(uPtr);
-			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>()); //nullptr
+			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr, 
+						NOU::NOU_MEM_MNGT::defaultDeleter));
 			Assert::IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
 			Assert::IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
 			Assert::IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
@@ -208,7 +226,54 @@ namespace UnitTests
 
 			uPtr = std::move(uPtr1);
 
+			Assert::IsTrue(uPtr1.rawPtr() == nullptr);
+
 			Assert::IsTrue(uPtr.rawPtr() == rawPtr1);
+
+			struct TestDeleter
+			{
+				void operator () (int* i)
+				{
+					testVar = true;
+					delete i;
+				}
+			};
+
+			{
+				//check if this compiles
+				NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
+				
+				//destructor is called here
+			}
+
+			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
+		}
+
+		TEST_METHOD(AreSame)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<double, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
+		}
+
+		TEST_METHOD(IsInvocable)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), std::string>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<int, int>::value);
+
+			Assert::IsTrue(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), std::string>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<std::string, decltype(dummyFunc1), int>::value);
+
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, int, int>::value);
 		}
 	};
 }
