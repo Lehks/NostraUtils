@@ -163,6 +163,31 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	struct NOU_CLASS AreSame<T, T> : TrueType {};
 	///\endcond
+
+	/**
+	\tparam T    The type to check if it is invocable.
+	\tparam ARGS The types that \p T needs to be invoked with.
+
+	\return TrueType, if the type \p T is invocable with the parameters \p ARGS, FalseType if not.
+
+	\brief Checks if a type is invocable using the passed parameter types.
+	*/
+	template<typename T, typename... ARGS>
+	struct IsInvocable : typeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
+
+	/**
+	\tparma R    The return type.
+	\tparam T    The type to check if it is invocable.
+	\tparam ARGS The types that \p T needs to be invoked with.
+
+	\return TrueType, if the type \p T is invocable with the parameters \p ARGS and it's return type is
+	        convertible to \p R, FalseType if not.
+
+	\brief Checks if a type is invocable using the passed parameter types and it's return type is convertible 
+	       to \p R.
+	*/
+	template<typename R, typename T, typename... ARGS>
+	struct IsInvocableR : typeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
 }
 
 #endif
