@@ -150,15 +150,6 @@ namespace NOU::NOU_CORE
 		else
 			return t;
 	}
-
-	template<typename T>
-	NOU_FUNC remove_reference<T>::type&& move(T&& t);
-
-	template<typename T>
-	remove_reference<T>::type&& move(T&& t)
-	{
-		return std::move(t);
-	}
 }
 
 #endif

@@ -9,9 +9,9 @@ namespace NOU::NOU_CORE
 	struct remove_reference : public std::remove_reference<T> {};
 }
 
-#endif
 #ifndef NOU_CORE_META_HPP
 #define NOU_CORE_META_HPP
+#endif
 
 #include "nostrautils\core\StdIncludes.hpp"
 
