@@ -247,6 +247,13 @@ namespace UnitTests
 			}
 
 			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
+
+			testVar = false;
+
+			NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr3(new int, TestDeleter());
+			uPtr3 = new int;
+
+			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
 		}
 
 		TEST_METHOD(AreSame)
