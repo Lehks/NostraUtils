@@ -72,10 +72,10 @@ namespace NOU::NOU_CORE
 	}
 
 	template<typename T>
-	NOU_FUNC remove_reference<T>::type&& move(T&& t);
+	NOU_FUNC typename remove_reference<T>::type&& move(T&& t);
 
 	template<typename T>
-	remove_reference<T>::type&& move(T&& t)
+	typename remove_reference<T>::type&& move(T&& t)
 	{
 		return std::move(t);
 	}

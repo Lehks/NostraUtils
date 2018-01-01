@@ -4,6 +4,8 @@
 #include "nostrautils\dat_alg\ContainerInterfaces.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Utils.hpp"
+#include "nostrautils\\mem_mngt\AllocationCallback.hpp"
+#include "nostrautils\\mem_mngt\Pointer.hpp"
 
 /**
 \file core/FastQueue.hpp
@@ -29,7 +31,22 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		using Type = T;
 
-	private:
+		static constexpr sizeType MIN_SIZE = 1;
+
+	public:
+		class Deleter
+		{
+		private:
+			NOU::NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
+
+		public:
+			Deleter(NOU::NOU_MEM_MNGT::AllocationCallback<Type> &allocator);
+
+			void operator () (Type* t);
+		};
+
+		NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
+
 		/** 
 		\brief The max size of the queue.
 		*/
@@ -46,11 +63,16 @@ namespace NOU::NOU_DAT_ALG
 		sizeType m_endIndex;
 
 		/**
-		\brief
+		\brief A pointer to the queue.
 		*/
-		Type *m_queue;
+		NOU_MEM_MNGT::UniquePtr<Type, Deleter> m_queue;
 		
 	public:
+		FastQueue(sizeType initialCapacity = MIN_SIZE, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
+			= NOU_MEM_MNGT::GenericAllocationCallback<Type>);
+
+		~FastQueue();
+
 		/**
 		\brief Checks if the queue is empty.
 		*/
@@ -98,7 +120,38 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the max capacity of the queue.
 		*/
 		sizeType capacity();
+
+		void resize(sizeType capacity);
 	};
+
+	template<typename T>
+	FastQueue<T>::Deleter::Deleter(NOU::NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
+		m_allocator(allocator)
+	{}
+
+	template<typename T>
+	void FastQueue<T>::Deleter::operator () (Type* t)
+	{
+		m_allocator.deallocate(t);
+	}
+
+	template<typename T>
+	FastQueue<T>::FastQueue(sizeType initialCapacity, NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
+		m_allocator(allocator),
+		m_capacity(initialCapacity < MIN_SIZE ? MIN_SIZE : initialCapacity), ///\todo replace w/ max()
+		m_startIndex(0),
+		m_endIndex(0),
+		m_queue(m_allocator.allocate(m_capacity), Deleter(m_allocator))
+	{}
+
+	template<typename T>
+	FastQueue<T>::~FastQueue()
+	{
+		for (Type* i = m_queue.rawPtr() + startIndex; i != m_queue.rawPtr() + endIndex; i++)
+		{
+			i->~Type();
+		}
+	}
 
 	template<typename T>
 	boolean FastQueue<T>::empty() const
@@ -115,7 +168,8 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void FastQueue<T>::pushBack(const Type &data)
 	{
-		m_queue[m_endIndex] = data;
+	
+		new (m_queue + m_endIndex) Type(data);
 		m_endIndex++;
 	}
 
@@ -129,7 +183,9 @@ namespace NOU::NOU_DAT_ALG
 	typename FastQueue<T>::Type FastQueue<T>::popFront()
 	{
 		T ret = move(m_queue[m_startIndex]);
-		//destruktor!
+
+		m_queue[m_startIndex].~Type();
+
 		m_startIndex++;
 
 		if (m_startIndex != 0 && m_startIndex == m_endIndex)
@@ -150,13 +206,22 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void FastQueue<T>::swap(sizeType index0, sizeType index1)
 	{
-		swap(index0, index1);
+		::swap(index0, index1);
 	}
 
 	template<typename T>
 	sizeType FastQueue<T>::capacity()
 	{
 		return m_capacity;
+	}
+
+	template<typename T>
+	void FastQueue<T>::resize(sizeType capacity)
+	{
+		if (m_capacity - m_endIndex >= (m_capacity - capacity >= m_capacity ? 0 : m_capacity - capacity))
+		{
+			return;
+		}
 	}
 }
 #endif
