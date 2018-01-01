@@ -5,6 +5,7 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
+#include "nostrautils\core\Meta.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
 
@@ -223,6 +224,20 @@ namespace UnitTests
 			NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
 
 			Assert::
+		}
+
+		TEST_METHOD(AreSame)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<double, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
 		}
 	};
 }
