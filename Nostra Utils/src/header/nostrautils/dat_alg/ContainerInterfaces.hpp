@@ -33,7 +33,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		virtual sizeType size() const = 0;
 		/**
-		\brief Inserts the element at the first position.
+		\brief Inserts the element at the last position.
 		*/
 		virtual void pushBack(const T &data) = 0;
 		/**
@@ -65,7 +65,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		virtual sizeType size() const = 0;
 		/**
-		\brief Inserts the element at the last position.
+		\brief Inserts the element at the first position.
 		*/
 		virtual void pushFront(const T &data) = 0;
 		/**

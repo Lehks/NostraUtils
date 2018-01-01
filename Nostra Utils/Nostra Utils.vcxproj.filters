@@ -37,6 +37,15 @@
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\core\Version.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -49,9 +58,10 @@
     <ClInclude Include="src\header\nostrautils\core\Version.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp">
+    <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp">
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -59,12 +69,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
