@@ -13,6 +13,19 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+
+//both functions are used in test IsInvocable
+void dummyFunc0(int)
+{
+
+}
+
+int dummyFunc1(int)
+{
+	return 1;
+}
+
+
 namespace UnitTests
 {		
 	TEST_CLASS(UnitTest)
@@ -238,6 +251,19 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
 			Assert::IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
 			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
+		}
+
+		TEST_METHOD(IsInvocable)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), std::string>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<int, int>::value);
+
+			Assert::IsTrue(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), std::string>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<std::string, decltype(dummyFunc1), int>::value);
+
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, int, int>::value);
 		}
 	};
 }
