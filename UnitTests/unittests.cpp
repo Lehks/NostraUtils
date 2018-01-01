@@ -208,7 +208,21 @@ namespace UnitTests
 
 			uPtr = std::move(uPtr1);
 
+			Assert::IsTrue(uPtr1.rawPtr() == nullptr);
+
 			Assert::IsTrue(uPtr.rawPtr() == rawPtr1);
+
+			struct TestDeleter
+			{
+				void operator () (int* i)
+				{
+					delete i;
+				}
+			};
+
+			NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
+
+			Assert::
 		}
 	};
 }

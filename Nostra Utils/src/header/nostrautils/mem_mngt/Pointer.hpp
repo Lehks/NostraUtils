@@ -9,14 +9,6 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief An aliasname for a deleter that is used by the various smart pointer types to deallocate it's data.
-	*/
-	template<typename T>
-	using Deleter = void(*)(T*);
-
-	/**
-	\tparam T The type of object to delete.
-
 	\brief A deleter that calls <tt>delete<tt>.
 	*/
 	template<typename T>
@@ -173,7 +165,22 @@ namespace NOU::NOU_MEM_MNGT
 	}; 
 
 	/**
+	\tparam T The type of object to delete.
+
+	\brief If a function pointer is passed to a smart pointer as a deleter, this function pointer must have
+	this signature. Also, if a class type is passed as a deleter, the function call operator must be
+	overloaded in a way that the class can be called as if it was a function of this type.
+	*/
+	template<typename T>
+	using DeleterFunc = void(*) (typename SmartPtrTempl<T>::Type*);
+
+	/**
 	\tparam The type of the object that this smart pointer should point to.
+	\tparam The type of the deleter. This type needs to have the function call operator overloaded. This
+	        operator needs to be defined as
+			\code{.cpp}
+			void operator () (T*);
+			\endcode
 
 	\brief The common parent class of all smart pointers that delete their memory.
 
@@ -184,7 +191,7 @@ namespace NOU::NOU_MEM_MNGT
 	\note
 	This class is not meant to be used directly by a user.
 	*/
-	template<typename T>
+	template<typename T, typename DELETER>
 	class NOU_CLASS ManagedPtrTemplate
 	{
 	public:
@@ -198,7 +205,7 @@ namespace NOU::NOU_MEM_MNGT
 		\brief The deleter that is used by the other pointer types. However, this deleter needs to be called
 		manually by every smart pointer, it is just stored here.
 		*/
-		Deleter<T> m_deleter; //not called!
+		DELETER m_deleter; //not called!
 
 	public:
 		/**
@@ -206,25 +213,28 @@ namespace NOU::NOU_MEM_MNGT
 
 		\brief Constructs a new ManagedPtrTemplate and initializes it's deleter with the passed parameter.
 		*/
-		ManagedPtrTemplate(Deleter<Type> deleter);
+		ManagedPtrTemplate(DELETER deleter);
 
 		/**
 		\return The deleter.
 
 		\brief Returns the deleter.
 		*/
-		Deleter<T> deleter() const;
+		DELETER deleter() const;
 
 	};
 
-	template<typename T>
-	class NOU_CLASS UniquePtr final :  public SmartPtrTempl<T>, public ManagedPtrTemplate<T>
+	/**
+	\tparam The type of the object that this smart pointer should point to.
+	*/
+	template<typename T, typename DELETER = void(*)(typename SmartPtrTempl<T>::Type*)>
+	class NOU_CLASS UniquePtr final :  public SmartPtrTempl<T>, public ManagedPtrTemplate<T, DELETER>
 	{
 	public:
 		using Type = typename SmartPtrTempl<T>::Type;
 
 	public:
-		UniquePtr(Type *ptr = nullptr, Deleter<Type> deleter = defaultDeleter<Type>);
+		UniquePtr(Type *ptr = nullptr, DELETER deleter = defaultDeleter);
 		UniquePtr(UniquePtr &&other);
 
 		~UniquePtr();
@@ -363,38 +373,38 @@ namespace NOU::NOU_MEM_MNGT
 		return m_ptr != other.m_ptr;
 	}
 
-	template<typename T>
-	ManagedPtrTemplate<T>::ManagedPtrTemplate(Deleter<Type> deleter) :
+	template<typename T, typename DELETER>
+	ManagedPtrTemplate<T, DELETER>::ManagedPtrTemplate(DELETER deleter) :
 		m_deleter(deleter)
 	{}
 
-	template<typename T>
-	Deleter<T> ManagedPtrTemplate<T>::deleter() const
+	template<typename T, typename DELETER>
+	DELETER ManagedPtrTemplate<T, DELETER>::deleter() const
 	{
 		return m_deleter;
 	}
 
-	template<typename T>
-	UniquePtr<T>::UniquePtr(Type *ptr, Deleter<Type> deleter) :
+	template<typename T, typename DELETER>
+	UniquePtr<T, DELETER>::UniquePtr(Type *ptr, DELETER deleter) :
 		SmartPtrTempl(ptr),
 		ManagedPtrTemplate(deleter)
 	{}
 
-	template<typename T>
-	UniquePtr<T>::UniquePtr(UniquePtr<T> &&other) :
+	template<typename T, typename DELETER>
+	UniquePtr<T, DELETER>::UniquePtr(UniquePtr<T, DELETER> &&other) :
 		UniquePtr(other.rawPtr(), other.deleter())
 	{
-		m_ptr = nullptr;
+		other.m_ptr = nullptr;
 	}
 
-	template<typename T>
-	UniquePtr<T>::~UniquePtr()
+	template<typename T, typename DELETER>
+	UniquePtr<T, DELETER>::~UniquePtr()
 	{
 		m_deleter(m_ptr);
 	}
 
-	template<typename T>
-	UniquePtr<T>& UniquePtr<T>::operator = (UniquePtr<T> &&other)
+	template<typename T, typename DELETER>
+	UniquePtr<T, DELETER>& UniquePtr<T, DELETER>::operator = (UniquePtr<T, DELETER> &&other)
 	{
 		this->~UniquePtr();
 
