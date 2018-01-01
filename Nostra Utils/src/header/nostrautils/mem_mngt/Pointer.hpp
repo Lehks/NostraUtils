@@ -456,7 +456,7 @@ namespace NOU::NOU_MEM_MNGT
 	template<typename T, typename DELETER>
 	UniquePtr<T, DELETER>& UniquePtr<T, DELETER>::operator = (Type *ptr)
 	{
-		ManagedPtrTemplate<T, DELETER>::m_deleter(rawPtr());
+		ManagedPtrTemplate<T, DELETER>::m_deleter(SmartPtrTempl<T>::m_ptr);
 		SmartPtrTempl<T>::m_ptr = ptr;
 
 		return *this;
