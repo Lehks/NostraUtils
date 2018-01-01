@@ -1,24 +1,29 @@
 #ifndef NOU_CORE_META_HPP
 #define NOU_CORE_META_HPP
 
-#include <type_traits>
-
-namespace NOU::NOU_CORE
-{
-	template<typename T>
-	struct remove_reference : public std::remove_reference<T> {};
-}
-
-#ifndef NOU_CORE_META_HPP
-#define NOU_CORE_META_HPP
-#endif
-
 #include "nostrautils\core\StdIncludes.hpp"
 
 #include <type_traits>
 
 namespace NOU::NOU_CORE
 {
+	/**
+	\tparam The type to remove the reference from.
+
+	\brief Removes any references from a type.
+
+	\details
+	Removes any references from a type.
+	E.g.:
+	T     | Returned Type
+	----- | -------------
+	int   | int
+	int&  | int
+	int&& | int
+	*/
+	template<typename T>
+	struct remove_reference : public std::remove_reference<T> {};
+
 	/**
 	\tparam T The type that will be returned by the function.
 	\return The passed type itself.
