@@ -34,7 +34,7 @@ namespace NOU::NOU_MEM_MNGT
 	\tparam T The type of object to delete.
 
 	\brief A deleter that calls no functions at all. This can be used if a pointer wrapps around a pointer to
-	       memory that does not need to be freed.
+	memory that does not need to be freed.
 	*/
 	template<typename T>
 	NOU_FUNC void nullDeleter(T *t);
@@ -52,7 +52,7 @@ namespace NOU::NOU_MEM_MNGT
 	This class is not meant to be used directly by a user.
 	*/
 	template<typename T>
-	class SmartPtrTempl
+	class NOU_FUNC SmartPtrTempl
 	{
 	public:
 		/**
@@ -162,7 +162,7 @@ namespace NOU::NOU_MEM_MNGT
 		\return rawPtr() != other.rawPtr()
 		*/
 		boolean operator != (const SmartPtrTempl &other);
-	}; 
+	};
 
 	/**
 	\tparam T The type of object to delete.
@@ -177,10 +177,10 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam The type of the object that this smart pointer should point to.
 	\tparam The type of the deleter. This type needs to have the function call operator overloaded. This
-	        operator needs to be defined as
-			\code{.cpp}
-			void operator () (T*);
-			\endcode
+	operator needs to be defined as
+	\code{.cpp}
+	void operator () (T*);
+	\endcode
 
 	\brief The common parent class of all smart pointers that delete their memory.
 
@@ -228,13 +228,13 @@ namespace NOU::NOU_MEM_MNGT
 
 	/**
 	\tparam T       The type of the object that this smart pointer should point to.
-	\tparam DELETER The type of the deleter. See nostra::utils::mem_mngt::ManagedPtrTemplate for the 
-	                requirements that such a deleter must obey.
+	\tparam DELETER The type of the deleter. See nostra::utils::mem_mngt::ManagedPtrTemplate for the
+	requirements that such a deleter must obey.
 
 	\brief A smart pointer that does not allow any other smart pointers to point to it's own pointer.
 	*/
 	template<typename T, typename DELETER = DeleterFunc<T>>
-	class NOU_CLASS UniquePtr final :  public SmartPtrTempl<T>, public ManagedPtrTemplate<T, DELETER>
+	class NOU_CLASS UniquePtr final : public SmartPtrTempl<T>, public ManagedPtrTemplate<T, DELETER>
 	{
 	public:
 		/**
@@ -282,7 +282,7 @@ namespace NOU::NOU_MEM_MNGT
 	template<typename T>
 	void defaultArrayDeleter(T *t)
 	{
-		delete[] t
+		delete[] t;
 	}
 
 	template<typename T>
@@ -417,8 +417,8 @@ namespace NOU::NOU_MEM_MNGT
 
 	template<typename T, typename DELETER>
 	UniquePtr<T, DELETER>::UniquePtr(Type *ptr, DELETER deleter) :
-		SmartPtrTempl(ptr),
-		ManagedPtrTemplate(deleter)
+		SmartPtrTempl<T>(ptr),
+		ManagedPtrTemplate<T, DELETER>(deleter)
 	{}
 
 	template<typename T, typename DELETER>
@@ -431,7 +431,7 @@ namespace NOU::NOU_MEM_MNGT
 	template<typename T, typename DELETER>
 	UniquePtr<T, DELETER>::~UniquePtr()
 	{
-		m_deleter(m_ptr);
+		ManagedPtrTemplate<T, DELETER>::m_deleter(SmartPtrTempl<T>::m_ptr);
 	}
 
 	template<typename T, typename DELETER>
