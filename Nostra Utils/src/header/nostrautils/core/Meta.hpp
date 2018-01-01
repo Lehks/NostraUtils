@@ -43,6 +43,9 @@ namespace NOU::NOU_CORE
 	template<typename T, T v>
 	struct NOU_CLASS Constant
 	{
+		/**
+		\brief The stored value.
+		*/
 		static constexpr T value = v;
 	};
 
@@ -129,13 +132,37 @@ namespace NOU::NOU_CORE
 	\brief Determines the underlying type of an enum.
 	*/
 	template<typename T>
-	struct UnderlyingType : std::underlying_type<T> {};
+	struct NOU_CLASS UnderlyingType : std::underlying_type<T> {};
 
 	/**
 	\brief The result of a call to UnderlyingType.
 	*/
 	template<typename T>
 	using UnderlyingType_t = typename UnderlyingType<T>::type;
+
+	/**
+	\tparam T0 The type to compare the other types to.
+	\tparam T1 The second (requiered) type.
+	\tparam T2 Other types that may also be passed and that also need to be the same as \p T0 in order for the
+	           function to retun TrueType.
+
+	\return TrueType, if all passed types are the same, FalseType if not.
+
+	\brief Checks if one or more types are the same.
+	*/
+	template<typename T0, typename T1, typename... T2>
+	struct NOU_CLASS AreSame : FalseType {};
+
+	///\cond
+	template<typename T0, typename... T2>
+	struct NOU_CLASS AreSame<T0, T0, T2...> : AreSame<T0, T2...> {};
+
+	template<typename T0, typename T1>
+	struct NOU_CLASS AreSame<T0, T1> : FalseType {};
+
+	template<typename T>
+	struct NOU_CLASS AreSame<T, T> : TrueType {};
+	///\endcond
 }
 
 #endif

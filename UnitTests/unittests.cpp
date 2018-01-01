@@ -5,6 +5,7 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
+#include "nostrautils\core\Meta.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -134,6 +135,20 @@ namespace UnitTests
 			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 3, 3), 3); //on max border
 			Assert::AreEqual(NOU::NOU_CORE::clamp(1, 2, 3), 2); //smaller than min
 			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
+		}
+
+		TEST_METHOD(AreSame)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<double, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
 		}
 	};
 }
