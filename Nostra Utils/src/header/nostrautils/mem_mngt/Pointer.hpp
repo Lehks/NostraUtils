@@ -271,6 +271,14 @@ namespace NOU::NOU_MEM_MNGT
 		\brief Move the data from \p other to this instance.
 		*/
 		UniquePtr& operator = (UniquePtr &&other);
+
+		/**
+		\param ptr The new pointer.
+		\return A reference to the instance itself.
+
+		\brief Sets a new pointer value. The old data will be deleted.
+		*/
+		UniquePtr& operator = (Type *ptr);
 	};
 
 	template<typename T>
@@ -439,8 +447,17 @@ namespace NOU::NOU_MEM_MNGT
 	{
 		this->~UniquePtr();
 
-		m_ptr = other.rawPtr();
+		SmartPtrTempl<T>::m_ptr = other.rawPtr();
 		other.m_ptr = nullptr;
+
+		return *this;
+	}
+
+	template<typename T, typename DELETER>
+	UniquePtr<T, DELETER>& UniquePtr<T, DELETER>::operator = (Type *ptr)
+	{
+		ManagedPtrTemplate<T, DELETER>::m_deleter(rawPtr());
+		SmartPtrTempl<T>::m_ptr = ptr;
 
 		return *this;
 	}
