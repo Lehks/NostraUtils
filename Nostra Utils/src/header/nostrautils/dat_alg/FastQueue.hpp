@@ -51,6 +51,7 @@ namespace NOU::NOU_DAT_ALG
 		NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
 
 		/** 
+		\Mahan is dumm!
 		\brief The max size of the queue.
 		*/
 		sizeType m_capacity;
