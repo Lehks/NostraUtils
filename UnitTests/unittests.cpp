@@ -218,21 +218,36 @@ namespace UnitTests
 
 			int i = 0;
 
-			NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> iter1 = vec2.begin();
 			for (NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> it = vec2.begin(); it != vec2.end(); it++)
 			{
 				Assert::AreEqual(*it, vec2[i]);
 				i++;
 			}
 
-			i = vec2.size();
+			i = vec2.size() - 1;
 
-			NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> iter2 = vec2.rbegin();
 			for (NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> it = vec2.rbegin(); it != vec2.rend(); it++)
 			{
 				Assert::AreEqual(*it, vec2[i]);
 				i--;
 			}
+			
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::int32> dbgAlloc;
+
+			{
+
+				NOU::NOU_DAT_ALG::Vector<NOU::int32> vec4(5, dbgAlloc);
+
+				vec4.pushBack(5);
+				vec4.pushBack(2);
+				vec4.remove(1);
+				vec4.pushBack(1);
+				vec4.remove(0);
+				vec4.remove(0);
+
+			}
+
+			Assert::IsTrue(dbgAlloc.getCounter() == 0);
 		}
 
 		TEST_METHOD(Comparator)
