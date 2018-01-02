@@ -300,6 +300,7 @@
     <None Include="src\source\nostrautils\thread\.gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\header\nostrautils\core\ErrorHandler.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Meta.hpp" />
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp" />
