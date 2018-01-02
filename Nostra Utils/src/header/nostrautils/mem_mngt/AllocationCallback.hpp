@@ -77,14 +77,15 @@ namespace NOU::NOU_MEM_MNGT
 	template<typename T>
 	class NOU_CLASS GenericAllocationCallback final : public AllocationCallback<T>
 	{
-	public:
+	private:
 		/**
 		\brief A static instance of this class.
 		*/
-		static GenericAllocationCallback m_instance;
+		static GenericAllocationCallback s_instance;
 
+	public:
 		/**
-		\return m_instance
+		\return s_instance
 
 		\brief Returns the static instance of this class.
 		*/
@@ -109,13 +110,61 @@ namespace NOU::NOU_MEM_MNGT
 		virtual void deallocate(T *data) override;
 	};
 
+	/**
+	\tparam T The type of objects to allocate.
+
+	\brief An allocation callback that calls the functions from GenericAllocationCallback<T>, but also 
+	       tracks the amount of allocations and deallocations.
+	*/
 	template<typename T>
-	GenericAllocationCallback<T> GenericAllocationCallback<T>::m_instance;
+	class NOU_CLASS DebugAllocationCallback final : public AllocationCallback<T>
+	{
+	private:
+		/**
+		\brief A counter for the allocations and deallocations. May be negative (if there were more 
+		       deallocations than allocations).
+		*/
+		int64 m_counter;
+
+	public:
+		/**
+		\brief Constructs a new DebugAllocationCallback.
+		*/
+		DebugAllocationCallback();
+
+		/**
+		\param amount The amount of objects to allocate.
+
+		\return A pointer to the allocated block of memory.
+
+		\brief An implementation of AllocationCallback::allocate() that uses 
+		       DebugAllocationCallback<T>::allocate().
+		*/
+		virtual T* allocate(sizeType amount = 1) override;
+
+		/**
+		\param data The memory to deallocate.
+
+		\brief An implementation of AllocationCallback::deallocate() that uses 
+		       DebugAllocationCallback<T>::deallocate().
+		*/
+		virtual void deallocate(T *data) override;
+
+		/**
+		\return m_counter
+
+		\brief Returns m_counter.
+		*/
+		int64 getCounter() const;
+	};
+
+	template<typename T>
+	GenericAllocationCallback<T> GenericAllocationCallback<T>::s_instance;
 
 	template<typename T>
 	GenericAllocationCallback<T>& GenericAllocationCallback<T>::getInstance()
 	{
-		return m_instance;
+		return s_instance;
 	}
 
 	template<typename T>
@@ -128,6 +177,31 @@ namespace NOU::NOU_MEM_MNGT
 	void GenericAllocationCallback<T>::deallocate(T *data)
 	{
 		return deallocateUninitialized(data);
+	}
+
+	template<typename T>
+	DebugAllocationCallback<T>::DebugAllocationCallback() :
+		m_counter(0)
+	{}
+
+	template<typename T>
+	T* DebugAllocationCallback<T>::allocate(sizeType amount)
+	{
+		m_counter++;
+		return GenericAllocationCallback<T>::getInstance().allocate(amount);
+	}
+
+	template<typename T>
+	void DebugAllocationCallback<T>::deallocate(T *data)
+	{
+		GenericAllocationCallback<T>::getInstance().deallocate(data);
+		m_counter--;
+	}
+
+	template<typename T>
+	int64 DebugAllocationCallback<T>::getCounter() const
+	{
+		return m_counter;
 	}
 }
 
