@@ -73,6 +73,9 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp">

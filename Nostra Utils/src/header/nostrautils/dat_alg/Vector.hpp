@@ -193,6 +193,20 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		T pop() override;
 		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		*/
+		T peakFront() override;
+		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		\details
+		This methode calls peakFront() .
+		*/
+		T peak() override;
+		/**
 		\param index0 The first index.
 		\param index1 The second index.
 
@@ -221,6 +235,10 @@ namespace NOU::NOU_DAT_ALG
 		\brief Sorts the Vector.
 		*/
 		void sort();
+		/**
+		\brief Sorts the Vector using comperators.
+		*/
+		void sortComp();
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -706,6 +724,18 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	T Vector<T>::peakFront()
+	{
+		return m_data[0];
+	}
+
+	template<typename T>
+	T Vector<T>::peak()
+	{
+		return peakFront();
+	}
+
+	template<typename T>
 	void Vector<T>::swap(sizeType index0, sizeType index1)
 	{
 		NOU::NOU_DAT_ALG::swap(m_data + index0, m_data + index1);
@@ -750,6 +780,13 @@ namespace NOU::NOU_DAT_ALG
 	{
 		///\todo implementing a "real" sorting alg.
 		bubbleSort(m_data, m_size);
+	}
+
+	template<typename T>
+	void Vector<T>::sortComp()
+	{
+		///\todo implementing a "real" sorting alg.
+		bubbleSortComp(m_data, m_size);
 	}
 
 	template<typename T>

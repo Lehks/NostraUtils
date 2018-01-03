@@ -37,9 +37,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		virtual void pushBack(const T &data) = 0;
 		/**
-		\brief Returns the first element of the queue.
+		\brief Returns the first element of the queue and delets it.
 		*/
 		virtual T popFront() = 0;
+		/**
+		\brief Returns the first element of the queue.
+		*/
+		virtual T peakFront() = 0;
 		/**
 		\brief Swaps the elements at the corresponding index.
 		*/
@@ -69,9 +73,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		virtual void pushFront(const T &data) = 0;
 		/**
-		\brief Returns the first element of the queue.
+		\brief Returns the first element of the queue and delets it.
 		*/
 		virtual T popFront() = 0;
+		/**
+		\brief Returns the first element of the queue.
+		*/
+		virtual T peakFront() = 0;
 		/**
 		\brief Swaps the elements at the corresponding index.
 		*/
@@ -104,9 +112,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		virtual void push(const T &data) = 0;
 		/**
-		\brief Returns an element.
+		\brief Returns the first element of the queue and delets it.
 		*/
 		virtual T pop() = 0;
+		/**
+		\brief Returns the first element of the queue.
+		*/
+		virtual T peak() = 0;
 		/**
 		\brief Swaps the elements at the corresponding index.
 		*/
