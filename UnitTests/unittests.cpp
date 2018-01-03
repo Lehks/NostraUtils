@@ -12,6 +12,7 @@
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
+#include "nostrautils\dat_alg\FastQueue.hpp"
 
 #include <type_traits>
 
@@ -366,7 +367,14 @@ namespace UnitTests
 
 		TEST_METHOD(FastQueue)
 		{
+			NOU::NOU_DAT_ALG::FastQueue<int> fq(5);
 
+			Assert::IsTrue(fq.capacity() == 5);
+			Assert::IsTrue(&(fq.getAllocationCallback()) == 
+				&(NOU::NOU_MEM_MNGT::GenericAllocationCallback<int>::getInstance()));
+
+			Assert::IsTrue(fq.size() == 0);
+			Assert::IsTrue(fq.empty());
 		}
 
 		TEST_METHOD(AreSame)

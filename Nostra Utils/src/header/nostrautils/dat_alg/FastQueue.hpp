@@ -39,35 +39,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		static constexpr sizeType MIN_CAPACITY = 1;
 
-	public:
-		/**
-		\brief The deleter that is used by <tt>m_queue</tt> to delete 
-		*/
-		class Deleter
-		{
-		private:
-			/**
-			\brief The allocator that will be used to deallocate the data.
-			*/
-			NOU::NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
-
-		public:
-			/**
-			\param allocator The allocator that will be used to deallocate data. This allocator must live at 
-			                 least as long as the deleter does.
-
-			\brief Constructs a new Deleter.
-			*/
-			Deleter(NOU::NOU_MEM_MNGT::AllocationCallback<Type> &allocator);
-
-			/**
-			\param t A pointer to the data that will be deallocated.
-
-			\brief Calls nostra::utils::mem_mngt::AllocationCallback::deallocate.
-			*/
-			void operator () (Type* t);
-		};
-
+	private:
 		/**
 		\brief The allocator that will be used to allocate and deallocate data.
 		*/
@@ -92,7 +64,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief A pointer to the queue.
 		*/
-		NOU_MEM_MNGT::UniquePtr<Type, Deleter> m_queue;
+		NOU_MEM_MNGT::UniquePtr<Type, NOU_MEM_MNGT::AllocationCallbackRefDeleter<Type>> m_queue;
 		
 		/**
 		\param src    The source array.
@@ -171,18 +143,14 @@ namespace NOU::NOU_DAT_ALG
 		       capacity plus \p additionalCapacity.
 		*/
 		void resize(sizeType additionalCapacity);
+
+		/**
+		\return m_allocator.
+
+		\brief Returns m_allocator.
+		*/
+		const NOU_MEM_MNGT::AllocationCallback<Type>& getAllocationCallback() const;
 	};
-
-	template<typename T>
-	FastQueue<T>::Deleter::Deleter(NOU::NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
-		m_allocator(allocator)
-	{}
-
-	template<typename T>
-	void FastQueue<T>::Deleter::operator () (Type* t)
-	{
-		m_allocator.deallocate(t);
-	}
 
 	template<typename T>
 	void FastQueue<T>::copyFromTo(Type *src, Type *dst, sizeType amount)
@@ -200,7 +168,7 @@ namespace NOU::NOU_DAT_ALG
 		m_capacity(initialCapacity < MIN_CAPACITY ? MIN_CAPACITY : initialCapacity), ///\todo replace w/ max()
 		m_startIndex(0),
 		m_endIndex(0),
-		m_queue(m_allocator.allocate(m_capacity), Deleter(m_allocator))
+		m_queue(m_allocator.allocate(m_capacity), m_allocator)
 	{}
 
 	template<typename T>
@@ -306,6 +274,13 @@ namespace NOU::NOU_DAT_ALG
 			m_queue = newBuf;
 			m_capacity = newCapacity;
 		}
+	}
+
+	template<typename T>
+	const NOU_MEM_MNGT::AllocationCallback<typename FastQueue<T>::Type>& 
+		FastQueue<T>::getAllocationCallback() const
+	{
+		return m_allocator;
 	}
 }
 #endif
