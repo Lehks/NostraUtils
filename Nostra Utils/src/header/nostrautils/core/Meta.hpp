@@ -8,6 +8,23 @@
 namespace NOU::NOU_CORE
 {
 	/**
+	\tparam The type to remove the reference from.
+
+	\brief Removes any references from a type.
+
+	\details
+	Removes any references from a type.
+	E.g.:
+	T     | Returned Type
+	----- | -------------
+	int   | int
+	int&  | int
+	int&& | int
+	*/
+	template<typename T>
+	struct remove_reference : public std::remove_reference<T> {};
+
+	/**
 	\tparam T The type that will be returned by the function.
 	\return The passed type itself.
 

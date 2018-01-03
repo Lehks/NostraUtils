@@ -303,11 +303,15 @@
     <ClInclude Include="src\header\nostrautils\core\Meta.hpp" />
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Version.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\dat_alg\Comparator.cpp" />

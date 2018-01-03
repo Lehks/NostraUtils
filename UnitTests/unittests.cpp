@@ -6,6 +6,10 @@
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
 #include "nostrautils\core\Meta.hpp"
+#include "nostrautils\mem_mngt\AllocationCallback.hpp"
+#include "nostrautils\core\Utils.hpp"
+#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
 
@@ -199,6 +203,8 @@ namespace UnitTests
 
 		}
 
+		}
+
 		TEST_METHOD(UniquePtr)
 		{
 			//use string for testing.
@@ -281,6 +287,19 @@ namespace UnitTests
 			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<std::string, decltype(dummyFunc1), int>::value);
 
 			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, int, int>::value);
+		}
+
+		TEST_METHOD(DebugAllocationCallback)
+		{
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> alloc;
+
+			int *iPtr = alloc.allocate(5);
+
+			Assert::IsTrue(alloc.getCounter() == 1);
+
+			alloc.deallocate(iPtr);
+
+			Assert::IsTrue(alloc.getCounter() == 0);
 		}
 	};
 }
