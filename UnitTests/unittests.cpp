@@ -12,6 +12,7 @@
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
+#include "nostrautils\dat_alg\StringView.hpp"
 
 #include <type_traits>
 
@@ -319,6 +320,28 @@ namespace UnitTests
 			deleter1(iPtr1); //delete using deleter
 
 			Assert::IsTrue(deleter1.getAllocator().getCounter() == 0);
+		}
+
+		TEST_METHOD(StringView)
+		{
+			NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
+
+			Assert::IsTrue(sv[0] == 'H');
+			Assert::IsTrue(sv[1] == 'e');
+			Assert::IsTrue(sv[2] == 'l');
+			Assert::IsTrue(sv[3] == 'l');
+			Assert::IsTrue(sv[4] == 'o');
+			Assert::IsTrue(sv[5] == ' ');
+			Assert::IsTrue(sv[6] == 'W');
+			Assert::IsTrue(sv[7] == 'o');
+			Assert::IsTrue(sv[8] == 'r');
+			Assert::IsTrue(sv[9] == 'l');
+			Assert::IsTrue(sv[10] == 'd');
+			Assert::IsTrue(sv[11] == '!');
+
+			Assert::IsTrue(sv.size() == 12);
+
+			Assert::IsTrue(sv == "Hello World!");
 		}
 	};
 }

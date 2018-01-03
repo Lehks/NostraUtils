@@ -3,7 +3,9 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Meta.hpp"
+#include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
+#include "nostrautils\dat_alg\Vector.hpp"
 
 namespace NOU::NOU_DAT_ALG
 {
@@ -543,6 +545,21 @@ namespace NOU::NOU_DAT_ALG
 		ConstCharType operator [] (sizeType index) const;
 	};
 
+	/**
+	\brief An aliasname for a StringView that uses a nostra::utils::char8;
+	*/
+	using StringView8 = StringView<char8>;
+
+	/**
+	\brief An aliasname for a StringView that uses a nostra::utils::char16;
+	*/
+	using StringView16 = StringView<char16>;
+
+	/**
+	\brief An aliasname for a StringView that uses a nostra::utils::char32;
+	*/
+	using StringView32 = StringView<char32>;
+
 	///\todo Re-enable and exchange error handling
 	/*
 	template<typename CHAR_TYPE>
@@ -741,11 +758,11 @@ namespace NOU::NOU_DAT_ALG
 			return CompareResult::EQUAL;
 
 		//the size of the smaller string (stored to avoid recalculating this value each iteration)
-		sizeType smallerSize = min(str0.size(), str1.size());
+		sizeType smallerSize = NOU_CORE::min(str0.size(), str1.size());
 
 		for (sizeType i = 0; i < smallerSize; i++)
 		{
-			CompareResult charCompareResult = charComparator(str0[i], str1[i]);
+			CompareResult charCompareResult = genericComparator<CharType>(str0[i], str1[i]);
 
 			if (charCompareResult != CompareResult::EQUAL)
 				return charCompareResult;
