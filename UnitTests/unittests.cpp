@@ -5,10 +5,11 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
+#include "nostrautils\core\Meta.hpp"
+#include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\core\Meta.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
 
@@ -367,6 +368,46 @@ namespace UnitTests
 		TEST_METHOD(FastQueue)
 		{
 
+		}
+
+		TEST_METHOD(AreSame)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<double, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
+		}
+
+		TEST_METHOD(IsInvocable)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), std::string>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<int, int>::value);
+
+			Assert::IsTrue(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), std::string>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<std::string, decltype(dummyFunc1), int>::value);
+
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, int, int>::value);
+		}
+
+		TEST_METHOD(DebugAllocationCallback)
+		{
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> alloc;
+
+			int *iPtr = alloc.allocate(5);
+
+			Assert::IsTrue(alloc.getCounter() == 1);
+
+			alloc.deallocate(iPtr);
+
+			Assert::IsTrue(alloc.getCounter() == 0);
 		}
 	};
 }
