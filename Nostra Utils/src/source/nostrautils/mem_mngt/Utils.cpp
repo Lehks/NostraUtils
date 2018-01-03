@@ -20,7 +20,7 @@ namespace NOU::NOU_MEM_MNGT
 #endif
 	}
 
-	NOU_FUNC void alignedFree(void *data)
+	void alignedFree(void *data)
 	{
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		_aligned_free(data);
@@ -29,7 +29,7 @@ namespace NOU::NOU_MEM_MNGT
 #endif
 	}
 
-	NOU_FUNC void deallocateUninitialized(void *data)
+	void deallocateUninitialized(void *data)
 	{
 		alignedFree(data);
 	}

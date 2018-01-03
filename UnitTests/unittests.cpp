@@ -5,11 +5,33 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
+#include "nostrautils\core\Meta.hpp"
+#include "nostrautils\mem_mngt\AllocationCallback.hpp"
+#include "nostrautils\core\Utils.hpp"
+#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
+#include "nostrautils\mem_mngt\Pointer.hpp"
 
 #include <type_traits>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+
+//both functions are used in test IsInvocable
+void dummyFunc0(int)
+{
+
+}
+
+int dummyFunc1(int)
+{
+	return 1;
+}
+
+//used in test UniquePtr
+NOU::boolean testVar = false;
+
 
 namespace UnitTests
 {		
@@ -178,7 +200,125 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') ==
 				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+		}
 
+		TEST_METHOD(UniquePtr)
+		{
+			//use string for testing.
+			std::string *rawPtr = new std::string("Hello World!");
+			std::string *rawPtr1 = new std::string("Hello World! 1");
+
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr(rawPtr, NOU::NOU_MEM_MNGT::defaultDeleter);
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr1(rawPtr1, NOU::NOU_MEM_MNGT::defaultDeleter);
+
+			Assert::IsTrue(uPtr.rawPtr() == rawPtr);
+			Assert::IsTrue(uPtr[0] == rawPtr[0]);
+			Assert::IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
+			Assert::IsTrue(*uPtr == *rawPtr);
+			Assert::IsTrue(uPtr);
+			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr, 
+						NOU::NOU_MEM_MNGT::defaultDeleter));
+			Assert::IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
+			Assert::IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
+			Assert::IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
+			Assert::IsTrue((uPtr > uPtr1) == (rawPtr > rawPtr1));
+			Assert::IsTrue((uPtr == uPtr1) == (rawPtr == rawPtr1));
+			Assert::IsTrue((uPtr != uPtr1) == (rawPtr != rawPtr1));
+
+			Assert::IsTrue(uPtr.deleter() == &NOU::NOU_MEM_MNGT::defaultDeleter<std::string>);
+
+			uPtr = std::move(uPtr1);
+
+			Assert::IsTrue(uPtr1.rawPtr() == nullptr);
+
+			Assert::IsTrue(uPtr.rawPtr() == rawPtr1);
+
+			struct TestDeleter
+			{
+				void operator () (int* i)
+				{
+					testVar = true;
+					delete i;
+				}
+			};
+
+			{
+				//check if this compiles
+				NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
+				
+				//destructor is called here
+			}
+
+			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
+
+			testVar = false;
+
+			NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr3(new int, TestDeleter());
+			uPtr3 = new int;
+
+			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
+		}
+
+		TEST_METHOD(AreSame)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<double, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
+			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
+		}
+
+		TEST_METHOD(IsInvocable)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), std::string>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<int, int>::value);
+
+			Assert::IsTrue(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), int>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), std::string>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<std::string, decltype(dummyFunc1), int>::value);
+
+			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, int, int>::value);
+		}
+
+		TEST_METHOD(DebugAllocationCallback)
+		{
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> alloc;
+
+			int *iPtr = alloc.allocate(5);
+
+			Assert::IsTrue(alloc.getCounter() == 1);
+
+			alloc.deallocate(iPtr);
+
+			Assert::IsTrue(alloc.getCounter() == 0);
+		}
+		
+		TEST_METHOD(AllocationCallbackDeleter)
+		{
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> dbgAlloc;
+			NOU::NOU_MEM_MNGT::AllocationCallbackRefDeleter<int> deleter0(dbgAlloc);
+
+			int *iPtr0 = dbgAlloc.allocate();
+
+			deleter0(iPtr0); //delete using deleter
+
+			Assert::IsTrue(dbgAlloc.getCounter() == 0);
+
+			auto callback = NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>();
+			NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int, 
+				NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>> deleter1(callback);
+
+			int *iPtr1 = deleter1.getAllocator().allocate();
+
+			deleter1(iPtr1); //delete using deleter
+
+			Assert::IsTrue(deleter1.getAllocator().getCounter() == 0);
 		}
 	};
 }
