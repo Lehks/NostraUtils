@@ -34,23 +34,19 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		using Type = T;
 
-		static constexpr sizeType MIN_SIZE = 1;
+		/**
+		\brief The minium capacity of a FastQueue.
+		*/
+		static constexpr sizeType MIN_CAPACITY = 1;
 
-	public:
-		class Deleter
-		{
-		private:
-			NOU::NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
-
-		public:
-			Deleter(NOU::NOU_MEM_MNGT::AllocationCallback<Type> &allocator);
-
-			void operator () (Type* t);
-		};
-
+	private:
+		/**
+		\brief The allocator that will be used to allocate and deallocate data.
+		*/
 		NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
 
 		/** 
+		\Mahan is dumm!
 		\brief The max size of the queue.
 		*/
 		sizeType m_capacity;
@@ -68,14 +64,28 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief A pointer to the queue.
 		*/
-		NOU_MEM_MNGT::UniquePtr<Type, Deleter> m_queue;
+		NOU_MEM_MNGT::UniquePtr<Type, NOU_MEM_MNGT::AllocationCallbackRefDeleter<Type>> m_queue;
 		
+		/**
+		\param src    The source array.
+		\param dst    The destination array.
+		\param amount The amount of data to copy.
+
+		\brief Copies the data from \p src to \p dst.
+		*/
 		void copyFromTo(Type *src, Type *dst, sizeType amount);
 
 	public:
-		FastQueue(sizeType initialCapacity = MIN_SIZE, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
+		/**
+		\param initialCapacity The initial capacity.
+		\param allocator       The allocator that will be used to allocate data.
+		*/
+		FastQueue(sizeType initialCapacity = MIN_CAPACITY, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
 			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::getInstance());
 
+		/**
+		\brief Destructs an instance of FastQueue.
+		*/
 		~FastQueue();
 
 		/**
@@ -126,19 +136,21 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		sizeType capacity();
 
+		/**
+		\param additionalCapacity The capacity that will be added to the currently existing capacity.
+
+		\brief Ensures that after a call to this method, the capacity will be <u>at least</u> the current 
+		       capacity plus \p additionalCapacity.
+		*/
 		void resize(sizeType additionalCapacity);
+
+		/**
+		\return m_allocator.
+
+		\brief Returns m_allocator.
+		*/
+		const NOU_MEM_MNGT::AllocationCallback<Type>& getAllocationCallback() const;
 	};
-
-	template<typename T>
-	FastQueue<T>::Deleter::Deleter(NOU::NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
-		m_allocator(allocator)
-	{}
-
-	template<typename T>
-	void FastQueue<T>::Deleter::operator () (Type* t)
-	{
-		m_allocator.deallocate(t);
-	}
 
 	template<typename T>
 	void FastQueue<T>::copyFromTo(Type *src, Type *dst, sizeType amount)
@@ -153,10 +165,10 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	FastQueue<T>::FastQueue(sizeType initialCapacity, NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
 		m_allocator(allocator),
-		m_capacity(initialCapacity < MIN_SIZE ? MIN_SIZE : initialCapacity), ///\todo replace w/ max()
+		m_capacity(initialCapacity < MIN_CAPACITY ? MIN_CAPACITY : initialCapacity), ///\todo replace w/ max()
 		m_startIndex(0),
 		m_endIndex(0),
-		m_queue(m_allocator.allocate(m_capacity), Deleter(m_allocator))
+		m_queue(m_allocator.allocate(m_capacity), m_allocator)
 	{}
 
 	template<typename T>
@@ -262,6 +274,13 @@ namespace NOU::NOU_DAT_ALG
 			m_queue = newBuf;
 			m_capacity = newCapacity;
 		}
+	}
+
+	template<typename T>
+	const NOU_MEM_MNGT::AllocationCallback<typename FastQueue<T>::Type>& 
+		FastQueue<T>::getAllocationCallback() const
+	{
+		return m_allocator;
 	}
 }
 #endif
