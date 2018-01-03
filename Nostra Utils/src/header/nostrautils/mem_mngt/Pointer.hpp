@@ -3,6 +3,7 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\Utils.hpp"
+#include "nostrautils\mem_mngt\AllocationCallback.hpp"
 
 namespace NOU::NOU_MEM_MNGT
 {
@@ -38,6 +39,101 @@ namespace NOU::NOU_MEM_MNGT
 	*/
 	template<typename T>
 	NOU_FUNC void nullDeleter(T *t);
+
+	/**
+	\tparam T The type of object to delete.
+
+	\brief A Deleter for Smart Pointers that wrapps nostra::utils::mem_mngt::AllocationCallback::deallocate.
+	This version does store it's Callback, so the Callback will be stored in the class itself.
+
+	\details
+	Alltough this class is designed to work with childclasses of nostra::utils::mem_mngt::AllocationCallback,
+	it works with all classes that have a <tt>.deallocate()</tt> member function.
+	*/
+	template<typename T, typename ALLOCATOR>
+	class NOU_CLASS AllocationCallbackDeleter
+	{
+	private:
+		/**
+		\brief The AllocationCallback.
+		*/
+		ALLOCATOR m_allocator;
+
+	public:
+		/**
+		\param allocator The AllocationCallback that will be used.
+
+		\brief Constructs a new AllocationCallbackDeleter.
+		*/
+		AllocationCallbackDeleter(ALLOCATOR &allocator);
+
+		/**
+		\return m_allocator.
+
+		\brief Returns m_allocator.
+		*/
+		const ALLOCATOR& getAllocator() const;
+
+		/**
+		\return m_allocator.
+
+		\brief Returns m_allocator.
+		*/
+		ALLOCATOR& getAllocator();
+
+		/**
+		\param data A pointer to the data that will be deallocated.
+
+		\brief Calls nostra::utils::mem_mngt::AllocationCallback::deallocate.
+		*/
+		void operator () (T *data);
+	};
+
+	/**
+	\tparam T The type of object to delete.
+
+	\brief A Deleter for Smart Pointers that wrapps nostra::utils::mem_mngt::AllocationCallback::deallocate.
+	This version does not store it's Callback, so the Callback that was passed to the constructor must
+	be alive for the entire time that this Deleter is used.
+	*/
+	template<typename T>
+	class NOU_CLASS AllocationCallbackRefDeleter
+	{
+	private:
+		/**
+		\brief The AllocationCallback.
+		*/
+		NOU_MEM_MNGT::AllocationCallback<T> &m_allocator;
+
+	public:
+		/**
+		\param allocator The AllocationCallback that will be used.
+
+		\brief Constructs a new AllocationCallbackRefDeleter.
+		*/
+		AllocationCallbackRefDeleter(NOU_MEM_MNGT::AllocationCallback<T> &allocator);
+
+		/**
+		\return m_allocator.
+
+		\brief Returns m_allocator.
+		*/
+		const NOU_MEM_MNGT::AllocationCallback<T>& getAllocator() const;
+
+		/**
+		\return m_allocator.
+
+		\brief Returns m_allocator.
+		*/
+		NOU_MEM_MNGT::AllocationCallback<T>& getAllocator();
+
+		/**
+		\param data A pointer to the data that will be deallocated.
+
+		\brief Calls nostra::utils::mem_mngt::AllocationCallback::deallocate.
+		*/
+		void operator () (T *data);
+	};
 
 	/**
 	\tparam The type of the object that this smart pointer should point to.
@@ -303,6 +399,53 @@ namespace NOU::NOU_MEM_MNGT
 	void nullDeleter(T *t)
 	{
 		//Do nothing
+	}
+
+	template<typename T, typename ALLOCATOR>
+	AllocationCallbackDeleter<T, ALLOCATOR>::AllocationCallbackDeleter(ALLOCATOR &allocator) :
+		m_allocator(allocator)
+	{}
+
+	template<typename T, typename ALLOCATOR>
+	const ALLOCATOR& AllocationCallbackDeleter<T, ALLOCATOR>::getAllocator() const
+	{
+		return m_allocator;
+	}
+
+	template<typename T, typename ALLOCATOR>
+	ALLOCATOR& AllocationCallbackDeleter<T, ALLOCATOR>::getAllocator()
+	{
+		return m_allocator;
+	}
+
+	template<typename T, typename ALLOCATOR>
+	void AllocationCallbackDeleter<T, ALLOCATOR>::operator () (T *data)
+	{
+		m_allocator.deallocate(data);
+	}
+
+	template<typename T>
+	AllocationCallbackRefDeleter<T>::
+		AllocationCallbackRefDeleter(NOU_MEM_MNGT::AllocationCallback<T> &allocator) :
+		m_allocator(allocator)
+	{}
+
+	template<typename T>
+	const NOU_MEM_MNGT::AllocationCallback<T>& AllocationCallbackRefDeleter<T>::getAllocator() const
+	{
+		m_allocator.dellocate(data);
+	}
+
+	template<typename T>
+	NOU_MEM_MNGT::AllocationCallback<T>& AllocationCallbackRefDeleter<T>::getAllocator()
+	{
+		m_allocator.dellocate(data);
+	}
+
+	template<typename T>
+	void AllocationCallbackRefDeleter<T>::operator () (T *data)
+	{
+		m_allocator.deallocate(data);
 	}
 
 	template<typename T>
