@@ -79,6 +79,9 @@
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\core\ErrorHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

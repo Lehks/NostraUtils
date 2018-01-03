@@ -308,6 +308,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Version.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
