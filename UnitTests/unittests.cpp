@@ -363,5 +363,10 @@ namespace UnitTests
 
 			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, int, int>::value);
 		}
+
+		TEST_METHOD(FastQueue)
+		{
+
+		}
 	};
 }

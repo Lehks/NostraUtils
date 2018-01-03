@@ -34,20 +34,43 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		using Type = T;
 
-		static constexpr sizeType MIN_SIZE = 1;
+		/**
+		\brief The minium capacity of a FastQueue.
+		*/
+		static constexpr sizeType MIN_CAPACITY = 1;
 
 	public:
+		/**
+		\brief The deleter that is used by <tt>m_queue</tt> to delete 
+		*/
 		class Deleter
 		{
 		private:
+			/**
+			\brief The allocator that will be used to deallocate the data.
+			*/
 			NOU::NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
 
 		public:
+			/**
+			\param allocator The allocator that will be used to deallocate data. This allocator must live at 
+			                 least as long as the deleter does.
+
+			\brief Constructs a new Deleter.
+			*/
 			Deleter(NOU::NOU_MEM_MNGT::AllocationCallback<Type> &allocator);
 
+			/**
+			\param t A pointer to the data that will be deallocated.
+
+			\brief Calls nostra::utils::mem_mngt::AllocationCallback::deallocate.
+			*/
 			void operator () (Type* t);
 		};
 
+		/**
+		\brief The allocator that will be used to allocate and deallocate data.
+		*/
 		NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
 
 		/** 
@@ -71,12 +94,26 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		NOU_MEM_MNGT::UniquePtr<Type, Deleter> m_queue;
 		
+		/**
+		\param src    The source array.
+		\param dst    The destination array.
+		\param amount The amount of data to copy.
+
+		\brief Copies the data from \p src to \p dst.
+		*/
 		void copyFromTo(Type *src, Type *dst, sizeType amount);
 
 	public:
-		FastQueue(sizeType initialCapacity = MIN_SIZE, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
+		/**
+		\param initialCapacity The initial capacity.
+		\param allocator       The allocator that will be used to allocate data.
+		*/
+		FastQueue(sizeType initialCapacity = MIN_CAPACITY, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
 			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::getInstance());
 
+		/**
+		\brief Destructs an instance of FastQueue.
+		*/
 		~FastQueue();
 
 		/**
@@ -127,6 +164,12 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		sizeType capacity();
 
+		/**
+		\param additionalCapacity The capacity that will be added to the currently existing capacity.
+
+		\brief Ensures that after a call to this method, the capacity will be <u>at least</u> the current 
+		       capacity plus \p additionalCapacity.
+		*/
 		void resize(sizeType additionalCapacity);
 	};
 
@@ -154,7 +197,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	FastQueue<T>::FastQueue(sizeType initialCapacity, NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
 		m_allocator(allocator),
-		m_capacity(initialCapacity < MIN_SIZE ? MIN_SIZE : initialCapacity), ///\todo replace w/ max()
+		m_capacity(initialCapacity < MIN_CAPACITY ? MIN_CAPACITY : initialCapacity), ///\todo replace w/ max()
 		m_startIndex(0),
 		m_endIndex(0),
 		m_queue(m_allocator.allocate(m_capacity), Deleter(m_allocator))
