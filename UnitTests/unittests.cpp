@@ -200,9 +200,6 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') ==
 				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
-
-		}
-
 		}
 
 		TEST_METHOD(UniquePtr)
@@ -300,6 +297,28 @@ namespace UnitTests
 			alloc.deallocate(iPtr);
 
 			Assert::IsTrue(alloc.getCounter() == 0);
+		}
+		
+		TEST_METHOD(AllocationCallbackDeleter)
+		{
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> dbgAlloc;
+			NOU::NOU_MEM_MNGT::AllocationCallbackRefDeleter<int> deleter0(dbgAlloc);
+
+			int *iPtr0 = dbgAlloc.allocate();
+
+			deleter0(iPtr0); //delete using deleter
+
+			Assert::IsTrue(dbgAlloc.getCounter() == 0);
+
+			auto callback = NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>();
+			NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int, 
+				NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>> deleter1(callback);
+
+			int *iPtr1 = deleter1.getAllocator().allocate();
+
+			deleter1(iPtr1); //delete using deleter
+
+			Assert::IsTrue(deleter1.getAllocator().getCounter() == 0);
 		}
 	};
 }
