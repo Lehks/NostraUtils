@@ -203,7 +203,13 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the element at the first position.
 		*/
-		T peekFront() override;
+		T& peekFront() override;
+		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		*/
+		const T& peekFront() const override;
 		/**
 		\return      The element at the first position.
 
@@ -211,7 +217,15 @@ namespace NOU::NOU_DAT_ALG
 		\details
 		This methode calls peakFront() .
 		*/
-		T peek() override;
+		T& peek() override;
+		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		\details
+		This methode calls peakFront() .
+		*/
+		const T& peek() const override;
 		/**
 		\param index0 The first index.
 		\param index1 The second index.
@@ -737,13 +751,25 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	T Vector<T>::peekFront()
+	T& Vector<T>::peekFront()
 	{
 		return m_data[0];
 	}
 
 	template<typename T>
-	T Vector<T>::peek()
+	const T& Vector<T>::peekFront() const
+	{
+		return m_data[0];
+	}
+
+	template<typename T>
+	T& Vector<T>::peek()
+	{
+		return peekFront();
+	}
+
+	template<typename T>
+	const T& Vector<T>::peek() const
 	{
 		return peekFront();
 	}
