@@ -276,10 +276,33 @@ namespace UnitTests
 				vec4.pushBack(4);
 			}
 
+
 			Assert::IsTrue(dbgAlloc.getCounter() == 0);
 
 			Assert::AreEqual(0, vec2.peek());
 			Assert::AreEqual(0, vec2.peekFront());
+
+			NOU::DebugClass dg;
+			NOU::DebugClass dg1;
+			NOU::DebugClass dg2;
+
+			NOU::int64 u = dg.getCounter();
+
+			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec5(1);
+
+			vec5.pushBack(dg);
+			u = dg.getCounter();
+			vec5.pushBack(dg1);
+			vec5.remove(0);
+			u = dg.getCounter();
+			vec5.pushBack(dg2);
+			vec5.remove(1);
+			u = dg.getCounter();
+			vec5.remove(0);
+
+			u = dg.getCounter();
+
+			Assert::IsTrue(dg.getCounter() == 0);
 		}
 
 		TEST_METHOD(Swap)
