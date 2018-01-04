@@ -139,15 +139,15 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		sizeType capacity() const;
 		/**
-		\param index The index of the element to remove.
-		\return      The element that was removed.
+		\param index The index of the element to show.
+		\return      The element that should be shown.
 
 		\brief Returns a reference of the object at the given index.
 		*/
 		T& at(sizeType index);
 		/**
-		\param index The index of the element to remove.
-		\return      The element that was removed.
+		\param index The index of the element to show.
+		\return      The element that should be shown.
 
 		\brief Returns a const reference of the object at the given index.
 		*/
