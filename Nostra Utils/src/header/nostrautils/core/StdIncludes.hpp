@@ -606,6 +606,15 @@ static_cast<NOU::uint32> 									 \
 
 #endif
 
+/**
+\param str The expression to convert.
+
+\brief Converts any expression into a const char*.
+*/
+#ifndef NOU_STRINGIFY
+#define NOU_STRINGIFY(str) #str
+#endif 
+
 namespace NOU::NOU_CORE
 {
 	/**
