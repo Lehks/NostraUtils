@@ -165,17 +165,6 @@ namespace UnitTests
 			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
 		}
 
-		TEST_METHOD(Swap)
-		{
-			NOU::int32 a = 1;
-			NOU::int32 b = 2;
-
-			NOU::NOU_DAT_ALG::swap(&a, &b);
-
-			Assert::AreEqual(2,a);
-			Assert::AreEqual(1,b);
-		}
-
 		TEST_METHOD(Vector)
 		{
 			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
@@ -316,73 +305,6 @@ namespace UnitTests
 			Assert::AreEqual(1,b);
 		}
 
-		TEST_METHOD(Vector)
-		{
-			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
-
-			Assert::AreEqual(static_cast<NOU::sizeType>(0), vec1.size());
-
-			for (NOU::sizeType i = 0; i < 10; i++)
-			{
-				vec1.pushBack(i);
-			}
-
-			Assert::AreEqual(0, vec1[0]);
-			Assert::AreEqual(1, vec1[1]);
-			Assert::AreEqual(2, vec1[2]);
-			Assert::AreEqual(3, vec1[3]);
-			Assert::AreEqual(4, vec1[4]);
-			Assert::AreEqual(5, vec1[5]);
-			Assert::AreEqual(6, vec1[6]);
-			Assert::AreEqual(7, vec1[7]);
-			Assert::AreEqual(8, vec1[8]);
-			Assert::AreEqual(9, vec1[9]);
-
-			Assert::IsFalse(vec1.empty());
-
-			vec1.pushBack(10);
-			Assert::AreEqual(10, vec1[10]);
-
-			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec2(11);
-			vec2 = vec1;
-			Assert::AreEqual(vec2[9], vec1[9]);
-
-			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec3(10);
-			vec3 = vec1;
-			Assert::AreEqual(vec3[9], vec1[9]);
-
-			vec1.pushFront(15);
-			Assert::AreEqual(15, vec1[0]);
-
-			NOU::int32 testinteger = 0;
-			testinteger = vec1.popFront();
-			Assert::AreEqual(15, testinteger);
-
-			vec2.swap(0,1);
-			Assert::AreEqual(0, vec2[1]);
-
-			vec2.remove(0);
-			Assert::AreEqual(0, vec2[0]);
-
-			int i = 0;
-
-			NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> iter1 = vec2.begin();
-			for (NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> it = vec2.begin(); it != vec2.end(); it++)
-			{
-				Assert::AreEqual(*it, vec2[i]);
-				i++;
-			}
-
-			i = vec2.size();
-
-			NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> iter2 = vec2.rbegin();
-			for (NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> it = vec2.rbegin(); it != vec2.rend(); it++)
-			{
-				Assert::AreEqual(*it, vec2[i]);
-				i--;
-			}
-		}
-
 		TEST_METHOD(Comparator)
 		{
 			//int as dummy type
@@ -481,43 +403,53 @@ namespace UnitTests
 			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
 		}
 
-		TEST_METHOD(AreSame)
-		{
-			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<double, int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double>::value);
-			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, double>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double, int>::value);
-			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
-			Assert::IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
-		}
-
-		TEST_METHOD(IsInvocable)
-		{
-			Assert::IsTrue(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), std::string>::value);
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<int, int>::value);
-
-			Assert::IsTrue(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), std::string>::value);
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<std::string, decltype(dummyFunc1), int>::value);
-
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, int, int>::value);
-		}
-
 		TEST_METHOD(FastQueue)
 		{
-			NOU::NOU_DAT_ALG::FastQueue<int> fq(5);
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
 
-			Assert::IsTrue(fq.capacity() == 5);
-			Assert::IsTrue(&(fq.getAllocationCallback()) == 
-				&(NOU::NOU_MEM_MNGT::GenericAllocationCallback<int>::getInstance()));
+			{
+				NOU::NOU_DAT_ALG::FastQueue<NOU::DebugClass> fq(5, allocator);
 
-			Assert::IsTrue(fq.size() == 0);
-			Assert::IsTrue(fq.empty());
+				Assert::IsTrue(fq.capacity() == 5);
+				Assert::IsTrue(&fq.getAllocationCallback() == &allocator);
+
+				Assert::IsTrue(fq.size() == 0);
+				Assert::IsTrue(fq.empty());
+
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+
+				fq.pop();
+				fq.pop();
+				fq.pop();
+				fq.pop();
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+			Assert::IsTrue(allocator.getCounter() == 0);
+
+			NOU::NOU_DAT_ALG::FastQueue<int> fq;
+		
+			fq.push(1);
+			fq.push(2);
+			fq.push(3);
+			fq.push(4);
+		
+			Assert::IsTrue(fq.peek() == 1);
+		
+			Assert::IsTrue(fq.pop() == 1);
+			Assert::IsTrue(fq.pop() == 2);
+			Assert::IsTrue(fq.pop() == 3);
+			Assert::IsTrue(fq.pop() == 4);
 		}
 
 		TEST_METHOD(AreSame)
