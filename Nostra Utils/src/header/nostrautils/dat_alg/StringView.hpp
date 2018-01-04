@@ -954,7 +954,7 @@ namespace NOU::NOU_DAT_ALG
 			return false;
 
 		for (sizeType i = size() - 1; i >= size() - str.size(); i--)
-			if (at(i - size() + str.size()) != at(i))
+			if (str.at(i - size() + str.size()) != at(i))
 				return false;
 
 		return true;

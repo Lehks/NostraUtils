@@ -413,9 +413,9 @@ namespace UnitTests
 			Assert::IsFalse(sv.endsWith("World"));
 
 			Assert::IsTrue(sv.compareTo("Abc") 
-				== NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+				== NOU::NOU_DAT_ALG::CompareResult::BIGGER);
 			Assert::IsTrue(sv.compareTo("Hello World!")
-				== NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+				== NOU::NOU_DAT_ALG::CompareResult::EQUAL);
 			Assert::IsTrue(sv.compareTo("Xyz") 
 				== NOU::NOU_DAT_ALG::CompareResult::SMALLER);
 
@@ -424,11 +424,11 @@ namespace UnitTests
 			Assert::IsTrue(subStr.size() == 6);
 
 			Assert::IsTrue(subStr[0] == 'W');
-			Assert::IsTrue(subStr[0] == 'o');
-			Assert::IsTrue(subStr[0] == 'r');
-			Assert::IsTrue(subStr[0] == 'l');
-			Assert::IsTrue(subStr[0] == 'd');
-			Assert::IsTrue(subStr[0] == '!');
+			Assert::IsTrue(subStr[1] == 'o');
+			Assert::IsTrue(subStr[2] == 'r');
+			Assert::IsTrue(subStr[3] == 'l');
+			Assert::IsTrue(subStr[4] == 'd');
+			Assert::IsTrue(subStr[5] == '!');
 
 			Assert::IsTrue(sv == "Hello World!");
 			Assert::IsTrue(sv != "Hello z World!");
