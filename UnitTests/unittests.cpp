@@ -271,27 +271,28 @@ namespace UnitTests
 			Assert::AreEqual(0, vec2.peek());
 			Assert::AreEqual(0, vec2.peekFront());
 
-			NOU::DebugClass dg;
-			NOU::DebugClass dg1;
-			NOU::DebugClass dg2;
 
-			NOU::int64 u = dg.getCounter();
+			{
+				NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec5(1);
 
-			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec5(1);
+				vec5.pushBack(NOU::DebugClass());
+				vec5.pushBack(NOU::DebugClass());
+				vec5.remove(0);
+				vec5.pushBack(NOU::DebugClass());
+				vec5.remove(1);
+				vec5.remove(0);
 
-			vec5.pushBack(dg);
-			u = dg.getCounter();
-			vec5.pushBack(dg1);
-			vec5.remove(0);
-			u = dg.getCounter();
-			vec5.pushBack(dg2);
-			vec5.remove(1);
-			u = dg.getCounter();
-			vec5.remove(0);
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 
-			u = dg.getCounter();
+				vec5.push(NOU::DebugClass());
+				vec5.push(NOU::DebugClass());
+				vec5.push(NOU::DebugClass());
+			}
 
-			Assert::IsTrue(dg.getCounter() == 0);
+			Assert::AreEqual(0, vec1.peek());
+			Assert::AreEqual(0, vec1.peekFront());
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 		}
 
 		TEST_METHOD(Swap)
