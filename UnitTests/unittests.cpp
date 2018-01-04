@@ -270,8 +270,8 @@ namespace UnitTests
 
 			Assert::IsTrue(dbgAlloc.getCounter() == 0);
 
-			Assert::AreEqual(0, vec2.peak());
-			Assert::AreEqual(0, vec2.peakFront());
+			Assert::AreEqual(0, vec2.peek());
+			Assert::AreEqual(0, vec2.peekFront());
 		}
 
 		TEST_METHOD(Comparator)

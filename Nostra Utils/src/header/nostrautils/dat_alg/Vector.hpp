@@ -197,7 +197,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the element at the first position.
 		*/
-		T peakFront() override;
+		T peekFront() override;
 		/**
 		\return      The element at the first position.
 
@@ -205,7 +205,7 @@ namespace NOU::NOU_DAT_ALG
 		\details
 		This methode calls peakFront() .
 		*/
-		T peak() override;
+		T peek() override;
 		/**
 		\param index0 The first index.
 		\param index1 The second index.
@@ -724,15 +724,15 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	T Vector<T>::peakFront()
+	T Vector<T>::peekFront()
 	{
 		return m_data[0];
 	}
 
 	template<typename T>
-	T Vector<T>::peak()
+	T Vector<T>::peek()
 	{
-		return peakFront();
+		return peekFront();
 	}
 
 	template<typename T>

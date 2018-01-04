@@ -43,7 +43,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief Returns the first element of the queue.
 		*/
-		virtual T peakFront() = 0;
+		virtual T peekFront() = 0;
 		/**
 		\brief Swaps the elements at the corresponding index.
 		*/
@@ -79,7 +79,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief Returns the first element of the queue.
 		*/
-		virtual T peakFront() = 0;
+		virtual T peekFront() = 0;
 		/**
 		\brief Swaps the elements at the corresponding index.
 		*/
@@ -118,7 +118,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief Returns the first element of the queue.
 		*/
-		virtual T peak() = 0;
+		virtual T peek() = 0;
 		/**
 		\brief Swaps the elements at the corresponding index.
 		*/
