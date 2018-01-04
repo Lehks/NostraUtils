@@ -39,7 +39,7 @@ namespace NOU::NOU_DAT_ALG
 	\details The most basic of our containers. It can act like a dynamic array a FIFO-Queue, LIFO-Queue or a normal Queue.
 	*/
 	template<typename T>
-	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>
+	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>, public RandomAccess<T>
 	{
 	private:
 		NOU::NOU_MEM_MNGT::AllocationCallback<T>	&m_allocator;
