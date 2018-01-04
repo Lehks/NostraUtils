@@ -133,6 +133,12 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		sizeType size() const override;
 		/**
+		\return      Returns the capacity of the Vector.
+
+		\brief Returns the capacity of the Vector.
+		*/
+		sizeType capacity() const;
+		/**
 		\param index The index of the element to remove.
 		\return      The element that was removed.
 
@@ -659,6 +665,13 @@ namespace NOU::NOU_DAT_ALG
 	{
 		return m_size;
 	}
+
+	template<typename T>
+	sizeType  Vector<T>::capacity() const
+	{
+		return m_capacity;
+	}
+
 	template<typename T>
 	T& Vector<T>::at(sizeType index)
 	{
