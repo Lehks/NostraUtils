@@ -324,6 +324,38 @@ namespace UnitTests
 
 		TEST_METHOD(StringView)
 		{
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('A'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('Z'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('a'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('z'));
+
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('3'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('-'));
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('1'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('2'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('3'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('4'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('5'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('6'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('7'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('8'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('9'));
+
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('A'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('-'));
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
+
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!§$%&"));
+
 			NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
 			Assert::IsTrue(sv[0] == 'H');
@@ -342,6 +374,66 @@ namespace UnitTests
 			Assert::IsTrue(sv.size() == 12);
 
 			Assert::IsTrue(sv == "Hello World!");
+
+			Assert::IsTrue(sv.find('e') == 1);
+			Assert::IsTrue(sv.find('e', 1) == 1);
+
+			Assert::IsTrue(sv.find('o') == 4);
+			Assert::IsTrue(sv.find('o', 5) == 7);
+			Assert::IsTrue(sv.find('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.find("ello") == 1);
+			Assert::IsTrue(sv.find("o") == 4);
+			Assert::IsTrue(sv.find("o", 5) == 7);
+			Assert::IsTrue(sv.find("test") == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.firstIndexOf('H') == 0);
+			Assert::IsTrue(sv.firstIndexOf('o') == 4);
+			Assert::IsTrue(sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.lastIndexOf('H') == 0);
+			Assert::IsTrue(sv.lastIndexOf('o') == 7);
+			Assert::IsTrue(sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.firstIndexOfNot('H') == 1);
+			Assert::IsTrue(sv.firstIndexOfNot('o') == 0);
+			Assert::IsTrue(sv.firstIndexOfNot('z') == 0);
+
+			Assert::IsTrue(sv.lastIndexOfNot('H') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('o') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('z') == 11);
+
+			Assert::IsTrue(sv.startsWith('H'));
+			Assert::IsFalse(sv.startsWith('g'));
+
+			Assert::IsTrue(sv.startsWith("Hell"));
+			Assert::IsFalse(sv.startsWith("World"));
+
+			Assert::IsTrue(sv.endsWith("rld!"));
+			Assert::IsFalse(sv.endsWith("World"));
+
+			Assert::IsTrue(sv.compareTo("Abc") 
+				== NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+			Assert::IsTrue(sv.compareTo("Hello World!")
+				== NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+			Assert::IsTrue(sv.compareTo("Xyz") 
+				== NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+			NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
+
+			Assert::IsTrue(subStr.size() == 6);
+
+			Assert::IsTrue(subStr[0] == 'W');
+			Assert::IsTrue(subStr[0] == 'o');
+			Assert::IsTrue(subStr[0] == 'r');
+			Assert::IsTrue(subStr[0] == 'l');
+			Assert::IsTrue(subStr[0] == 'd');
+			Assert::IsTrue(subStr[0] == '!');
+
+			Assert::IsTrue(sv == "Hello World!");
+			Assert::IsTrue(sv != "Hello z World!");
+			Assert::IsTrue(sv < "xyz");
+			Assert::IsTrue(sv > "abc");
 		}
 	};
 }
