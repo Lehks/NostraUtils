@@ -3,7 +3,7 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
-
+#include "nostrautils\dat_alg\StringView.hpp"
 
 /**
 \file core/ErrorHandler.hpp
@@ -21,11 +21,13 @@ namespace NOU::NOU_CORE
 	*/
 	class NOU_CLASS ErrorLocation
 	{
+	public:
+		using StringType = NOU::NOU_DAT_ALG::StringView8;
 	private:
 		/**
 		\brief The function name in which the error occured.
 		*/
-		const char8* m_fnName; //Warten auf String implementierung von Dennis.
+		StringType  m_fnName;
 		
 		/**
 		\brief The line in which the error occured.
@@ -35,22 +37,28 @@ namespace NOU::NOU_CORE
 		/**
 		\brief The file in which the error occured.
 		*/
-		const char8* m_file;
+		StringType m_file;
+
+		/**
+		\brief The error code of the error.
+		*/
+		sizeType m_id;
 
 		/**
 		\brief The error message which is showed.
 		*/
-		const char8* m_msg;
+		StringType m_msg;
 
 	public:
-		ErrorLocation(const char8* fnName, sizeType line, const char8* file, sizeType errorCode, const char8* msg);
+		ErrorLocation(const StringType &fnName, sizeType line, const StringType &file,
+			sizeType id, const StringType &msg);
 
 		/**
 		\return Returns the function name.
 
 		\brief Returns the name of the function in which the error occured.
 		*/
-		const char8* getFnName();
+		const StringType &getFnName() const;
 
 		/**
 		\return Returns the line.
@@ -64,14 +72,21 @@ namespace NOU::NOU_CORE
 		
 		\brief Returns the file in which the error occured.
 		*/
-		const char8* getFile();
+		const StringType &getFile() const;
+
+		/**
+		\return Returns the id code.
+		
+		\brief Returns the id of the error.
+		*/
+		sizeType getID();
 
 		/**
 		\return Returns the error message.
 		
 		\brief Returns the error message of the error.
 		*/
-		const char8* getMsg();
+		const StringType &getMsg() const;
 	};
 
 	/**
@@ -79,12 +94,15 @@ namespace NOU::NOU_CORE
 	*/
 	class NOU_CLASS Error
 	{
+	public:
+		using StringType = ErrorLocation::StringType;
+
 	private:
 
 		/**
 		\brief The error name.
 		*/
-		const char8* m_name;
+		StringType m_name;
 
 		/**
 		\brief The error id.
@@ -93,12 +111,14 @@ namespace NOU::NOU_CORE
 
 	public:
 
+		Error(const StringType &name, sizeType id);
+
 		/**
 		\return Returns the name.
 		
 		\brief Returns the name of the error object.
 		*/
-		const char8* getName();
+		const StringType &getName() const;
 
 		/**
 		\return Returns the id.
@@ -115,7 +135,7 @@ namespace NOU::NOU_CORE
 	{
 	public:
 		ErrorPool();
-		Error& queryError(sizeType errorCode);
+		Error& queryError(sizeType id);
 	};
 
 	/**
@@ -124,14 +144,16 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS ErrorHandler
 	{
 	public:
+		using StringType = ErrorLocation::StringType;
+
 		using CallbackType = void(*)(const ErrorLocation &loc);
 
-	private:
-		NOU::NOU_DAT_ALG::FastQueue<ErrorHandler> m_errorQueue;
 	public:
-		ErrorHandler();
+		ErrorHandler(const StringType &fnName, sizeType line, const StringType &file, 
+			sizeType id, const StringType &msg);
 
-		void setError(const char8* fnName, sizeType line, const char8* file, sizeType errorCode, const char8* msg);
+		void setError(const StringType &fnName, sizeType line, const StringType &file, 
+			sizeType id, const StringType &msg);
 	};
 }
 #endif
