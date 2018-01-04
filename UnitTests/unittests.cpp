@@ -11,6 +11,8 @@
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
+#include "nostrautils\mem_mngt\Pointer.hpp"
+#include "nostrautils\dat_alg\StringView.hpp"
 
 #include <type_traits>
 
@@ -27,6 +29,9 @@ int dummyFunc1(int)
 {
 	return 1;
 }
+
+//used in test UniquePtr
+NOU::boolean testVar = false;
 
 
 namespace UnitTests
@@ -289,7 +294,63 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') ==
 				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+		}
 
+		TEST_METHOD(UniquePtr)
+		{
+			//use string for testing.
+			std::string *rawPtr = new std::string("Hello World!");
+			std::string *rawPtr1 = new std::string("Hello World! 1");
+
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr(rawPtr, NOU::NOU_MEM_MNGT::defaultDeleter);
+			NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr1(rawPtr1, NOU::NOU_MEM_MNGT::defaultDeleter);
+
+			Assert::IsTrue(uPtr.rawPtr() == rawPtr);
+			Assert::IsTrue(uPtr[0] == rawPtr[0]);
+			Assert::IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
+			Assert::IsTrue(*uPtr == *rawPtr);
+			Assert::IsTrue(uPtr);
+			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr, 
+						NOU::NOU_MEM_MNGT::defaultDeleter));
+			Assert::IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
+			Assert::IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
+			Assert::IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
+			Assert::IsTrue((uPtr > uPtr1) == (rawPtr > rawPtr1));
+			Assert::IsTrue((uPtr == uPtr1) == (rawPtr == rawPtr1));
+			Assert::IsTrue((uPtr != uPtr1) == (rawPtr != rawPtr1));
+
+			Assert::IsTrue(uPtr.deleter() == &NOU::NOU_MEM_MNGT::defaultDeleter<std::string>);
+
+			uPtr = std::move(uPtr1);
+
+			Assert::IsTrue(uPtr1.rawPtr() == nullptr);
+
+			Assert::IsTrue(uPtr.rawPtr() == rawPtr1);
+
+			struct TestDeleter
+			{
+				void operator () (int* i)
+				{
+					testVar = true;
+					delete i;
+				}
+			};
+
+			{
+				//check if this compiles
+				NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
+				
+				//destructor is called here
+			}
+
+			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
+
+			testVar = false;
+
+			NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr3(new int, TestDeleter());
+			uPtr3 = new int;
+
+			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
 		}
 
 		TEST_METHOD(AreSame)
@@ -330,6 +391,142 @@ namespace UnitTests
 			alloc.deallocate(iPtr);
 
 			Assert::IsTrue(alloc.getCounter() == 0);
+		}
+		
+		TEST_METHOD(AllocationCallbackDeleter)
+		{
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> dbgAlloc;
+			NOU::NOU_MEM_MNGT::AllocationCallbackRefDeleter<int> deleter0(dbgAlloc);
+
+			int *iPtr0 = dbgAlloc.allocate();
+
+			deleter0(iPtr0); //delete using deleter
+
+			Assert::IsTrue(dbgAlloc.getCounter() == 0);
+
+			auto callback = NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>();
+			NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int, 
+				NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>> deleter1(callback);
+
+			int *iPtr1 = deleter1.getAllocator().allocate();
+
+			deleter1(iPtr1); //delete using deleter
+
+			Assert::IsTrue(deleter1.getAllocator().getCounter() == 0);
+		}
+
+		TEST_METHOD(StringView)
+		{
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('A'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('Z'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('a'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('z'));
+
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('3'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('-'));
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('1'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('2'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('3'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('4'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('5'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('6'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('7'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('8'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('9'));
+
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('A'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('-'));
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
+
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!§$%&"));
+
+			NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
+
+			Assert::IsTrue(sv[0] == 'H');
+			Assert::IsTrue(sv[1] == 'e');
+			Assert::IsTrue(sv[2] == 'l');
+			Assert::IsTrue(sv[3] == 'l');
+			Assert::IsTrue(sv[4] == 'o');
+			Assert::IsTrue(sv[5] == ' ');
+			Assert::IsTrue(sv[6] == 'W');
+			Assert::IsTrue(sv[7] == 'o');
+			Assert::IsTrue(sv[8] == 'r');
+			Assert::IsTrue(sv[9] == 'l');
+			Assert::IsTrue(sv[10] == 'd');
+			Assert::IsTrue(sv[11] == '!');
+
+			Assert::IsTrue(sv.size() == 12);
+
+			Assert::IsTrue(sv == "Hello World!");
+
+			Assert::IsTrue(sv.find('e') == 1);
+			Assert::IsTrue(sv.find('e', 1) == 1);
+
+			Assert::IsTrue(sv.find('o') == 4);
+			Assert::IsTrue(sv.find('o', 5) == 7);
+			Assert::IsTrue(sv.find('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.find("ello") == 1);
+			Assert::IsTrue(sv.find("o") == 4);
+			Assert::IsTrue(sv.find("o", 5) == 7);
+			Assert::IsTrue(sv.find("test") == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.firstIndexOf('H') == 0);
+			Assert::IsTrue(sv.firstIndexOf('o') == 4);
+			Assert::IsTrue(sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.lastIndexOf('H') == 0);
+			Assert::IsTrue(sv.lastIndexOf('o') == 7);
+			Assert::IsTrue(sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.firstIndexOfNot('H') == 1);
+			Assert::IsTrue(sv.firstIndexOfNot('o') == 0);
+			Assert::IsTrue(sv.firstIndexOfNot('z') == 0);
+
+			Assert::IsTrue(sv.lastIndexOfNot('H') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('o') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('z') == 11);
+
+			Assert::IsTrue(sv.startsWith('H'));
+			Assert::IsFalse(sv.startsWith('g'));
+
+			Assert::IsTrue(sv.startsWith("Hell"));
+			Assert::IsFalse(sv.startsWith("World"));
+
+			Assert::IsTrue(sv.endsWith("rld!"));
+			Assert::IsFalse(sv.endsWith("World"));
+
+			Assert::IsTrue(sv.compareTo("Abc") 
+				== NOU::NOU_DAT_ALG::CompareResult::BIGGER);
+			Assert::IsTrue(sv.compareTo("Hello World!")
+				== NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+			Assert::IsTrue(sv.compareTo("Xyz") 
+				== NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+			NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
+
+			Assert::IsTrue(subStr.size() == 6);
+
+			Assert::IsTrue(subStr[0] == 'W');
+			Assert::IsTrue(subStr[1] == 'o');
+			Assert::IsTrue(subStr[2] == 'r');
+			Assert::IsTrue(subStr[3] == 'l');
+			Assert::IsTrue(subStr[4] == 'd');
+			Assert::IsTrue(subStr[5] == '!');
+
+			Assert::IsTrue(sv == "Hello World!");
+			Assert::IsTrue(sv != "Hello z World!");
+			Assert::IsTrue(sv < "xyz");
+			Assert::IsTrue(sv > "abc");
 		}
 	};
 }
