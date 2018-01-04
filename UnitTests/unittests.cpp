@@ -14,6 +14,8 @@
 #include "nostrautils\mem_mngt\Pointer.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 
+#include "DebugClass.hpp"
+
 #include <type_traits>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -527,6 +529,29 @@ namespace UnitTests
 			Assert::IsTrue(sv != "Hello z World!");
 			Assert::IsTrue(sv < "xyz");
 			Assert::IsTrue(sv > "abc");
+		}
+
+		TEST_METHOD(DebugClass)
+		{
+			{
+				NOU::DebugClass dbgCls0;
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
+
+				{
+					NOU::DebugClass dbgCls1 = dbgCls0;
+
+					Assert::IsTrue(NOU::DebugClass::getCounter() == 2);
+				}
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
+
+				NOU::DebugClass dbgCls2 = NOU::NOU_CORE::move(dbgCls0);
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 2);
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 		}
 	};
 }
