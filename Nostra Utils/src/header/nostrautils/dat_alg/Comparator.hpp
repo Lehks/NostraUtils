@@ -73,6 +73,18 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	NOU_FUNC CompareResult genericComparator(const T &a, const T &b);
 
+	///\todo comment
+	///\cond
+	template<>
+	NOU_FUNC CompareResult genericComparator<char8>(const char8 &a, const char8 &b);
+
+	template<>
+	NOU_FUNC CompareResult genericComparator<char16>(const char16 &a, const char16 &b);
+
+	template<>
+	NOU_FUNC CompareResult genericComparator<char32>(const char32 &a, const char32 &b);
+	///\endcond
+
 	/**
 	\tparam T The type of the objects that will be compared.
 	\param  a The first object.
@@ -93,8 +105,6 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	NOU_FUNC CompareResult genericInvertedComparator(const T &a, const T &b);
 
-
-
 	template<typename T>
 	CompareResult genericComparator(const T &a, const T &b)
 	{
@@ -110,33 +120,6 @@ namespace NOU::NOU_DAT_ALG
 	CompareResult genericInvertedComparator(const T &a, const T &b)
 	{
 		return invert(genericComparator(a, b));
-	}
-
-	template<>
-	CompareResult genericComparator<char8>(const char8 &a, const char8 &b)
-	{
-		char8 lowerCaseCharA = a >= 'A' && a <= 'Z' ? a + 'a' - 'A' : a;
-		char8 lowerCaseCharB = b >= 'A' && b <= 'Z' ? b + 'a' - 'A' : b;
-
-		return genericComparator<int8>(lowerCaseCharA, lowerCaseCharB);
-	}
-
-	template<>
-	CompareResult genericComparator<char16>(const char16 &a, const char16 &b)
-	{
-		char16 lowerCaseCharA = a >= u'A' && a <= u'Z' ? a + u'a' - u'A' : a;
-		char16 lowerCaseCharB = b >= u'A' && b <= u'Z' ? b + u'a' - u'A' : b;
-
-		return genericComparator<int16>(lowerCaseCharA, lowerCaseCharB);
-	}
-
-	template<>
-	CompareResult genericComparator<char32>(const char32 &a, const char32 &b)
-	{
-		char32 lowerCaseCharA = a >= U'A' && a <= U'Z' ? a + U'a' - U'A' : a;
-		char32 lowerCaseCharB = b >= U'A' && b <= U'Z' ? b + U'a' - U'A' : b;
-
-		return genericComparator<int32>(lowerCaseCharA, lowerCaseCharB);
 	}
 }
 
