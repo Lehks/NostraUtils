@@ -667,7 +667,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	sizeType  Vector<T>::capacity() const
+	sizeType Vector<T>::capacity() const
 	{
 		return m_capacity;
 	}
