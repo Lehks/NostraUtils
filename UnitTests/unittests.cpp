@@ -282,6 +282,31 @@ namespace UnitTests
 				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
 		}
 
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
+				static_cast<NOU::char16>('a')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
+				static_cast<NOU::char16>('A')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
+				static_cast<NOU::char16>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
+				static_cast<NOU::char16>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'), 
+				static_cast<NOU::char32>('a')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
+				static_cast<NOU::char32>('A')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
+				static_cast<NOU::char32>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
+				static_cast<NOU::char32>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
 		TEST_METHOD(UniquePtr)
 		{
 			//use string for testing.
