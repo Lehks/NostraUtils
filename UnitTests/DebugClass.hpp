@@ -18,6 +18,9 @@ namespace NOU
 		DebugClass(DebugClass &&other);
 
 		~DebugClass();
+
+		DebugClass& operator = (const DebugClass &other);
+		DebugClass& operator = (DebugClass &&other);
 	};
 }
 
