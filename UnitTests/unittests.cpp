@@ -244,18 +244,42 @@ namespace UnitTests
 
 			{
 
-				NOU::NOU_DAT_ALG::Vector<NOU::int32> vec4(5, dbgAlloc);
+				NOU::NOU_DAT_ALG::Vector<NOU::int32> vec4(1, dbgAlloc);
 
 				vec4.pushBack(5);
 				vec4.pushBack(2);
 				vec4.remove(1);
 				vec4.pushBack(1);
+				vec4.pushBack(1);
+				vec4.pushBack(1);
+				vec4.pushBack(546045);
+				vec4.pushBack(909789);
+				vec4.pushBack(213301);
+				vec4.pushBack(898049);
+				vec4.pushBack(132034);
+				vec4.pushBack(1);
+				vec4.pushBack(1);
+				vec4.pushBack(1);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
 				vec4.remove(0);
 				vec4.remove(0);
 
+
+				vec4.pushBack(4);
 			}
 
 			Assert::IsTrue(dbgAlloc.getCounter() == 0);
+
+			Assert::AreEqual(0, vec2.peek());
+			Assert::AreEqual(0, vec2.peekFront());
 		}
 
 		TEST_METHOD(Swap)

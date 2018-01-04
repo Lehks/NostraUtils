@@ -39,7 +39,7 @@ namespace NOU::NOU_DAT_ALG
 	\details The most basic of our containers. It can act like a dynamic array a FIFO-Queue, LIFO-Queue or a normal Queue.
 	*/
 	template<typename T>
-	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>
+	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>, public RandomAccess<T>
 	{
 	private:
 		NOU::NOU_MEM_MNGT::AllocationCallback<T>	&m_allocator;
@@ -133,15 +133,21 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		sizeType size() const override;
 		/**
-		\param index The index of the element to remove.
-		\return      The element that was removed.
+		\return      Returns the capacity of the Vector.
+
+		\brief Returns the capacity of the Vector.
+		*/
+		sizeType capacity() const;
+		/**
+		\param index The index of the element to show.
+		\return      The element that should be shown.
 
 		\brief Returns a reference of the object at the given index.
 		*/
 		T& at(sizeType index);
 		/**
-		\param index The index of the element to remove.
-		\return      The element that was removed.
+		\param index The index of the element to show.
+		\return      The element that should be shown.
 
 		\brief Returns a const reference of the object at the given index.
 		*/
@@ -193,6 +199,20 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		T pop() override;
 		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		*/
+		T peekFront() override;
+		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		\details
+		This methode calls peakFront() .
+		*/
+		T peek() override;
+		/**
 		\param index0 The first index.
 		\param index1 The second index.
 
@@ -221,6 +241,10 @@ namespace NOU::NOU_DAT_ALG
 		\brief Sorts the Vector.
 		*/
 		void sort();
+		/**
+		\brief Sorts the Vector using comperators.
+		*/
+		void sortComp();
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -641,6 +665,13 @@ namespace NOU::NOU_DAT_ALG
 	{
 		return m_size;
 	}
+
+	template<typename T>
+	sizeType Vector<T>::capacity() const
+	{
+		return m_capacity;
+	}
+
 	template<typename T>
 	T& Vector<T>::at(sizeType index)
 	{
@@ -706,6 +737,18 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	T Vector<T>::peekFront()
+	{
+		return m_data[0];
+	}
+
+	template<typename T>
+	T Vector<T>::peek()
+	{
+		return peekFront();
+	}
+
+	template<typename T>
 	void Vector<T>::swap(sizeType index0, sizeType index1)
 	{
 		NOU::NOU_DAT_ALG::swap(m_data + index0, m_data + index1);
@@ -750,6 +793,13 @@ namespace NOU::NOU_DAT_ALG
 	{
 		///\todo implementing a "real" sorting alg.
 		bubbleSort(m_data, m_size);
+	}
+
+	template<typename T>
+	void Vector<T>::sortComp()
+	{
+		///\todo implementing a "real" sorting alg.
+		bubbleSortComp(m_data, m_size);
 	}
 
 	template<typename T>

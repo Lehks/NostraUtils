@@ -28,4 +28,14 @@ namespace NOU
 	{
 		s_counter--;
 	}
+
+	DebugClass& DebugClass::operator = (const DebugClass &other)
+	{
+		return *this;
+	}
+
+	DebugClass& DebugClass::operator = (DebugClass &&other)
+	{
+		return *this;
+	}
 }
