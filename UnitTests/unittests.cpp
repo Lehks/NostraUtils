@@ -429,6 +429,15 @@ namespace UnitTests
 
 				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+
+				fq.clear();
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 
 				fq.push(NOU::DebugClass());
 				fq.push(NOU::DebugClass());

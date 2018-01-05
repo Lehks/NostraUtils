@@ -159,6 +159,11 @@ namespace NOU::NOU_DAT_ALG
 		void swap(sizeType index0, sizeType index1) override;
 
 		/**
+		\brief Removes all elements from the queue.
+		*/
+		void clear();
+
+		/**
 		\return The max capacity of the queue.
 		\brief Returns the max capacity of the queue.
 		*/
@@ -287,6 +292,18 @@ namespace NOU::NOU_DAT_ALG
 	{
 		Type *queueStart = m_queue.rawPtr() + m_startIndex;
 		NOU_DAT_ALG::swap<Type>(queueStart + index0, queueStart + index1);
+	}
+
+	template<typename T>
+	void FastQueue<T>::clear()
+	{
+		for (Type* i = m_queue.rawPtr() + m_startIndex; i != m_queue.rawPtr() + m_endIndex; i++)
+		{
+			i->~Type();
+		}
+
+		m_startIndex = 0;
+		m_endIndex = 0;
 	}
 
 	template<typename T>
