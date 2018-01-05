@@ -15,6 +15,8 @@
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
 
+#include "DebugClass.hpp"
+
 #include <type_traits>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -163,17 +165,6 @@ namespace UnitTests
 			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
 		}
 
-		TEST_METHOD(Swap)
-		{
-			NOU::int32 a = 1;
-			NOU::int32 b = 2;
-
-			NOU::NOU_DAT_ALG::swap(&a, &b);
-
-			Assert::AreEqual(2,a);
-			Assert::AreEqual(1,b);
-		}
-
 		TEST_METHOD(Vector)
 		{
 			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
@@ -224,21 +215,95 @@ namespace UnitTests
 
 			int i = 0;
 
-			NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> iter1 = vec2.begin();
 			for (NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> it = vec2.begin(); it != vec2.end(); it++)
 			{
 				Assert::AreEqual(*it, vec2[i]);
 				i++;
 			}
 
-			i = vec2.size();
+			i = vec2.size() - 1;
 
-			NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> iter2 = vec2.rbegin();
 			for (NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> it = vec2.rbegin(); it != vec2.rend(); it++)
 			{
 				Assert::AreEqual(*it, vec2[i]);
 				i--;
 			}
+			
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::int32> dbgAlloc;
+
+			{
+
+				NOU::NOU_DAT_ALG::Vector<NOU::int32> vec4(1, dbgAlloc);
+
+				vec4.pushBack(5);
+				vec4.pushBack(2);
+				vec4.remove(1);
+				vec4.pushBack(1);
+				vec4.pushBack(1);
+				vec4.pushBack(1);
+				vec4.pushBack(546045);
+				vec4.pushBack(909789);
+				vec4.pushBack(213301);
+				vec4.pushBack(898049);
+				vec4.pushBack(132034);
+				vec4.pushBack(1);
+				vec4.pushBack(1);
+				vec4.pushBack(1);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+				vec4.remove(0);
+
+
+				vec4.pushBack(4);
+			}
+
+
+			Assert::IsTrue(dbgAlloc.getCounter() == 0);
+
+			Assert::AreEqual(0, vec2.peek());
+			Assert::AreEqual(0, vec2.peekFront());
+
+
+			{
+				NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec5(1);
+
+				vec5.pushBack(NOU::DebugClass());
+				vec5.pushBack(NOU::DebugClass());
+				vec5.remove(0);
+				vec5.pushBack(NOU::DebugClass());
+				vec5.remove(1);
+				vec5.remove(0);
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+				vec5.push(NOU::DebugClass());
+				vec5.push(NOU::DebugClass());
+				vec5.push(NOU::DebugClass());
+			}
+
+			Assert::AreEqual(0, vec1.peek());
+			Assert::AreEqual(0, vec1.peekFront());
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(Swap)
+		{
+			NOU::int32 a = 1;
+			NOU::int32 b = 2;
+
+			NOU::NOU_DAT_ALG::swap(&a, &b);
+
+			Assert::AreEqual(2,a);
+			Assert::AreEqual(1,b);
 		}
 
 		TEST_METHOD(Comparator)
@@ -364,43 +429,53 @@ namespace UnitTests
 			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
 		}
 
-		TEST_METHOD(AreSame)
-		{
-			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<double, int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double>::value);
-			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, double>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, double, double, int>::value);
-			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
-			Assert::IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
-			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
-		}
-
-		TEST_METHOD(IsInvocable)
-		{
-			Assert::IsTrue(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), std::string>::value);
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocable<int, int>::value);
-
-			Assert::IsTrue(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), int>::value);
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, decltype(dummyFunc1), std::string>::value);
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<std::string, decltype(dummyFunc1), int>::value);
-
-			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, int, int>::value);
-		}
-
 		TEST_METHOD(FastQueue)
 		{
-			NOU::NOU_DAT_ALG::FastQueue<int> fq(5);
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
 
-			Assert::IsTrue(fq.capacity() == 5);
-			Assert::IsTrue(&(fq.getAllocationCallback()) == 
-				&(NOU::NOU_MEM_MNGT::GenericAllocationCallback<int>::getInstance()));
+			{
+				NOU::NOU_DAT_ALG::FastQueue<NOU::DebugClass> fq(5, allocator);
 
-			Assert::IsTrue(fq.size() == 0);
-			Assert::IsTrue(fq.empty());
+				Assert::IsTrue(fq.capacity() == 5);
+				Assert::IsTrue(&fq.getAllocationCallback() == &allocator);
+
+				Assert::IsTrue(fq.size() == 0);
+				Assert::IsTrue(fq.empty());
+
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+
+				fq.pop();
+				fq.pop();
+				fq.pop();
+				fq.pop();
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+			Assert::IsTrue(allocator.getCounter() == 0);
+
+			NOU::NOU_DAT_ALG::FastQueue<int> fq;
+		
+			fq.push(1);
+			fq.push(2);
+			fq.push(3);
+			fq.push(4);
+		
+			Assert::IsTrue(fq.peek() == 1);
+		
+			Assert::IsTrue(fq.pop() == 1);
+			Assert::IsTrue(fq.pop() == 2);
+			Assert::IsTrue(fq.pop() == 3);
+			Assert::IsTrue(fq.pop() == 4);
 		}
 
 		TEST_METHOD(AreSame)
@@ -467,6 +542,38 @@ namespace UnitTests
 
 		TEST_METHOD(StringView)
 		{
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('A'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('Z'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('a'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('z'));
+
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('3'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('-'));
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('1'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('2'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('3'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('4'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('5'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('6'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('7'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('8'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('9'));
+
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('A'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('-'));
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
+
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!§$%&"));
+
 			NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
 			Assert::IsTrue(sv[0] == 'H');
@@ -484,7 +591,139 @@ namespace UnitTests
 
 			Assert::IsTrue(sv.size() == 12);
 
+			Assert::IsTrue(*sv.indexIterator(0) == 'H');
+			Assert::IsTrue(*sv.indexIterator(1) == 'e');
+			Assert::IsTrue(*sv.indexIterator(2) == 'l');
+			Assert::IsTrue(*sv.indexIterator(3) == 'l');
+			Assert::IsTrue(*sv.indexIterator(4) == 'o');
+			Assert::IsTrue(*sv.indexIterator(5) == ' ');
+			Assert::IsTrue(*sv.indexIterator(6) == 'W');
+			Assert::IsTrue(*sv.indexIterator(7) == 'o');
+			Assert::IsTrue(*sv.indexIterator(8) == 'r');
+			Assert::IsTrue(*sv.indexIterator(9) == 'l');
+			Assert::IsTrue(*sv.indexIterator(10) == 'd');
+			Assert::IsTrue(*sv.indexIterator(11) == '!');
+
 			Assert::IsTrue(sv == "Hello World!");
+
+			Assert::IsTrue(sv.find('e') == 1);
+			Assert::IsTrue(sv.find('e', 1) == 1);
+
+			Assert::IsTrue(sv.find('o') == 4);
+			Assert::IsTrue(sv.find('o', 5) == 7);
+			Assert::IsTrue(sv.find('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.find("ello") == 1);
+			Assert::IsTrue(sv.find("o") == 4);
+			Assert::IsTrue(sv.find("o", 5) == 7);
+			Assert::IsTrue(sv.find("test") == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.firstIndexOf('H') == 0);
+			Assert::IsTrue(sv.firstIndexOf('o') == 4);
+			Assert::IsTrue(sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.lastIndexOf('H') == 0);
+			Assert::IsTrue(sv.lastIndexOf('o') == 7);
+			Assert::IsTrue(sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+			Assert::IsTrue(sv.firstIndexOfNot('H') == 1);
+			Assert::IsTrue(sv.firstIndexOfNot('o') == 0);
+			Assert::IsTrue(sv.firstIndexOfNot('z') == 0);
+
+			Assert::IsTrue(sv.lastIndexOfNot('H') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('o') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('z') == 11);
+
+			Assert::IsTrue(sv.startsWith('H'));
+			Assert::IsFalse(sv.startsWith('g'));
+
+			Assert::IsTrue(sv.startsWith("Hell"));
+			Assert::IsFalse(sv.startsWith("World"));
+
+			Assert::IsTrue(sv.endsWith("rld!"));
+			Assert::IsFalse(sv.endsWith("World"));
+
+			Assert::IsTrue(sv.compareTo("Abc") 
+				== NOU::NOU_DAT_ALG::CompareResult::BIGGER);
+			Assert::IsTrue(sv.compareTo("Hello World!")
+				== NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+			Assert::IsTrue(sv.compareTo("Xyz") 
+				== NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+			NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
+
+			Assert::IsTrue(subStr.size() == 6);
+
+			Assert::IsTrue(subStr[0] == 'W');
+			Assert::IsTrue(subStr[1] == 'o');
+			Assert::IsTrue(subStr[2] == 'r');
+			Assert::IsTrue(subStr[3] == 'l');
+			Assert::IsTrue(subStr[4] == 'd');
+			Assert::IsTrue(subStr[5] == '!');
+
+			Assert::IsTrue(sv == "Hello World!");
+			Assert::IsTrue(sv != "Hello z World!");
+			Assert::IsTrue(sv < "xyz");
+			Assert::IsTrue(sv > "abc");
+
+			NOU::NOU_DAT_ALG::StringView8 sv1 = "Hello World!";
+			NOU::NOU_DAT_ALG::StringView8 sv2 = "Bye World!";
+
+			sv1 = sv2;
+
+			Assert::IsTrue(sv1 == sv2);
+		}
+
+		TEST_METHOD(DebugClass)
+		{
+			{
+				NOU::DebugClass dbgCls0;
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
+
+				{
+					NOU::DebugClass dbgCls1 = dbgCls0;
+
+					Assert::IsTrue(NOU::DebugClass::getCounter() == 2);
+				}
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
+
+				NOU::DebugClass dbgCls2 = NOU::NOU_CORE::move(dbgCls0);
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 2);
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			NOU::DebugClass dbgCls0(1);
+			NOU::DebugClass dbgCls1(3);
+
+			Assert::IsTrue(dbgCls0 < dbgCls1);
+			Assert::IsFalse(dbgCls0 > dbgCls1);
+			Assert::IsTrue(dbgCls0 <= dbgCls1);
+			Assert::IsFalse(dbgCls0 >= dbgCls1);
+			Assert::IsFalse(dbgCls0 == dbgCls1);
+			Assert::IsTrue(dbgCls0 != dbgCls1);
+
+			NOU::DebugClass dbgCls2(1);
+
+			Assert::IsFalse(dbgCls0 < dbgCls2);
+			Assert::IsFalse(dbgCls0 > dbgCls2);
+			Assert::IsTrue(dbgCls0 <= dbgCls2);
+			Assert::IsTrue(dbgCls0 >= dbgCls2);
+			Assert::IsTrue(dbgCls0 == dbgCls2);
+			Assert::IsFalse(dbgCls0 != dbgCls2);
+
+			Assert::IsTrue(dbgCls0.get() == 1);
+			Assert::IsTrue(dbgCls1.get() == 3);
+			Assert::IsTrue(dbgCls2.get() == 1);
+
+			NOU::DebugClass dbgCls3 = dbgCls0;
+			NOU::DebugClass dbgCls4 = NOU::NOU_CORE::move(dbgCls1);
+
+			Assert::IsTrue(dbgCls3.get() == 1);
+			Assert::IsTrue(dbgCls4.get() == 3);
 		}
 	};
 }

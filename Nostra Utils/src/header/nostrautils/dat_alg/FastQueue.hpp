@@ -124,6 +124,34 @@ namespace NOU::NOU_DAT_ALG
 		Type pop() override;
 
 		/**
+		\return A reference to the first (aka oldest) element in the queue.
+
+		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
+		*/
+		const Type& peekFront() const override;
+
+		/**
+		\return A reference to the first (aka oldest) element in the queue.
+
+		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
+		*/
+		Type& peekFront() override;
+
+		/**
+		\return A reference to the first (aka oldest) element in the queue.
+
+		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
+		*/
+		const Type& peek() const override;
+
+		/**
+		\return A reference to the first (aka oldest) element in the queue.
+
+		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
+		*/
+		Type& peek() override;
+
+		/**
 		\param index0 The first element.
 		\param index1 The second element.
 		\brief Swaps two elements of the queue.
@@ -228,6 +256,30 @@ namespace NOU::NOU_DAT_ALG
 	typename FastQueue<T>::Type FastQueue<T>::pop() //trailing? 
 	{
 		return popFront();
+	}
+
+	template<typename T>
+	const typename FastQueue<T>::Type& FastQueue<T>::peekFront() const
+	{
+		return m_queue[m_startIndex];
+	}
+
+	template<typename T>
+	typename FastQueue<T>::Type& FastQueue<T>::peekFront()
+	{
+		return m_queue[m_startIndex];
+	}
+
+	template<typename T>
+	const typename FastQueue<T>::Type& FastQueue<T>::peek() const
+	{
+		return peekFront();
+	}
+
+	template<typename T>
+	typename FastQueue<T>::Type& FastQueue<T>::peek()
+	{
+		return peekFront();
 	}
 
 	template<typename T>
