@@ -10,7 +10,7 @@ namespace NOU::NOU_CORE
 		m_msg(msg)
 	{}
 
-	const ErrorLocation::StringType &ErrorLocation::getFnName() const
+	const ErrorLocation::StringType& ErrorLocation::getFnName() const
 	{
 		return m_fnName;
 	}
@@ -20,7 +20,7 @@ namespace NOU::NOU_CORE
 		return m_line;
 	}
 
-	const ErrorLocation::StringType &ErrorLocation::getFile() const
+	const ErrorLocation::StringType& ErrorLocation::getFile() const
 	{
 		return m_file;
 	}
@@ -30,7 +30,7 @@ namespace NOU::NOU_CORE
 		return m_id;
 	}
 
-	const ErrorLocation::StringType &ErrorLocation::getMsg() const
+	const ErrorLocation::StringType& ErrorLocation::getMsg() const
 	{
 		return m_msg;
 	}
@@ -39,7 +39,7 @@ namespace NOU::NOU_CORE
 		m_name(name),
 		m_id(id)
 	{}
-	const Error::StringType &Error::getName() const
+	const Error::StringType& Error::getName() const
 	{
 		return m_name;
 	}

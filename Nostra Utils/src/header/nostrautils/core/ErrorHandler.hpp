@@ -22,7 +22,12 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS ErrorLocation
 	{
 	public:
+
+		/**
+		\brief Uses the alias StringType for the NOU::NOU_DAT_ALG::StringView8.
+		*/
 		using StringType = NOU::NOU_DAT_ALG::StringView8;
+
 	private:
 		/**
 		\brief The function name in which the error occured.
@@ -50,6 +55,19 @@ namespace NOU::NOU_CORE
 		StringType m_msg;
 
 	public:
+		/**
+		\param fnName A reference to the function name in which the error occured.
+
+		\param line The line in which the error occured.
+
+		\param file A reference to the file in which the error occured.
+
+		\param id The ID of the error.
+
+		\param msg A reference to the error message.
+
+		\brief Constructs a new ErrorLocation 
+		*/
 		ErrorLocation(const StringType &fnName, sizeType line, const StringType &file,
 			sizeType id, const StringType &msg);
 
@@ -58,7 +76,7 @@ namespace NOU::NOU_CORE
 
 		\brief Returns the name of the function in which the error occured.
 		*/
-		const StringType &getFnName() const;
+		const StringType& getFnName() const;
 
 		/**
 		\return Returns the line.
@@ -72,7 +90,7 @@ namespace NOU::NOU_CORE
 		
 		\brief Returns the file in which the error occured.
 		*/
-		const StringType &getFile() const;
+		const StringType& getFile() const;
 
 		/**
 		\return Returns the id code.
@@ -86,7 +104,7 @@ namespace NOU::NOU_CORE
 		
 		\brief Returns the error message of the error.
 		*/
-		const StringType &getMsg() const;
+		const StringType& getMsg() const;
 	};
 
 	/**
@@ -95,6 +113,10 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS Error
 	{
 	public:
+
+		/**
+		\brief Uses the alias StringType for the NOU::NOU_DAT_ALG::StringView8.
+		*/
 		using StringType = ErrorLocation::StringType;
 
 	private:
@@ -111,6 +133,13 @@ namespace NOU::NOU_CORE
 
 	public:
 
+		/**
+		\param name A reference to the name of the error.
+
+		\param id The ID of the error.
+
+		\brief Constructs a new error.
+		*/
 		Error(const StringType &name, sizeType id);
 
 		/**
@@ -118,7 +147,7 @@ namespace NOU::NOU_CORE
 		
 		\brief Returns the name of the error object.
 		*/
-		const StringType &getName() const;
+		const StringType& getName() const;
 
 		/**
 		\return Returns the id.
@@ -134,7 +163,17 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS ErrorPool
 	{
 	public:
+
+		/**
+		\brief Constructs a new ErrorPool.
+		*/
 		ErrorPool();
+
+		/**
+		\return Returns a reference to an Error.
+
+		\brief Returns a reference to an error with the passed ID.
+		*/
 		Error& queryError(sizeType id);
 	};
 
@@ -144,14 +183,48 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS ErrorHandler
 	{
 	public:
+
+		/**
+		\brief Uses the alias StringType for the NOU::NOU_DAT_ALG::StringView8.
+		*/
 		using StringType = ErrorLocation::StringType;
 
+		/**
+		\brief A CallbackType where loc is a reference to the ErrorLocation.
+		*/
 		using CallbackType = void(*)(const ErrorLocation &loc);
 
 	public:
+
+		/**
+		\param fnName A reference to the function name in which the error occured.
+
+		\param line The line in which the error occured.
+
+		\param file A reference to the file in which the error occured.
+
+		\ param id The ID of the error.
+
+		\param msg A reference to the message of the error.
+
+		\brief Constructs a new ErrorHandler.
+		*/
 		ErrorHandler(const StringType &fnName, sizeType line, const StringType &file, 
 			sizeType id, const StringType &msg);
 
+		/**
+		\param fnName A reference to the function name in which the error occured.
+
+		\param line The line in which the error occured.
+		
+		\param file A reference to the file in which the error occured.
+
+		\ param id The ID of the error.
+
+		\param msg A reference to the message of the error.
+
+		\brief Sets an error with its attributes.
+		*/
 		void setError(const StringType &fnName, sizeType line, const StringType &file, 
 			sizeType id, const StringType &msg);
 	};
