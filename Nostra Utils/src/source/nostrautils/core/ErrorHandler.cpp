@@ -8,7 +8,9 @@ namespace NOU::NOU_CORE
 		m_line(line),
 		m_file(file),
 		m_msg(msg)
-	{}
+	{
+		
+	}
 
 	const ErrorLocation::StringType& ErrorLocation::getFnName() const
 	{
@@ -49,25 +51,12 @@ namespace NOU::NOU_CORE
 		return m_id;
 	}
 
-	ErrorPool::ErrorPool()
-	{
-
-	}
-
-	//Error& ErrorPool::queryError(sizeType id)
-	//{
-		
-	//}
-
-	ErrorHandler::ErrorHandler(const StringType &fnName, sizeType line, const StringType &file,
-		sizeType id, const StringType &msg)
-	{
-		setError(fnName, line, file, id, msg);
-	}
+	ErrorHandler::ErrorHandler()
+	{}
 
 	void ErrorHandler::setError(const StringType &fnName, sizeType line, const StringType &file,
 		sizeType id, const StringType &msg)
 	{
-		ErrorLocation::ErrorLocation(fnName, line, file, id, msg);
+		m_errors.push(ErrorLocation::ErrorLocation(fnName, line, file, id, msg));
 	}
 }

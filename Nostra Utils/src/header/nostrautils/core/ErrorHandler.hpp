@@ -64,7 +64,7 @@ namespace NOU::NOU_CORE
 
 		\param id The ID of the error.
 
-		\param msg A reference to the error message.
+		\param msg A reference to the message of the error.
 
 		\brief Constructs a new ErrorLocation 
 		*/
@@ -182,6 +182,10 @@ namespace NOU::NOU_CORE
 	*/
 	class NOU_CLASS ErrorHandler
 	{
+	private:
+		NOU_DAT_ALG::FastQueue<ErrorLocation> m_errors;
+		NOU_DAT_ALG::Vector<ErrorPool> m_errorPools;
+
 	public:
 
 		/**
@@ -194,23 +198,10 @@ namespace NOU::NOU_CORE
 		*/
 		using CallbackType = void(*)(const ErrorLocation &loc);
 
-	public:
-
 		/**
-		\param fnName A reference to the function name in which the error occured.
-
-		\param line The line in which the error occured.
-
-		\param file A reference to the file in which the error occured.
-
-		\ param id The ID of the error.
-
-		\param msg A reference to the message of the error.
-
 		\brief Constructs a new ErrorHandler.
 		*/
-		ErrorHandler(const StringType &fnName, sizeType line, const StringType &file, 
-			sizeType id, const StringType &msg);
+		ErrorHandler();
 
 		/**
 		\param fnName A reference to the function name in which the error occured.
@@ -219,7 +210,7 @@ namespace NOU::NOU_CORE
 		
 		\param file A reference to the file in which the error occured.
 
-		\ param id The ID of the error.
+		\param id The ID of the error.
 
 		\param msg A reference to the message of the error.
 
