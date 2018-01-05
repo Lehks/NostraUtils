@@ -156,7 +156,7 @@ namespace NOU::NOU_DAT_ALG
 		\param index1 The second element.
 		\brief Swaps two elements of the queue.
 		*/
-		void swap(sizeType index0, sizeType index1) override;
+		void swap(sizeType index0, sizeType index1);
 
 		/**
 		\brief Removes all elements from the queue.
