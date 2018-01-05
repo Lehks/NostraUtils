@@ -2,6 +2,7 @@
 #define	NOU_DAT_ALG_COMPARTOR_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\core\Meta.hpp"
 
 namespace NOU::NOU_DAT_ALG
 {
@@ -42,7 +43,7 @@ namespace NOU::NOU_DAT_ALG
 	EQUAL   => EQUAL\n
 	BIGGER  => SMALLER
 	*/
-	NOU_FUNC CompareResult invert(CompareResult result);
+	NOU_FUNC constexpr CompareResult invert(CompareResult result);
 
 	/**
 	\tparam T The type of the objects that will be compared.
@@ -71,7 +72,7 @@ namespace NOU::NOU_DAT_ALG
 	      languages)
 	*/
 	template<typename T>
-	NOU_FUNC CompareResult genericComparator(const T &a, const T &b);
+	NOU_FUNC constexpr CompareResult genericComparator(const T &a, const T &b);
 
 	/**
 	\tparam T The type of the objects that will be compared.
@@ -91,12 +92,28 @@ namespace NOU::NOU_DAT_ALG
 	using invert().
 	*/
 	template<typename T>
-	NOU_FUNC CompareResult genericInvertedComparator(const T &a, const T &b);
+	NOU_FUNC constexpr CompareResult genericInvertedComparator(const T &a, const T &b);
 
+	///\todo comment
+	///\cond
+	template<>
+	NOU_FUNC constexpr CompareResult genericComparator<char8>(const char8 &a, const char8 &b);
 
+	template<>
+	NOU_FUNC constexpr CompareResult genericComparator<char16>(const char16 &a, const char16 &b);
+
+	template<>
+	NOU_FUNC constexpr CompareResult genericComparator<char32>(const char32 &a, const char32 &b);
+	///\endcond
+
+	constexpr CompareResult invert(CompareResult result)
+	{
+		//cast to underlying type, invert value, cast back to enum
+		return static_cast<CompareResult>(-static_cast<NOU_CORE::UnderlyingType_t<CompareResult>>(result));
+	}
 
 	template<typename T>
-	CompareResult genericComparator(const T &a, const T &b)
+	constexpr CompareResult genericComparator(const T &a, const T &b)
 	{
 		if (a < b)
 			return CompareResult::SMALLER;
@@ -107,13 +124,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	CompareResult genericInvertedComparator(const T &a, const T &b)
+	constexpr CompareResult genericInvertedComparator(const T &a, const T &b)
 	{
 		return invert(genericComparator(a, b));
 	}
 
 	template<>
-	CompareResult genericComparator<char8>(const char8 &a, const char8 &b)
+	constexpr CompareResult genericComparator<char8>(const char8 &a, const char8 &b)
 	{
 		char8 lowerCaseCharA = a >= 'A' && a <= 'Z' ? a + 'a' - 'A' : a;
 		char8 lowerCaseCharB = b >= 'A' && b <= 'Z' ? b + 'a' - 'A' : b;
@@ -122,7 +139,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<>
-	CompareResult genericComparator<char16>(const char16 &a, const char16 &b)
+	constexpr CompareResult genericComparator<char16>(const char16 &a, const char16 &b)
 	{
 		char16 lowerCaseCharA = a >= u'A' && a <= u'Z' ? a + u'a' - u'A' : a;
 		char16 lowerCaseCharB = b >= u'A' && b <= u'Z' ? b + u'a' - u'A' : b;
@@ -131,7 +148,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<>
-	CompareResult genericComparator<char32>(const char32 &a, const char32 &b)
+	constexpr CompareResult genericComparator<char32>(const char32 &a, const char32 &b)
 	{
 		char32 lowerCaseCharA = a >= U'A' && a <= U'Z' ? a + U'a' - U'A' : a;
 		char32 lowerCaseCharB = b >= U'A' && b <= U'Z' ? b + U'a' - U'A' : b;
