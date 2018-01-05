@@ -73,6 +73,9 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

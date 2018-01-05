@@ -13,6 +13,7 @@
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
+#include "nostrautils\dat_alg\FastQueue.hpp"
 
 #include "DebugClass.hpp"
 
@@ -164,17 +165,6 @@ namespace UnitTests
 			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
 		}
 
-		TEST_METHOD(Swap)
-		{
-			NOU::int32 a = 1;
-			NOU::int32 b = 2;
-
-			NOU::NOU_DAT_ALG::swap(&a, &b);
-
-			Assert::AreEqual(2,a);
-			Assert::AreEqual(1,b);
-		}
-
 		TEST_METHOD(Vector)
 		{
 			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
@@ -275,10 +265,45 @@ namespace UnitTests
 				vec4.pushBack(4);
 			}
 
+
 			Assert::IsTrue(dbgAlloc.getCounter() == 0);
 
 			Assert::AreEqual(0, vec2.peek());
 			Assert::AreEqual(0, vec2.peekFront());
+
+
+			{
+				NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec5(1);
+
+				vec5.pushBack(NOU::DebugClass());
+				vec5.pushBack(NOU::DebugClass());
+				vec5.remove(0);
+				vec5.pushBack(NOU::DebugClass());
+				vec5.remove(1);
+				vec5.remove(0);
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+				vec5.push(NOU::DebugClass());
+				vec5.push(NOU::DebugClass());
+				vec5.push(NOU::DebugClass());
+			}
+
+			Assert::AreEqual(0, vec1.peek());
+			Assert::AreEqual(0, vec1.peekFront());
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(Swap)
+		{
+			NOU::int32 a = 1;
+			NOU::int32 b = 2;
+
+			NOU::NOU_DAT_ALG::swap(&a, &b);
+
+			Assert::AreEqual(2,a);
+			Assert::AreEqual(1,b);
 		}
 
 		TEST_METHOD(Comparator)
@@ -377,6 +402,55 @@ namespace UnitTests
 			uPtr3 = new int;
 
 			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
+		}
+
+		TEST_METHOD(FastQueue)
+		{
+			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
+
+			{
+				NOU::NOU_DAT_ALG::FastQueue<NOU::DebugClass> fq(5, allocator);
+
+				Assert::IsTrue(fq.capacity() == 5);
+				Assert::IsTrue(&fq.getAllocationCallback() == &allocator);
+
+				Assert::IsTrue(fq.size() == 0);
+				Assert::IsTrue(fq.empty());
+
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+
+				fq.pop();
+				fq.pop();
+				fq.pop();
+				fq.pop();
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+				fq.push(NOU::DebugClass());
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+			Assert::IsTrue(allocator.getCounter() == 0);
+
+			NOU::NOU_DAT_ALG::FastQueue<int> fq;
+		
+			fq.push(1);
+			fq.push(2);
+			fq.push(3);
+			fq.push(4);
+		
+			Assert::IsTrue(fq.peek() == 1);
+		
+			Assert::IsTrue(fq.pop() == 1);
+			Assert::IsTrue(fq.pop() == 2);
+			Assert::IsTrue(fq.pop() == 3);
+			Assert::IsTrue(fq.pop() == 4);
 		}
 
 		TEST_METHOD(AreSame)
