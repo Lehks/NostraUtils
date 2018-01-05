@@ -213,7 +213,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Inserts the provided string at the provided index.
 		*/
-		String& insert(sizeType index, const StringView &str);
+		String& insert(sizeType index, const StringView<CHAR_TYPE> &str);
 
 		/**
 		\param index The index at which the number will be inserted.
@@ -283,7 +283,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Appends the provided string.
 		*/
-		String& append(const StringView &str);
+		String& append(const StringView<CHAR_TYPE> &str);
 
 		/**
 		\param nr The number to append.
@@ -349,7 +349,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Appends the provided string if the passed boolean is \c true.
 		*/
-		String& appendIf(boolean b, const StringView &str);
+		String& appendIf(boolean b, const StringView<CHAR_TYPE> &str);
 
 		/**
 		\param b  The value that determines weather the number will be appended or not.
@@ -434,7 +434,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Finds all \p target substrings and replaces them with \p replacement in the interval \f$\left[target,
 		replacement\right[\f$.
 		*/
-		String& replace(const StringView &target, const StringView &replacement, sizeType start = 0, sizeType end = NULL_INDEX);
+		String& replace(const StringView<CHAR_TYPE> &target, const StringView<CHAR_TYPE> &replacement, sizeType start = 0, sizeType end = NULL_INDEX);
 
 		/**
 		\param start       The start of the interval of the substring that will be replaced. The character at this
@@ -446,7 +446,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Replaces the substring that is marked by \p start and \p end and replaces it with \p replacement.
 		*/
-		String& replace(sizeType start, sizeType end, const StringView &replacement);
+		String& replace(sizeType start, sizeType end, const StringView<CHAR_TYPE> &replacement);
 
 		/**
 		\tparam SELECTOR The type of the selector that will be used to select the characters to replace. This must be a
@@ -497,7 +497,7 @@ namespace NOU::NOU_DAT_ALG
 		instance at the index \p insertIndex. This method is the opposite of copySubstringTo() in terms of from
 		where the source substring is pulled and where it is inserted.
 		*/
-		String& copySubstringHere(const StringView &src, sizeType start,
+		String& copySubstringHere(const StringView<CHAR_TYPE> &src, sizeType start,
 			sizeType end = NULL_INDEX, sizeType insertIndex = 0);
 
 		/**
@@ -603,7 +603,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Concatenates the current string and the passed string into a new string.
 		*/
-		String concat(const StringView &str) const;
+		String concat(const StringView<CHAR_TYPE> &str) const;
 
 		/**
 		\param i The integer to concatenate this string with.
@@ -669,7 +669,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Concatenates the current string and the passed string into a new string, but only if \p b is \c true.
 		*/
-		String concatIf(boolean b, const StringView &str) const;
+		String concatIf(boolean b, const StringView<CHAR_TYPE> &str) const;
 
 		/**
 		\param b The value that determines weather the number will be concatenated or not.
@@ -827,7 +827,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Calls concat(const StringView&).
 		*/
-		String operator + (const StringView &str) const;
+		String operator + (const StringView<CHAR_TYPE> &str) const;
 
 		/**
 		\param i The integer to concatenate.
@@ -891,7 +891,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Calls append(const StringView&).
 		*/
-		String& operator += (const StringView &str);
+		String& operator += (const StringView<CHAR_TYPE> &str);
 
 		/**
 		\param i The integer to append.
@@ -950,10 +950,23 @@ namespace NOU::NOU_DAT_ALG
 		CharType& operator [] (sizeType index);
 	};
 
-	template<typename T>
-	String<T>::String(const StringView<CHAR_TYPE> &str) :
-		m_data(NOU::NOU_DAT_ALG::Vector<CHAR_TYPE>())
-	{}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(const StringView<CHAR_TYPE> &str) :
+		m_data(str.size()),
+		StringView<CHAR_TYPE>(m_data.data(), str.size())
+	{
+		for (sizeType i = 0; i < str.size(); i++)
+		{
+			m_data.pushBack(str.at(i));
+		}
+
+		setSize(str.size());
+	}
+	template<typename CHAR_TYPE>
+	void String<CHAR_TYPE>::setSize(sizeType size)
+	{
+		m_size = size;
+	}
 }
 
 

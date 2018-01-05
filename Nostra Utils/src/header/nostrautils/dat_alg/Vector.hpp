@@ -259,6 +259,8 @@ namespace NOU::NOU_DAT_ALG
 		\brief Sorts the Vector using comperators.
 		*/
 		void sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp);
+
+		const T& data() const;
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -826,6 +828,12 @@ namespace NOU::NOU_DAT_ALG
 	{
 		///\todo implementing a "real" sorting alg.
 		bubbleSortComp(m_data, m_size, comp);
+	}
+
+	template<typename T>
+	const T& Vector<T>::data() const
+	{
+		return m_data;
 	}
 
 	template<typename T>
