@@ -21,7 +21,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief Sorts the Conatiner .
 	*/
 	template<typename T>
-	void NOU_FUNC bubbleSort(T container, sizeType size);
+	void NOU_FUNC bubbleSort(T& container, sizeType size);
 	/**
 	\tparam		The type of the container to sort.
 	\param size The size of the container.
@@ -29,10 +29,10 @@ namespace NOU::NOU_DAT_ALG
 	\brief Sorts the Conatiner using comperators.
 	*/
 	template<typename T>
-	void NOU_FUNC bubbleSortComp(T container, sizeType size);
+	void NOU_FUNC bubbleSortComp(T& container, sizeType size, NOU::NOU_DAT_ALG::Comparator<T> comp);
 
 	template<typename T>
-	void bubbleSort(T container, sizeType size)
+	void bubbleSort(T& container, sizeType size)
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -47,13 +47,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	void bubbleSortComp(T container, sizeType size)
+	void bubbleSortComp(T& container, sizeType size, NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = i + 1; j < size; j++)
 			{
-				if (NOU::NOU_DAT_ALG::genericComparator(container[i], container[j]) == NOU::NOU_DAT_ALG::CompareResult::BIGGER)
+				if (comp(container[i], container[j]) == NOU::NOU_DAT_ALG::CompareResult::BIGGER)
 				{
 					swap(&container[i], &container[j]);
 				}

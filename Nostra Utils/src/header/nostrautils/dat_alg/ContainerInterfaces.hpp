@@ -48,10 +48,6 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the first element of the queue.
 		*/
 		virtual const T& peekFront() const = 0;
-		/**
-		\brief Swaps the elements at the corresponding index.
-		*/
-		virtual void swap(sizeType index0, sizeType index1) = 0;
 	};
 
 
@@ -88,10 +84,6 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the first element of the queue.
 		*/
 		virtual const T& peekFront() const = 0;
-		/**
-		\brief Swaps the elements at the corresponding index.
-		*/
-		virtual void swap(sizeType index0, sizeType index1) = 0;
 	};
 
 
@@ -132,10 +124,6 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the first element of the queue.
 		*/
 		virtual const T& peek() const = 0;
-		/**
-		\brief Swaps the elements at the corresponding index.
-		*/
-		virtual void swap(sizeType index0, sizeType index1) = 0;
 	};
 
 	/**
