@@ -152,19 +152,19 @@ namespace NOU::NOU_DAT_ALG
 		\note
 		This is only used if the instance was instanciated using StringView(ConstCharType*).
 		*/
-		ConstCharType         * const m_string;
+		ConstCharType  *m_string;
 
 	protected:
 		/**
 		\brief A pointer to a pointer to the string that is represented by this instance (see the detailed description
 		of this class on why this is done).
 		*/
-		ConstCharType * const * const m_dataPtr;
+		ConstCharType **m_dataPtr;
 
 		/**
 		\brief The amount of characters in this string.
 		*/
-		sizeType                      m_size;
+		sizeType        m_size;
 
 		/**
 		\param dataPtr A pointer to a pointer to the actual data.
@@ -487,6 +487,13 @@ namespace NOU::NOU_DAT_ALG
 		string.
 		*/
 		StringReverseConstIterator rend() const;
+
+		/**
+		\param other The string view to copy the data from.
+
+		\brief Copies the data from the other StringView to this one.
+		*/
+		StringView& operator = (const StringView &other);
 
 		/**
 		\param str The string to compare to.
@@ -1031,6 +1038,16 @@ namespace NOU::NOU_DAT_ALG
 	auto StringView<CHAR_TYPE>::rend() const -> StringReverseConstIterator
 	{
 		return indexRIterator(-1);
+	}
+
+	template<typename CHAR_TYPE>
+	StringView<CHAR_TYPE>& StringView<CHAR_TYPE>::operator = (const StringView<CHAR_TYPE> &other)
+	{
+		m_string = other.m_string;
+		m_dataPtr = m_string == nullptr ? other.m_dataPtr : &m_string;
+		m_size = other.m_size;
+
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>

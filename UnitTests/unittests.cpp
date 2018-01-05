@@ -566,6 +566,19 @@ namespace UnitTests
 
 			Assert::IsTrue(sv.size() == 12);
 
+			Assert::IsTrue(*sv.indexIterator(0) == 'H');
+			Assert::IsTrue(*sv.indexIterator(1) == 'e');
+			Assert::IsTrue(*sv.indexIterator(2) == 'l');
+			Assert::IsTrue(*sv.indexIterator(3) == 'l');
+			Assert::IsTrue(*sv.indexIterator(4) == 'o');
+			Assert::IsTrue(*sv.indexIterator(5) == ' ');
+			Assert::IsTrue(*sv.indexIterator(6) == 'W');
+			Assert::IsTrue(*sv.indexIterator(7) == 'o');
+			Assert::IsTrue(*sv.indexIterator(8) == 'r');
+			Assert::IsTrue(*sv.indexIterator(9) == 'l');
+			Assert::IsTrue(*sv.indexIterator(10) == 'd');
+			Assert::IsTrue(*sv.indexIterator(11) == '!');
+
 			Assert::IsTrue(sv == "Hello World!");
 
 			Assert::IsTrue(sv.find('e') == 1);
@@ -627,6 +640,13 @@ namespace UnitTests
 			Assert::IsTrue(sv != "Hello z World!");
 			Assert::IsTrue(sv < "xyz");
 			Assert::IsTrue(sv > "abc");
+
+			NOU::NOU_DAT_ALG::StringView8 sv1 = "Hello World!";
+			NOU::NOU_DAT_ALG::StringView8 sv2 = "Bye World!";
+
+			sv1 = sv2;
+
+			Assert::IsTrue(sv1 == sv2);
 		}
 
 		TEST_METHOD(DebugClass)
