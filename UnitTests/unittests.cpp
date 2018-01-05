@@ -576,6 +576,35 @@ namespace UnitTests
 			}
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			NOU::DebugClass dbgCls0(1);
+			NOU::DebugClass dbgCls1(3);
+
+			Assert::IsTrue(dbgCls0 < dbgCls1);
+			Assert::IsFalse(dbgCls0 > dbgCls1);
+			Assert::IsTrue(dbgCls0 <= dbgCls1);
+			Assert::IsFalse(dbgCls0 >= dbgCls1);
+			Assert::IsFalse(dbgCls0 == dbgCls1);
+			Assert::IsTrue(dbgCls0 != dbgCls1);
+
+			NOU::DebugClass dbgCls2(1);
+
+			Assert::IsFalse(dbgCls0 < dbgCls2);
+			Assert::IsFalse(dbgCls0 > dbgCls2);
+			Assert::IsTrue(dbgCls0 <= dbgCls2);
+			Assert::IsTrue(dbgCls0 >= dbgCls2);
+			Assert::IsTrue(dbgCls0 == dbgCls2);
+			Assert::IsFalse(dbgCls0 != dbgCls2);
+
+			Assert::IsTrue(dbgCls0.get() == 1);
+			Assert::IsTrue(dbgCls1.get() == 3);
+			Assert::IsTrue(dbgCls2.get() == 1);
+
+			NOU::DebugClass dbgCls3 = dbgCls0;
+			NOU::DebugClass dbgCls4 = NOU::NOU_CORE::move(dbgCls1);
+
+			Assert::IsTrue(dbgCls3.get() == 1);
+			Assert::IsTrue(dbgCls4.get() == 3);
 		}
 	};
 }
