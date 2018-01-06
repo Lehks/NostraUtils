@@ -29,6 +29,9 @@ namespace NOU::NOU_CORE
 		*/
 		using StringType = NOU::NOU_DAT_ALG::StringView8;
 
+		/**
+		\brief Uses the alias ErrorType for the sizeType.
+		*/
 		using ErrorType = sizeType;
 
 	private:
@@ -122,6 +125,9 @@ namespace NOU::NOU_CORE
 		*/
 		using StringType = ErrorLocation::StringType;
 
+		/**
+		\brief Uses the alias ErrorType for the sizeType.
+		*/
 		using ErrorType = ErrorLocation::ErrorType;
 
 	private:
@@ -168,6 +174,10 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS ErrorPool
 	{
 	public:
+
+		/**
+		\brief Uses the alias ErrorType for the sizeType.
+		*/
 		using ErrorType = typename Error::ErrorType;
 
 		/**
@@ -184,12 +194,15 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS ErrorHandler
 	{
 	public:
-		using ErrorType = typename Error::ErrorType;
-
 		/**
 		\brief Uses the alias StringType for the NOU::NOU_DAT_ALG::StringView8.
 		*/
 		using StringType = ErrorLocation::StringType;
+
+		/**
+		\brief Uses the alias ErrorType for the sizeType.
+		*/
+		using ErrorType = typename Error::ErrorType;
 
 		/**
 		\brief The callback type
@@ -197,12 +210,27 @@ namespace NOU::NOU_CORE
 		using CallbackType = void(*)(const ErrorLocation &loc);
 
 	private:
+
+		/**
+		\brief Creates a new GenericAllocationCallback which allocates memory
+			   for the ErrorPool Vector.
+		*/
 		static NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> s_allocator;
+
+		/**
+		\brief Creates a new Vector from a pointer to an ErrorPool
+		*/
 		static NOU_DAT_ALG::Vector<const ErrorPool*> s_errorPools;
 
+		/**
+		\brief Creates a new FastQueue from ErrorLocation.
+		*/
 		NOU_DAT_ALG::FastQueue<ErrorLocation> m_errors;
 
 	public:
+		/**
+		\brief The default capacity for m_errors.
+		*/
 		constexpr static sizeType DEFAULT_CAPACITY = 20;
 		 
 		/**
@@ -210,16 +238,42 @@ namespace NOU::NOU_CORE
 		*/
 		static CallbackType s_callback;
 
+		/**
+		\brief Sets the callback in s_callback.
+		*/
 		static void setCallback(CallbackType callback);
 
+		/**
+		\brief A standard callback that does nothing.
+		*/
 		static void standardCallback(const NOU::NOU_CORE::ErrorLocation &loc);
 
+		/**
+		\param id The passed ID of the error which will be returned.
+
+		\return Returns a reference to an error.
+
+		\brief Returns an error with the passed ID.
+		*/
 		static const Error& getError(ErrorType id);
 
+		/**
+		\brief Constructs an new ErrorHandler.
+		*/
 		ErrorHandler();
 
+		/**
+		\return Returns a reference to an ErrorLocation.
+
+		\brief Returns the first error in the queue.
+		*/
 		const ErrorLocation& peekError() const;
 
+		/**
+		\return Returns an ErrorLocation.
+
+		\brief Removes the first element in the queue and returns it.
+		*/
 		ErrorLocation popError();
 
 		/**
@@ -239,9 +293,15 @@ namespace NOU::NOU_CORE
 			ErrorType id, const StringType &msg);
 	};
 
+	/**
+	\brief Defines the enum values for the error codes
+	*/
 	class ErrorCodes
 	{
 	public:
+		/**
+		\brief Enum values for the error type.
+		*/
 		enum Codes : typename ErrorLocation::ErrorType
 		{
 			UNKNOWN_ERROR,
