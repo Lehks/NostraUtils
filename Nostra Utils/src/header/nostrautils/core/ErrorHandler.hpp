@@ -4,6 +4,7 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
+#include "nostrautils\mem_mngt\Pointer.hpp"
 
 /**
 \file core/ErrorHandler.hpp
@@ -28,6 +29,8 @@ namespace NOU::NOU_CORE
 		*/
 		using StringType = NOU::NOU_DAT_ALG::StringView8;
 
+		using ErrorType = sizeType;
+
 	private:
 		/**
 		\brief The function name in which the error occured.
@@ -47,7 +50,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief The error code of the error.
 		*/
-		sizeType m_id;
+		ErrorType m_id;
 
 		/**
 		\brief The error message which is showed.
@@ -69,7 +72,7 @@ namespace NOU::NOU_CORE
 		\brief Constructs a new ErrorLocation 
 		*/
 		ErrorLocation(const StringType &fnName, sizeType line, const StringType &file,
-			sizeType id, const StringType &msg);
+			ErrorType id, const StringType &msg);
 
 		/**
 		\return Returns the function name.
@@ -83,7 +86,7 @@ namespace NOU::NOU_CORE
 		
 		\brief Returns the line in which the error occured.
 		*/
-		sizeType getLine();
+		sizeType getLine() const;
 
 		/**
 		\return Returns the file.
@@ -97,7 +100,7 @@ namespace NOU::NOU_CORE
 		
 		\brief Returns the id of the error.
 		*/
-		sizeType getID();
+		ErrorType getID() const;
 
 		/**
 		\return Returns the error message.
@@ -119,6 +122,8 @@ namespace NOU::NOU_CORE
 		*/
 		using StringType = ErrorLocation::StringType;
 
+		using ErrorType = ErrorLocation::ErrorType;
+
 	private:
 
 		/**
@@ -129,7 +134,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief The error id.
 		*/
-		sizeType m_id;
+		ErrorType m_id;
 
 	public:
 
@@ -140,21 +145,21 @@ namespace NOU::NOU_CORE
 
 		\brief Constructs a new error.
 		*/
-		Error(const StringType &name, sizeType id);
+		Error(const StringType &name, ErrorType id);
 
 		/**
 		\return Returns the name.
-		
+
 		\brief Returns the name of the error object.
 		*/
 		const StringType& getName() const;
 
 		/**
 		\return Returns the id.
-		
+
 		\Brief Returns the id of the error object.
 		*/
-		sizeType getID();
+		ErrorType getID() const;
 	};
 
 	/**
@@ -163,18 +168,14 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS ErrorPool
 	{
 	public:
+		using ErrorType = typename Error::ErrorType;
 
 		/**
-		\brief Constructs a new ErrorPool.
-		*/
-		ErrorPool();
+		\return Returns a const pointer to an error.
 
-		/**
-		\return Returns a reference to an Error.
-
-		\brief Returns a reference to an error with the passed ID.
+		\brief Returns a const pointer to an error with the passed ID. This function is abstract.
 		*/
-		Error& queryError(sizeType id);
+		virtual const Error* queryError(ErrorType id) const = 0;
 	};
 
 	/**
@@ -182,11 +183,8 @@ namespace NOU::NOU_CORE
 	*/
 	class NOU_CLASS ErrorHandler
 	{
-	private:
-		NOU_DAT_ALG::FastQueue<ErrorLocation> m_errors;
-		NOU_DAT_ALG::Vector<ErrorPool> m_errorPools;
-
 	public:
+		using ErrorType = typename Error::ErrorType;
 
 		/**
 		\brief Uses the alias StringType for the NOU::NOU_DAT_ALG::StringView8.
@@ -194,14 +192,35 @@ namespace NOU::NOU_CORE
 		using StringType = ErrorLocation::StringType;
 
 		/**
-		\brief A CallbackType where loc is a reference to the ErrorLocation.
+		\brief The callback type
 		*/
 		using CallbackType = void(*)(const ErrorLocation &loc);
 
+	private:
+		static NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> s_allocator;
+		static NOU_DAT_ALG::Vector<const ErrorPool*> s_errorPools;
+
+		NOU_DAT_ALG::FastQueue<ErrorLocation> m_errors;
+
+	public:
+		constexpr static sizeType DEFAULT_CAPACITY = 20;
+		 
 		/**
-		\brief Constructs a new ErrorHandler.
+		\brief A CallbackType where loc is a reference to the ErrorLocation.
 		*/
+		static CallbackType s_callback;
+
+		static void setCallback(CallbackType callback);
+
+		static void standardCallback(const NOU::NOU_CORE::ErrorLocation &loc);
+
+		static const Error& getError(ErrorType id);
+
 		ErrorHandler();
+
+		const ErrorLocation& peekError() const;
+
+		ErrorLocation popError();
 
 		/**
 		\param fnName A reference to the function name in which the error occured.
@@ -216,8 +235,18 @@ namespace NOU::NOU_CORE
 
 		\brief Sets an error with its attributes.
 		*/
-		void setError(const StringType &fnName, sizeType line, const StringType &file, 
-			sizeType id, const StringType &msg);
+		void pushError(const StringType &fnName, sizeType line, const StringType &file, 
+			ErrorType id, const StringType &msg);
+	};
+
+	class ErrorCodes
+	{
+	public:
+		enum Codes : typename ErrorLocation::ErrorType
+		{
+			UNKNOWN_ERROR,
+			INDEX_OUT_OF_BOUNDS
+		};
 	};
 }
 #endif
