@@ -942,33 +942,33 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i) //Remember implementation with insert!.
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i) //Remember implementation with insert!.					///TODO
 	{
 		return String();
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)//Remember implementation with insert!.
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)//Remember implementation with insert!.					///TODO
 	{
 		return String();
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)//Remember implementation with insert!.
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)//Remember implementation with insert!.					///TODO
 	{
 		return String();
 	}
 
 	template<typename CHAR_TYPE>
 	template<typename SELECTOR, typename SUPPLIER>
-	String<CHAR_TYPE>& String<CHAR_TYPE>::replaceAll(SELECTOR selector, SUPPLIER supplier)
+	String<CHAR_TYPE>& String<CHAR_TYPE>::replaceAll(SELECTOR selector, SUPPLIER supplier)					///TODO
 	{
 		// TODO: insert return statement here
 	}
 
 	template<typename CHAR_TYPE>
 	template<typename SELECTOR>
-	String<CHAR_TYPE>& String<CHAR_TYPE>::removeAll(SELECTOR selector)
+	String<CHAR_TYPE>& String<CHAR_TYPE>::removeAll(SELECTOR selector)					///TODO
 	{
 		// TODO: insert return statement here
 	}
@@ -980,43 +980,43 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	inline String<CHAR_TYPE> String<CHAR_TYPE>::booleanToString(boolean b)
+	inline String<CHAR_TYPE> String<CHAR_TYPE>::booleanToString(boolean b)					///TODO
 	{
 		return String();
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)					///TODO
 	{
 		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)					///TODO
 	{
 		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)					///TODO
 	{
 		return genericUintToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)					///TODO
 	{
 		return genericUintToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)
+	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)					///TODO
 	{
 		return genericFloatToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)
+	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)					///TODO
 	{
 		return genericFloatToString(i);
 	}
@@ -1035,37 +1035,37 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(CharType c)
+	String<CHAR_TYPE>::String(CharType c)					///TODO
 	{
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(int32 i)
+	String<CHAR_TYPE>::String(int32 i)					///TODO
 	{
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(int64 i)
+	String<CHAR_TYPE>::String(int64 i)					///TODO
 	{
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(uint32 i)
+	String<CHAR_TYPE>::String(uint32 i)					///TODO
 	{
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(uint64 i)
+	String<CHAR_TYPE>::String(uint64 i)					///TODO
 	{
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(float32 f)
+	String<CHAR_TYPE>::String(float32 f)					///TODO
 	{
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(float64 f)
+	String<CHAR_TYPE>::String(float64 f)					///TODO
 	{
 	}
 
@@ -1338,12 +1338,12 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	inline void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const
+	inline void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const					///TODO
 	{
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>& String<CHAR_TYPE>::copySubstringHere(const StringView<CHAR_TYPE>& src, sizeType start, sizeType end, sizeType insertIndex)
+	String<CHAR_TYPE>& String<CHAR_TYPE>::copySubstringHere(const StringView<CHAR_TYPE>& src, sizeType start, sizeType end, sizeType insertIndex)					///TODO
 	{
 		// TODO: insert return statement here
 	}
@@ -1401,7 +1401,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	inline Vector<String<CHAR_TYPE>> String<CHAR_TYPE>::split(CharType separator) const
+	inline Vector<String<CHAR_TYPE>> String<CHAR_TYPE>::split(CharType separator) const					///TODO
 	{
 		return Vector<String>();
 	}
