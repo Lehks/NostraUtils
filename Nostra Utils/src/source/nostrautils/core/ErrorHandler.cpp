@@ -50,6 +50,12 @@ namespace NOU::NOU_CORE
 		return m_id;
 	}
 
+	NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> ErrorHandler::s_allocator;
+
+	NOU_DAT_ALG::Vector<const ErrorPool*> ErrorHandler::s_errorPools(1, s_allocator);
+
+	ErrorHandler::CallbackType ErrorHandler::s_callback = ErrorHandler::standardCallback;
+
 	void ErrorHandler::setCallback(CallbackType callback)
 	{
 		s_callback = callback;
@@ -57,26 +63,6 @@ namespace NOU::NOU_CORE
 
 	void ErrorHandler::standardCallback(const NOU::NOU_CORE::ErrorLocation &loc)
 	{}
-
-	NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> ErrorHandler::s_allocator;
-
-	NOU_DAT_ALG::Vector<const ErrorPool*> ErrorHandler::s_errorPools(1, s_allocator);
-
-	ErrorHandler::CallbackType ErrorHandler::s_callback = ErrorHandler::standardCallback;
-
-	ErrorHandler::ErrorHandler() :
-		m_errors(DEFAULT_CAPACITY)
-	{}
-
-	const ErrorLocation& ErrorHandler::peekError() const
-	{
-		return ErrorHandler::m_errors.peek();
-	}
-
-	ErrorLocation ErrorHandler::popError()
-	{
-		return ErrorHandler::m_errors.pop();
-	}
 
 	const Error& ErrorHandler::getError(ErrorType id)
 	{
@@ -90,6 +76,25 @@ namespace NOU::NOU_CORE
 		}
 
 		return *(s_errorPools[0]->queryError(ErrorCodes::UNKNOWN_ERROR));
+	}
+
+	sizeType ErrorHandler::getErrorCount() const
+	{
+		return m_errors.size();
+	}
+
+	ErrorHandler::ErrorHandler() :
+		m_errors(DEFAULT_CAPACITY)
+	{}
+
+	const ErrorLocation& ErrorHandler::peekError() const
+	{
+		return ErrorHandler::m_errors.peek();
+	}
+
+	ErrorLocation ErrorHandler::popError()
+	{
+		return ErrorHandler::m_errors.pop();
 	}
 
 	void ErrorHandler::pushError(const StringType &fnName, sizeType line, const StringType &file,

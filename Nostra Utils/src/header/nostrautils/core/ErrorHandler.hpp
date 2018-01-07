@@ -258,6 +258,13 @@ namespace NOU::NOU_CORE
 		static const Error& getError(ErrorType id);
 
 		/**
+		\return Returns the error count.
+
+		\brief Returns the count of errors in the queue.
+		*/
+		sizeType getErrorCount() const;
+
+		/**
 		\brief Constructs an new ErrorHandler.
 		*/
 		ErrorHandler();
