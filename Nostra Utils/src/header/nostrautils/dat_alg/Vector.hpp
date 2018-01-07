@@ -11,6 +11,7 @@
 
 /** \file Vector.hpp
 \author  Dennis Franz
+\author  Lukas Reichmann
 \since   0.0.1
 \version 0.0.1
 \brief   This file provides a Vector implementation.
@@ -271,9 +272,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		const T*& data() const;
 		/**
-		\brief clears the String.
+		\brief Clears the Vector.
 		*/
 		void clear();
+		/**
+		\brief Sets the size of the Vector.
+		*/
+		void setSize(sizeType size);
 		/**
 		\param replacement The data to insert.
 		\param index The index at wich the data gets replaced.
@@ -860,6 +865,12 @@ namespace NOU::NOU_DAT_ALG
 	void Vector<T>::clear()
 	{
 		reallocateData(1);
+	}
+
+	template<typename T>
+	void Vector<T>::setSize(sizeType size)
+	{
+		m_size = size;
 	}
 
 	template<typename T>

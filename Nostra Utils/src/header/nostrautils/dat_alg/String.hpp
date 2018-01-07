@@ -6,6 +6,15 @@
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 
+
+/** \file Vector.hpp
+\author  Dennis Franz
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides a String implementation.
+*/
+
 namespace NOU::NOU_DAT_ALG
 {
 
@@ -504,32 +513,6 @@ namespace NOU::NOU_DAT_ALG
 		String& preserve(sizeType start, sizeType end = NULL_INDEX);
 
 		/**
-		\param separator The seperator at which the strings will be split. This character not be part of any of the
-		returned strings.
-		\return          A vector that holds all the substrings that were created.
-
-		\brief Splits the string into substrings that start and end with the passed character (this passed character
-		will not be part of the substrings).
-
-		\details
-		Splits the string into substrings that start and end with the passed character (this passed character will not
-		be part of the substrings).
-
-		Example:
-		The string
-		\code{.cpp}
-		"Important data:A date:Other important data"
-		\endcode
-		and
-		\p separator = ':'
-		will result in the substrings
-		\code{.cpp}
-		"Important data", "A date" and "Other important data"
-		\endcode
-		*/
-		Vector<String> split(CharType separator) const;
-
-		/**
 		\param start The start of the interval of the characters that will be in the substring. The character at this
 		index will included in the substring.
 		\param end   The end of the interval of the characters that will be in the substring. The character at this
@@ -911,21 +894,21 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i) //Remember implementation with insert!.					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)					///TODO
 	{
-		return String();
+		return *this;
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)//Remember implementation with insert!.					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)				///TODO
 	{
-		return String();
+		return *this;
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)//Remember implementation with insert!.					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)					///TODO
 	{
-		return String();
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
@@ -943,37 +926,43 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)					
 	{
-		return genericIntToString(i);
+		char buffer[20];
+		return _i32toa(i, buffer, 10);;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)					
 	{
-		return genericIntToString(i);
+		char buffer[20];
+		return _i64toa(i, buffer, 10);;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)					
 	{
-		return genericUintToString(i);
+		char buffer[20];
+		return _ui32toa(i, buffer, 10);;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)					
 	{
-		return genericUintToString(i);
+		char buffer[20];
+		return _ui64toa(i, buffer, 10);;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)					
 	{
-		return genericFloatToString(i);
+		char buffer[20];
+		return _ui32toa(i, buffer, 10);;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)					
 	{
-		return genericFloatToString(i);
+		char buffer[20];
+		return _ui32toa(i, buffer, 10);;
 	}
 
 	template<typename CHAR_TYPE>
@@ -1336,14 +1325,16 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const					///TODO
+	void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const
 	{
+		target.insert(insertIndex, substring(start, end));
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>& String<CHAR_TYPE>::copySubstringHere(const StringView<CHAR_TYPE>& src, sizeType start, sizeType end, sizeType insertIndex)					///TODO
+	String<CHAR_TYPE>& String<CHAR_TYPE>::copySubstringHere(const StringView<CHAR_TYPE>& src, sizeType start, sizeType end, sizeType insertIndex)
 	{
-		// TODO: insert return statement here
+		m_data.insert(insertIndex, src.logicalSubstring(start, end))
 	}
 
 	template<typename CHAR_TYPE>
@@ -1396,12 +1387,6 @@ namespace NOU::NOU_DAT_ALG
 
 		setSize(m_data.size());
 		return *this;
-	}
-
-	template<typename CHAR_TYPE>
-	inline Vector<String<CHAR_TYPE>> String<CHAR_TYPE>::split(CharType separator) const					///TODO
-	{
-		return Vector<String>();
 	}
 
 	template<typename CHAR_TYPE>

@@ -7,6 +7,13 @@
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 
+/** \file Vector.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides a String implementation.
+*/
+
 namespace NOU::NOU_DAT_ALG
 {
 	/**
