@@ -439,27 +439,6 @@ namespace NOU::NOU_DAT_ALG
 		String& replace(sizeType start, sizeType end, const StringView<CHAR_TYPE> &replacement);
 
 		/**
-		\tparam SELECTOR The type of the selector that will be used to select the characters to replace. This must be a
-		selector according to gul::functional::assertSelector<SELECTOR,
-		gul::container::String::CharType>().
-		\tparam SUPPLIER The type of the supplier that will be used to make the replacement characters. This must be a
-		supplier according to gul::functional::assertSelector<SUPPLIER,
-		gul::container::String::CharType, gul::container::String::ConstCharType&>().
-		\param selector  A selector of the type SELECTOR that will be used to select the characters to replace. The
-		character that will be passed to the selector is the character that is currently checked
-		weather it should be replaced.
-		\param supplier  A supplier of the type SUPPLIER that will be used to make the character replacements. The
-		character that is passed to the supplier is the character that will be replaced by the
-		character that will be returned by the supplier.
-		\return          A reference to the instance itself.
-
-		\brief Replaces all characters that will be selected by the selector with the characters that will be made by
-		the supplier.
-		*/
-		template<typename SELECTOR, typename SUPPLIER>
-		String& replaceAll(SELECTOR selector, SUPPLIER supplier);
-
-		/**
 		\param target      The target string that the substring will be inserted to.
 		\param start       The start of the interval that will be copied. The character at this index will be included.
 		\param end         The end of the interval that will be copied. The character at this index will be excluded. If
@@ -512,16 +491,6 @@ namespace NOU::NOU_DAT_ALG
 		to preserve().
 		*/
 		String& remove(sizeType start, sizeType end = NULL_INDEX);
-
-		/**
-		\tparam SELECTOR The type of the selector that will be used to select the characters that should be removed.
-		\param selector  The selector that used to select the characters to remove.
-		\return      A reference to the instance itself.
-
-		\brief Removes all the characters that will be selected by the selector.
-		*/
-		template<typename SELECTOR>
-		String& removeAll(SELECTOR selector);
 
 		/**
 		\param start The start of the interval that will be preserved. The character at this index will be included.
@@ -960,63 +929,49 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	template<typename SELECTOR, typename SUPPLIER>
-	String<CHAR_TYPE>& String<CHAR_TYPE>::replaceAll(SELECTOR selector, SUPPLIER supplier)					///TODO
-	{
-		// TODO: insert return statement here
-	}
-
-	template<typename CHAR_TYPE>
-	template<typename SELECTOR>
-	String<CHAR_TYPE>& String<CHAR_TYPE>::removeAll(SELECTOR selector)					///TODO
-	{
-		// TODO: insert return statement here
-	}
-
-	template<typename CHAR_TYPE>
 	void String<CHAR_TYPE>::setSize(sizeType size)
 	{
 		StringView<CHAR_TYPE>::m_size = size;
 	}
 
 	template<typename CHAR_TYPE>
-	inline String<CHAR_TYPE> String<CHAR_TYPE>::booleanToString(boolean b)					///TODO
+	inline String<CHAR_TYPE> String<CHAR_TYPE>::booleanToString(boolean b)					
 	{
 		return String();
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)					
 	{
 		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)					
 	{
 		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)					
 	{
 		return genericUintToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)					
 	{
 		return genericUintToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)					
 	{
 		return genericFloatToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)					
 	{
 		return genericFloatToString(i);
 	}
@@ -1035,38 +990,81 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(CharType c)					///TODO
+	String<CHAR_TYPE>::String(CharType c) :
+		m_data(1),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), 1)
 	{
+
+		m_data.pushBack(c);
+
+		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(int32 i)					///TODO
+	String<CHAR_TYPE>::String(int32 i)	:
+		m_data(genericIntToString(i)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericIntToString(i))
 	{
+
+		m_data.pushBack(genericIntToString(i));
+
+
+		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(int64 i)					///TODO
+	String<CHAR_TYPE>::String(int64 i)	:
+		m_data(genericIntToString(i)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericIntToString(i))
 	{
+
+		m_data.pushBack(genericIntToString(i));
+
+		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(uint32 i)					///TODO
+	String<CHAR_TYPE>::String(uint32 i)	 :
+		m_data(genericUintToString(i)), 
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericUintToString(i))
 	{
+		m_data.pushBack(genericUintToString(i));
+
+		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(uint64 i)					///TODO
+	String<CHAR_TYPE>::String(uint64 i)	:
+		m_data(genericUintToString(i)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericUintToString(i))
 	{
+
+		m_data.pushBack(genericUintToString(i));
+
+		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(float32 f)					///TODO
+	String<CHAR_TYPE>::String(float32 f) :	
+		m_data(genericFloatToString(f)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericFloatToString(f))
 	{
+
+		m_data.pushBack(genericFloatToString(f));
+	
+		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(float64 f)					///TODO
+	String<CHAR_TYPE>::String(float64 f) :	
+		m_data(genericFloatToString(f)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericFloatToString(f))
 	{
+
+		m_data.pushBack(genericFloatToString(f));
+
+
+		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
@@ -1338,7 +1336,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	inline void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const					///TODO
+	void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const					///TODO
 	{
 	}
 
