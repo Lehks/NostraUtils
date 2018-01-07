@@ -942,19 +942,19 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i) //Remember implementation with insert!.
 	{
 		return String();
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)//Remember implementation with insert!.
 	{
 		return String();
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)//Remember implementation with insert!.
 	{
 		return String();
 	}
@@ -988,37 +988,37 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)
 	{
-		return String();
+		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)
 	{
-		return String();
+		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)
 	{
-		return String();
+		return genericUintToString(i);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)
 	{
-		return String();
+		return genericUintToString(i);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)
 	{
-		return String();
+		return genericFloatToString(i);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)
 	{
-		return String();
+		return genericFloatToString(i);
 	}
 
 	template<typename CHAR_TYPE>
@@ -1086,43 +1086,57 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, const StringView<CHAR_TYPE>& str)
 	{
-		// TODO: insert return statement here
+		m_data.insert(str, index);
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int32 nr)
 	{
-		// TODO: insert return statement here
+		m_data.insert(genericIntToString(nr), index);
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int64 nr)
 	{
-		// TODO: insert return statement here
+		m_data.insert(genericIntToString(nr), index);
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint32 nr)
 	{
-		// TODO: insert return statement here
+		m_data.insert(genericUintToString(nr), index);
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint64 nr)
 	{
-		// TODO: insert return statement here
+		m_data.insert(genericUintToString(nr), index);
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float32 nr)
 	{
-		// TODO: insert return statement here
+		m_data.insert(genericFloatToString(nr), index);
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float64 nr)
 	{
-		// TODO: insert return statement here
+		m_data.insert(genericFloatToString(nr), index);
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
@@ -1136,43 +1150,57 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(const StringView<CHAR_TYPE>& str)
 	{
-		// TODO: insert return statement here
+		m_data.pushBack(str);
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int32 nr)
 	{
-		// TODO: insert return statement here
+		m_data.pushBack(genericIntToString(nr));
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int64 nr)
 	{
-		// TODO: insert return statement here
+		m_data.pushBack(genericIntToString(nr));
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint32 nr)
 	{
-		// TODO: insert return statement here
+		m_data.pushBack(genericUintToString(nr));
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint64 nr)
 	{
-		// TODO: insert return statement here
+		m_data.pushBack(genericUintToString(nr));
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float32 nr)
 	{
-		// TODO: insert return statement here
+		m_data.pushBack(genericFloatToString(nr));
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float64 nr)
 	{
-		// TODO: insert return statement here
+		m_data.pushBack(genericFloatToString(nr));
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
@@ -1183,7 +1211,7 @@ namespace NOU::NOU_DAT_ALG
 			///ERROR
 		}
 
-		for (sizeType i = 0; i < m_data.size(); i++)
+		for (sizeType i = start; i < end; i++)
 		{
 			if (target == m_data.at(i))
 			{
@@ -1197,13 +1225,36 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(const StringView<CHAR_TYPE>& target, const StringView<CHAR_TYPE>& replacement, sizeType start, sizeType end)
 	{
-		// TODO: insert return statement here
+		if (start > m_data.size() || end > m_data.size())
+		{
+			///ERROR
+		}
+
+		for (sizeType i = start; i < end; i++)
+		{
+			if (target == m_data.at(i))
+			{
+				m_data.replace(replacement, i);
+			}
+		}
+
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(sizeType start, sizeType end, const StringView<CHAR_TYPE>& replacement)
 	{
-		// TODO: insert return statement here
+		if (start > m_data.size() || end > m_data.size())
+		{
+			///ERROR
+		}
+
+		for (sizeType i = start; i <end; i++)
+		{
+			m_data.replace(replacement, i);
+		}
+
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
@@ -1219,43 +1270,71 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, const StringView<CHAR_TYPE>& str)
 	{
-		// TODO: insert return statement here
+		if (b)
+			m_data.pushBack(str);
+
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, int32 nr)
 	{
-		// TODO: insert return statement here
+		if (b)
+			m_data.pushBack(genericIntToString(nr));
+
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, int64 nr)
 	{
-		// TODO: insert return statement here
+		if (b)
+			m_data.pushBack(genericIntToString(nr));
+
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint32 nr)
 	{
-		// TODO: insert return statement here
+		if (b)
+			m_data.pushBack(genericUintToString(nr));
+
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint64 nr)
 	{
-		// TODO: insert return statement here
+		if (b)
+			m_data.pushBack(genericUintToString(nr));
+
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float32 nr)
 	{
-		// TODO: insert return statement here
+		if (b)
+			m_data.pushBack(genericFloatToString(nr));
+
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float64 nr)
 	{
-		// TODO: insert return statement here
+		if (b)
+			m_data.pushBack(genericFloatToString(nr));
+
+		setSize(m_data.size());
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
@@ -1322,7 +1401,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	inline Vector<String> String<CHAR_TYPE>::split(CharType separator) const
+	inline Vector<String<CHAR_TYPE>> String<CHAR_TYPE>::split(CharType separator) const
 	{
 		return Vector<String>();
 	}
@@ -1330,110 +1409,153 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::substring(sizeType start, sizeType end) const
 	{
+		String<CHAR_TYPE> strnew;
 
-		return String();
+		for (sizeType i = start; i < end; i++)
+		{
+			strnew.m_data.at(i) = m_data.at(i);
+		}
+		strnew.setSize(strnew.m_data.size());
+
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::copy() const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+
+		strnew = m_data;
+
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(CharType c) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		append(c);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(const StringView<CHAR_TYPE>& str) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		append(str);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int32 i) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		append(i);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int64 i) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		append(i);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint32 i) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		append(i);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint64 i) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		append(i);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float32 f) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		append(f);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float64 f) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		append(f);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, CharType c) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		appendIf(b, c);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, const StringView<CHAR_TYPE>& str) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		appendIf(b, str);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int32 i) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		appendIf(b, i);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int64 i) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		appendIf(b, i);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint32 i) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		appendIf(b, i);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint64 i) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		appendIf(b, i);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float32 f) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		appendIf(b, f);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float64 f) const
 	{
-		return String();
+		String<CHAR_TYPE> strnew;
+		appendIf(b, f);
+		return copy();
 	}
 
 	template<typename CHAR_TYPE>
@@ -1609,7 +1731,7 @@ namespace NOU::NOU_DAT_ALG
 		// TODO: insert return statement here
 	}
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>& String<CHAR_TYPE>::operator[](sizeType index)
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator [] (sizeType index)
 	{
 		// TODO: insert return statement here
 	}
