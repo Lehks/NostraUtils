@@ -50,6 +50,18 @@ namespace NOU::NOU_CORE
 		return m_id;
 	}
 
+	NOU_MEM_MNGT::GenericAllocationCallback<const Error> DefaultErrorPool::s_poolAllocator;
+
+	NOU_DAT_ALG::Vector<const Error> DefaultErrorPool::s_defaultErrorPool(1, s_poolAllocator);
+
+	const Error* DefaultErrorPool::queryError(ErrorPool::ErrorType id) const
+	{
+		if(id < ErrorCodes::LAST_ELEMENT)
+			return &s_defaultErrorPool[id];
+		else
+			return nullptr;
+	}
+
 	NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> ErrorHandler::s_allocator;
 
 	NOU_DAT_ALG::Vector<const ErrorPool*> ErrorHandler::s_errorPools(1, s_allocator);
@@ -82,7 +94,7 @@ namespace NOU::NOU_CORE
 	{
 		return m_errors.size();
 	}
-
+	
 	ErrorHandler::ErrorHandler() :
 		m_errors(DEFAULT_CAPACITY)
 	{}

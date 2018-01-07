@@ -42,24 +42,24 @@ namespace UnitTests
 	TEST_CLASS(UnitTest)
 	{
 	public:
-		
+
 		TEST_METHOD(TypeSizes)
 		{
-			Assert::IsTrue(sizeof(NOU::int8)   >= 1);
-			Assert::IsTrue(sizeof(NOU::uint8)  >= 1);
-			Assert::IsTrue(sizeof(NOU::int16)  >= 2);
+			Assert::IsTrue(sizeof(NOU::int8) >= 1);
+			Assert::IsTrue(sizeof(NOU::uint8) >= 1);
+			Assert::IsTrue(sizeof(NOU::int16) >= 2);
 			Assert::IsTrue(sizeof(NOU::uint16) >= 2);
-			Assert::IsTrue(sizeof(NOU::int32)  >= 4);
+			Assert::IsTrue(sizeof(NOU::int32) >= 4);
 			Assert::IsTrue(sizeof(NOU::uint32) >= 4);
-			Assert::IsTrue(sizeof(NOU::int64)  >= 8);
+			Assert::IsTrue(sizeof(NOU::int64) >= 8);
 			Assert::IsTrue(sizeof(NOU::uint64) >= 8);
 
-			Assert::IsTrue(sizeof(NOU::char8)  >= 1);
+			Assert::IsTrue(sizeof(NOU::char8) >= 1);
 			Assert::IsTrue(sizeof(NOU::char16) >= 2);
 			Assert::IsTrue(sizeof(NOU::char32) >= 4);
 
 			/*
-			  sizeof(long double) >= 4 / 8 to sort out those compilers that do not have a float that is 
+			  sizeof(long double) >= 4 / 8 to sort out those compilers that do not have a float that is
 			  32 / 64 bit wide
 			*/
 			Assert::IsTrue(sizeof(NOU::float32) == 4 && sizeof(long double) >= 4);
@@ -146,7 +146,7 @@ namespace UnitTests
 
 			NOU::NOU_CORE::Version version11(5, 9, 4);
 			NOU::NOU_CORE::Version version12(1, 10, 4);
-			
+
 			Assert::IsFalse(version11 == version12);
 			Assert::IsTrue(version11 != version12);
 			Assert::IsTrue(version11 > version12);
@@ -207,7 +207,7 @@ namespace UnitTests
 			testinteger = vec1.popFront();
 			Assert::AreEqual(15, testinteger);
 
-			vec2.swap(0,1);
+			vec2.swap(0, 1);
 			Assert::AreEqual(0, vec2[1]);
 
 			vec2.remove(0);
@@ -228,7 +228,7 @@ namespace UnitTests
 				Assert::AreEqual(*it, vec2[i]);
 				i--;
 			}
-			
+
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::int32> dbgAlloc;
 
 			{
@@ -302,18 +302,18 @@ namespace UnitTests
 
 			NOU::NOU_DAT_ALG::swap(&a, &b);
 
-			Assert::AreEqual(2,a);
-			Assert::AreEqual(1,b);
+			Assert::AreEqual(2, a);
+			Assert::AreEqual(1, b);
 		}
 
 		TEST_METHOD(Comparator)
 		{
 			//int as dummy type
-			Assert::IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>, 
-												decltype(&NOU::NOU_DAT_ALG::genericComparator<int>)>);
+			Assert::IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>,
+				decltype(&NOU::NOU_DAT_ALG::genericComparator<int>)>);
 
 			Assert::IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>,
-												decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>);
+				decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(NOU::NOU_DAT_ALG::CompareResult::BIGGER) ==
 				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
@@ -334,7 +334,7 @@ namespace UnitTests
 
 
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'a') == 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'a') ==
 				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'A') ==
@@ -345,7 +345,7 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') ==
 				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
-		}
+		
 
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
@@ -361,7 +361,7 @@ namespace UnitTests
 				static_cast<NOU::char16>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
 
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'), 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
 				static_cast<NOU::char32>('a')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
@@ -372,6 +372,8 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
 				static_cast<NOU::char32>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+		}
+
 		TEST_METHOD(UniquePtr)
 		{
 			//use string for testing.

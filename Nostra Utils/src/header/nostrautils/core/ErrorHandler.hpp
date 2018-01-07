@@ -188,6 +188,18 @@ namespace NOU::NOU_CORE
 		virtual const Error* queryError(ErrorType id) const = 0;
 	};
 
+	class NOU_CLASS DefaultErrorPool : public ErrorPool
+	{
+	private:
+		static NOU_MEM_MNGT::GenericAllocationCallback<const Error> s_poolAllocator;
+
+		static NOU_DAT_ALG::Vector<const Error> s_defaultErrorPool;
+
+	public:
+
+		virtual const Error* queryError(ErrorType id) const override;
+	};
+
 	/**
 	\brief Defines the ErrorHandler class.
 	*/
@@ -311,8 +323,10 @@ namespace NOU::NOU_CORE
 		*/
 		enum Codes : typename ErrorLocation::ErrorType
 		{
-			UNKNOWN_ERROR,
-			INDEX_OUT_OF_BOUNDS
+			UNKNOWN_ERROR = 0,			//Must start at 0!
+			INDEX_OUT_OF_BOUNDS,
+
+			LAST_ELEMENT				 //Must be the last element!
 		};
 	};
 }
