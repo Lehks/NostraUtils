@@ -700,5 +700,21 @@ namespace UnitTests
 			Assert::IsTrue(dbgCls3.get() == 1);
 			Assert::IsTrue(dbgCls4.get() == 3);
 		}
+
+		TEST_METHOD(IsDefaultConstructible)
+		{
+			struct NotDefaultConstructible
+			{
+				NotDefaultConstructible(int)
+				{
+
+				}
+			};
+
+			Assert::IsTrue(NOU::NOU_CORE::IsDefaultConstructible<int>::value);
+			Assert::IsTrue(NOU::NOU_CORE::IsDefaultConstructible
+				<NOU::NOU_MEM_MNGT::GenericAllocationCallback<int>>::value);
+			Assert::IsFalse(NOU::NOU_CORE::IsDefaultConstructible<NotDefaultConstructible>::value);
+		}
 	};
 }

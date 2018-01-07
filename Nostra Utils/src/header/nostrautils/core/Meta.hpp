@@ -205,6 +205,17 @@ namespace NOU::NOU_CORE
 	*/
 	template<typename R, typename T, typename... ARGS>
 	struct IsInvocableR : typeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
+
+	/**
+	\tparam T    The type to check.
+
+	\return TrueType, if the type \p T is default constructible, FalseType if not.
+
+	\brief Checks wether a type is default constructible or not.
+	*/
+	template<typename T>
+	struct IsDefaultConstructible : typeIf_t<std::is_default_constructible<T>::value, 
+		TrueType, FalseType> {};
 }
 
 #endif
