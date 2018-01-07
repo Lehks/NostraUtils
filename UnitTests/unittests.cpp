@@ -14,6 +14,7 @@
 #include "nostrautils\mem_mngt\Pointer.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
 
 #include "DebugClass.hpp"
 
@@ -789,5 +790,12 @@ namespace UnitTests
 				<NOU::NOU_MEM_MNGT::GenericAllocationCallback<int>>::value);
 			Assert::IsFalse(NOU::NOU_CORE::IsDefaultConstructible<NotDefaultConstructible>::value);
 		}
+
+		//TEST_METHOD(ErrorHandler)
+		//{
+		//	NOU::NOU_CORE::ErrorHandler handler;
+		//
+		//	handler.pushError();
+		//}
 	};
 }

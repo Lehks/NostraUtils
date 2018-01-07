@@ -5,6 +5,7 @@
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
+#include "nostrautils\core\Meta.hpp"
 
 /**
 \file core/ErrorHandler.hpp
@@ -234,7 +235,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief A wrapper for a vector that stores const pointers to error pools.
 		*/
-		class ErrorPoolVectorWrapper
+		class NOU_CLASS ErrorPoolVectorWrapper
 		{
 		private:
 			/**
@@ -304,6 +305,13 @@ namespace NOU::NOU_CORE
 		\brief Creates a new FastQueue from ErrorLocation.
 		*/
 		NOU_DAT_ALG::FastQueue<ErrorLocation> m_errors;
+
+		/**
+		\return s_errorPools
+
+		\brief Returns the s_errorPools member. This is used by pushPools().
+		*/
+		static ErrorPoolVectorWrapper& getPools();
 
 	public:
 		/**
@@ -384,6 +392,7 @@ namespace NOU::NOU_CORE
 		*/
 		void pushError(const StringType &fnName, sizeType line, const StringType &file, 
 			ErrorType id, const StringType &msg);
+
 	};
 
 	/**
@@ -404,11 +413,15 @@ namespace NOU::NOU_CORE
 		};
 	};
 
+#ifndef NOU_PUSH_ERROR
+#define NOU_PUSH_ERROR(handler, error, msg) handler.pushError(NOU_FUNC_NAME, __LINE__, __FILE__, error, msg)
+#endif
+
+
 	template<typename T>
 	void ErrorHandler::ErrorPoolVectorWrapper::pushPool()
 	{
-		///\todo check if default constructible
-		//static_assert();
+		static_assert(IsDefaultConstructible<T>::value);
 
 		m_errorPools.pushBack(new T()); //must be push back, default pool must be at index #0.
 	}
@@ -416,7 +429,7 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	void ErrorHandler::pushPool()
 	{
-		s_errorPools.pushPool<T>();
+		getPools().pushPool<T>();
 	}
 }
 #endif

@@ -82,7 +82,9 @@ namespace NOU::NOU_CORE
 
 	ErrorHandler::ErrorPoolVectorWrapper::ErrorPoolVectorWrapper(sizeType initialCapacity) :
 		m_errorPools(initialCapacity, m_allocator)
-	{}
+	{
+		pushPool<DefaultErrorPool>();
+	}
 
 	ErrorHandler::ErrorPoolVectorWrapper::~ErrorPoolVectorWrapper()
 	{
@@ -123,6 +125,11 @@ namespace NOU::NOU_CORE
 		return *(s_errorPools.getVector()[0]->queryError(ErrorCodes::UNKNOWN_ERROR));
 	}
 
+	ErrorHandler::ErrorPoolVectorWrapper& ErrorHandler::getPools()
+	{
+		return s_errorPools;
+	}
+
 	sizeType ErrorHandler::getErrorCount() const
 	{
 		return m_errors.size();
@@ -130,9 +137,7 @@ namespace NOU::NOU_CORE
 	
 	ErrorHandler::ErrorHandler() :
 		m_errors(DEFAULT_CAPACITY)
-	{
-		pushPool<DefaultErrorPool>();
-	}
+	{}
 
 	const ErrorLocation& ErrorHandler::peekError() const
 	{
