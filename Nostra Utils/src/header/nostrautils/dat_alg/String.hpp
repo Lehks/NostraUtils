@@ -954,15 +954,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)					
 	{
-		char buffer[20];
-		return _ui32toa(i, buffer, 10);;
+		/// TODO Implementing this methode.
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)					
 	{
-		char buffer[20];
-		return _ui32toa(i, buffer, 10);;
+		/// TODO Implementing this methode.
 	}
 
 	template<typename CHAR_TYPE>
@@ -991,11 +989,11 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(int32 i)	:
-		m_data(genericIntToString(i)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericIntToString(i))
+		m_data(intToString(i)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), intToString(i))
 	{
 
-		m_data.pushBack(genericIntToString(i));
+		m_data.pushBack(intToString(i));
 
 
 		setSize(m_data.size());
@@ -1003,54 +1001,54 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(int64 i)	:
-		m_data(genericIntToString(i)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericIntToString(i))
+		m_data(intToString(i)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), intToString(i))
 	{
 
-		m_data.pushBack(genericIntToString(i));
+		m_data.pushBack(intToString(i));
 
 		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(uint32 i)	 :
-		m_data(genericUintToString(i)), 
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericUintToString(i))
+		m_data(intToString(i)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), intToString(i))
 	{
-		m_data.pushBack(genericUintToString(i));
+		m_data.pushBack(intToString(i));
 
 		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(uint64 i)	:
-		m_data(genericUintToString(i)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericUintToString(i))
+		m_data(intToString(i)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), intToString(i))
 	{
 
-		m_data.pushBack(genericUintToString(i));
+		m_data.pushBack(intToString(i));
 
 		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(float32 f) :	
-		m_data(genericFloatToString(f)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericFloatToString(f))
+		m_data(floatToString(f)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), floatToString(f))
 	{
 
-		m_data.pushBack(genericFloatToString(f));
+		m_data.pushBack(floatToString(f));
 	
 		setSize(m_data.size());
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(float64 f) :	
-		m_data(genericFloatToString(f)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), genericFloatToString(f))
+		m_data(floatToString(f)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), floatToString(f))
 	{
 
-		m_data.pushBack(genericFloatToString(f));
+		m_data.pushBack(floatToString(f));
 
 
 		setSize(m_data.size());
@@ -1081,7 +1079,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int32 nr)
 	{
-		m_data.insert(genericIntToString(nr), index);
+		m_data.insert(intToString(nr), index);
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1089,7 +1087,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int64 nr)
 	{
-		m_data.insert(genericIntToString(nr), index);
+		m_data.insert(intToString(nr), index);
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1097,7 +1095,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint32 nr)
 	{
-		m_data.insert(genericUintToString(nr), index);
+		m_data.insert(intToString(nr), index);
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1105,7 +1103,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint64 nr)
 	{
-		m_data.insert(genericUintToString(nr), index);
+		m_data.insert(intToString(nr), index);
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1113,7 +1111,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float32 nr)
 	{
-		m_data.insert(genericFloatToString(nr), index);
+		m_data.insert(floatToString(nr), index);
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1121,7 +1119,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float64 nr)
 	{
-		m_data.insert(genericFloatToString(nr), index);
+		m_data.insert(floatToString(nr), index);
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1145,7 +1143,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int32 nr)
 	{
-		m_data.pushBack(genericIntToString(nr));
+		m_data.pushBack(intToString(nr));
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1153,7 +1151,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int64 nr)
 	{
-		m_data.pushBack(genericIntToString(nr));
+		m_data.pushBack(intToString(nr));
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1161,7 +1159,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint32 nr)
 	{
-		m_data.pushBack(genericUintToString(nr));
+		m_data.pushBack(intToString(nr));
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1169,7 +1167,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint64 nr)
 	{
-		m_data.pushBack(genericUintToString(nr));
+		m_data.pushBack(intToString(nr));
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1177,7 +1175,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float32 nr)
 	{
-		m_data.pushBack(genericFloatToString(nr));
+		m_data.pushBack(floatToString(nr));
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1185,7 +1183,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float64 nr)
 	{
-		m_data.pushBack(genericFloatToString(nr));
+		m_data.pushBack(floatToString(nr));
 		setSize(m_data.size());
 		return *this;
 	}
@@ -1268,7 +1266,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, int32 nr)
 	{
 		if (b)
-			m_data.pushBack(genericIntToString(nr));
+			m_data.pushBack(intToString(nr));
 
 		setSize(m_data.size());
 		return *this;
@@ -1278,7 +1276,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, int64 nr)
 	{
 		if (b)
-			m_data.pushBack(genericIntToString(nr));
+			m_data.pushBack(intToString(nr));
 
 		setSize(m_data.size());
 		return *this;
@@ -1288,7 +1286,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint32 nr)
 	{
 		if (b)
-			m_data.pushBack(genericUintToString(nr));
+			m_data.pushBack(intToString(nr));
 
 		setSize(m_data.size());
 		return *this;
@@ -1298,7 +1296,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint64 nr)
 	{
 		if (b)
-			m_data.pushBack(genericUintToString(nr));
+			m_data.pushBack(intToString(nr));
 
 		setSize(m_data.size());
 		return *this;
@@ -1308,7 +1306,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float32 nr)
 	{
 		if (b)
-			m_data.pushBack(genericFloatToString(nr));
+			m_data.pushBack(FloatToString(nr));
 
 		setSize(m_data.size());
 		return *this;
@@ -1318,7 +1316,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float64 nr)
 	{
 		if (b)
-			m_data.pushBack(genericFloatToString(nr));
+			m_data.pushBack(FloatToString(nr));
 
 		setSize(m_data.size());
 		return *this;
