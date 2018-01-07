@@ -7,6 +7,8 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
 
+#include <new>
+
 /** \file Vector.hpp
 \author  Dennis Franz
 \since   0.0.1
@@ -41,6 +43,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>, public RandomAccess<T>
 	{
+
 	private:
 		NOU::NOU_MEM_MNGT::AllocationCallback<T>	&m_allocator;
 
@@ -260,7 +263,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		void sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp);
 
-		const T& data() const;
+		const T*& data() const;
+
+		void clear();
+
+		T*& data();
+
+		Vector& replace(const T& replacement, sizeType index);
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -831,9 +840,28 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	const T& Vector<T>::data() const
+	const T*& Vector<T>::data() const
 	{
 		return m_data;
+	}
+
+	template<typename T>
+	void Vector<T>::clear()
+	{
+		reallocateData(1);
+	}
+
+	template<typename T>
+	T*& Vector<T>::data()
+	{
+		return m_data;
+	}
+
+	template<typename T>
+	Vector<T>& Vector<T>::replace(const T& replacement, sizeType index)
+	{
+		at(index) = replacement;
+		return *this;
 	}
 
 	template<typename T>

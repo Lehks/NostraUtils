@@ -180,16 +180,6 @@ namespace NOU::NOU_DAT_ALG
 		String(float64 f);
 
 		/**
-		\param additionalCapactiy The minimum additional capacity that this string has after calling
-		this method.
-
-		\brief Expands the capacity of the string in a way that it is guaranteed that after
-		this method the string has at least a capacity of the old capacity + \p additionalCapactiy.
-		This method behaves exactly like gul::container::Vector::expandIfNeeded().
-		*/
-		void expandIfNeeded(sizeType additionalCapactiy);
-
-		/**
 		\param index The index of the character that will be returned.
 		\return      The character at the provided index.
 
@@ -951,9 +941,90 @@ namespace NOU::NOU_DAT_ALG
 	};
 
 	template<typename CHAR_TYPE>
+	template<typename IT>
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	template<typename IT>
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	template<typename IT>
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	template<typename SELECTOR, typename SUPPLIER>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::replaceAll(SELECTOR selector, SUPPLIER supplier)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	template<typename SELECTOR>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::removeAll(SELECTOR selector)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	void String<CHAR_TYPE>::setSize(sizeType size)
+	{
+		StringView<CHAR_TYPE>::m_size = size;
+	}
+
+	template<typename CHAR_TYPE>
+	inline String<CHAR_TYPE> String<CHAR_TYPE>::booleanToString(boolean b)
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(const StringView<CHAR_TYPE> &str) :
 		m_data(str.size()),
-		StringView<CHAR_TYPE>(m_data.data(), str.size())
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), str.size())
 	{
 		for (sizeType i = 0; i < str.size(); i++)
 		{
@@ -962,10 +1033,585 @@ namespace NOU::NOU_DAT_ALG
 
 		setSize(str.size());
 	}
+
 	template<typename CHAR_TYPE>
-	void String<CHAR_TYPE>::setSize(sizeType size)
+	String<CHAR_TYPE>::String(CharType c)
 	{
-		m_size = size;
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(int32 i)
+	{
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(int64 i)
+	{
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(uint32 i)
+	{
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(uint64 i)
+	{
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(float32 f)
+	{
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(float64 f)
+	{
+	}
+
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::CharType& String<CHAR_TYPE>::at(sizeType index)
+	{
+		return m_data.at(index);
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, CharType c)
+	{
+		m_data.insert(c, index);
+		setSize(m_data.size());
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, const StringView<CHAR_TYPE>& str)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int32 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int64 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint32 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint64 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float32 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float64 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::append(CharType c)
+	{
+		m_data.pushBack(c);
+		setSize(m_data.size());
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::append(const StringView<CHAR_TYPE>& str)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int32 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int64 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint32 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint64 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float32 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float64 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(CharType target, CharType replacement, sizeType start, sizeType end)
+	{
+		if (start > m_data.size() || end > m_data.size())
+		{
+			///ERROR
+		}
+
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (target == m_data.at(i))
+			{
+				m_data.replace(replacement, i);
+			}
+		}
+
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(const StringView<CHAR_TYPE>& target, const StringView<CHAR_TYPE>& replacement, sizeType start, sizeType end)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(sizeType start, sizeType end, const StringView<CHAR_TYPE>& replacement)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, CharType c)
+	{
+		if (b)
+			m_data.pushBack(c);
+
+		setSize(m_data.size());
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, const StringView<CHAR_TYPE>& str)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, int32 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, int64 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint32 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint64 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float32 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float64 nr)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	inline void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const
+	{
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::copySubstringHere(const StringView<CHAR_TYPE>& src, sizeType start, sizeType end, sizeType insertIndex)
+	{
+		// TODO: insert return statement here
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::fillRange(CharType c, sizeType start, sizeType end)
+	{
+		if (start > m_data.size())
+		{
+			///ERROR
+		}
+		else if (start <= m_data.capacity() && end > m_data.capacity())
+		{
+			m_data.expandCapacity(end - m_data.capacity());
+		}
+
+		for (sizeType i = start; i < end; i++)
+		{
+			m_data.replace(c, i);
+		}
+		setSize(m_data.size());
+		return *this;
+
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::remove(sizeType start, sizeType end)
+	{
+		for (sizeType i = start; i < end; i++)
+		{
+			m_data.remove(i);
+		}
+		setSize(m_data.size());
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::preserve(sizeType start, sizeType end)
+	{
+		if (start > m_data.size() || end > m_data.size())
+		{
+			///ERROR
+		}
+
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (i == start)
+				i = end;
+
+			m_data.remove(i);
+		}
+
+		setSize(m_data.size());
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	inline Vector<String> String<CHAR_TYPE>::split(CharType separator) const
+	{
+		return Vector<String>();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::substring(sizeType start, sizeType end) const
+	{
+
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::copy() const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concat(CharType c) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concat(const StringView<CHAR_TYPE>& str) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int32 i) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int64 i) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint32 i) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint64 i) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float32 f) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float64 f) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, CharType c) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, const StringView<CHAR_TYPE>& str) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int32 i) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int64 i) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint32 i) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint64 i) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float32 f) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float64 f) const
+	{
+		return String();
+	}
+
+	template<typename CHAR_TYPE>
+	const Vector<typename String<CHAR_TYPE>::CharType>& String<CHAR_TYPE>::data() const
+	{
+		return m_data; 
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::toLowerCase()
+	{
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (m_data.at(i) >= '\u0040' && m_data.at(i) <= '\u005A') // \u0040 (A) upper letter unicode, \u005A upper letter unicode (Z) 
+			{
+				String<CHAR_TYPE>::CharType c = m_data.at(i) + 20;  // adds +20 to convert the upper case letter \u0040 - \u005A to lower case letter \u0060 - \u007A
+				m_data.replace(c, i);								// example: A (\u0040) toLowerCase = a (\u0060)
+			}
+		}
+
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::toUpperCase()
+	{
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (m_data.at(i) >= '\u0060' && m_data.at(i) <= '\u007A') //same just vice versa toLowerCase.
+			{
+				String<CHAR_TYPE>::CharType c = m_data.at(i) - 20; 
+				m_data.replace(c, i);
+			}
+		}
+
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::trim()
+	{
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (m_data.at(i) == '\u0020') // \u0020 unicode space ( )
+			{
+				m_data.remove(i);
+			}
+		}
+		setSize(m_data.size());
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::clear()
+	{
+		m_data.clear();
+		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::StringIterator String<CHAR_TYPE>::begin()
+	{
+		return m_data.begin();
+	}
+
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::StringIterator String<CHAR_TYPE>::end()
+	{
+		return m_data.end();
+	}
+
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::StringIterator String<CHAR_TYPE>::indexIterator(sizeType index)
+	{
+		return m_data.indexIterator(index);
+	}
+
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::StringReverseIterator String<CHAR_TYPE>::indexRIterator(sizeType index)
+	{
+		return m_data.rindexIterator(index);
+	}
+
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::StringReverseIterator String<CHAR_TYPE>::rbegin()
+	{
+		return m_data.rbegin();
+	}
+
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::StringReverseIterator String<CHAR_TYPE>::rend()
+	{
+		return m_data.rend();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(CharType c) const
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(const StringView<CHAR_TYPE>& str) const
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(int32 i) const
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(int64 i) const
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(uint32 i) const
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(uint64 i) const
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(float32 f) const
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(float64 f) const
+	{
+		return String();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(CharType c)
+	{
+		// TODO: insert return statement here
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(const StringView<CHAR_TYPE>& str)
+	{
+		// TODO: insert return statement here
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(int32 i)
+	{
+		// TODO: insert return statement here
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(int64 i)
+	{
+		// TODO: insert return statement here
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(uint32 i)
+	{
+		// TODO: insert return statement here
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(uint64 i)
+	{
+		// TODO: insert return statement here
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(float32 f)
+	{
+		// TODO: insert return statement here
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(float64 f)
+	{
+		// TODO: insert return statement here
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator[](sizeType index)
+	{
+		// TODO: insert return statement here
 	}
 }
 
