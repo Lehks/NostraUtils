@@ -1653,87 +1653,95 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(CharType c) const
 	{
-		return String();
+		return concat(c);
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(const StringView<CHAR_TYPE>& str) const
 	{
-		return String();
+		return concat(str);
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(int32 i) const
 	{
-		return String();
+		return concat(i);
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(int64 i) const
 	{
-		return String();
+		return concat(i);
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(uint32 i) const
 	{
-		return String();
+		return concat(i);
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(uint64 i) const
 	{
-		return String();
+		return concat(i);
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(float32 f) const
 	{
-		return String();
+		return concat(f);
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(float64 f) const
 	{
-		return String();
+		return concat(f);
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(CharType c)
 	{
-		// TODO: insert return statement here
+		append(c);
+		return *this;
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(const StringView<CHAR_TYPE>& str)
 	{
-		// TODO: insert return statement here
+		append(str);
+		return *this;
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(int32 i)
 	{
-		// TODO: insert return statement here
+		append(i);
+		return *this;
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(int64 i)
 	{
-		// TODO: insert return statement here
+		append(i);
+		return *this;
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(uint32 i)
 	{
-		// TODO: insert return statement here
+		append(i);
+		return *this;
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(uint64 i)
 	{
-		// TODO: insert return statement here
+		append(i);
+		return *this;
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(float32 f)
 	{
-		// TODO: insert return statement here
+		append(f);
+		return *this;
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::operator+=(float64 f)
 	{
-		// TODO: insert return statement here
+		append(f);
+		return *this;
 	}
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>& String<CHAR_TYPE>::operator [] (sizeType index)
+	typename String<CHAR_TYPE>::CharType& String<CHAR_TYPE>::operator [] (sizeType index)
 	{
-		// TODO: insert return statement here
+		return m_data.at(i);
 	}
 }
 
