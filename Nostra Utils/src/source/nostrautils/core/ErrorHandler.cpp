@@ -50,9 +50,27 @@ namespace NOU::NOU_CORE
 		return m_id;
 	}
 
-	NOU_MEM_MNGT::GenericAllocationCallback<const Error> DefaultErrorPool::s_poolAllocator;
+	NOU_MEM_MNGT::GenericAllocationCallback<Error> DefaultErrorPool::s_poolAllocator;
 
-	NOU_DAT_ALG::Vector<const Error> DefaultErrorPool::s_defaultErrorPool(1, s_poolAllocator);
+	NOU_DAT_ALG::Vector<Error> DefaultErrorPool::s_defaultErrorPool(ErrorCodes::LAST_ELEMENT,
+		s_poolAllocator);
+
+#ifndef NOU_ADD_ERROR
+#define NOU_ADD_ERROR(pool, code) pool##[ErrorCodes::##code] = Error(#code, ErrorCodes::##code)
+#endif
+
+	DefaultErrorPool::DefaultErrorPool()
+	{
+
+		if (s_defaultErrorPool.size() != 0) //errors have already been pushed
+			return;
+
+		for (sizeType i = 0; i < ErrorCodes::LAST_ELEMENT; i++)
+			s_defaultErrorPool.push(Error("", -1));
+
+		NOU_ADD_ERROR(s_defaultErrorPool, UNKNOWN_ERROR);
+		NOU_ADD_ERROR(s_defaultErrorPool, INDEX_OUT_OF_BOUNDS);
+	}
 
 	const Error* DefaultErrorPool::queryError(ErrorPool::ErrorType id) const
 	{
@@ -62,9 +80,27 @@ namespace NOU::NOU_CORE
 			return nullptr;
 	}
 
-	NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> ErrorHandler::s_allocator;
+	ErrorHandler::ErrorPoolVectorWrapper::ErrorPoolVectorWrapper(sizeType initialCapacity) :
+		m_errorPools(initialCapacity, m_allocator)
+	{}
 
-	NOU_DAT_ALG::Vector<const ErrorPool*> ErrorHandler::s_errorPools(1, s_allocator);
+	ErrorHandler::ErrorPoolVectorWrapper::~ErrorPoolVectorWrapper()
+	{
+		for (const ErrorPool *errorPool : m_errorPools)
+		{
+			delete errorPool;
+		}
+	}
+
+	const NOU_DAT_ALG::Vector<const ErrorPool*>& ErrorHandler::ErrorPoolVectorWrapper::getVector() const
+	{
+		return m_errorPools;
+	}
+
+	//NOU_MEM_MNGT::GenericAllocationCallback<NOU_MEM_MNGT::UniquePtr<const ErrorPool>> ErrorHandler::s_allocator;
+	//
+	//NOU_DAT_ALG::Vector<NOU_MEM_MNGT::UniquePtr<const ErrorPool>> ErrorHandler::s_errorPools(1, s_allocator);
+	ErrorHandler::ErrorPoolVectorWrapper ErrorHandler::s_errorPools(1);
 
 	ErrorHandler::CallbackType ErrorHandler::s_callback = ErrorHandler::standardCallback;
 
@@ -79,7 +115,7 @@ namespace NOU::NOU_CORE
 	const Error& ErrorHandler::getError(ErrorType id)
 	{
 		const Error *error;
-		for (const ErrorPool *errorPool : ErrorHandler::s_errorPools)
+		for (const ErrorPool *errorPool : ErrorHandler::s_errorPools.getVector())
 		{
 			error = errorPool->queryError(id);
 
@@ -87,7 +123,7 @@ namespace NOU::NOU_CORE
 				return *error;
 		}
 
-		return *(s_errorPools[0]->queryError(ErrorCodes::UNKNOWN_ERROR));
+		return *(s_errorPools.getVector()[0]->queryError(ErrorCodes::UNKNOWN_ERROR));
 	}
 
 	sizeType ErrorHandler::getErrorCount() const
@@ -97,7 +133,9 @@ namespace NOU::NOU_CORE
 	
 	ErrorHandler::ErrorHandler() :
 		m_errors(DEFAULT_CAPACITY)
-	{}
+	{
+		pushPool<DefaultErrorPool>();
+	}
 
 	const ErrorLocation& ErrorHandler::peekError() const
 	{

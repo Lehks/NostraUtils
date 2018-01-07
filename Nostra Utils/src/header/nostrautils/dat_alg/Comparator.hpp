@@ -74,18 +74,6 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	NOU_FUNC constexpr CompareResult genericComparator(const T &a, const T &b);
 
-	///\todo comment
-	///\cond
-	template<>
-	NOU_FUNC CompareResult genericComparator<char8>(const char8 &a, const char8 &b);
-
-	template<>
-	NOU_FUNC CompareResult genericComparator<char16>(const char16 &a, const char16 &b);
-
-	template<>
-	NOU_FUNC CompareResult genericComparator<char32>(const char32 &a, const char32 &b);
-	///\endcond
-
 	/**
 	\tparam T The type of the objects that will be compared.
 	\param  a The first object.

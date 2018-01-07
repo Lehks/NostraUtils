@@ -191,11 +191,15 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS DefaultErrorPool : public ErrorPool
 	{
 	private:
-		static NOU_MEM_MNGT::GenericAllocationCallback<const Error> s_poolAllocator;
+		static NOU_MEM_MNGT::GenericAllocationCallback<Error> s_poolAllocator;
 
-		static NOU_DAT_ALG::Vector<const Error> s_defaultErrorPool;
+		static NOU_DAT_ALG::Vector<Error> s_defaultErrorPool;
 
 	public:
+
+		constexpr static sizeType DEFAULT_CAPACITY = 20;
+
+		DefaultErrorPool();
 
 		virtual const Error* queryError(ErrorType id) const override;
 	};
@@ -205,7 +209,54 @@ namespace NOU::NOU_CORE
 	*/
 	class NOU_CLASS ErrorHandler
 	{
+	private:
+		/**
+		\brief A wrapper for a vector that stores const pointers to error pools.
+		*/
+		class ErrorPoolVectorWrapper
+		{
+		private:
+			/**
+			\brief The allocation callback that is used by m_errorPools. 
+			GenericAllocationCallback::getInstance() can not be used, since it may not be constructed yet (
+			this class is only used as a static member).
+			*/
+			NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> m_allocator;
+
+			/**
+			\brief The vector that this class wrapps around.
+			*/
+			NOU_DAT_ALG::Vector<const ErrorPool*> m_errorPools;
+
+		public:
+			/**
+			\param initialCapacity The initial capacity of the vector.
+
+			\brief Constructs the vector with the passed capacity.
+			*/
+			ErrorPoolVectorWrapper(sizeType initialCapacity);
+
+			/**
+			\brief Deletes all the error pools that are in the vector.
+			*/
+			~ErrorPoolVectorWrapper();
+
+			/**
+			\brief Pushes a pool into the vector.
+			*/
+			template<typename T>
+			void pushPool();
+
+			/**
+			\return m_errorPools
+
+			\brief Returns the vector that this class wrapps around.
+			*/
+			const NOU_DAT_ALG::Vector<const ErrorPool*>& getVector() const;
+		};
+
 	public:
+
 		/**
 		\brief Uses the alias StringType for the NOU::NOU_DAT_ALG::StringView8.
 		*/
@@ -224,15 +275,9 @@ namespace NOU::NOU_CORE
 	private:
 
 		/**
-		\brief Creates a new GenericAllocationCallback which allocates memory
-			   for the ErrorPool Vector.
+		\brief A wrapper for the vector that stores the single error pools.
 		*/
-		static NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> s_allocator;
-
-		/**
-		\brief Creates a new Vector from a pointer to an ErrorPool
-		*/
-		static NOU_DAT_ALG::Vector<const ErrorPool*> s_errorPools;
+		static ErrorPoolVectorWrapper s_errorPools;
 
 		/**
 		\brief Creates a new FastQueue from ErrorLocation.
@@ -268,6 +313,14 @@ namespace NOU::NOU_CORE
 		\brief Returns an error with the passed ID.
 		*/
 		static const Error& getError(ErrorType id);
+
+		/**
+		\brief The type of the error pool to push. Must be default constructible.
+
+		\brief Pushes an error pool into the error handler.
+		*/
+		template<typename T>
+		static void pushPool();
 
 		/**
 		\return Returns the error count.
@@ -329,5 +382,20 @@ namespace NOU::NOU_CORE
 			LAST_ELEMENT				 //Must be the last element!
 		};
 	};
+
+	template<typename T>
+	void ErrorHandler::ErrorPoolVectorWrapper::pushPool()
+	{
+		///\todo check if default constructible
+		//static_assert();
+
+		m_errorPools.pushBack(new T()); //must be push back, default pool must be at index #0.
+	}
+
+	template<typename T>
+	void ErrorHandler::pushPool()
+	{
+		s_errorPools.pushPool<T>();
+	}
 }
 #endif
