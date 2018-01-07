@@ -188,19 +188,40 @@ namespace NOU::NOU_CORE
 		virtual const Error* queryError(ErrorType id) const = 0;
 	};
 
+	/**
+	\brief Defines the DefaultErrorPool class.
+	*/
 	class NOU_CLASS DefaultErrorPool : public ErrorPool
 	{
 	private:
+
+		/**
+		\brief The AllocationCallback that is used by the ErrorPool
+		*/
 		static NOU_MEM_MNGT::GenericAllocationCallback<Error> s_poolAllocator;
 
+		/**
+		\brief The vector that stores the single errors of the defaultErrorPool.
+		*/
 		static NOU_DAT_ALG::Vector<Error> s_defaultErrorPool;
 
 	public:
 
+		/**
+		\brief The default capacity of the vector.
+		*/
 		constexpr static sizeType DEFAULT_CAPACITY = 20;
 
+		/**
+		\brief Constructs a new defaultErrorPool.
+		*/
 		DefaultErrorPool();
 
+		/**
+		\param id The id that is searched for in the pool.
+
+		\brief Searches for a passed id int the pool.
+		*/
 		virtual const Error* queryError(ErrorType id) const override;
 	};
 

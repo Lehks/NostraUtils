@@ -97,9 +97,6 @@ namespace NOU::NOU_CORE
 		return m_errorPools;
 	}
 
-	//NOU_MEM_MNGT::GenericAllocationCallback<NOU_MEM_MNGT::UniquePtr<const ErrorPool>> ErrorHandler::s_allocator;
-	//
-	//NOU_DAT_ALG::Vector<NOU_MEM_MNGT::UniquePtr<const ErrorPool>> ErrorHandler::s_errorPools(1, s_allocator);
 	ErrorHandler::ErrorPoolVectorWrapper ErrorHandler::s_errorPools(1);
 
 	ErrorHandler::CallbackType ErrorHandler::s_callback = ErrorHandler::standardCallback;
