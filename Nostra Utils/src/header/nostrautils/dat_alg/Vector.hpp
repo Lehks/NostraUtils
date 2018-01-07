@@ -262,13 +262,24 @@ namespace NOU::NOU_DAT_ALG
 		\brief Sorts the Vector using comperators.
 		*/
 		void sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp);
-
-		const T*& data() const;
-
-		void clear();
-
+		/**
+		\brief returns a pointer reference to the current data.
+		*/
 		T*& data();
+		/**
+		\brief returns a const pointer reference to the current data.
+		*/
+		const T*& data() const;
+		/**
+		\brief clears the String.
+		*/
+		void clear();
+		/**
+		\param replacement The data to insert.
+		\param index The index at wich the data gets replaced.
 
+		\brief replaces the data at the index with the passed data.
+		*/
 		Vector& replace(const T& replacement, sizeType index);
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
