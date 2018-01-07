@@ -6,6 +6,8 @@
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 
+#include <stdlib.h>
+
 
 /** \file Vector.hpp
 \author  Dennis Franz
@@ -927,28 +929,28 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)					
 	{
 		char buffer[20];
-		return _i32toa(i, buffer, 10);;
+		return String((_itoa_s(i, buffer, 10)));
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)					
 	{
 		char buffer[20];
-		return _i64toa(i, buffer, 10);;
+		return _i64toa(i, buffer, 10);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)					
 	{
 		char buffer[20];
-		return _ui32toa(i, buffer, 10);;
+		return _ui32toa(i, buffer, 10);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)					
 	{
 		char buffer[20];
-		return _ui64toa(i, buffer, 10);;
+		return _ui64toa(i, buffer, 10);
 	}
 
 	template<typename CHAR_TYPE>
@@ -973,7 +975,9 @@ namespace NOU::NOU_DAT_ALG
 			m_data.pushBack(str.at(i));
 		}
 
-		setSize(str.size());
+		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
+
+		setSize(str.size() - 1);
 	}
 
 	template<typename CHAR_TYPE>
@@ -984,75 +988,53 @@ namespace NOU::NOU_DAT_ALG
 
 		m_data.pushBack(c);
 
-		setSize(m_data.size());
+		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
+
+		setSize(m_data.size() - 1);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(int32 i)	:
-		m_data(intToString(i)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), intToString(i))
-	{
+	String<CHAR_TYPE>::String(int32 i) : 
+		String(NOU_CORE::move(intToString(i)))
+	{}
 
-		m_data.pushBack(intToString(i));
-
-
-		setSize(m_data.size());
-	}
+	//template<typename CHAR_TYPE>
+	//String<CHAR_TYPE>::String(int32 i)	:
+	//	m_data(1),
+	//	StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), 1)
+	//{
+	//
+	//	append(intToString(i));
+	//
+	//	m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
+	//
+	//	setSize(m_data.size() - 1);
+	//}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(int64 i)	:
-		m_data(intToString(i)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), intToString(i))
-	{
-
-		m_data.pushBack(intToString(i));
-
-		setSize(m_data.size());
-	}
+		String(NOU_CORE::move(intToString(i)))
+	{}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(uint32 i)	 :
-		m_data(intToString(i)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), intToString(i))
-	{
-		m_data.pushBack(intToString(i));
-
-		setSize(m_data.size());
-	}
+		String(NOU_CORE::move(intToString(i)))
+	{}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(uint64 i)	:
-		m_data(intToString(i)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), intToString(i))
-	{
-
-		m_data.pushBack(intToString(i));
-
-		setSize(m_data.size());
-	}
+		String(NOU_CORE::move(intToString(i)))
+	{}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(float32 f) :	
-		m_data(floatToString(f)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), floatToString(f))
-	{
-
-		m_data.pushBack(floatToString(f));
-	
-		setSize(m_data.size());
-	}
+		String(NOU_CORE::move(floatToString(f)))
+	{}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(float64 f) :	
-		m_data(floatToString(f)),
-		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), floatToString(f))
-	{
-
-		m_data.pushBack(floatToString(f));
-
-
-		setSize(m_data.size());
-	}
+		String(NOU_CORE::move(floatToString(f)))
+	{}
 
 	template<typename CHAR_TYPE>
 	typename String<CHAR_TYPE>::CharType& String<CHAR_TYPE>::at(sizeType index)
@@ -1064,15 +1046,19 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, CharType c)
 	{
 		m_data.insert(c, index);
-		setSize(m_data.size());
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, const StringView<CHAR_TYPE>& str)
 	{
-		m_data.insert(str, index);
-		setSize(m_data.size());
+		for (sizeType i = 0; i < str.size(); i++)
+		{
+			m_data.insert(str[i], index + i);
+
+		}
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1080,7 +1066,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int32 nr)
 	{
 		m_data.insert(intToString(nr), index);
-		setSize(m_data.size());
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1088,7 +1074,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int64 nr)
 	{
 		m_data.insert(intToString(nr), index);
-		setSize(m_data.size());
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1096,7 +1082,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint32 nr)
 	{
 		m_data.insert(intToString(nr), index);
-		setSize(m_data.size());
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1104,7 +1090,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint64 nr)
 	{
 		m_data.insert(intToString(nr), index);
-		setSize(m_data.size());
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1112,7 +1098,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float32 nr)
 	{
 		m_data.insert(floatToString(nr), index);
-		setSize(m_data.size());
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1120,78 +1106,71 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float64 nr)
 	{
 		m_data.insert(floatToString(nr), index);
-		setSize(m_data.size());
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(CharType c)
 	{
-		m_data.pushBack(c);
-		setSize(m_data.size());
+		insert(m_data.size() - 1, c);
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(const StringView<CHAR_TYPE>& str)
 	{
-		m_data.pushBack(str);
-		setSize(m_data.size());
+
+		insert(m_data.size() - 1, str);
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int32 nr)
 	{
-		m_data.pushBack(intToString(nr));
-		setSize(m_data.size());
+		insert(m_data.size() - 1, intToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int64 nr)
 	{
-		m_data.pushBack(intToString(nr));
-		setSize(m_data.size());
+		insert(m_data.size() - 1, intToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint32 nr)
 	{
-		m_data.pushBack(intToString(nr));
-		setSize(m_data.size());
+		insert(m_data.size() - 1, intToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint64 nr)
 	{
-		m_data.pushBack(intToString(nr));
-		setSize(m_data.size());
+		insert(m_data.size() - 1, intToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float32 nr)
 	{
-		m_data.pushBack(floatToString(nr));
-		setSize(m_data.size());
+		insert(m_data.size() - 1, floatToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float64 nr)
 	{
-		m_data.pushBack(floatToString(nr));
-		setSize(m_data.size());
+		insert(m_data.size() - 1, floatToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(CharType target, CharType replacement, sizeType start, sizeType end)
 	{
-		if (start > m_data.size() || end > m_data.size())
+		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
 			///ERROR
 		}
@@ -1210,7 +1189,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(const StringView<CHAR_TYPE>& target, const StringView<CHAR_TYPE>& replacement, sizeType start, sizeType end)
 	{
-		if (start > m_data.size() || end > m_data.size())
+		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
 			///ERROR
 		}
@@ -1229,7 +1208,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(sizeType start, sizeType end, const StringView<CHAR_TYPE>& replacement)
 	{
-		if (start > m_data.size() || end > m_data.size())
+		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
 			///ERROR
 		}
@@ -1246,9 +1225,8 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, CharType c)
 	{
 		if (b)
-			m_data.pushBack(c);
+			append(c);
 
-		setSize(m_data.size());
 		return *this;
 	}
 
@@ -1256,9 +1234,8 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, const StringView<CHAR_TYPE>& str)
 	{
 		if (b)
-			m_data.pushBack(str);
+			append(str);
 
-		setSize(m_data.size());
 		return *this;
 	}
 
@@ -1266,9 +1243,8 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, int32 nr)
 	{
 		if (b)
-			m_data.pushBack(intToString(nr));
+			append(intToString(nr));
 
-		setSize(m_data.size());
 		return *this;
 	}
 
@@ -1276,9 +1252,8 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, int64 nr)
 	{
 		if (b)
-			m_data.pushBack(intToString(nr));
+			append(intToString(nr));
 
-		setSize(m_data.size());
 		return *this;
 	}
 
@@ -1286,9 +1261,8 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint32 nr)
 	{
 		if (b)
-			m_data.pushBack(intToString(nr));
+			append(intToString(nr));
 
-		setSize(m_data.size());
 		return *this;
 	}
 
@@ -1296,9 +1270,8 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint64 nr)
 	{
 		if (b)
-			m_data.pushBack(intToString(nr));
+			appendk(intToString(nr));
 
-		setSize(m_data.size());
 		return *this;
 	}
 
@@ -1306,9 +1279,8 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float32 nr)
 	{
 		if (b)
-			m_data.pushBack(FloatToString(nr));
+			append(FloatToString(nr));
 
-		setSize(m_data.size());
 		return *this;
 	}
 
@@ -1316,9 +1288,8 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float64 nr)
 	{
 		if (b)
-			m_data.pushBack(FloatToString(nr));
+			append(FloatToString(nr));
 
-		setSize(m_data.size());
 		return *this;
 	}
 
@@ -1338,7 +1309,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::fillRange(CharType c, sizeType start, sizeType end)
 	{
-		if (start > m_data.size())
+		if (start > m_data.size() - 1)
 		{
 			///ERROR
 		}
@@ -1351,7 +1322,8 @@ namespace NOU::NOU_DAT_ALG
 		{
 			m_data.replace(c, i);
 		}
-		setSize(m_data.size());
+
+		setSize(m_data.size() - 1);
 		return *this;
 
 	}
@@ -1363,19 +1335,20 @@ namespace NOU::NOU_DAT_ALG
 		{
 			m_data.remove(i);
 		}
-		setSize(m_data.size());
+
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::preserve(sizeType start, sizeType end)
 	{
-		if (start > m_data.size() || end > m_data.size())
+		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
 			///ERROR
 		}
 
-		for (sizeType i = 0; i < m_data.size(); i++)
+		for (sizeType i = 0; i < m_data.size() - 1; i++)
 		{
 			if (i == start)
 				i = end;
@@ -1383,7 +1356,7 @@ namespace NOU::NOU_DAT_ALG
 			m_data.remove(i);
 		}
 
-		setSize(m_data.size());
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1396,7 +1369,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			strnew.m_data.at(i) = m_data.at(i);
 		}
-		strnew.setSize(strnew.m_data.size());
+		strnew.setSize(strnew.m_data.size() - 1);
 
 		return strnew;
 	}
@@ -1548,11 +1521,11 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::toLowerCase()
 	{
-		for (sizeType i = 0; i < m_data.size(); i++)
+		for (sizeType i = 0; i < m_data.size() - 1; i++)
 		{
 			if (m_data.at(i) >= '\u0040' && m_data.at(i) <= '\u005A') // \u0040 (A) upper letter unicode, \u005A upper letter unicode (Z) 
 			{
-				String<CHAR_TYPE>::CharType c = m_data.at(i) + 20;  // adds +20 to convert the upper case letter \u0040 - \u005A to lower case letter \u0060 - \u007A
+				String<CHAR_TYPE>::CharType c = m_data.at(i) + 32;  // adds +32 to convert the upper case letter \u0040 - \u005A to lower case letter \u0060 - \u007A
 				m_data.replace(c, i);								// example: A (\u0040) toLowerCase = a (\u0060)
 			}
 		}
@@ -1563,11 +1536,11 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::toUpperCase()
 	{
-		for (sizeType i = 0; i < m_data.size(); i++)
+		for (sizeType i = 0; i < m_data.size() - 1; i++)
 		{
 			if (m_data.at(i) >= '\u0060' && m_data.at(i) <= '\u007A') //same just vice versa toLowerCase.
 			{
-				String<CHAR_TYPE>::CharType c = m_data.at(i) - 20; 
+				String<CHAR_TYPE>::CharType c = m_data.at(i) - 32; 
 				m_data.replace(c, i);
 			}
 		}
@@ -1578,14 +1551,14 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::trim()
 	{
-		for (sizeType i = 0; i < m_data.size(); i++)
+		for (sizeType i = 0; i < m_data.size() - 1; i++)
 		{
 			if (m_data.at(i) == '\u0020') // \u0020 unicode space ( )
 			{
 				m_data.remove(i);
 			}
 		}
-		setSize(m_data.size());
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1722,7 +1695,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	typename String<CHAR_TYPE>::CharType& String<CHAR_TYPE>::operator [] (sizeType index)
 	{
-		return m_data.at(i);
+		return m_data.at(index);
 	}
 }
 
