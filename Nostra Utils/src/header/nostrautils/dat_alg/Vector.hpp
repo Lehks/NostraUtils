@@ -260,6 +260,10 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		void sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp);
 		/**
+		\brief Sets the size of the Vector.
+		*/
+		void setSize(sizeType size);
+		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
 		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the first element in the
@@ -826,6 +830,12 @@ namespace NOU::NOU_DAT_ALG
 	{
 		///\todo implementing a "real" sorting alg.
 		bubbleSortComp(m_data, m_size, comp);
+	}
+
+	template<typename T>
+	void Vector<T>::setSize(sizeType size)
+	{
+		m_size = size;
 	}
 
 	template<typename T>
