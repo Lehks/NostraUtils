@@ -81,6 +81,9 @@ namespace NOU::NOU_CORE
 
 		NOU_ADD_ERROR(s_defaultErrorPool, UNKNOWN_ERROR);
 		NOU_ADD_ERROR(s_defaultErrorPool, INDEX_OUT_OF_BOUNDS);
+		NOU_ADD_ERROR(s_defaultErrorPool, ASSERT_ERROR); 
+		NOU_ADD_ERROR(s_defaultErrorPool, BAD_ALLOCATION);
+		NOU_ADD_ERROR(s_defaultErrorPool, BAD_DEALLOCATION);
 	}
 
 	const Error* DefaultErrorPool::queryError(ErrorPool::ErrorType id) const
@@ -113,6 +116,8 @@ namespace NOU::NOU_CORE
 	ErrorHandler::ErrorPoolVectorWrapper ErrorHandler::s_errorPools(1);
 
 	ErrorHandler::CallbackType ErrorHandler::s_callback = ErrorHandler::standardCallback;
+
+	ErrorHandler ErrorHandler::s_handler; //remove later
 
 	void ErrorHandler::setCallback(CallbackType callback)
 	{
@@ -166,5 +171,10 @@ namespace NOU::NOU_CORE
 		ErrorLocation errLoc(fnName, line, file, id, msg);
 		m_errors.push(errLoc);
 		s_callback(errLoc);
+	}
+
+	ErrorHandler& getErrorHandler()
+	{
+		return ErrorHandler::s_handler; //todo rework w/ thread mngr
 	}
 }

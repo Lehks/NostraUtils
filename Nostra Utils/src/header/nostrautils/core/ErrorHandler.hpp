@@ -4,7 +4,6 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
 #include "nostrautils\core\Meta.hpp"
 
 /**
@@ -39,7 +38,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief The function name in which the error occured.
 		*/
-		StringType  m_fnName;
+		StringType m_fnName;
 		
 		/**
 		\brief The line in which the error occured.
@@ -310,7 +309,6 @@ namespace NOU::NOU_CORE
 		using CallbackType = void(*)(const ErrorLocation &loc);
 
 	private:
-
 		/**
 		\brief A wrapper for the vector that stores the single error pools.
 		*/
@@ -329,6 +327,10 @@ namespace NOU::NOU_CORE
 		static ErrorPoolVectorWrapper& getPools();
 
 	public:
+
+		//static instance of the error handler. will be removed as soon as the thread manager is ready
+		static ErrorHandler s_handler;
+
 		/**
 		\brief The default capacity for m_errors.
 		*/
@@ -423,10 +425,21 @@ namespace NOU::NOU_CORE
 		{
 			UNKNOWN_ERROR = 0,			//Must start at 0!
 			INDEX_OUT_OF_BOUNDS,
+			ASSERT_ERROR,
+			BAD_ALLOCATION,
+			BAD_DEALLOCATION,
 
 			LAST_ELEMENT				 //Must be the last element!
 		};
 	};
+
+	/**
+	\return The error handler that is associated with the calling thread.
+
+	\brief Returns the error handler that is associated with the calling thread. This function is the 
+	       preferred way to obtain the current error handler.
+	*/
+	ErrorHandler& getErrorHandler();
 
 /**
 \brief This macro is a convenience macro for pushing errors to the specified handler. This macro automatically
