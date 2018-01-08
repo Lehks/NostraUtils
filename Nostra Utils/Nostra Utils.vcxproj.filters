@@ -96,5 +96,8 @@
     <ClCompile Include="src\source\nostrautils\dat_alg\Comparator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\source\nostrautils\core\Thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
