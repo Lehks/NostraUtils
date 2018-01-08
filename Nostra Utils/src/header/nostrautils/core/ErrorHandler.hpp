@@ -428,10 +428,25 @@ namespace NOU::NOU_CORE
 		};
 	};
 
+/**
+\brief This macro is a convenience macro for pushing errors to the specified handler. This macro automatically
+       passes the functionname, line number and filename.
+*/
 #ifndef NOU_PUSH_ERROR
 #define NOU_PUSH_ERROR(handler, error, msg) handler.pushError(NOU_FUNC_NAME, __LINE__, __FILE__, error, msg)
 #endif
 
+/**
+\brief This macro is a convenience macro, that behaves exactly like NOU_PUSH_ERROR, but only if NOU_DEBUG is 
+       defined. Otherwise, it will do nothing.
+*/
+#ifndef NOU_PUSH_DBG_ERROR
+#    ifdef  NOU_DEBUG
+#        define NOU_PUSH_DBG_ERROR(handler, error, msg) NOU_PUSH_ERROR(handler, error, msg)
+#    else
+#        define NOU_PUSH_DBG_ERROR(handler, error, msg)
+#    endif
+#endif
 
 	template<typename T>
 	void ErrorHandler::ErrorPoolVectorWrapper::pushPool()
