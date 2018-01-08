@@ -4,8 +4,6 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Meta.hpp"
 
-#include <utility>
-
 /**
 \file core/Utils.hpp
 
