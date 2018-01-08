@@ -616,6 +616,14 @@ static_cast<NOU::uint32> 									 \
 #endif 
 
 /**
+\brief Returns the result of __LINE__ as a c-string (NOU_STRINGIFY(__LINE__) would not work).
+*/
+#ifndef NOU_LINE_STRING
+#define NOU_LINE_STRING_HELPER(str) NOU_STRINGIFY(str)
+#define NOU_LINE_STRING NOU_LINE_STRING_HELPER(__LINE__)
+#endif
+
+/**
 \brief The macro which is used for getting the function name.
 
 \todo Verify!
