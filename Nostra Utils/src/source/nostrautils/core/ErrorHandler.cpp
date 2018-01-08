@@ -7,6 +7,7 @@ namespace NOU::NOU_CORE
 		m_fnName(fnName),
 		m_line(line),
 		m_file(file),
+		m_id(id),
 		m_msg(msg)
 	{}
 
@@ -27,12 +28,22 @@ namespace NOU::NOU_CORE
 
 	ErrorLocation::ErrorType ErrorLocation::getID() const
 	{
+		return ErrorHandler::getError(getActualID()).getID();
+	}
+
+	ErrorLocation::ErrorType ErrorLocation::getActualID() const
+	{
 		return m_id;
 	}
 
 	const ErrorLocation::StringType& ErrorLocation::getMsg() const
 	{
 		return m_msg;
+	}
+
+	const ErrorLocation::StringType& ErrorLocation::getName() const
+	{
+		return ErrorHandler::getError(getActualID()).getName();
 	}
 
 	Error::Error(const StringType &name, ErrorType id) :

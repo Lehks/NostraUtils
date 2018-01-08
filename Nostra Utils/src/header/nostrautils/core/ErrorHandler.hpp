@@ -102,9 +102,16 @@ namespace NOU::NOU_CORE
 		/**
 		\return Returns the id code.
 		
-		\brief Returns the id of the error.
+		\brief Returns the id of the error, or ErrorCodes::UNKNOWN_ERROR if the error is not known.
 		*/
 		ErrorType getID() const;
+
+		/**
+		\brief Returns the error code that was actually set. If the set error code is a valid one, this will
+		       be the same as getId(), but if the code is invalid (not part of any error pool) the returned 
+			   code will be the error that was set, not ErrorCodes::UNKNOWN_ERROR.
+		*/
+		ErrorType getActualID() const;
 
 		/**
 		\return Returns the error message.
@@ -112,6 +119,13 @@ namespace NOU::NOU_CORE
 		\brief Returns the error message of the error.
 		*/
 		const StringType& getMsg() const;
+
+		/**
+		\return The name of the error as a string.
+
+		\brief Returns the name of the error as provided by ErrorHandler::getError().getName().
+		*/
+		const StringType& getName() const;
 	};
 
 	/**
@@ -170,7 +184,8 @@ namespace NOU::NOU_CORE
 	};
 
 	/**
-	\brief Defines the ErrorPool class.
+	\brief Defines the ErrorPool interface. This interface is used to provide new errors for the 
+	       ErrorHandler.
 	*/
 	class NOU_CLASS ErrorPool
 	{
@@ -184,7 +199,7 @@ namespace NOU::NOU_CORE
 		/**
 		\return Returns a const pointer to an error.
 
-		\brief Returns a const pointer to an error with the passed ID. This function is abstract.
+		\brief Returns a const pointer to an error with the passed ID.
 		*/
 		virtual const Error* queryError(ErrorType id) const = 0;
 	};
