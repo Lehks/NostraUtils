@@ -4,45 +4,35 @@
 #include <iostream>
 
 
+struct Foo {
+
+	int m_i;
+	bool m_b;
+	float m_f;
+
+	Foo() = default;
+	Foo(int i, bool b, float f) :
+		m_i(i),
+		m_b(b),
+		m_f(f)
+	{}
+
+	Foo(Foo&&)
+	{
+
+	}
+};
+
 int main()
 {
-	NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(1);
-	NOU::NOU_DAT_ALG::Vector<NOU::int32> vec2(1);
 
-	int b = 10;
-	for (int i = 0; i < 10; i++)
+	NOU::NOU_DAT_ALG::Vector<Foo> v1;
 	{
-		vec1.pushBack(b);
-		b--;
-		std::cout << vec1[i] << std::endl;
+		Foo f1(1, true, 2.1f);
+		v1.emplace_back(1,true,2.1f);
+
+		std::cout << v1.at(0).m_f << std::endl;
 	}
 
-	vec1.sortComp();
-
-	for (int i = 0; i < 10; i++)
-	{
-		std::cout << vec1[i] << std::endl;
-	}
-
-
-	int a;
-	NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::int32> dbgAlloc;
-	std::cin >> a;
-
-	{
-		NOU::NOU_DAT_ALG::Vector<NOU::int32> vec4(1, dbgAlloc);
-
-		for (int i = 0; i <= 1000000; i++)
-		{
-			vec4.pushBack(i);
-		}
-
-		std::cout << dbgAlloc.getCounter() << std::endl;
-
-		std::cin >> a;
-	}
-
-	std::cin >> a;
-
-	//Do testing here
+	system("pause");
 }

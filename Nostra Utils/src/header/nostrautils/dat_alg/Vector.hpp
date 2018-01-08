@@ -170,6 +170,8 @@ namespace NOU::NOU_DAT_ALG
 		\brief Inserts an element at the last position.
 		*/
 		void pushBack(const T &data) override;
+
+		void pushBack(T &&data);
 		/**
 		\param data The data to insert.
 
@@ -259,6 +261,11 @@ namespace NOU::NOU_DAT_ALG
 		\brief Sorts the Vector using comperators.
 		*/
 		void sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp);
+		/**
+		\brief Creates an object with the given parametas and appends it at the end of the vector.
+		*/
+		template <class... Args>
+		void emplace_back(Args&&... args);
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -669,6 +676,17 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	template<typename ...Args>
+	void Vector<T>::emplace_back(Args&& ...args)
+	{
+		expandIfNeeded(1);
+
+		new (m_data + m_size) T(NOU::NOU_CORE::forward<Args>(args)...);
+
+		m_size++;
+	}
+
+	template<typename T>
 	boolean Vector<T>::empty() const
 	{
 		return m_size > 0 ? false : true;
@@ -716,6 +734,16 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename T>
 	void Vector<T>::pushBack(const T &data)
+	{
+		expandIfNeeded(1);
+
+		new (m_data + m_size) T(data); //initialize next object
+
+		m_size++;
+	}
+
+	template<typename T>
+	void Vector<T>::pushBack(T &&data)
 	{
 		expandIfNeeded(1);
 

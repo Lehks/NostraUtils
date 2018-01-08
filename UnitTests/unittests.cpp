@@ -175,6 +175,29 @@ namespace UnitTests
 			Assert::AreEqual(1,b);
 		}
 
+
+		struct NOU_CLASS Foo
+		{
+		public:
+			int m_i;
+			bool m_b;
+			float m_f;
+
+			Foo() = default;
+			Foo(Foo &&other)
+			{
+				m_i = other.m_i;
+				m_b = other.m_b;
+				m_f = other.m_f;
+			}
+			Foo(int i, bool b, float f) :
+				m_i(i),
+				m_b(b),
+				m_f(f)
+			{}
+		};
+
+
 		TEST_METHOD(Vector)
 		{
 			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
@@ -303,6 +326,10 @@ namespace UnitTests
 			Assert::AreEqual(0, vec1.peekFront());
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+
+
+
 		}
 
 		TEST_METHOD(Comparator)

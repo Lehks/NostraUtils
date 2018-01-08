@@ -65,6 +65,11 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr NOU_FUNC const T& max(const T &a,const T &b);
 
+	template<typename T>
+	constexpr NOU_FUNC T&& forward(typename remove_reference<T>::type& t);
+
+	template<typename T>
+	constexpr NOU_FUNC T&& forward(typename remove_reference<T>::type&& t);
 
 
 	template<typename T>
@@ -89,6 +94,18 @@ namespace NOU::NOU_CORE
 	constexpr T& max(T &a, T &b)
 	{
 		return a > b ? a : b;
+	}
+
+	template<typename T>
+	constexpr T&& forward(typename remove_reference<T>::type & t)
+	{
+		return std::forward<T>(t);
+	}
+
+	template<typename T>
+	constexpr T&& forward(typename remove_reference<T>::type && t)
+	{
+		return std::forward<T>(t);
 	}
 
 	template<typename T>
