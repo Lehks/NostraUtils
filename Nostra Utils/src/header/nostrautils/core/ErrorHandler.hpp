@@ -439,12 +439,36 @@ namespace NOU::NOU_CORE
 		*/
 		enum Codes : typename ErrorLocation::ErrorType
 		{
+			/**
+			\brief An unknown error has occured or an invalid error code has been passed to 
+			       ErrorHandler::pushError().
+			*/
 			UNKNOWN_ERROR = 0,			//Must start at 0!
+
+			/**
+			\brief An index was out of bounds.
+			*/
 			INDEX_OUT_OF_BOUNDS,
+
+			/**
+			\brief An assertion failed.
+			*/
 			ASSERT_ERROR,
+
+			/**
+			\brief An allocation failed.
+			*/
 			BAD_ALLOCATION,
+
+			/**
+			\brief A deallocation failed.
+			*/
 			BAD_DEALLOCATION,
 
+			/**
+			\brief Not an actual error, but always the last element in the enum. The error codes 0 - 
+			LAST_ELEMENT are always reserved for the default error pool.
+			*/
 			LAST_ELEMENT				 //Must be the last element!
 		};
 	};
