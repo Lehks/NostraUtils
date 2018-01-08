@@ -4,6 +4,7 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\Utils.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
+#include "nostrautils\core\Meta.hpp"
 
 namespace NOU::NOU_MEM_MNGT
 {

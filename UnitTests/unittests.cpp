@@ -804,21 +804,23 @@ namespace UnitTests
 
 			//validate that the error in the handler is the one that was supposed to be pushed
 			Assert::IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
-			Assert::IsTrue(handler.peekError().getFnName() == NOU_FUNC_NAME);
-			Assert::IsTrue(handler.peekError().getFile() == __FILE__);
-			Assert::IsTrue(handler.peekError().getMsg() == "The index was out of bounds.");
-			Assert::IsTrue(handler.peekError().getName() == "INDEX_OUT_OF_BOUNDS");
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFnName()) == NOU_FUNC_NAME);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFile()) == __FILE__);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) == 
+				"The index was out of bounds.");
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) == 
+				"INDEX_OUT_OF_BOUNDS");
 		
 			auto errorPeek = handler.peekError();
 			auto errorPop = handler.popError();
 
 			//validate that the popped error is the same one as the peeked error.
 			Assert::IsTrue(errorPeek.getID() == errorPop.getID());
-			Assert::IsTrue(errorPeek.getFnName() == errorPop.getFnName());
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getFnName()) == errorPop.getFnName());
 			Assert::IsTrue(errorPeek.getLine() == errorPop.getLine());
-			Assert::IsTrue(errorPeek.getFile() == errorPop.getFile());
-			Assert::IsTrue(errorPeek.getMsg() == errorPop.getMsg());
-			Assert::IsTrue(errorPeek.getName() == errorPop.getName());
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getFile()) == errorPop.getFile());
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getMsg()) == errorPop.getMsg());
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getName()) == errorPop.getName());
 
 			Assert::IsTrue(handler.getErrorCount() == 0);
 

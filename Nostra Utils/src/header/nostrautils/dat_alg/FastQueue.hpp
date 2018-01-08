@@ -4,8 +4,8 @@
 #include "nostrautils\dat_alg\ContainerInterfaces.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\\mem_mngt\Pointer.hpp"
+#include "nostrautils\mem_mngt\AllocationCallback.hpp"
+#include "nostrautils\mem_mngt\Pointer.hpp"
 
 #include <new>
 
@@ -26,7 +26,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief A simple implementation of a queue which can be used in O(1).
 	*/
 	template<typename T>
-	class NOU_CLASS FastQueue : public Queue<T>, public FifoQueue<T>
+	class NOU_CLASS FastQueue : public Queue<T>, public FifoQueue<T>, public RandomAccess<T>
 	{
 	public:
 		/**
@@ -156,7 +156,21 @@ namespace NOU::NOU_DAT_ALG
 		\param index1 The second element.
 		\brief Swaps two elements of the queue.
 		*/
-		void swap(sizeType index0, sizeType index1);
+		void swap(sizeType index0, sizeType index1) override;
+
+		/**
+		\return The element at the index \p index in the queue. 
+
+		\brief Returns the element at the index \p index in the queue.
+		*/
+		Type& at(sizeType index) override;
+
+		/**
+		\return The element at the index \p index in the queue.
+
+		\brief Returns the element at the index \p index in the queue.
+		*/
+		const Type& at(sizeType index) const override;
 
 		/**
 		\brief Removes all elements from the queue.
@@ -292,6 +306,18 @@ namespace NOU::NOU_DAT_ALG
 	{
 		Type *queueStart = m_queue.rawPtr() + m_startIndex;
 		NOU_DAT_ALG::swap<Type>(queueStart + index0, queueStart + index1);
+	}
+
+	template<typename T>
+	typename FastQueue<T>::Type& FastQueue<T>::at(sizeType index)
+	{
+		return *(m_queue.rawPtr() + m_startIndex + index);
+	}
+
+	template<typename T>
+	typename const FastQueue<T>::Type& FastQueue<T>::at(sizeType index) const
+	{
+		return *(m_queue.rawPtr() + m_startIndex + index);
 	}
 
 	template<typename T>

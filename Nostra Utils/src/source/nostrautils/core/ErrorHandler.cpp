@@ -1,4 +1,5 @@
 #include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils\dat_alg\FastQueue.hpp"
 
 namespace NOU::NOU_CORE
 {
@@ -63,21 +64,22 @@ namespace NOU::NOU_CORE
 
 	NOU_MEM_MNGT::GenericAllocationCallback<Error> DefaultErrorPool::s_poolAllocator;
 
-	NOU_DAT_ALG::Vector<Error> DefaultErrorPool::s_defaultErrorPool(ErrorCodes::LAST_ELEMENT,
-		s_poolAllocator);
+	NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<Error>> DefaultErrorPool::s_defaultErrorPool(
+		new NOU_DAT_ALG::FastQueue<Error>(ErrorCodes::LAST_ELEMENT, s_poolAllocator), 
+		NOU_MEM_MNGT::defaultDeleter);
 
 #ifndef NOU_ADD_ERROR
-#define NOU_ADD_ERROR(pool, code) pool##[ErrorCodes::##code] = Error(#code, ErrorCodes::##code)
+#define NOU_ADD_ERROR(pool, code) pool##->at(ErrorCodes::##code) = Error(#code, ErrorCodes::##code)
 #endif
 
 	DefaultErrorPool::DefaultErrorPool()
 	{
 
-		if (s_defaultErrorPool.size() != 0) //errors have already been pushed
+		if (s_defaultErrorPool->size() != 0) //errors have already been pushed
 			return;
 
 		for (sizeType i = 0; i < ErrorCodes::LAST_ELEMENT; i++)
-			s_defaultErrorPool.push(Error("", -1));
+			s_defaultErrorPool->push(Error("", -1));
 
 		NOU_ADD_ERROR(s_defaultErrorPool, UNKNOWN_ERROR);
 		NOU_ADD_ERROR(s_defaultErrorPool, INDEX_OUT_OF_BOUNDS);
@@ -89,31 +91,38 @@ namespace NOU::NOU_CORE
 	const Error* DefaultErrorPool::queryError(ErrorPool::ErrorType id) const
 	{
 		if(id < ErrorCodes::LAST_ELEMENT)
-			return &s_defaultErrorPool[id];
+			return &s_defaultErrorPool->at(id);
 		else
 			return nullptr;
 	}
 
-	ErrorHandler::ErrorPoolVectorWrapper::ErrorPoolVectorWrapper(sizeType initialCapacity) :
-		m_errorPools(initialCapacity, m_allocator)
+	ErrorHandler::ErrorPoolContainerWrapper::ErrorPoolContainerWrapper(sizeType initialCapacity) :
+		m_errorPools(new NOU_DAT_ALG::FastQueue<const ErrorPool*>(initialCapacity, m_allocator), 
+			NOU_MEM_MNGT::defaultDeleter)
 	{
 		pushPool<DefaultErrorPool>();
 	}
 
-	ErrorHandler::ErrorPoolVectorWrapper::~ErrorPoolVectorWrapper()
+	ErrorHandler::ErrorPoolContainerWrapper::~ErrorPoolContainerWrapper()
 	{
-		for (const ErrorPool *errorPool : m_errorPools)
+		for (sizeType i = 0; i < m_errorPools->size(); i++)
 		{
-			delete errorPool;
+			delete m_errorPools->at(i);
 		}
 	}
 
-	const NOU_DAT_ALG::Vector<const ErrorPool*>& ErrorHandler::ErrorPoolVectorWrapper::getVector() const
+	void ErrorHandler::ErrorPoolContainerWrapper::_pushPool(const ErrorPool *pool)
 	{
-		return m_errorPools;
+		m_errorPools->pushBack(pool); //must be pushBack!
 	}
 
-	ErrorHandler::ErrorPoolVectorWrapper ErrorHandler::s_errorPools(1);
+	const NOU_DAT_ALG::FastQueue<const ErrorPool*>& 
+		ErrorHandler::ErrorPoolContainerWrapper::getContainer() const
+	{
+		return *m_errorPools;
+	}
+
+	ErrorHandler::ErrorPoolContainerWrapper ErrorHandler::s_errorPools(1);
 
 	ErrorHandler::CallbackType ErrorHandler::s_callback = ErrorHandler::standardCallback;
 
@@ -130,46 +139,47 @@ namespace NOU::NOU_CORE
 	const Error& ErrorHandler::getError(ErrorType id)
 	{
 		const Error *error;
-		for (const ErrorPool *errorPool : ErrorHandler::s_errorPools.getVector())
+		for (sizeType i = 0; i < s_errorPools.getContainer().size(); i++)
 		{
-			error = errorPool->queryError(id);
+			error = s_errorPools.getContainer().at(i)->queryError(id);
 
 			if (error != nullptr)
 				return *error;
 		}
 
-		return *(s_errorPools.getVector()[0]->queryError(ErrorCodes::UNKNOWN_ERROR));
+		return *(s_errorPools.getContainer()[0]->queryError(ErrorCodes::UNKNOWN_ERROR));
 	}
 
-	ErrorHandler::ErrorPoolVectorWrapper& ErrorHandler::getPools()
+	ErrorHandler::ErrorPoolContainerWrapper& ErrorHandler::getPools()
 	{
 		return s_errorPools;
 	}
 
 	sizeType ErrorHandler::getErrorCount() const
 	{
-		return m_errors.size();
+		return m_errors->size();
 	}
 	
 	ErrorHandler::ErrorHandler() :
-		m_errors(DEFAULT_CAPACITY)
+		m_errors(new NOU_DAT_ALG::FastQueue<ErrorLocation>(DEFAULT_CAPACITY, m_allocator), 
+			NOU_MEM_MNGT::defaultDeleter) //remove later the m_allocator
 	{}
 
 	const ErrorLocation& ErrorHandler::peekError() const
 	{
-		return ErrorHandler::m_errors.peek();
+		return ErrorHandler::m_errors->peek();
 	}
 
 	ErrorLocation ErrorHandler::popError()
 	{
-		return ErrorHandler::m_errors.pop();
+		return ErrorHandler::m_errors->pop();
 	}
 
 	void ErrorHandler::pushError(const StringType &fnName, sizeType line, const StringType &file,
 		ErrorType id, const StringType &msg)
 	{
 		ErrorLocation errLoc(fnName, line, file, id, msg);
-		m_errors.push(errLoc);
+		m_errors->push(errLoc);
 		s_callback(errLoc);
 	}
 

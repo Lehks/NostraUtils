@@ -2,8 +2,7 @@
 #define NOU_CORE_ERROR_HANDLER_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\FastQueue.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
+#include "nostrautils\mem_mngt\Pointer.hpp"
 #include "nostrautils\core\Meta.hpp"
 
 /**
@@ -15,6 +14,13 @@
 
 \brief A file that contains the nostra::utils::core::ErrorHandler class.
 */
+
+namespace NOU::NOU_DAT_ALG
+{
+	template<typename T>
+	class FastQueue;
+}
+
 namespace NOU::NOU_CORE
 {
 	/**
@@ -27,7 +33,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief Uses the alias StringType for the NOU::NOU_DAT_ALG::StringView8.
 		*/
-		using StringType = NOU::NOU_DAT_ALG::StringView8;
+		using StringType = const char*;
 
 		/**
 		\brief Uses the alias ErrorType for the sizeType.
@@ -218,7 +224,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief The vector that stores the single errors of the defaultErrorPool.
 		*/
-		static NOU_DAT_ALG::Vector<Error> s_defaultErrorPool;
+		static NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<Error>> s_defaultErrorPool;
 
 	public:
 
@@ -247,9 +253,9 @@ namespace NOU::NOU_CORE
 	{
 	private:
 		/**
-		\brief A wrapper for a vector that stores const pointers to error pools.
+		\brief A wrapper for a container that stores const pointers to error pools.
 		*/
-		class NOU_CLASS ErrorPoolVectorWrapper
+		class NOU_CLASS ErrorPoolContainerWrapper
 		{
 		private:
 			/**
@@ -262,7 +268,15 @@ namespace NOU::NOU_CORE
 			/**
 			\brief The vector that this class wrapps around.
 			*/
-			NOU_DAT_ALG::Vector<const ErrorPool*> m_errorPools;
+			NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<const ErrorPool*>> m_errorPools;
+
+			/**
+			\param pool The error pool to push.
+
+			\brief Used to push back an actual error pool. This needs to be in a .cpp file, since the
+			       FastQueue's operations are not known in the .hpp file.
+			*/
+			void _pushPool(const ErrorPool *pool);
 
 		public:
 			/**
@@ -270,12 +284,12 @@ namespace NOU::NOU_CORE
 
 			\brief Constructs the vector with the passed capacity.
 			*/
-			ErrorPoolVectorWrapper(sizeType initialCapacity);
+			ErrorPoolContainerWrapper(sizeType initialCapacity);
 
 			/**
 			\brief Deletes all the error pools that are in the vector.
 			*/
-			~ErrorPoolVectorWrapper();
+			~ErrorPoolContainerWrapper();
 
 			/**
 			\brief Pushes a pool into the vector.
@@ -288,7 +302,7 @@ namespace NOU::NOU_CORE
 
 			\brief Returns the vector that this class wrapps around.
 			*/
-			const NOU_DAT_ALG::Vector<const ErrorPool*>& getVector() const;
+			const NOU_DAT_ALG::FastQueue<const ErrorPool*>& getContainer() const;
 		};
 
 	public:
@@ -312,19 +326,21 @@ namespace NOU::NOU_CORE
 		/**
 		\brief A wrapper for the vector that stores the single error pools.
 		*/
-		static ErrorPoolVectorWrapper s_errorPools;
+		static ErrorPoolContainerWrapper s_errorPools;
+
+		NOU_MEM_MNGT::GenericAllocationCallback<ErrorLocation> m_allocator; //remove later
 
 		/**
 		\brief Creates a new FastQueue from ErrorLocation.
 		*/
-		NOU_DAT_ALG::FastQueue<ErrorLocation> m_errors;
+		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<ErrorLocation>> m_errors;
 
 		/**
 		\return s_errorPools
 
 		\brief Returns the s_errorPools member. This is used by pushPools().
 		*/
-		static ErrorPoolVectorWrapper& getPools();
+		static ErrorPoolContainerWrapper& getPools();
 
 	public:
 
@@ -439,7 +455,7 @@ namespace NOU::NOU_CORE
 	\brief Returns the error handler that is associated with the calling thread. This function is the 
 	       preferred way to obtain the current error handler.
 	*/
-	ErrorHandler& getErrorHandler();
+	NOU_FUNC ErrorHandler& getErrorHandler();
 
 /**
 \brief This macro is a convenience macro for pushing errors to the specified handler. This macro automatically
@@ -462,11 +478,11 @@ namespace NOU::NOU_CORE
 #endif
 
 	template<typename T>
-	void ErrorHandler::ErrorPoolVectorWrapper::pushPool()
+	void ErrorHandler::ErrorPoolContainerWrapper::pushPool()
 	{
 		static_assert(IsDefaultConstructible<T>::value);
 
-		m_errorPools.pushBack(new T()); //must be push back, default pool must be at index #0.
+		_pushPool(new T());
 	}
 
 	template<typename T>
