@@ -4,6 +4,12 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 
+/**
+\param b The expression to check.
+
+\brief Checks wether \p b evaluates to <tt>true</tt>. If not, an ASSERT_ERROR will be set in the error
+       handler.
+*/
 #ifndef NOU_ASSERT
 #    ifdef NOU_DEBUG
 #        define NOU_ASSERT(b) NOU::NOU_CORE::assert(b, "Assertion failed: " NOU_STRINGIFY(b) "; Function: "\
@@ -16,6 +22,16 @@
 
 namespace NOU::NOU_CORE
 {
+	/**
+	\param b      The evaluated expression.
+	\param msg    The message that will be set.
+	\param fnName The name of the function in which the assertion failed.
+	\param line   The number of the line on which the assertion failed.
+	\param file   The file in which the assertion failed.
+
+	\brief The function that is called by NOU_ASSERT. This function should never called directly, always use
+	       NOU_ASSERT.
+	*/
 	NOU_FUNC void assert(boolean b, const char *msg, const char *fnName, sizeType line, const char *file);
 }
 
