@@ -308,7 +308,6 @@
     <ClInclude Include="src\header\nostrautils\core\ErrorHandler.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Meta.hpp" />
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp" />
-    <ClInclude Include="src\header\nostrautils\core\Thread.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Uninitialized.hpp" />
@@ -329,7 +328,6 @@
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
-    <ClCompile Include="src\source\nostrautils\core\Thread.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
