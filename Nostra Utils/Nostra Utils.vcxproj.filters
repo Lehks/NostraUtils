@@ -82,6 +82,12 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\core\ErrorHandler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\core\Assertions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,7 +99,10 @@
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\source\nostrautils\dat_alg\Comparator.cpp">
+    <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\core\Assertions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\source\nostrautils\core\Thread.cpp">

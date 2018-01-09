@@ -180,6 +180,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Nostra Utils\src\header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <PreprocessorDefinitions>NOU_DEBUG;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='LIB Dbg|Win32'">
@@ -191,6 +192,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Nostra Utils\src\header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <PreprocessorDefinitions>NOU_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL Dbg|x64'">
@@ -202,6 +204,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Nostra Utils\src\header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <PreprocessorDefinitions>NOU_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='LIB Dbg|x64'">
@@ -213,6 +216,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Nostra Utils\src\header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <PreprocessorDefinitions>NOU_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL Rel|Win32'">
@@ -300,12 +304,13 @@
     <None Include="src\source\nostrautils\thread\.gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\header\nostrautils\core\Assertions.hpp" />
+    <ClInclude Include="src\header\nostrautils\core\ErrorHandler.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Meta.hpp" />
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Thread.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp" />
-    <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Version.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp" />
@@ -318,8 +323,9 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
+    <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
     <ClCompile Include="src\source\nostrautils\core\Thread.cpp" />
-    <ClCompile Include="src\source\nostrautils\dat_alg\Comparator.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
