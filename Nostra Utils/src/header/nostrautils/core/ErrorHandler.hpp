@@ -470,6 +470,10 @@ namespace NOU::NOU_CORE
 			*/
 			INVALID_STRING_CONVERSION,
 
+			/**
+			\brief An object of some kind is invalid.
+			*/
+			INVALID_OBJECT,
 
 			/**
 			\brief Not an actual error, but always the last element in the enum. The error codes 0 - 

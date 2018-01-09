@@ -86,6 +86,7 @@ namespace NOU::NOU_CORE
 		NOU_ADD_ERROR(s_defaultErrorPool, ASSERT_ERROR); 
 		NOU_ADD_ERROR(s_defaultErrorPool, BAD_ALLOCATION);
 		NOU_ADD_ERROR(s_defaultErrorPool, BAD_DEALLOCATION);
+		NOU_ADD_ERROR(s_defaultErrorPool, INVALID_OBJECT);
 	}
 
 	const Error* DefaultErrorPool::queryError(ErrorPool::ErrorType id) const
