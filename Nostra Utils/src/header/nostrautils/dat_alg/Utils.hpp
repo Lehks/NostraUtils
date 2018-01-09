@@ -36,6 +36,9 @@ namespace NOU::NOU_DAT_ALG
 	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
 
 	template<typename T>
+	constexpr NOU_FUNC int32 epsilonCompare(const T &t0, const T &t1, const T &epsilon);
+
+	template<typename T>
 	void swap(T *dataone, T *datatwo) 
 	{
 		T tempdata = NOU_CORE::move(*dataone);
@@ -47,6 +50,14 @@ namespace NOU::NOU_DAT_ALG
 	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str)
 	{
 		return *str != 0 ? stringlen<CHAR_TYPE>(str + 1) + 1 : 0;
+	}
+
+	template<typename T>
+	constexpr NOU_FUNC int32 epsilonCompare(const T &t0, const T &t1, const T &epsilon)
+	{
+		T diff = t0 - t1;
+		T abs = (diff < 0 ? -diff : diff);
+		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
 	}
 }
 
