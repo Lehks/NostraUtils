@@ -843,5 +843,13 @@ namespace UnitTests
 			Assert::IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
 			Assert::IsTrue(handler.peekError().getActualID() == error);
 		}
+
+		TEST_METHOD(EpsilonCompare)
+		{
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) <  0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(123.456, 123.457, 0.1) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
+
+		}
 	};
 }
