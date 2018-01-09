@@ -518,7 +518,7 @@ namespace NOU::NOU_CORE
 */
 #ifndef NOU_COND_PUSH_ERROR
 #define NOU_COND_PUSH_ERROR(b, handler, error, msg) \
-	if (b) { handler.pushError(NOU_FUNC_NAME, __LINE__, __FILE__, error, msg) }
+	if (b) { handler.pushError(NOU_FUNC_NAME, __LINE__, __FILE__, error, msg); }
 #endif
 
 /**

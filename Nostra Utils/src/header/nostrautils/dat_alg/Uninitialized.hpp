@@ -259,9 +259,8 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	T* Uninitialized<T>::data()
 	{
-		if (!isValid())
-			NOU_PUSH_DBG_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT,
-				"The object is not initialized yet."); //make conditional
+			NOU_COND_PUSH_DBG_ERROR(!isValid(), NOU_CORE::getErrorHandler(), 
+				NOU_CORE::ErrorCodes::INVALID_OBJECT, "The object is not initialized yet.");
 
 		return (T*)(m_dataChunk);
 	}
@@ -269,9 +268,8 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	const T* Uninitialized<T>::data() const
 	{
-		if (!isValid())
-			NOU_PUSH_DBG_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT,
-				"The object is not initialized yet."); //make conditional
+		NOU_COND_PUSH_DBG_ERROR(!isValid(), NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INVALID_OBJECT, "The object is not initialized yet.");
 
 		return (T*)(m_dataChunk);
 	}
