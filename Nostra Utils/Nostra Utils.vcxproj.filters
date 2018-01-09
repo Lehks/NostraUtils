@@ -88,10 +88,16 @@
     <ClInclude Include="src\header\nostrautils\core\Assertions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
+    <ClInclude Include="src\header\nostrautils\core\Thread.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\core\Thread.hpp">
+    <ClInclude Include="src\header\nostrautils\thread\ThreadManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\AsyncTaskResult.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\Task.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

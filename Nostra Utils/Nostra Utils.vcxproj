@@ -321,6 +321,9 @@
     <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp" />
+    <ClInclude Include="src\header\nostrautils\thread\AsyncTaskResult.hpp" />
+    <ClInclude Include="src\header\nostrautils\thread\Task.hpp" />
+    <ClInclude Include="src\header\nostrautils\thread\ThreadManager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
