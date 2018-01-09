@@ -7,8 +7,8 @@ namespace NOU::NOU_CORE
 	{
 		time_t now = time(0);
 
-		StringType dt = ctime(&now);
+		StringType localTime = ctime(&now);
 
-		return dt;
+		return localTime;
 	}
 }
