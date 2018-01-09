@@ -734,15 +734,15 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-9999999") == -9999999);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-0") == -0);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123") == 123);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999") == 9999999);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0") == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456") == 123.456);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99") == 5.99);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5") == 14.4);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456") == -123.456);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99") == -5.99);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5") == -14.4);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123"), 123.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999"), 9999999.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0"), 0.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456"), 123.456f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99"), 5.99f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5"), 14.5f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
 		}
 
 		TEST_METHOD(DebugClass)
