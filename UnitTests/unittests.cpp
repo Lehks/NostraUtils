@@ -433,6 +433,9 @@ namespace UnitTests
 
 		TEST_METHOD(FastQueue)
 		{
+			while(NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
+				NOU::NOU_CORE::getErrorHandler().popError();
+
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
 
 			{
@@ -487,6 +490,8 @@ namespace UnitTests
 			Assert::IsTrue(fq.pop() == 2);
 			Assert::IsTrue(fq.pop() == 3);
 			Assert::IsTrue(fq.pop() == 4);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 		}
 
 		TEST_METHOD(AreSame)

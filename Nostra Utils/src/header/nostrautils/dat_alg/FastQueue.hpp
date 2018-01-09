@@ -6,6 +6,7 @@
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
 
 #include <new>
 
@@ -216,7 +217,10 @@ namespace NOU::NOU_DAT_ALG
 		m_startIndex(0),
 		m_endIndex(0),
 		m_queue(m_allocator.allocate(m_capacity), m_allocator)
-	{}
+	{
+		if(m_queue == nullptr)
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION, "The allocation failed.");
+	}
 
 	template<typename T>
 	FastQueue<T>::~FastQueue()
@@ -256,6 +260,10 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	typename FastQueue<T>::Type FastQueue<T>::popFront()
 	{
+		if (size() == 0)
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, 
+				"No elements in the queue");
+
 		T ret = NOU_CORE::move(m_queue[m_startIndex]);
 
 		m_queue[m_startIndex].~Type();
@@ -280,12 +288,20 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	const typename FastQueue<T>::Type& FastQueue<T>::peekFront() const
 	{
+		if (size() == 0)
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+				"No elements in the queue");
+
 		return m_queue[m_startIndex];
 	}
 
 	template<typename T>
 	typename FastQueue<T>::Type& FastQueue<T>::peekFront()
 	{
+		if (size() == 0)
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+				"No elements in the queue");
+
 		return m_queue[m_startIndex];
 	}
 
@@ -304,6 +320,14 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void FastQueue<T>::swap(sizeType index0, sizeType index1)
 	{
+		if (index0 >= size())
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+				"index0 is out of bounds.");
+
+		if (index1 >= size())
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+				"index1 is out of bounds.");
+
 		Type *queueStart = m_queue.rawPtr() + m_startIndex;
 		NOU_DAT_ALG::swap<Type>(queueStart + index0, queueStart + index1);
 	}
@@ -311,12 +335,20 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	typename FastQueue<T>::Type& FastQueue<T>::at(sizeType index)
 	{
+		if (index >= size())
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+				"index is out of bounds.");
+
 		return *(m_queue.rawPtr() + m_startIndex + index);
 	}
 
 	template<typename T>
 	typename const FastQueue<T>::Type& FastQueue<T>::at(sizeType index) const
 	{
+		if (index >= size())
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+				"index is out of bounds.");
+
 		return *(m_queue.rawPtr() + m_startIndex + index);
 	}
 
@@ -357,6 +389,9 @@ namespace NOU::NOU_DAT_ALG
 		{
 			newCapacity = m_capacity + (((m_capacity + additionalCapacity) / m_capacity) * m_capacity);
 			newBuf = m_allocator.allocate(newCapacity);
+			
+			if (newBuf == nullptr)
+				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION, "The allocation failed.");
 		}
 
 		copyFromTo(m_queue.rawPtr() + m_startIndex, newBuf, size());
