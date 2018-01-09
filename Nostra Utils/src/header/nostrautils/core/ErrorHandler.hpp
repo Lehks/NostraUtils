@@ -464,6 +464,12 @@ namespace NOU::NOU_CORE
 			\brief A deallocation failed.
 			*/
 			BAD_DEALLOCATION,
+#
+			/**
+			\brief A string conversion failed.
+			*/
+			INVALID_STRING_CONVERSION,
+
 
 			/**
 			\brief Not an actual error, but always the last element in the enum. The error codes 0 - 

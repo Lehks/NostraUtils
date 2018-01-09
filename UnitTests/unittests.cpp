@@ -721,6 +721,28 @@ namespace UnitTests
 			sv1 = sv2;
 
 			Assert::IsTrue(sv1 == sv2);
+
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("123") == 123);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("9999999") == 9999999);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("0") == 0);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("123") == 123);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("9999999") == 9999999);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("0") == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-123") == -123);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-9999999") == -9999999);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-0") == -0);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123") == 123);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999") == 9999999);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0") == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456") == 123.456);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99") == 5.99);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5") == 14.4);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456") == -123.456);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99") == -5.99);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5") == -14.4);
 		}
 
 		TEST_METHOD(DebugClass)
