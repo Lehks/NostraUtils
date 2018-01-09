@@ -1,44 +1,42 @@
 #ifndef NOU_CORE_LOGGING_HPP
 #define NOU_CORE_LOGGING_HPP
 
+#define _CRT_SECURE_NO_WARNINGS //Only because compiler warnings by the ctime header.
+
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Meta.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 
-#include <iostream>
-#include <ostream>
 #include <chrono>
+
+#undef _CRT_SECURE_NO_WARNINGS
+
 
 namespace NOU::NOU_CORE
 {
-	
 	class NOU_CLASS Logger
 	{
 	public:
 
 		using StringType = NOU::NOU_DAT_ALG::StringView8;
-
-		using dateType = std::chrono::high_resolution_clock::time_point;
 	
 	private:
 
-		dateType m_date;
-
-		StringType m_logLevel;
-
-		StringType m_event;
+		StringType m_date;
 
 	public:
 
 		template<typename T>
-		void write(StringType& msg, T iostream);
+		void write(StringType eventLevel, StringType event, T stream);
+
+		StringType getTime();
 	};
 
-	template<typename T>
-	void Logger::write(StringType& msg, T iostream)
+	template<typename T> 
+	void Logger::write(StringType eventLevel, StringType eventMsg, T stream)
 	{
-		m_date = std::chrono::high_resolution_clock::now();
-		iostream << msg << "\n";
+		m_date = getTime();
+		*stream << m_date.rawStr() << eventLevel.rawStr() << ": " << eventMsg.rawStr()<< "\n\n";
 	}
 }
 
