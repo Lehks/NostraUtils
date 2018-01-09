@@ -851,5 +851,13 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
 
 		}
+
+		TEST_METHOD(InvokeResult)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<void, NOU::NOU_CORE::InvokeResult_t<
+				decltype(dummyFunc0), int>>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, NOU::NOU_CORE::InvokeResult_t<
+				decltype(dummyFunc1), int>>::value);
+		}
 	};
 }
