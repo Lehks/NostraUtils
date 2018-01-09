@@ -45,7 +45,7 @@ namespace NOU::NOU_THREAD
 	{
 	public:
 		using StoredType = T;
-		using InvocableType = F*;
+		using InvocableType = F;
 		using ReturnType = NOU_CORE::InvokeResult_t<T, ARGS...>;
 
 	private:
@@ -71,7 +71,7 @@ namespace NOU::NOU_THREAD
 
 	template<typename T, typename... ARGS>
 	InvocableTask<T, ARGS...>::InvocableTask(InvocableType &&invocable, ARGS&&...args) :
-		m_invocable(NOU_CORE::move(invocable)),
+		m_invocable(NOU_CORE::forward<T>(invocable)),
 		m_args(args)
 	{}
 
@@ -83,6 +83,34 @@ namespace NOU::NOU_THREAD
 
 	template<typename T, typename... ARGS>
 	void* InvocableTask<T, ARGS...>::getResult()
+	{
+		return &(*m_result);
+	}
+
+	template<typename T, typename F, typename... ARGS>
+	MemberFunctionTask<T, F, ARGS...>::MemberFunctionTask(const StoredType &stored, InvocableType invocable, 
+		ARGS&&...args) :
+		m_stored(stored),
+		m_invocable(invocable),
+		m_args(args...)
+	{}
+
+	template<typename T, typename F, typename... ARGS>
+	MemberFunctionTask<T, F, ARGS...>::MemberFunctionTask(StoredType &&stored, InvocableType invocable, 
+		ARGS&&...args) :
+		m_stored(std::forward<T>(stored)),
+		m_invocable(invocable),
+		m_args(args...)
+	{}
+
+	template<typename T, typename F, typename... ARGS>
+	void MemberFunctionTask<T, F, ARGS...>::execute()
+	{
+		m_result = std::apply(m_invocable, std::tuple_cat(std::forward_as_tuple(m_stored, m_args)));
+	}
+
+	template<typename T, typename F, typename... ARGS>
+	void* MemberFunctionTask<T, F, ARGS...>::getResult()
 	{
 		return &(*m_result);
 	}
