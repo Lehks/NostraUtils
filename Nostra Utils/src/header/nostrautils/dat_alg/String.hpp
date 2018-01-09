@@ -898,13 +898,44 @@ namespace NOU::NOU_DAT_ALG
 	template<typename IT>
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)					///TODO
 	{
-		return *this;
+		
+		String<CHAR_TYPE> str;
+		IT temp = i;
+
+		if (i < 0)
+		{
+			i = i * (-1); //ABS MATH
+		}
+
+		while (i != 0)
+		{
+			char8 c = (i % 10) + '0';
+			str.insert(0, c);
+			i = i / 10;
+		}
+
+		if (temp < 0)
+		{
+			str.insert(0, "-");
+		}
+
+		return str;
+
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)				///TODO
 	{
-		return *this;
+		String<CHAR_TYPE> str;
+
+		while (i != 0)
+		{
+			char8 c = (i % 10) + '0';
+			str.insert(0, c);
+			i = i / 10;
+		}
+
+		return str;
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
@@ -922,47 +953,50 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	inline String<CHAR_TYPE> String<CHAR_TYPE>::booleanToString(boolean b)					
 	{
-		return String();
+		String<CHAR_TYPE> str;
+
+		if (b)
+			str.append("true");
+		else
+			str.append("false");
+
+		return str;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)					
 	{
-		char buffer[20];
-		return String((_itoa_s(i, buffer, 10)));
+		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)					
 	{
-		char buffer[20];
-		return _i64toa(i, buffer, 10);
+		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)					
 	{
-		char buffer[20];
-		return _ui32toa(i, buffer, 10);
+		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)					
 	{
-		char buffer[20];
-		return _ui64toa(i, buffer, 10);
+		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)					
 	{
-		/// TODO Implementing this methode.
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)					
 	{
-		/// TODO Implementing this methode.
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>

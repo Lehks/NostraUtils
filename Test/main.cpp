@@ -33,7 +33,7 @@ int main()
 	str.appendIf(true, "c++ is einfach.");
 	std::cout << str.rawStr() << std::endl;
 
-	str.append(1);
+	str.append(12);
 	std::cout << str.rawStr() << std::endl;
 
 	system("pause");
