@@ -8,23 +8,6 @@
 namespace NOU::NOU_CORE
 {
 	/**
-	\tparam The type to remove the reference from.
-
-	\brief Removes any references from a type.
-
-	\details
-	Removes any references from a type.
-	E.g.:
-	T     | Returned Type
-	----- | -------------
-	int   | int
-	int&  | int
-	int&& | int
-	*/
-	template<typename T>
-	struct remove_reference : public std::remove_reference<T> {};
-
-	/**
 	\tparam T The type that will be returned by the function.
 	\return The passed type itself.
 
@@ -45,6 +28,29 @@ namespace NOU::NOU_CORE
 	*/
 	template<typename T>
 	using IdentityType_t = typename IdentityType<T>::type;
+
+	/**
+	\tparam The type to remove the reference from.
+
+	\brief Removes any references from a type.
+
+	\details
+	Removes any references from a type.
+	E.g.:
+	T     | Returned Type
+	----- | -------------
+	int   | int
+	int&  | int
+	int&& | int
+	*/
+	template<typename T>
+	struct remove_reference : public IdentityType<std::remove_reference_t<T>> {};
+
+	/**
+	\brief The result of a call to remove_reference.
+	*/
+	template<typename T>
+	using remove_reference_t = typename remove_reference<T>::type;
 
 	/**
 	\tparam t The type of the returned value.
@@ -216,6 +222,22 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	struct IsDefaultConstructible : typeIf_t<std::is_default_constructible<T>::value, 
 		TrueType, FalseType> {};
+
+	/**
+	\tparam The invocable to check the result of.
+
+	\return The result type of the passed invocable.
+
+	\brief Returns the result type of the passed invocable.
+	*/
+	template<typename T, typename...ARGS>
+	struct InvokeResult : IdentityType<std::invoke_result_t<T, ARGS...>> {};
+
+	/**
+	\brief The result of a call to InvokeResult.
+	*/
+	template<typename T, typename...ARGS>
+	using InvokeResult_t = typename InvokeResult<T, ARGS...>::type;
 }
 
 #endif
