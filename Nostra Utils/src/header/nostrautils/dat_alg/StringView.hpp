@@ -2,6 +2,7 @@
 #define	NOU_DAT_ALG_STRING_VIEW_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\core\Meta.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
@@ -87,36 +88,36 @@ namespace NOU::NOU_DAT_ALG
 	private:
 		
 	//Re-enable later w/ error handling
-	//	/**
-	//	\tparam OT The output type.
-	//	\param str The string to convert.
-	//	\return    The converted number.
-	//
-	//	\brief Converts a string into any signed integer.
-	//	*/
-	//	template<typename OT>
-	//	constexpr static OT genericStringToInt(const StringView &str);
-	//
-	//	/**
-	//	\tparam OT The output type.
-	//	\param str The string to convert.
-	//	\return    The converted number.
-	//
-	//	\brief Converts a string into any unsigned integer.
-	//	*/
-	//	template<typename OT>
-	//	constexpr static OT genericStringToUint(const StringView &str);
-	//
-	//	/**
-	//	\tparam OT                   The output type.
-	//	\param str                   The string to convert.
-	//	\param decimalPlaceSeparator The character that is used to seperate the decimal places.
-	//	\return                      The converted number.
-	//
-	//	\brief Converts a string into any floating point type number.
-	//	*/
-	//	template<typename OT>
-	//	constexpr static OT genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator);
+		/**
+		\tparam OT The output type.
+		\param str The string to convert.
+		\return    The converted number.
+	
+		\brief Converts a string into any signed integer.
+		*/
+		template<typename OT>
+		static OT genericStringToInt(const StringView &str);
+	
+		/**
+		\tparam OT The output type.
+		\param str The string to convert.
+		\return    The converted number.
+	
+		\brief Converts a string into any unsigned integer.
+		*/
+		template<typename OT>
+		static OT genericStringToUint(const StringView &str);
+	
+		/**
+		\tparam OT                   The output type.
+		\param str                   The string to convert.
+		\param decimalPlaceSeparator The character that is used to seperate the decimal places.
+		\return                      The converted number.
+	
+		\brief Converts a string into any floating point type number.
+		*/
+		template<typename OT>
+		static OT genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator);
 	
 		/**
 		\param multiple The multiplier.
@@ -218,7 +219,7 @@ namespace NOU::NOU_DAT_ALG
 		0 is returned. If the conversion fails, the error register is set to
 		ErrorCode::ErrorCode::INVALID_STRING_CONVERSION.
 		*/
-		constexpr static int32   stringToInt32(const StringView &str);
+		static int32   stringToInt32(const StringView &str);
 
 		/**
 		\param str The string to convert.
@@ -228,7 +229,7 @@ namespace NOU::NOU_DAT_ALG
 		0 is returned. If the conversion fails, the error register is set to
 		ErrorCode::ErrorCode::INVALID_STRING_CONVERSION.
 		*/
-		constexpr static int64   stringToInt64(const StringView &str);
+		static int64   stringToInt64(const StringView &str);
 
 		/**
 		\param str The string to convert.
@@ -238,7 +239,7 @@ namespace NOU::NOU_DAT_ALG
 		and 0 is returned. If the conversion fails, the error register is set to
 		ErrorCode::ErrorCode::INVALID_STRING_CONVERSION.
 		*/
-		constexpr static uint32  stringToUint32(const StringView &str);
+		static uint32  stringToUint32(const StringView &str);
 
 		/**
 		\param str The string to convert.
@@ -248,7 +249,7 @@ namespace NOU::NOU_DAT_ALG
 		and 0 is returned. If the conversion fails, the error register is set to
 		ErrorCode::ErrorCode::INVALID_STRING_CONVERSION.
 		*/
-		constexpr static uint64  stringToUint64(const StringView &str);
+		static uint64  stringToUint64(const StringView &str);
 
 		/**
 		\param str                   The string to convert.
@@ -259,7 +260,7 @@ namespace NOU::NOU_DAT_ALG
 		and 0.0 is returned. If the conversion fails, the error register is set to
 		ErrorCode::ErrorCode::INVALID_STRING_CONVERSION.
 		*/
-		constexpr static float32 stringToFloat32(const StringView &str, ConstCharType decimalPlaceSeparator 
+		static float32 stringToFloat32(const StringView &str, ConstCharType decimalPlaceSeparator 
 			= DECIMAL_PLACE_SEPARATOR); ///TODO fix
 
 		/**
@@ -271,7 +272,7 @@ namespace NOU::NOU_DAT_ALG
 		and 0.0 is returned. If the conversion fails, the error register is set to
 		ErrorCode::ErrorCode::INVALID_STRING_CONVERSION.
 		*/
-		constexpr static float64 stringToFloat64(const StringView &str, ConstCharType decimalPlaceSeparator = DECIMAL_PLACE_SEPARATOR);
+		static float64 stringToFloat64(const StringView &str, ConstCharType decimalPlaceSeparator = DECIMAL_PLACE_SEPARATOR);
 
 		/**
 		\param str The string to convert.
@@ -574,14 +575,13 @@ namespace NOU::NOU_DAT_ALG
 	using StringView32 = StringView<char32>;
 
 	///\todo Re-enable and exchange error handling
-	/*
 	template<typename CHAR_TYPE>
 	template<typename OT>
 	OT StringView<CHAR_TYPE>::genericStringToInt(const StringView &str)
 	{
 		if (str.size() == 0)
 		{
-			getErrorRegister() = ErrorCode::INVALID_STRING_CONVERSION;
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_STRING_CONVERSION, "String is empty.");
 			return 0;
 		}
 
@@ -602,7 +602,7 @@ namespace NOU::NOU_DAT_ALG
 				ret += (str[i] - '0') * static_cast<OT>(getMultipleOf10(static_cast<uint32>(str.size() - i - 1)));
 			else
 			{
-				getErrorRegister() = ErrorCode::INVALID_STRING_CONVERSION;
+				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_STRING_CONVERSION, "Invalid character found.");
 				return 0;
 			}
 		}
@@ -624,7 +624,7 @@ namespace NOU::NOU_DAT_ALG
 				ret += (str[i] - '0') * static_cast<OT>(getMultipleOf10(static_cast<uint32>(str.size() - i - 1)));
 			else
 			{
-				getErrorRegister() = ErrorCode::INVALID_STRING_CONVERSION;
+				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_STRING_CONVERSION, "Invalid character found.");
 				return 0;
 			}
 
@@ -669,7 +669,7 @@ namespace NOU::NOU_DAT_ALG
 				}
 				else
 				{
-					getErrorRegister() = ErrorCode::INVALID_STRING_CONVERSION;
+					NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_STRING_CONVERSION, "Invalid character found.");
 					return 0;
 				}
 			}
@@ -680,7 +680,6 @@ namespace NOU::NOU_DAT_ALG
 
 		return ret;
 	}
-	*/
 
 	template<typename CHAR_TYPE>
 	constexpr uint64 StringView<CHAR_TYPE>::getMultipleOf10(uint32 multiple)
@@ -805,38 +804,38 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr int32 StringView<CHAR_TYPE>::stringToInt32(const StringView &str)
+	int32 StringView<CHAR_TYPE>::stringToInt32(const StringView &str)
 	{
 		return genericStringToInt<int32>(str);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr int64 StringView<CHAR_TYPE>::stringToInt64(const StringView &str)
+	int64 StringView<CHAR_TYPE>::stringToInt64(const StringView &str)
 	{
 		return genericStringToInt<int64>(str);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr uint32 StringView<CHAR_TYPE>::stringToUint32(const StringView &str)
+	uint32 StringView<CHAR_TYPE>::stringToUint32(const StringView &str)
 	{
 		return genericStringToInt<uint32>(str);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr uint64 StringView<CHAR_TYPE>::stringToUint64(const StringView &str)
+	uint64 StringView<CHAR_TYPE>::stringToUint64(const StringView &str)
 	{
 		return genericStringToUint<uint64>(str);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr float32 StringView<CHAR_TYPE>::stringToFloat32(const StringView &str, 
+	float32 StringView<CHAR_TYPE>::stringToFloat32(const StringView &str, 
 		ConstCharType decimalPlaceSeparator)
 	{
 		return genericStringToFloat<float32>(str, decimalPlaceSeparator);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr float64 StringView<CHAR_TYPE>::stringToFloat64(const StringView &str, 
+	float64 StringView<CHAR_TYPE>::stringToFloat64(const StringView &str, 
 		ConstCharType decimalPlaceSeparator)
 	{
 		return genericStringToFloat<float64>(str, decimalPlaceSeparator);

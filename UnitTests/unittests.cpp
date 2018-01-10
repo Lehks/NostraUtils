@@ -14,6 +14,8 @@
 #include "nostrautils\mem_mngt\Pointer.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils\dat_alg\Uninitialized.hpp"
 
 #include "DebugClass.hpp"
 
@@ -41,24 +43,24 @@ namespace UnitTests
 	TEST_CLASS(UnitTest)
 	{
 	public:
-		
+
 		TEST_METHOD(TypeSizes)
 		{
-			Assert::IsTrue(sizeof(NOU::int8)   >= 1);
-			Assert::IsTrue(sizeof(NOU::uint8)  >= 1);
-			Assert::IsTrue(sizeof(NOU::int16)  >= 2);
+			Assert::IsTrue(sizeof(NOU::int8) >= 1);
+			Assert::IsTrue(sizeof(NOU::uint8) >= 1);
+			Assert::IsTrue(sizeof(NOU::int16) >= 2);
 			Assert::IsTrue(sizeof(NOU::uint16) >= 2);
-			Assert::IsTrue(sizeof(NOU::int32)  >= 4);
+			Assert::IsTrue(sizeof(NOU::int32) >= 4);
 			Assert::IsTrue(sizeof(NOU::uint32) >= 4);
-			Assert::IsTrue(sizeof(NOU::int64)  >= 8);
+			Assert::IsTrue(sizeof(NOU::int64) >= 8);
 			Assert::IsTrue(sizeof(NOU::uint64) >= 8);
 
-			Assert::IsTrue(sizeof(NOU::char8)  >= 1);
+			Assert::IsTrue(sizeof(NOU::char8) >= 1);
 			Assert::IsTrue(sizeof(NOU::char16) >= 2);
 			Assert::IsTrue(sizeof(NOU::char32) >= 4);
 
 			/*
-			  sizeof(long double) >= 4 / 8 to sort out those compilers that do not have a float that is 
+			  sizeof(long double) >= 4 / 8 to sort out those compilers that do not have a float that is
 			  32 / 64 bit wide
 			*/
 			Assert::IsTrue(sizeof(NOU::float32) == 4 && sizeof(long double) >= 4);
@@ -145,7 +147,7 @@ namespace UnitTests
 
 			NOU::NOU_CORE::Version version11(5, 9, 4);
 			NOU::NOU_CORE::Version version12(1, 10, 4);
-			
+
 			Assert::IsFalse(version11 == version12);
 			Assert::IsTrue(version11 != version12);
 			Assert::IsTrue(version11 > version12);
@@ -206,7 +208,7 @@ namespace UnitTests
 			testinteger = vec1.popFront();
 			Assert::AreEqual(15, testinteger);
 
-			vec2.swap(0,1);
+			vec2.swap(0, 1);
 			Assert::AreEqual(0, vec2[1]);
 
 			vec2.remove(0);
@@ -227,7 +229,7 @@ namespace UnitTests
 				Assert::AreEqual(*it, vec2[i]);
 				i--;
 			}
-			
+
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::int32> dbgAlloc;
 
 			{
@@ -301,18 +303,18 @@ namespace UnitTests
 
 			NOU::NOU_DAT_ALG::swap(&a, &b);
 
-			Assert::AreEqual(2,a);
-			Assert::AreEqual(1,b);
+			Assert::AreEqual(2, a);
+			Assert::AreEqual(1, b);
 		}
 
 		TEST_METHOD(Comparator)
 		{
 			//int as dummy type
-			Assert::IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>, 
-												decltype(&NOU::NOU_DAT_ALG::genericComparator<int>)>);
+			Assert::IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>,
+				decltype(&NOU::NOU_DAT_ALG::genericComparator<int>)>);
 
 			Assert::IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>,
-												decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>);
+				decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(NOU::NOU_DAT_ALG::CompareResult::BIGGER) ==
 				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
@@ -333,7 +335,7 @@ namespace UnitTests
 
 
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'a') == 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'a') ==
 				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'A') ==
@@ -344,6 +346,33 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') ==
 				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+		
+
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
+				static_cast<NOU::char16>('a')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
+				static_cast<NOU::char16>('A')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
+				static_cast<NOU::char16>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
+				static_cast<NOU::char16>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
+				static_cast<NOU::char32>('a')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
+				static_cast<NOU::char32>('A')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
+				static_cast<NOU::char32>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
+				static_cast<NOU::char32>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
 		}
 
 		TEST_METHOD(UniquePtr)
@@ -405,6 +434,9 @@ namespace UnitTests
 
 		TEST_METHOD(FastQueue)
 		{
+			while(NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
+				NOU::NOU_CORE::getErrorHandler().popError();
+
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
 
 			{
@@ -459,6 +491,8 @@ namespace UnitTests
 			Assert::IsTrue(fq.pop() == 2);
 			Assert::IsTrue(fq.pop() == 3);
 			Assert::IsTrue(fq.pop() == 4);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 		}
 
 		TEST_METHOD(AreSame)
@@ -693,6 +727,28 @@ namespace UnitTests
 			sv1 = sv2;
 
 			Assert::IsTrue(sv1 == sv2);
+
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("123") == 123);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("9999999") == 9999999);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("0") == 0);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("123") == 123);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("9999999") == 9999999);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("0") == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-123") == -123);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-9999999") == -9999999);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-0") == -0);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123"), 123.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999"), 9999999.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0"), 0.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456"), 123.456f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99"), 5.99f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5"), 14.5f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
 		}
 
 		TEST_METHOD(DebugClass)
@@ -761,6 +817,104 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_CORE::IsDefaultConstructible
 				<NOU::NOU_MEM_MNGT::GenericAllocationCallback<int>>::value);
 			Assert::IsFalse(NOU::NOU_CORE::IsDefaultConstructible<NotDefaultConstructible>::value);
+		}
+
+		TEST_METHOD(ErrorHandler)
+		{
+			NOU::NOU_CORE::ErrorHandler handler;
+
+			Assert::IsTrue(handler.getErrorCount() == 0);
+
+			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of "
+				"bounds.");
+
+			Assert::IsTrue(handler.getErrorCount() == 1);
+
+			//validate that the error in the handler is the one that was supposed to be pushed
+			Assert::IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFnName()) == NOU_FUNC_NAME);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFile()) == __FILE__);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) == 
+				"The index was out of bounds.");
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) == 
+				"INDEX_OUT_OF_BOUNDS");
+		
+			auto errorPeek = handler.peekError();
+			auto errorPop = handler.popError();
+
+			//validate that the popped error is the same one as the peeked error.
+			Assert::IsTrue(errorPeek.getID() == errorPop.getID());
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getFnName()) == errorPop.getFnName());
+			Assert::IsTrue(errorPeek.getLine() == errorPop.getLine());
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getFile()) == errorPop.getFile());
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getMsg()) == errorPop.getMsg());
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getName()) == errorPop.getName());
+
+			Assert::IsTrue(handler.getErrorCount() == 0);
+
+			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR, "Some message");
+			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "Some other message");
+
+			Assert::IsTrue(handler.getErrorCount() == 2);
+
+			//validate that the order in which the errors are popped is correct
+			Assert::IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
+			Assert::IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
+			
+			Assert::IsTrue(handler.getErrorCount() == 0);
+
+			NOU::NOU_CORE::ErrorHandler::ErrorType error = 50000;
+
+			//push some invalid error code
+			NOU_PUSH_ERROR(handler, error, "Some invalid code");
+
+			Assert::IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
+			Assert::IsTrue(handler.peekError().getActualID() == error);
+		}
+
+		TEST_METHOD(EpsilonCompare)
+		{
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) <  0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(123.456, 123.457, 0.1) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
+
+		}
+
+		TEST_METHOD(InvokeResult)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<void, NOU::NOU_CORE::InvokeResult_t<
+				decltype(dummyFunc0), int>>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, NOU::NOU_CORE::InvokeResult_t<
+				decltype(dummyFunc1), int>>::value);
+		}
+
+		TEST_METHOD(Uninitialized)
+		{
+			{
+				NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> ui;
+
+				Assert::IsFalse(ui.isValid());
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+				ui = NOU::DebugClass(5);
+
+				Assert::IsTrue(ui.isValid());
+
+				Assert::IsTrue(ui->get() == 5);
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
+
+				ui = NOU::DebugClass(10);
+
+				Assert::IsTrue(ui.isValid());
+
+				Assert::IsTrue(ui->get() == 10);
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 		}
 	};
 }
