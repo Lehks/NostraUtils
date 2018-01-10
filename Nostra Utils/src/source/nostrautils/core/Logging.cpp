@@ -32,4 +32,31 @@ namespace NOU::NOU_CORE
 			s_logger[i]->writeLog(eventLevel, eventMsg, *s_logger[i]);
 		}
 	}
+
+	Logger::StringType EventLevelCodes::getLevel(sizeType lvl)
+	{
+		switch (lvl)
+		{
+		case EventLevel::FATAL:
+			return "Fatal";
+			break;
+		case EventLevel::ERROR:
+			return "Error";
+			break;
+		case EventLevel::WARNING:
+			return "Warning";
+			break;
+		case EventLevel::INFO:
+			return "Info";
+			break;
+		case EventLevel::DEBUG:
+			return "Debug";
+			break;
+		case EventLevel::TRACE:
+			return "Debug";
+			break;
+		default:
+			return "Unknown";
+		}
+	}
 }

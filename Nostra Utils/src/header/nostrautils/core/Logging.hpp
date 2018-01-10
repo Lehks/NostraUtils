@@ -86,6 +86,7 @@ namespace NOU::NOU_CORE
 			std::cout << m_date.rawStr() << eventLevel.rawStr() << ": " 
 				<< eventMsg.rawStr() << "\n" << std::endl;
 		}
+
 	};
 
 	class NOU_CLASS Logger
@@ -109,6 +110,28 @@ namespace NOU::NOU_CORE
 
 		static void logAll(StringType eventLevel, StringType eventMsg);
 
+	};
+
+	class NOU_CLASS EventLevelCodes
+	{
+	public:
+		enum EventLevel : typename sizeType
+		{
+			FATAL = 0,
+
+			ERROR = 1,
+
+			WARNING = 2,
+
+			INFO = 3,
+
+			DEBUG = 4,
+
+			TRACE = 5
+
+		};
+
+		static Logger::StringType getLevel(sizeType lvl);
 	};
 }
 
