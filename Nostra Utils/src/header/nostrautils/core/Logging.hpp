@@ -25,11 +25,23 @@
 */
 namespace NOU::NOU_CORE
 {
+	class NOU_CLASS Event
+	{
+	public:
+		using StringType = NOU::NOU_DAT_ALG::StringView8;
+
+		sizeType eventLevel;
+
+		StringType eventMsg;
+
+		void setEventLevel();
+	};
+
 	class NOU_CLASS EventLevelCodes
 	{
 	public:
 
-		using StringType = NOU::NOU_DAT_ALG::StringView8;
+		using StringType = Event::StringType;
 
 		static enum EventLevel : typename sizeType
 		{
@@ -62,7 +74,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
 		*/
-		using StringType = EventLevelCodes::StringType;
+		using StringType = Event::StringType;
 
 		/**
 		\brief Returns the current local time.
@@ -118,7 +130,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
 		*/
-		using StringType = EventLevelCodes::StringType;
+		using StringType = Event::StringType;
 
 	private:
 		static NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> s_allocator;
