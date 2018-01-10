@@ -9,6 +9,7 @@
 #include "nostrautils\dat_alg\StringView.hpp"
 
 #include <chrono>
+#include <iostream>
 #undef _CRT_SECURE_NO_WARNINGS
 
 
@@ -27,7 +28,7 @@ namespace NOU::NOU_CORE
 	/**
 	\brief Defines the Logger class.
 	*/
-	class NOU_CLASS Logger
+	class NOU_CLASS ILogger
 	{
 	public:
 
@@ -35,16 +36,15 @@ namespace NOU::NOU_CORE
 		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
 		*/
 		using StringType = NOU::NOU_DAT_ALG::StringView8;
-	
-	private:
 
 		/**
-		\brief The timestamp at which a logging entry was created.
+		\brief Returns the current local time.
 		*/
-		StringType m_date;
+		StringType getTime();
 
-	public:
+		void writeLog(StringType eventLevel, StringType eventMsg, ILogger &log);
 
+	private:
 		/**
 		\tparam T The type of the stream
 
@@ -68,21 +68,47 @@ namespace NOU::NOU_CORE
 			e.g. std::cout
 			This will print to the console.
 		*/
-		template<typename T>
-		void write(StringType eventLevel, StringType event, T stream);
-
-		/**
-		\brief Returns the current local time.
-		*/
-		StringType getTime();
+		virtual void write(StringType eventLevel, StringType event) = 0;
 	};
 
-	template<typename T> 
-	void Logger::write(StringType eventLevel, StringType eventMsg, T stream)
+	class NOU_CLASS ScreenLogger : public ILogger
 	{
-		m_date = getTime();
-		*stream << m_date.rawStr() << eventLevel.rawStr() << ": " << eventMsg.rawStr()<< "\n\n";
-	}
+	private:
+
+		/**
+		\brief The timestamp at which a logging entry was created.
+		*/
+		StringType m_date;
+
+	public:
+
+		void ILogger::write(StringType eventLevel, StringType eventMsg)
+		{
+			m_date = getTime();
+
+			std::cout << m_date.rawStr() << eventLevel.rawStr() << ": " << eventMsg.rawStr() << std::endl;
+		}
+	};
+
+	class NOU_CLASS FileLogger : public ILogger
+	{
+	private:
+
+		/**
+		\brief The timestamp at which a logging entry was created.
+		*/
+		StringType m_date;
+
+	public:
+
+		void ILogger::write(StringType eventLevel, StringType eventMsg)
+		{
+			m_date = getTime();
+
+			std::cout << m_date.rawStr() << eventLevel.rawStr() << ": " << eventMsg.rawStr() << std::endl;///\Todo add
+			///changes for file log
+		}
+	};
 }
 
 #endif
