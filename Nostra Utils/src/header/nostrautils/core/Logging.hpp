@@ -23,10 +23,32 @@
 
 \brief A file that contains the nostra::utils::core::Logging class.
 */
-
 namespace NOU::NOU_CORE
 {
-	
+	class NOU_CLASS EventLevelCodes
+	{
+	public:
+
+		using StringType = NOU::NOU_DAT_ALG::StringView8;
+
+		static enum EventLevel : typename sizeType
+		{
+			FATAL = 0,
+
+			ERROR = 1,
+
+			WARNING = 2,
+
+			INFO = 3,
+
+			DEBUG = 4,
+
+			TRACE = 5
+
+		};
+
+		static StringType getLevel(sizeType lvl);
+	};
 
 	/**
 	\brief Defines the Logger class.
@@ -40,14 +62,14 @@ namespace NOU::NOU_CORE
 		/**
 		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
 		*/
-		using StringType = NOU::NOU_DAT_ALG::StringView8;
+		using StringType = EventLevelCodes::StringType;
 
 		/**
 		\brief Returns the current local time.
 		*/
 		StringType getTime();
 
-		static void writeLog(StringType eventLevel, StringType eventMsg, ILogger &log);
+		static void writeLog(sizeType eventLevel, StringType eventMsg, ILogger &log);
 
 	private:
 		/**
@@ -65,7 +87,7 @@ namespace NOU::NOU_CORE
 				   debugging errors.
 			Trace: Detailled tracing of the application during runtime, especially for tracking errors.
 		*/
-		virtual void write(StringType eventLevel, StringType event) = 0;
+		virtual void write(sizeType eventLevel, StringType event) = 0;
 	};
 
 	class NOU_CLASS ConsoleLogger : public ILogger
@@ -79,11 +101,10 @@ namespace NOU::NOU_CORE
 
 	public:
 
-		void write(StringType eventLevel, StringType eventMsg) override
+		void write(sizeType eventLevel, StringType eventMsg) override
 		{
 			m_date = getTime();
-
-			std::cout << m_date.rawStr() << eventLevel.rawStr() << ": " 
+			std::cout << m_date.rawStr() << EventLevelCodes::getLevel(eventLevel).rawStr() <<": " 
 				<< eventMsg.rawStr() << "\n" << std::endl;
 		}
 
@@ -97,7 +118,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
 		*/
-		using StringType = NOU::NOU_DAT_ALG::StringView8;
+		using StringType = EventLevelCodes::StringType;
 
 	private:
 		static NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> s_allocator;
@@ -108,30 +129,8 @@ namespace NOU::NOU_CORE
 		
 		static void pushLogger(ILogger &log);
 
-		static void logAll(StringType eventLevel, StringType eventMsg);
+		static void logAll(sizeType eventLevel, StringType eventMsg);
 
-	};
-
-	class NOU_CLASS EventLevelCodes
-	{
-	public:
-		enum EventLevel : typename sizeType
-		{
-			FATAL = 0,
-
-			ERROR = 1,
-
-			WARNING = 2,
-
-			INFO = 3,
-
-			DEBUG = 4,
-
-			TRACE = 5
-
-		};
-
-		static Logger::StringType getLevel(sizeType lvl);
 	};
 }
 
