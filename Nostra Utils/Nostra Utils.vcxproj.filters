@@ -82,12 +82,15 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
+    <ClInclude Include="src\header\nostrautils\file_mngt\IniParser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\file_mngt\IniParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
