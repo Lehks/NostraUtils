@@ -38,7 +38,7 @@ namespace NOU::NOU_THREAD
 		InvocableTask(const InvocableType &invocable, ARGS&&...args);
 		InvocableTask(InvocableType &&invocable, ARGS&&...args);
 
-		virtual void execute() override;
+		virtual boolean execute() override;
 
 		virtual void* getResult() override;
 	};
@@ -60,7 +60,7 @@ namespace NOU::NOU_THREAD
 		MemberFunctionTask(const StoredType &stored, InvocableType invocable, ARGS&&...args);
 		MemberFunctionTask(StoredType &&stored, InvocableType invocable, ARGS&&...args);
 
-		virtual void execute() override;
+		virtual boolean execute() override;
 
 		virtual void* getResult() override;
 	};
@@ -95,7 +95,7 @@ namespace NOU::NOU_THREAD
 	public:
 		MemberFunctionTask(StoredType stored, InvocableType invocable, ARGS&&...args);
 
-		virtual void execute() override;
+		virtual boolean execute() override;
 
 		virtual void* getResult() override;
 	};
@@ -155,8 +155,11 @@ namespace NOU::NOU_THREAD
 	template<typename T, typename F, typename... ARGS>
 	void MemberFunctionTask<T, F, ARGS...>::execute()
 	{
+		//lock, return false if locked
+
 		//create &m_stored to avoid copy
 		m_result = std::apply(m_invocable, m_args);
+		return true;
 	}
 
 	template<typename T, typename F, typename... ARGS>
@@ -191,7 +194,10 @@ namespace NOU::NOU_THREAD
 	template<typename T, typename F, typename... ARGS>
 	void MemberFunctionTask<T*, F, ARGS...>::execute()
 	{
+		//lock, return false if locked
+
 		m_result = std::apply(m_invocableAndStored, m_args);
+		return true; 
 	}
 
 	template<typename T, typename F, typename... ARGS>
