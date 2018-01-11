@@ -14,6 +14,13 @@ namespace NOU::NOU_MATH
 	*/
 	template<typename IT>
 	NOU_FUNC IT abs(const IT &intone);
+
+
+	template<typename IT>
+	IT abs(const IT &intone)
+	{
+		return intone < 0 ? -intone : intone;
+	}
 }
 
 #endif 

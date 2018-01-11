@@ -7,5 +7,9 @@
 
 int main()
 {
-	N
+	NOU::int32 a = -(-51231);
+
+	std::cout << NOU::NOU_MATH::abs(a) << std::endl;
+
+	system("pause");
 }
