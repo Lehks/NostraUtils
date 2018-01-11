@@ -26,11 +26,6 @@ namespace NOU::NOU_CORE
 		return localTime;
 	}
 
-	void ILogger::writeLog(const Event& event, ILogger &log)
-	{
-		log.write(event);
-	}
-
 	Event::StringType enumToString(EventLevelCodes eventLevel)
 	{
 		switch (eventLevel)
@@ -68,9 +63,9 @@ namespace NOU::NOU_CORE
 
 	void Logger::logAll(const Event& event)
 	{
-		for (sizeType i = 0; i < s_logger.capacity(); i++)
+		for (sizeType i = 0; i < s_logger.size(); i++)
 		{
-			s_logger[i]->writeLog(event, *s_logger[i]);
+			s_logger[i]->write(event);
 		}
 	}
 

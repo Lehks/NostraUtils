@@ -77,8 +77,6 @@ namespace NOU::NOU_CORE
 		\brief Returns the current local time.
 		*/
 		StringType getTime();
-	
-		static void writeLog(const Event& event, ILogger &log);
 
 	private:
 		/**
@@ -132,11 +130,11 @@ namespace NOU::NOU_CORE
 
 		static NOU::NOU_DAT_ALG::Vector<ILogger*> s_logger;
 
+		static void logAll(const Event& event);
 	public:
 		
 		static void pushLogger(ILogger &log);
 
-		static void logAll(const Event& event);
 
 		static void write(EventLevelCodes level, const StringType &msg);
 	};
