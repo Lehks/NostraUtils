@@ -73,4 +73,11 @@ namespace NOU::NOU_CORE
 			s_logger[i]->writeLog(event, *s_logger[i]);
 		}
 	}
+
+	void Logger::write(EventLevelCodes level, const StringType &msg)
+	{
+		Event event(level, msg);
+
+		logAll(event);
+	}
 }

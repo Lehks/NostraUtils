@@ -55,11 +55,15 @@ namespace NOU::NOU_CORE
 		const StringType& getEventMsg() const;
 	};
 
+	class Logger;
+
 	/**
 	\brief Defines the Logger class.
 	*/
 	class NOU_CLASS ILogger
 	{
+		friend class Logger;
+
 	public:
 
 		virtual ~ILogger() = default;
@@ -73,7 +77,7 @@ namespace NOU::NOU_CORE
 		\brief Returns the current local time.
 		*/
 		StringType getTime();
-
+	
 		static void writeLog(const Event& event, ILogger &log);
 
 	private:
@@ -106,8 +110,6 @@ namespace NOU::NOU_CORE
 		*/
 		StringType m_date;
 
-	public:
-
 		void write(const Event& event) override
 		{
 			m_date = getTime();
@@ -136,6 +138,7 @@ namespace NOU::NOU_CORE
 
 		static void logAll(const Event& event);
 
+		static void write(EventLevelCodes level, const StringType &msg);
 	};
 }
 #endif
