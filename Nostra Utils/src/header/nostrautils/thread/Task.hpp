@@ -76,7 +76,7 @@ namespace NOU::NOU_THREAD
 
 	public:
 		MemberFunPtrWrapper(T ptr, F invocable);
-		auto operator () (ARGS&&... args);
+		auto operator () (ARGS&... args);
 	};
 
 	template<typename T, typename F, typename... ARGS>
@@ -174,7 +174,7 @@ namespace NOU::NOU_THREAD
 	{}
 
 	template<typename T, typename F, typename... ARGS>
-	auto MemberFunPtrWrapper<T, F, ARGS...>::operator () (ARGS&&... args)
+	auto MemberFunPtrWrapper<T, F, ARGS...>::operator () (ARGS&... args)
 	{
 		return (m_ptr->*m_invocable)(NOU_CORE::forward<ARGS>(args)...);
 	}
@@ -191,13 +191,7 @@ namespace NOU::NOU_THREAD
 	template<typename T, typename F, typename... ARGS>
 	void MemberFunctionTask<T*, F, ARGS...>::execute()
 	{
-		//create &m_stored to avoid copy
-		//m_result = std::apply(m_invocableAndStored, m_args);
-
-		m_result = std::invoke(m_invocableAndStored, std::get<0>(m_args), std::get<1>(m_args), std::forward<B>(std::get<2>(m_args)));
-
-		//m_result = m_invocableAndStored(std::forward<int>(std::get<0>(m_args)), 
-			//std::forward<int>(std::get<1>(m_args)), std::forward<B>(std::get<2>(m_args)));
+		m_result = std::apply(m_invocableAndStored, m_args);
 	}
 
 	template<typename T, typename F, typename... ARGS>
