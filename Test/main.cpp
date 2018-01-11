@@ -11,29 +11,29 @@ class B
 public:
 	B()
 	{
-		std::cout << "Const" << std::endl;
+		std::cout << "Const B" << std::endl;
 	}
 
 	B(const B&)
 	{
-		std::cout << "Copy" << std::endl;
+		std::cout << "Copy B" << std::endl;
 	}
 
 	B(B&&)
 	{
-		std::cout << "Move" << std::endl;
+		std::cout << "Move B" << std::endl;
 	}
 
 	B& operator = (const B&)
 	{
-		std::cout << "Copy Assign" << std::endl;
+		std::cout << "Copy Assign B" << std::endl;
 
 		return *this;
 	}
 
 	B& operator = (B&&)
 	{
-		std::cout << "Move Assign" << std::endl;
+		std::cout << "Move Assign B" << std::endl;
 
 		return *this;
 	}
@@ -77,12 +77,23 @@ public:
 		return *this;
 	}
 
-	int exec(int i, int j, const B&)
+	int exec(int i, int j, const B&) const
 	{
 		std::cout << ":= " << j << " " << std::endl;
 		return i + j;
 	}
 };
+
+template<typename T, typename F, typename... ARGS>
+int func(T* t, F&& func, ARGS&&... args)
+{
+	return (t->*func)(args...);
+}
+
+int func2(const A* a, decltype(&A::exec) func_, int a_, int b, const B& b_)
+{
+	return func(a, func_, a_, b, b_);
+}
 
 int main()
 {
@@ -92,7 +103,28 @@ int main()
 	
 	NOU::NOU_THREAD::MemberFunPtrWrapper<const A*, decltype(&A::exec), int, int, const B&> mfpw(&a, &A::exec);
 
-	mfpw(5, 6, B());
+	auto tuple = std::make_tuple(&a, &A::exec, 5, 6, B());
+
+	//int i = std::apply(mfpw, tuple);
+	//int i = std::invoke(mfpw, 5, 6, B());
+
+	//func(&a, &A::exec, 5, 6, B());
+
+	//std::apply(func<A, decltype(&A::exec), int, int, B>, tuple);
+
+	using T = decltype(func<A, decltype(&A::exec), int, int, B>);
+
+	std::cout << typeid(T).name() << std::endl;
+
+	//func2(&a, &A::exec, 5, 6, B());
+
+	//std::invoke(func2, &a, &A::exec, 5, 6, B());
+
+	std::apply(func2, tuple);
+
+	//std::invoke(func<A, decltype(&A::exec), int, int, B>, &a, &A::exec, 5, 5, B());
+
+	//std::cout << i << std::endl;
 
 	//task->execute();
 	

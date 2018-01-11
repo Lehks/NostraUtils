@@ -13,6 +13,8 @@ namespace NOU::NOU_THREAD
 	class AbstractTask
 	{
 	public:
+		virtual ~AbstractTask() = default;
+
 		virtual void execute() = 0;
 
 		virtual void* getResult() = 0;
@@ -83,11 +85,11 @@ namespace NOU::NOU_THREAD
 	public:
 		using StoredType = T*;
 		using InvocableType = F;
-		using ReturnType = NOU_CORE::InvokeResult_t<F, NOU_CORE::removeConst_t<T>, ARGS...>;
+		using ReturnType = int;//NOU_CORE::InvokeResult_t<F, NOU_CORE::removeConst_t<T>, ARGS...>;
 
 	private:
-		std::tuple<StoredType, ARGS...> m_args;
-		InvocableType m_invocable;
+		MemberFunPtrWrapper<StoredType, F, ARGS...> m_invocableAndStored;
+		std::tuple<ARGS...> m_args;
 		NOU_DAT_ALG::Uninitialized<ReturnType> m_result;
 
 	public:
@@ -174,7 +176,7 @@ namespace NOU::NOU_THREAD
 	template<typename T, typename F, typename... ARGS>
 	auto MemberFunPtrWrapper<T, F, ARGS...>::operator () (ARGS&&... args)
 	{
-		return m_ptr->*m_invocable(NOU_CORE::forward<ARGS>(args)...);
+		return (m_ptr->*m_invocable)(NOU_CORE::forward<ARGS>(args)...);
 	}
 
 
@@ -182,15 +184,20 @@ namespace NOU::NOU_THREAD
 	template<typename T, typename F, typename... ARGS>
 	MemberFunctionTask<T*, F, ARGS...>::MemberFunctionTask(StoredType stored, InvocableType invocable,
 		ARGS&&...args) :
-		m_invocable(invocable),
-		m_args(std::forward_as_tuple(stored, NOU_CORE::forward<ARGS>(args)...))
+		m_invocableAndStored(stored, invocable),
+		m_args(NOU_CORE::forward<ARGS>(args)...)
 	{}
 
 	template<typename T, typename F, typename... ARGS>
 	void MemberFunctionTask<T*, F, ARGS...>::execute()
 	{
 		//create &m_stored to avoid copy
-		m_result = std::apply(m_invocable, m_args);
+		//m_result = std::apply(m_invocableAndStored, m_args);
+
+		m_result = std::invoke(m_invocableAndStored, std::get<0>(m_args), std::get<1>(m_args), std::forward<B>(std::get<2>(m_args)));
+
+		//m_result = m_invocableAndStored(std::forward<int>(std::get<0>(m_args)), 
+			//std::forward<int>(std::get<1>(m_args)), std::forward<B>(std::get<2>(m_args)));
 	}
 
 	template<typename T, typename F, typename... ARGS>
