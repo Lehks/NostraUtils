@@ -2,31 +2,19 @@
 
 namespace NOU::NOU_CORE
 {
-	EventLevelCodes::StringType EventLevelCodes::getLevel(sizeType lvl)
+	Event::Event(EventLevelCodes eventLevel, StringType eventMsg) :
+		m_eventLevel(eventLevel),
+		m_eventMsg(eventMsg)
+	{}
+
+	const Event::StringType Event::getEventLevel() const
 	{
-		switch (lvl)
-		{
-		case EventLevel::FATAL:
-			return "Fatal";
-			break;
-		case EventLevel::ERROR:
-			return "Error";
-			break;
-		case EventLevel::WARNING:
-			return "Warning";
-			break;
-		case EventLevel::INFO:
-			return "Info";
-			break;
-		case EventLevel::DEBUG:
-			return "Debug";
-			break;
-		case EventLevel::TRACE:
-			return "Debug";
-			break;
-		default:
-			return "Unknown";
-		}
+		return enumToString(m_eventLevel);
+	}
+
+	const Event::StringType& Event::getEventMsg() const
+	{
+		return m_eventMsg;
 	}
 
 	ILogger::StringType ILogger::getTime()
@@ -38,9 +26,36 @@ namespace NOU::NOU_CORE
 		return localTime;
 	}
 
-	void ILogger::writeLog(sizeType eventLevel, StringType eventMsg, ILogger &log)
+	void ILogger::writeLog(const Event& event, ILogger &log)
 	{
-		log.write(eventLevel, eventMsg);
+		log.write(event);
+	}
+
+	Event::StringType enumToString(EventLevelCodes eventLevel)
+	{
+		switch (eventLevel)
+		{
+		case EventLevelCodes::FATAL:
+			return "Fatal";
+			break;
+		case EventLevelCodes::ERROR:
+			return "Error";
+			break;
+		case EventLevelCodes::WARNING:
+			return "Warning";
+			break;
+		case EventLevelCodes::INFO:
+			return "Info";
+			break;
+		case EventLevelCodes::DEBUG:
+			return "Debug";
+			break;
+		case EventLevelCodes::TRACE:
+			return "Debug";
+			break;
+		default:
+			return "Unknown";
+		}
 	}
 
 	NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> Logger::s_allocator;
@@ -51,11 +66,11 @@ namespace NOU::NOU_CORE
 		s_logger.pushBack(&log);
 	}
 
-	void Logger::logAll(sizeType eventLevel, StringType eventMsg)
+	void Logger::logAll(const Event& event)
 	{
 		for (sizeType i = 0; i < s_logger.capacity(); i++)
 		{
-			s_logger[i]->writeLog(eventLevel, eventMsg, *s_logger[i]);
+			s_logger[i]->writeLog(event, *s_logger[i]);
 		}
 	}
 }

@@ -13,7 +13,6 @@
 #include <iostream>
 #undef _CRT_SECURE_NO_WARNINGS
 
-
 /**
 \file core/Logging.hpp
 
@@ -25,41 +24,35 @@
 */
 namespace NOU::NOU_CORE
 {
+	enum class EventLevelCodes
+	{
+
+		FATAL = 0,
+
+		ERROR = 1,
+
+		WARNING = 2,
+
+		INFO = 3,
+
+		DEBUG = 4,
+
+		TRACE = 5
+	};
+
 	class NOU_CLASS Event
 	{
 	public:
 		using StringType = NOU::NOU_DAT_ALG::StringView8;
+	private:
+		EventLevelCodes m_eventLevel;
 
-		sizeType eventLevel;
-
-		StringType eventMsg;
-
-		void setEventLevel();
-	};
-
-	class NOU_CLASS EventLevelCodes
-	{
+		StringType m_eventMsg;
 	public:
+		Event(EventLevelCodes eventLevel, StringType eventMsg);
 
-		using StringType = Event::StringType;
-
-		static enum EventLevel : typename sizeType
-		{
-			FATAL = 0,
-
-			ERROR = 1,
-
-			WARNING = 2,
-
-			INFO = 3,
-
-			DEBUG = 4,
-
-			TRACE = 5
-
-		};
-
-		static StringType getLevel(sizeType lvl);
+		const StringType getEventLevel() const;
+		const StringType& getEventMsg() const;
 	};
 
 	/**
@@ -81,7 +74,7 @@ namespace NOU::NOU_CORE
 		*/
 		StringType getTime();
 
-		static void writeLog(sizeType eventLevel, StringType eventMsg, ILogger &log);
+		static void writeLog(const Event& event, ILogger &log);
 
 	private:
 		/**
@@ -99,8 +92,10 @@ namespace NOU::NOU_CORE
 				   debugging errors.
 			Trace: Detailled tracing of the application during runtime, especially for tracking errors.
 		*/
-		virtual void write(sizeType eventLevel, StringType event) = 0;
+		virtual void write(const Event& event) = 0;
 	};
+
+	NOU_FUNC Event::StringType enumToString(EventLevelCodes eventLevel);
 
 	class NOU_CLASS ConsoleLogger : public ILogger
 	{
@@ -113,18 +108,16 @@ namespace NOU::NOU_CORE
 
 	public:
 
-		void write(sizeType eventLevel, StringType eventMsg) override
+		void write(const Event& event) override
 		{
 			m_date = getTime();
-			std::cout << m_date.rawStr() << EventLevelCodes::getLevel(eventLevel).rawStr() <<": " 
-				<< eventMsg.rawStr() << "\n" << std::endl;
+			std::cout << m_date.rawStr() << event.getEventLevel().rawStr() << ": "
+				<< event.getEventMsg().rawStr() << "\n" << std::endl;
 		}
-
 	};
 
 	class NOU_CLASS Logger
 	{
-
 	public:
 
 		/**
@@ -141,9 +134,8 @@ namespace NOU::NOU_CORE
 		
 		static void pushLogger(ILogger &log);
 
-		static void logAll(sizeType eventLevel, StringType eventMsg);
+		static void logAll(const Event& event);
 
 	};
 }
-
 #endif
