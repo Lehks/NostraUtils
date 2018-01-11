@@ -39,7 +39,7 @@ namespace NOU::NOU_DAT_ALG
 	\details The most basic of our containers. It can act like a dynamic array a FIFO-Queue, LIFO-Queue or a normal Queue.
 	*/
 	template<typename T>
-	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>
+	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>, public RandomAccess<T>
 	{
 	private:
 		NOU::NOU_MEM_MNGT::AllocationCallback<T>	&m_allocator;
@@ -139,15 +139,15 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		sizeType capacity() const;
 		/**
-		\param index The index of the element to remove.
-		\return      The element that was removed.
+		\param index The index of the element to show.
+		\return      The element that should be shown.
 
 		\brief Returns a reference of the object at the given index.
 		*/
 		T& at(sizeType index);
 		/**
-		\param index The index of the element to remove.
-		\return      The element that was removed.
+		\param index The index of the element to show.
+		\return      The element that should be shown.
 
 		\brief Returns a const reference of the object at the given index.
 		*/
@@ -203,7 +203,13 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the element at the first position.
 		*/
-		T peekFront() override;
+		T& peekFront() override;
+		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		*/
+		const T& peekFront() const override;
 		/**
 		\return      The element at the first position.
 
@@ -211,7 +217,15 @@ namespace NOU::NOU_DAT_ALG
 		\details
 		This methode calls peakFront() .
 		*/
-		T peek() override;
+		T& peek() override;
+		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		\details
+		This methode calls peakFront() .
+		*/
+		const T& peek() const override;
 		/**
 		\param index0 The first index.
 		\param index1 The second index.
@@ -244,7 +258,11 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief Sorts the Vector using comperators.
 		*/
-		void sortComp();
+		void sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp);
+		/**
+		\brief Sets the size of the Vector.
+		*/
+		void setSize(sizeType size);
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -426,50 +444,50 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Constructs a new instance that starts at the passed index and iterates over the passed array.
 		*/
-		VectorIterator(sizeType index, const T **dataPtr);
+		constexpr VectorIterator(sizeType index, const T **dataPtr);
 
 		/**
 		\return The element that this iterator is currently pointing to.
 
 		\brief Returns the element that this iterator is currently pointing to.
 		*/
-		T& operator * ();
+		constexpr T& operator * ();
 
 		/**
 		\return The element that this iterator is currently pointing to.
 
 		\brief Returns the element that this iterator is currently pointing to.
 		*/
-		const T& operator * () const;
+		constexpr const T& operator * () const;
 
 		/**
 		\return The element that this iterator is currently pointing to.
 
 		\brief Returns the element that this iterator is currently pointing to.
 		*/
-		T* operator -> ();
+		constexpr T* operator -> ();
 
 		/**
 		\return The element that this iterator is currently pointing to.
 
 		\brief Returns the element that this iterator is currently pointing to.
 		*/
-		const T* operator -> () const;
+		constexpr const T* operator -> () const;
 
 		/**
 		\brief Increments the iterator to point to the next element in the vector.
 		*/
-		VectorIterator& operator ++ ();
+		constexpr VectorIterator& operator ++ ();
 
 		/**
 		\brief Increments the iterator to point to the next element in the vector.
 		*/
-		const VectorIterator& operator ++ () const;
+		constexpr const VectorIterator& operator ++ () const;
 
 		/**
 		\brief Increments the iterator to point to the next element in the vector.
 		*/
-		VectorIterator operator ++ (int) const;
+		constexpr VectorIterator operator ++ (int) const;
 
 		/**
 		\param other The iterator to compare this iterator to.
@@ -478,7 +496,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns weather two iterators are equal. Two iterators qualify as equal if their internal
 		index and the vector that they point to are the same.
 		*/
-		boolean operator == (const VectorIterator &other) const;
+		constexpr boolean operator == (const VectorIterator &other) const;
 
 		/**
 		\param other The iterator to compare this iterator to.
@@ -487,7 +505,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns weather two iterators are unequal. This returns the opposite of what the operator
 		= would return.
 		*/
-		boolean operator != (const VectorIterator &other) const;
+		constexpr boolean operator != (const VectorIterator &other) const;
 	};
 
 	/**
@@ -517,50 +535,50 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Constructs a new instance that starts at the passed index and iterates over the passed array.
 		*/
-		VectorReverseIterator(sizeType index, const T **dataPtr);
+		constexpr VectorReverseIterator(sizeType index, const T **dataPtr);
 
 		/**
 		\return The element that this iterator is currently pointing to.
 
 		\brief Returns the element that this iterator is currently pointing to.
 		*/
-		T& operator * ();
+		constexpr T& operator * ();
 
 		/**
 		\return The element that this iterator is currently pointing to.
 
 		\brief Returns the element that this iterator is currently pointing to.
 		*/
-		const T& operator * () const;
+		constexpr const T& operator * () const;
 
 		/**
 		\return The element that this iterator is currently pointing to.
 
 		\brief Returns the element that this iterator is currently pointing to.
 		*/
-		T* operator -> ();
+		constexpr T* operator -> ();
 
 		/**
 		\return The element that this iterator is currently pointing to.
 
 		\brief Returns the element that this iterator is currently pointing to.
 		*/
-		const T* operator -> () const;
+		constexpr const T* operator -> () const;
 
 		/**
 		\brief Increments the iterator to point to the next element in the vector.
 		*/
-		VectorReverseIterator& operator ++ ();
+		constexpr VectorReverseIterator& operator ++ ();
 
 		/**
 		\brief Increments the iterator to point to the next element in the vector.
 		*/
-		const VectorReverseIterator& operator ++ () const;
+		constexpr const VectorReverseIterator& operator ++ () const;
 
 		/**
 		\brief Increments the iterator to point to the next element in the vector.
 		*/
-		VectorReverseIterator operator ++ (int) const;
+		constexpr VectorReverseIterator operator ++ (int) const;
 
 		/**
 		\param other The iterator to compare this iterator to.
@@ -569,7 +587,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns weather two iterators are equal. Two iterators qualify as equal if their internal
 		index and the vector that they point to are the same.
 		*/
-		boolean operator == (const VectorReverseIterator &other) const;
+		constexpr boolean operator == (const VectorReverseIterator &other) const;
 
 		/**
 		\param other The iterator to compare this iterator to.
@@ -578,7 +596,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns weather two iterators are unequal. This returns the opposite of what the operator
 		= would return.
 		*/
-		boolean operator != (const VectorReverseIterator &other) const;
+		constexpr boolean operator != (const VectorReverseIterator &other) const;
 	};
 
 
@@ -737,13 +755,25 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	T Vector<T>::peekFront()
+	T& Vector<T>::peekFront()
 	{
 		return m_data[0];
 	}
 
 	template<typename T>
-	T Vector<T>::peek()
+	const T& Vector<T>::peekFront() const
+	{
+		return m_data[0];
+	}
+
+	template<typename T>
+	T& Vector<T>::peek()
+	{
+		return peekFront();
+	}
+
+	template<typename T>
+	const T& Vector<T>::peek() const
 	{
 		return peekFront();
 	}
@@ -796,10 +826,16 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	void Vector<T>::sortComp()
+	void Vector<T>::sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
 		///\todo implementing a "real" sorting alg.
-		bubbleSortComp(m_data, m_size);
+		bubbleSortComp(m_data, m_size, comp);
+	}
+
+	template<typename T>
+	void Vector<T>::setSize(sizeType size)
+	{
+		m_size = size;
 	}
 
 	template<typename T>
@@ -939,37 +975,37 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	VectorIterator<T>::VectorIterator(sizeType index, const T **dataPtr) :
+	constexpr VectorIterator<T>::VectorIterator(sizeType index, const T **dataPtr) :
 		m_dataPtr(const_cast<T**>(dataPtr)), //const cast is safe at this point
 		m_index(index)
 	{}
 
-		template<typename T>
-	T& VectorIterator<T>::operator * ()
+	template<typename T>
+	constexpr T& VectorIterator<T>::operator * ()
 	{
 		return *((*m_dataPtr) + m_index);
 	}
 
 	template<typename T>
-	const T& VectorIterator<T>::operator * () const
+	constexpr const T& VectorIterator<T>::operator * () const
 	{
 		return *((*m_dataPtr) + m_index);
 	}
 
 	template<typename T>
-	T* VectorIterator<T>::operator -> ()
+	constexpr T* VectorIterator<T>::operator -> ()
 	{
 		return ((*m_dataPtr) + m_index);
 	}
 
 	template<typename T>
-	const T* VectorIterator<T>::operator -> () const
+	constexpr const T* VectorIterator<T>::operator -> () const
 	{
 		return ((*m_dataPtr) + m_index);
 	}
 
 	template<typename T>
-	VectorIterator<T>& VectorIterator<T>::operator ++ ()
+	constexpr VectorIterator<T>& VectorIterator<T>::operator ++ ()
 	{
 		m_index++;
 
@@ -977,7 +1013,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	const VectorIterator<T>& VectorIterator<T>::operator ++ () const
+	constexpr const VectorIterator<T>& VectorIterator<T>::operator ++ () const
 	{
 		m_index++;
 
@@ -985,7 +1021,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	VectorIterator<T> VectorIterator<T>::operator ++ (int) const
+	constexpr VectorIterator<T> VectorIterator<T>::operator ++ (int) const
 	{
 		VectorIterator<T> ret = *this;
 
@@ -995,49 +1031,49 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	boolean VectorIterator<T>::operator == (const VectorIterator<T> &other) const
+	constexpr boolean VectorIterator<T>::operator == (const VectorIterator<T> &other) const
 	{
 		return m_dataPtr == other.m_dataPtr && m_index == other.m_index;
 	}
 
 	template<typename T>
-	boolean VectorIterator<T>::operator != (const VectorIterator<T> &other) const
+	constexpr boolean VectorIterator<T>::operator != (const VectorIterator<T> &other) const
 	{
 		return !(*this == other);
 	}
 
 	template<typename T>
-	VectorReverseIterator<T>::VectorReverseIterator(sizeType index, const T **dataPtr) :
+	constexpr VectorReverseIterator<T>::VectorReverseIterator(sizeType index, const T **dataPtr) :
 		m_dataPtr(const_cast<T**>(dataPtr)), //const cast is safe at this point
 		m_index(index)
 	{}
 
-		template<typename T>
-	T& VectorReverseIterator<T>::operator * ()
+	template<typename T>
+	constexpr T& VectorReverseIterator<T>::operator * ()
 	{
 		return *((*m_dataPtr) + m_index);
 	}
 
 	template<typename T>
-	const T& VectorReverseIterator<T>::operator * () const
+	constexpr const T& VectorReverseIterator<T>::operator * () const
 	{
 		return *((*m_dataPtr) + m_index);
 	}
 
 	template<typename T>
-	T* VectorReverseIterator<T>::operator -> ()
+	constexpr T* VectorReverseIterator<T>::operator -> ()
 	{
 		return ((*m_dataPtr) + m_index);
 	}
 
 	template<typename T>
-	const T* VectorReverseIterator<T>::operator -> () const
+	constexpr const T* VectorReverseIterator<T>::operator -> () const
 	{
 		return ((*m_dataPtr) + m_index);
 	}
 
 	template<typename T>
-	VectorReverseIterator<T>& VectorReverseIterator<T>::operator ++ ()
+	constexpr VectorReverseIterator<T>& VectorReverseIterator<T>::operator ++ ()
 	{
 		m_index--;
 
@@ -1045,7 +1081,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	const VectorReverseIterator<T>& VectorReverseIterator<T>::operator ++ () const
+	constexpr const VectorReverseIterator<T>& VectorReverseIterator<T>::operator ++ () const
 	{
 		m_index--;
 
@@ -1053,7 +1089,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	VectorReverseIterator<T> VectorReverseIterator<T>::operator ++ (int) const
+	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator ++ (int) const
 	{
 		VectorReverseIterator<T> ret = *this;
 
@@ -1063,13 +1099,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	boolean VectorReverseIterator<T>::operator == (const VectorReverseIterator<T> &other) const
+	constexpr boolean VectorReverseIterator<T>::operator == (const VectorReverseIterator<T> &other) const
 	{
 		return m_dataPtr == other.m_dataPtr && m_index == other.m_index;
 	}
 
 	template<typename T>
-	boolean VectorReverseIterator<T>::operator != (const VectorReverseIterator<T> &other) const
+	constexpr boolean VectorReverseIterator<T>::operator != (const VectorReverseIterator<T> &other) const
 	{
 		return !(*this == other);
 	}

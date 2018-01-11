@@ -43,11 +43,11 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief Returns the first element of the queue.
 		*/
-		virtual T peekFront() = 0;
+		virtual T& peekFront() = 0;
 		/**
-		\brief Swaps the elements at the corresponding index.
+		\brief Returns the first element of the queue.
 		*/
-		virtual void swap(sizeType index0, sizeType index1) = 0;
+		virtual const T& peekFront() const = 0;
 	};
 
 
@@ -79,11 +79,11 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief Returns the first element of the queue.
 		*/
-		virtual T peekFront() = 0;
+		virtual T& peekFront() = 0;
 		/**
-		\brief Swaps the elements at the corresponding index.
+		\brief Returns the first element of the queue.
 		*/
-		virtual void swap(sizeType index0, sizeType index1) = 0;
+		virtual const T& peekFront() const = 0;
 	};
 
 
@@ -118,12 +118,84 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief Returns the first element of the queue.
 		*/
-		virtual T peek() = 0;
+		virtual T& peek() = 0;
+		/**
+		/**
+		\brief Returns the first element of the queue.
+		*/
+		virtual const T& peek() const = 0;
+	};
+
+	/**
+	\tparam The type of the elements that will be stored in this RandomAccess Container.
+
+	\brief Implementation of the a RandomAccess interface.
+	*/
+	template<typename T>
+	class NOU_CLASS RandomAccess
+	{
+	public:
+		/**
+		\brief Returns the size of the RandomAccess Container.
+		*/
+		virtual sizeType size() const = 0;
+
 		/**
 		\brief Swaps the elements at the corresponding index.
 		*/
 		virtual void swap(sizeType index0, sizeType index1) = 0;
+		/**
+		\param index The index of the element to show.
+		\return      The element that should be shown.
+
+		\brief Returns a reference of the object at the given index.
+		*/
+		virtual T& at(sizeType index) = 0;
+		/**
+		\param index The index of the element to show.
+		\return      The element that should be shown.
+
+		\brief Returns a const reference of the object at the given index.
+		*/
+		virtual const T& at(sizeType index) const = 0;
+		/**
+		\param index The index of the element in the RandomAccess Container.
+		\return      The element at the passed index.
+
+		\brief Returns the element at the specified index. Same as at().
+
+		\details
+		Returns the element at the specified index. Same as at(), seet the doc of that method for further
+		information.
+
+		\see at()
+		*/
+		virtual T& operator [] (sizeType index);
+		/**
+		\param index The index of the element in the RandomAccess Container.
+		\return      The element at the passed index.
+
+		\brief Returns the element at the specified index. Same as at().
+
+		\details
+		Returns the element at the specified index. Same as at(), seet the doc of that method for further
+		information.
+
+		\see at()
+		*/
+		virtual const T& operator [] (sizeType index) const;
 	};
+
+	template<typename T>
+	T& RandomAccess<T>::operator[](sizeType index)
+	{
+		return at(index);
+	}
+	template<typename T>
+	const T& RandomAccess<T>::operator[](sizeType index) const
+	{
+		return at(index);
+	}
 }
 
 #endif

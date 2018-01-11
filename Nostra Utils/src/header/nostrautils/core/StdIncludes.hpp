@@ -606,6 +606,48 @@ static_cast<NOU::uint32> 									 \
 
 #endif
 
+/**
+\param str The expression to convert.
+
+\brief Converts any expression into a const char*.
+*/
+#ifndef NOU_STRINGIFY
+#define NOU_STRINGIFY(str) #str
+#endif 
+
+/**
+\brief Returns the result of __LINE__ as a c-string (NOU_STRINGIFY(__LINE__) would not work).
+*/
+#ifndef NOU_LINE_STRING
+#define NOU_LINE_STRING_HELPER(str) NOU_STRINGIFY(str)
+#define NOU_LINE_STRING NOU_LINE_STRING_HELPER(__LINE__)
+#endif
+
+/**
+\brief The macro which is used for getting the function name.
+
+\todo Verify!
+*/
+#ifndef NOU_FUNC_NAME
+
+#	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
+#	define NOU_FUNC_NAME __FUNCSIG__
+#	elif NOU_COMPILER == NOU_COMPILER_GCC
+#	define NOU_FUNC_NAME __PRETTY__FUNCTION__
+#	elif NOU_COMPILER == NOU_COMPILER_CLANG
+#	define NOU_FUNC_NAME __func__ ///\Todo check
+#	elif NOU_COMPILER == NOU_COMPILER_INTEL_CPP
+#	define NOU_FUNC_NAME __func__ ///\Todo check
+#	elif NOU_COMPILER == NOU_COMPILER_MIN_GW
+#	define NOU_FUNC_NAME __func__ ///\Todo check
+#	elif NOU_COMPILER == NOU_COMPILER_DOXYGEN
+#	define NOU_FUNC_NAME __FUNCSIG__
+#	else
+#	define NOU_COMPILER_NAME __func__
+#	endif
+
+#endif
+
 namespace NOU::NOU_CORE
 {
 	/**
