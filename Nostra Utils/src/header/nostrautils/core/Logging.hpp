@@ -103,7 +103,9 @@ namespace NOU::NOU_CORE
 		const StringType& getEventMsg() const;
 	};
 
+	///\cond
 	class Logger;
+	///\endcond
 
 	/**
 	\brief A abstract class, which defines the ILogger interface.
@@ -175,7 +177,6 @@ namespace NOU::NOU_CORE
 				<< event.getEventMsg().rawStr() << "\n" << std::endl;
 		}
 	};
-
 	/**
 	\brief A class for storeing the different logger and writing logs to all of them.
 	*/
@@ -226,5 +227,24 @@ namespace NOU::NOU_CORE
 		*/
 		static void write(EventLevelCodes level, const StringType &msg);
 	};
+/**
+\brief This macro is a convenience macro for writing logs to the logger. This macro automatically
+passes the level and message.
+*/
+#ifndef NOU_WRITE_LOG
+#define NOU_WRITE_LOG(logger, level, msg) logger.write(level, msg)
+#endif
+
+/**
+\brief This macro is a convenience macro, that behaves exactly like NOU_WRITE_LOG, but only if NOU_DEBUG is
+defined. Otherwise, it will do nothing.
+*/
+#ifndef NOU_WRITE_DEBUG_LOG
+#    ifdef  NOU_DEBUG
+#        define NOU_WRITE_DEBUG_LOG(logger, level, msg) NOU_WRITE_LOG(logger, level, msg)
+#    else
+#        define NOU_WRITE_DEBUG_LOG(logger, level, msg)
+#    endif
+#endif
 }
 #endif
