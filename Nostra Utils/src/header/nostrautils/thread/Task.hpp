@@ -15,7 +15,7 @@ namespace NOU::NOU_THREAD
 	public:
 		virtual ~AbstractTask() = default;
 
-		virtual void execute() = 0;
+		virtual boolean execute() = 0;
 
 		virtual void* getResult() = 0;
 	};
@@ -127,9 +127,12 @@ namespace NOU::NOU_THREAD
 	{}
 
 	template<typename T, typename... ARGS>
-	void InvocableTask<T, ARGS...>::execute()
+	boolean InvocableTask<T, ARGS...>::execute()
 	{
+		//lock, return false if locked
+
 		m_result = std::apply(m_invocable, m_args);
+		return true;
 	}
 
 	template<typename T, typename... ARGS>
@@ -153,7 +156,7 @@ namespace NOU::NOU_THREAD
 	{}
 
 	template<typename T, typename F, typename... ARGS>
-	void MemberFunctionTask<T, F, ARGS...>::execute()
+	boolean MemberFunctionTask<T, F, ARGS...>::execute()
 	{
 		//lock, return false if locked
 
@@ -192,7 +195,7 @@ namespace NOU::NOU_THREAD
 	{}
 
 	template<typename T, typename F, typename... ARGS>
-	void MemberFunctionTask<T*, F, ARGS...>::execute()
+	boolean MemberFunctionTask<T*, F, ARGS...>::execute()
 	{
 		//lock, return false if locked
 
