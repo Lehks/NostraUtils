@@ -156,6 +156,27 @@ namespace NOU::NOU_FILE_MNGT
 			\brief Returns True if the key exists. Returns False if it does not exist.
 			*/
 			boolean keyExists(const char *) const;
+
+			/**
+			\param The key to look up.
+
+			\brief Returns True if the key exists. Returns False if it does not exist.
+			*/
+			boolean keyExistsString(const char *) const;
+
+			/**
+			\param The key to look up.
+
+			\brief Returns True if the key exists. Returns False if it does not exist.
+			*/
+			boolean keyExistsInt(const char *) const;
+
+			/**
+			\param The key to look up.
+
+			\brief Returns True if the key exists. Returns False if it does not exist.
+			*/
+			boolean keyExistsFloat(const char *) const;
 	};
 }
 #endif

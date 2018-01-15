@@ -193,8 +193,23 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean  IniParser::keyExists(const char * key) const
+	boolean IniParser::keyExists(const char * key) const
+	{
+		return (this->keyExistsString(key) || this->keyExistsInt(key) || this->keyExistsFloat(key));
+	}
+
+	boolean IniParser::keyExistsString(const char * key) const
 	{
 		return (m_string_data.count(key) > 0);
+	}
+
+	boolean IniParser::keyExistsInt(const char * key) const
+	{
+		return (m_int_data.count(key) > 0);
+	}
+
+	boolean IniParser::keyExistsFloat(const char * key) const
+	{
+		return (m_float_data.count(key) > 0);
 	}
 }
