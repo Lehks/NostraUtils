@@ -102,8 +102,5 @@
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\source\nostrautils\mem_mngt\PoolAllocator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
