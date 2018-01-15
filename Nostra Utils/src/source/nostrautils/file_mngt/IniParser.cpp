@@ -181,7 +181,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	std::string IniParser::getValue(const char *key) const
+	std::string IniParser::getString(const char *key) const
 	{
 		std::unordered_map<std::string, std::string>::const_iterator i = m_string_data.find(key);
 
@@ -193,20 +193,47 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
+	int32 IniParser::getInt(const char *key) const
+	{
+		std::unordered_map<std::string, int32>::const_iterator i = m_int_data.find(key);
+
+		if (i == m_int_data.end()) {
+			return 0;
+		}
+
+		return i->second;
+	}
+
+
+	float32 IniParser::getFloat(const char *key) const
+	{
+		std::unordered_map<std::string, float32>::const_iterator i = m_float_data.find(key);
+
+		if (i == m_float_data.end()) {
+			return 0.0;
+		}
+
+		return i->second;
+	}
+
+
 	boolean IniParser::keyExists(const char * key) const
 	{
 		return (this->keyExistsString(key) || this->keyExistsInt(key) || this->keyExistsFloat(key));
 	}
+
 
 	boolean IniParser::keyExistsString(const char * key) const
 	{
 		return (m_string_data.count(key) > 0);
 	}
 
+
 	boolean IniParser::keyExistsInt(const char * key) const
 	{
 		return (m_int_data.count(key) > 0);
 	}
+
 
 	boolean IniParser::keyExistsFloat(const char * key) const
 	{

@@ -114,7 +114,7 @@ namespace NOU::NOU_FILE_MNGT
 			\param The key to look up.
 
 			\brief Returns the value that corresponds to the given key.
-			Returns an empty string if the key was not found.
+			Returns 0 if the key was not found.
 			*/
 			int32 getInt(const char *) const;
 
@@ -122,7 +122,7 @@ namespace NOU::NOU_FILE_MNGT
 			\param The key to look up.
 
 			\brief Returns the value that corresponds to the given key.
-			Returns an empty string if the key was not found.
+			Returns 0.0 if the key was not found.
 			*/
 			float32 getFloat(const char *) const;
 
