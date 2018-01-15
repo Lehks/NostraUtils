@@ -222,7 +222,7 @@ namespace NOU::NOU_DAT_ALG
 		m_constructorCalled(other.m_constructorCalled)
 	{
 		if (isValid()) //only move if valid obj
-			new ((T*)(m_dataChunk)) T(move(*other));
+			new ((T*)(m_dataChunk)) T(NOU_CORE::move(*other));
 	}
 
 	template<typename T>
@@ -251,7 +251,7 @@ namespace NOU::NOU_DAT_ALG
 		if (m_constructorCalled)
 			data()->~T();
 
-		new ((T*)(m_dataChunk)) T(args...);
+		new ((T*)(m_dataChunk)) T(NOU_CORE::forward<ARGS>(args)...);
 
 		m_constructorCalled = true;
 	}
@@ -304,7 +304,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename... ARGS>
 	Uninitialized<T>& Uninitialized<T>::operator = (ARGS&&... args)
 	{
-		set(args...);
+		set(NOU_CORE::forward<ARGS>(args)...);
 
 		return *this;
 	}
@@ -324,7 +324,7 @@ namespace NOU::NOU_DAT_ALG
 	Uninitialized<T>& Uninitialized<T>::operator = (Uninitialized &&other)
 	{
 		if (other.isValid())
-			set(move(*other));
+			set(NOU_CORE::move(*other));
 
 		m_constructorCalled = other.m_constructorCalled;
 
