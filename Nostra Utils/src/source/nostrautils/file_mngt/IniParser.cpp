@@ -13,24 +13,36 @@ namespace NOU::NOU_FILE_MNGT
 		int pos_quot_dbl = line.find_first_of('"');
 		int pos_quot_sin = line.find_first_of('\'');
 
-		// Return 0 if no quotes
+		// Return INI_QUOTE_NONE if no quotes
 		if (pos_quot_dbl == pos_quot_sin) {
-			return 0;
+			return INI_QUOTE_NONE;
 		}
 
-		// Return 1 for double quoation marks
+		// Return INI_QUOTE_DOUBLE for double quoation marks
 		if (pos_quot_sin == std::string::npos) {
-			return 1;
+			return INI_QUOTE_DOUBLE;
 		}
 
-		// Return 2 for single quotation marks
-		return 2;
+		// Return INI_QUOTE_SINGLE for single quotation marks
+		return INI_QUOTE_SINGLE;
 	}
 
 
 	void IniParser::addString(const std::string &key, const std::string &value)
 	{
 		m_string_data.insert(std::make_pair(key, value));
+	}
+
+
+	void IniParser::addInt(const std::string &key, const int32 &value)
+	{
+		m_int_data.insert(std::make_pair(key, value));
+	}
+
+
+	void IniParser::addFloat(const std::string &key, const float32 &value)
+	{
+		m_float_data.insert(std::make_pair(key, value));
 	}
 
 
@@ -181,7 +193,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean  IniParser::keyExists(const char *key) const
+	boolean  IniParser::keyExists(const char * key) const
 	{
 		return (m_string_data.count(key) > 0);
 	}

@@ -8,6 +8,10 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
+	int const INI_QUOTE_NONE = 0;
+	int const INI_QUOTE_DOUBLE = 1;
+	int const INI_QUOTE_SINGLE = 2;
+
 	/**
 	\brief Parses .ini files into usable key-value pairs.
 	*/
@@ -22,12 +26,12 @@ namespace NOU::NOU_FILE_MNGT
 			/**
 			\brief Holds the parsed key value pairs, with the values being int32.
 			*/
-			std::unordered_map<std::string, int32> m_int32_data;
+			std::unordered_map<std::string, int32> m_int_data;
 
 			/**
-			\brief Holds the parsed key value pairs, with the values being float 32.
+			\brief Holds the parsed key value pairs, with the values being float32.
 			*/
-			std::unordered_map<std::string, float32> m_float32_data;
+			std::unordered_map<std::string, float32> m_float_data;
 
 			/**
 			\brief The target file name to parse.
@@ -124,11 +128,27 @@ namespace NOU::NOU_FILE_MNGT
 
 			/**
 			\param The key to store.
-			\param The value to store.
+			\param The string value to store.
 
-			\brief Stores a key-value pair in m_data.
+			\brief Stores a key-value pair in m_string_data.
 			*/
 			void addString(const std::string &, const std::string &);
+
+			/**
+			\param The key to store.
+			\param The int32 value to store.
+
+			\brief Stores a key-value pair in m_int32_data.
+			*/
+			void addInt(const std::string &, const int32 &);
+
+			/**
+			\param The key to store.
+			\param The float32 value to store.
+
+			\brief Stores a key-value pair in m_float32_data.
+			*/
+			void addFloat(const std::string &, const float32 &);
 
 			/**
 			\param The key to look up.
