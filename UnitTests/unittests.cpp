@@ -16,6 +16,7 @@
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
+#include "nostrautils\dat_alg\String.hpp"
 
 #include "DebugClass.hpp"
 
@@ -915,6 +916,26 @@ namespace UnitTests
 			}
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(String)
+		{
+			NOU::NOU_DAT_ALG::String<NOU::char8> str;
+
+			str.append('a');
+			Assert::AreEqual(str[0], 'a');
+
+			str.append("Hallo");
+			Assert::AreEqual(str[1] , 'H');
+
+			str.insert(0, 'A');
+			Assert::AreEqual(str[0], 'A');
+
+			str.appendIf(1, 'T');
+			Assert::AreEqual(str[str.size() -1], 'T');
+
+			str.insert(0, 1);
+			Assert::AreEqual(str[0], '1');
 		}
 	};
 }

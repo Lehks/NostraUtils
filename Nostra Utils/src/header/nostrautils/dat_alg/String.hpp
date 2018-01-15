@@ -68,6 +68,8 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		Vector<CharType> m_data;
 
+		NOU::NOU_CORE::ErrorHandler handler;
+
 		/**
 		\param size The new size (without the null-terminator).
 
@@ -896,7 +898,7 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)			
 	{
 		
 		String<CHAR_TYPE> str;
@@ -924,7 +926,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)				///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)			
 	{
 		String<CHAR_TYPE> str;
 
@@ -990,13 +992,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)					
 	{
-		return *this;
+		return genericFloatToString(f);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)					
 	{
-		return *this;
+		return  genericFloatToString(f);
 	}
 
 	template<typename CHAR_TYPE>
@@ -1011,6 +1013,8 @@ namespace NOU::NOU_DAT_ALG
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 
+		NOU::NOU_CORE::ErrorHandler handler;
+
 		setSize(str.size() - 1);
 	}
 
@@ -1024,6 +1028,8 @@ namespace NOU::NOU_DAT_ALG
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 
+		NOU::NOU_CORE::ErrorHandler handler;
+
 		setSize(m_data.size() - 1);
 	}
 
@@ -1031,19 +1037,6 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>::String(int32 i) : 
 		String(NOU_CORE::move(intToString(i)))
 	{}
-
-	//template<typename CHAR_TYPE>
-	//String<CHAR_TYPE>::String(int32 i)	:
-	//	m_data(1),
-	//	StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), 1)
-	//{
-	//
-	//	append(intToString(i));
-	//
-	//	m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
-	//
-	//	setSize(m_data.size() - 1);
-	//}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(int64 i)	:
@@ -1206,7 +1199,11 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
-			///ERROR
+			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
+
+			std::cout << handler.peekError().getMsg() << std::endl;
+			std::cout << handler.peekError().getFile() << std::endl;
+			std::cout << handler.peekError().getLine() << std::endl;
 		}
 
 		for (sizeType i = start; i < end; i++)
@@ -1225,7 +1222,11 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
-			///ERROR
+			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
+
+			std::cout << handler.peekError().getMsg() << std::endl;
+			std::cout << handler.peekError().getFile() << std::endl;
+			std::cout << handler.peekError().getLine() << std::endl;
 		}
 
 		for (sizeType i = start; i < end; i++)
@@ -1244,7 +1245,11 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
-			///ERROR
+			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
+
+			std::cout << handler.peekError().getMsg() << std::endl;
+			std::cout << handler.peekError().getFile() << std::endl;
+			std::cout << handler.peekError().getLine() << std::endl;
 		}
 
 		for (sizeType i = start; i <end; i++)
@@ -1345,7 +1350,11 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1)
 		{
-			///ERROR
+			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
+
+			std::cout << handler.peekError().getMsg() << std::endl;
+			std::cout << handler.peekError().getFile() << std::endl;
+			std::cout << handler.peekError().getLine() << std::endl;
 		}
 		else if (start <= m_data.capacity() && end > m_data.capacity())
 		{
@@ -1379,7 +1388,11 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
-			///ERROR
+			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
+
+			std::cout << handler.peekError().getMsg() << std::endl;
+			std::cout << handler.peekError().getFile() << std::endl;
+			std::cout << handler.peekError().getLine() << std::endl;
 		}
 
 		for (sizeType i = 0; i < m_data.size() - 1; i++)
