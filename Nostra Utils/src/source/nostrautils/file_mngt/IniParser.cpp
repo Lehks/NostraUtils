@@ -103,11 +103,11 @@ namespace NOU::NOU_FILE_MNGT
 		quote_type = this->getValueQuotationType(line);
 
 		// If there are no quotes, we are done here.
-		if (quote_type == 0) {
+		if (quote_type == INI_QUOTE_NONE) {
 			return value;
 		}
 
-		if (quote_type == 1) {
+		if (quote_type == INI_QUOTE_DOUBLE) {
 			quote = '"';
 		}
 		else {
