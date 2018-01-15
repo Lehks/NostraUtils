@@ -1,6 +1,6 @@
 #include "nostrautils\thread\ThreadWrapper.hpp"
 #include "nostrautils\core\Utils.hpp"
-
+/*
 namespace NOU::NOU_THREAD
 {
 	uint32 ThreadWrapper::maxThreads()
@@ -47,3 +47,4 @@ namespace NOU::NOU_THREAD
 		return m_thread.get_id();
 	}
 }
+*/

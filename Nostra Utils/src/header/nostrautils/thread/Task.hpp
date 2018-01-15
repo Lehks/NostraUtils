@@ -7,27 +7,29 @@
 #include "nostrautils\mem_mngt\Pointer.hpp"
 
 #include <tuple>
+#include <type_traits>
 
 namespace NOU::NOU_THREAD
 {
-	class AbstractTask
+	class NOU_CLASS AbstractTask
 	{
 	public:
 		virtual ~AbstractTask() = default;
 
 		virtual boolean execute() = 0;
 
-		virtual void* getResult() = 0;
+		virtual void* getResultPtr() = 0;
+		virtual const void* getResultPtr() const = 0;
 	};
 
-	template<typename T, typename... ARGS>
-	class InvocableTask final : public AbstractTask
+	template<typename R, typename I, typename... ARGS>
+	class NOU_CLASS Task final : AbstractTask
 	{
-		static_assert(NOU_CORE::IsInvocable<T, ARGS...>::value);
+		static_assert(NOU_CORE::IsInvocableR<R, I, ARGS...>::value);
 
 	public:
-		using InvocableType = T*;
-		using ReturnType = NOU_CORE::InvokeResult_t<T, ARGS...>;
+		using ReturnType = R;
+		using InvocableType = I;
 
 	private:
 		std::tuple<ARGS...> m_args;
@@ -35,213 +37,72 @@ namespace NOU::NOU_THREAD
 		NOU_DAT_ALG::Uninitialized<ReturnType> m_result;
 
 	public:
-		InvocableTask(const InvocableType &invocable, ARGS&&...args);
-		InvocableTask(InvocableType &&invocable, ARGS&&...args);
+		explicit Task(InvocableType&& invocable, ARGS&&... args);
 
 		virtual boolean execute() override;
 
-		virtual void* getResult() override;
+		virtual void* getResultPtr() override;
+		virtual const void* getResultPtr() const override;
+		ReturnType& getResult();
+		const ReturnType& getResult() const;
 	};
-
-	template<typename T, typename F, typename... ARGS>
-	class MemberFunctionTask final : public AbstractTask
-	{
-	public:
-		using StoredType = T;
-		using InvocableType = F;
-		using ReturnType = NOU_CORE::InvokeResult_t<F, T, ARGS...>;
-
-	private:
-		std::tuple<T, ARGS...> m_args;
-		InvocableType m_invocable;
-		NOU_DAT_ALG::Uninitialized<ReturnType> m_result;
-
-	public:
-		MemberFunctionTask(const StoredType &stored, InvocableType invocable, ARGS&&...args);
-		MemberFunctionTask(StoredType &&stored, InvocableType invocable, ARGS&&...args);
-
-		virtual boolean execute() override;
-
-		virtual void* getResult() override;
-	};
-
-	template<typename T, typename F, typename... ARGS>
-	class MemberFunPtrWrapper
-	{
-		static_assert(std::is_pointer_v<T>);
-
-	private:
-		T m_ptr;
-		F m_invocable;
-
-	public:
-		MemberFunPtrWrapper(T ptr, F invocable);
-		auto operator () (ARGS&... args);
-	};
-
-	template<typename T, typename F, typename... ARGS>
-	class MemberFunctionTask<T*, F, ARGS...> final : public AbstractTask
-	{
-	public:
-		using StoredType = T*;
-		using InvocableType = F;
-		using ReturnType = int;//NOU_CORE::InvokeResult_t<F, NOU_CORE::removeConst_t<T>, ARGS...>;
-
-	private:
-		MemberFunPtrWrapper<StoredType, F, ARGS...> m_invocableAndStored;
-		std::tuple<ARGS...> m_args;
-		NOU_DAT_ALG::Uninitialized<ReturnType> m_result;
-
-	public:
-		MemberFunctionTask(StoredType stored, InvocableType invocable, ARGS&&...args);
-
-		virtual boolean execute() override;
-
-		virtual void* getResult() override;
-	};
-
-	using Task = NOU_MEM_MNGT::UniquePtr<AbstractTask>;
 
 	template<typename I, typename... ARGS>
-	NOU_FUNC Task makeTaskFromInvocable(const I &invocable, ARGS&&... args);
+	NOU_FUNC Task<std::invoke_result_t<I, std::remove_reference_t<ARGS>...>, I, 
+		std::remove_reference_t<ARGS>...>makeTask(I&& invocable, ARGS&&... args);
 
-	template<typename I, typename... ARGS>
-	NOU_FUNC Task makeTaskFromInvocable(I &&invocable, ARGS&&... args);
+//	template<typename I, typename... ARGS>
+//	NOU_FUNC Task makeTaskFromInvocable(I &&invocable, ARGS&&... args);
+//
+//	template<typename T, typename I, typename... ARGS>
+//	NOU_FUNC Task makeTaskFromMemberFunction(T &&t, I invocable, ARGS&&... args);
 
-	template<typename T, typename I, typename... ARGS>
-	NOU_FUNC Task makeTaskFromMemberFunction(const T &t, I invocable, ARGS&&... args);
-
-	template<typename T, typename I, typename... ARGS>
-	NOU_FUNC Task makeTaskFromMemberFunction(T &&t, I invocable, ARGS&&... args);
-
-	template<typename T, typename... ARGS>
-	InvocableTask<T, ARGS...>::InvocableTask(const InvocableType &invocable, ARGS&&... args) :
-		m_invocable(invocable),
+	template<typename R, typename I, typename... ARGS>
+	Task<R, I, ARGS...>::Task(InvocableType&& invocable, ARGS&&... args) :
+		m_invocable(NOU_CORE::forward<InvocableType>(invocable)),
 		m_args(NOU_CORE::forward<ARGS>(args)...)
 	{}
 
-	template<typename T, typename... ARGS>
-	InvocableTask<T, ARGS...>::InvocableTask(InvocableType &&invocable, ARGS&&...args) :
-		m_invocable(invocable),
-		m_args(NOU_CORE::forward<ARGS>(args)...)
-	{}
-
-	template<typename T, typename... ARGS>
-	boolean InvocableTask<T, ARGS...>::execute()
+	template<typename R, typename I, typename... ARGS>
+	boolean Task<R, I, ARGS...>::execute()
 	{
-		//lock, return false if locked
-
 		m_result = std::apply(m_invocable, m_args);
-		return true;
+		return false;
 	}
 
-	template<typename T, typename... ARGS>
-	void* InvocableTask<T, ARGS...>::getResult()
+	template<typename R, typename I, typename... ARGS>
+	void* Task<R, I, ARGS...>::getResultPtr()
 	{
-		return &(*m_result);
+		return m_result.data();
 	}
 
-	template<typename T, typename F, typename... ARGS>
-	MemberFunctionTask<T, F, ARGS...>::MemberFunctionTask(const StoredType &stored, InvocableType invocable, 
-		ARGS&&...args) :
-		m_invocable(invocable),
-		m_args(std::forward_as_tuple(stored, NOU_CORE::forward<ARGS>(args)...))
-	{}
-
-	template<typename T, typename F, typename... ARGS>
-	MemberFunctionTask<T, F, ARGS...>::MemberFunctionTask(StoredType &&stored, InvocableType invocable, 
-		ARGS&&...args) :
-		m_invocable(invocable),
-		m_args(std::forward_as_tuple(std::forward<StoredType>(stored), NOU_CORE::forward<ARGS>(args)...))
-	{}
-
-	template<typename T, typename F, typename... ARGS>
-	boolean MemberFunctionTask<T, F, ARGS...>::execute()
+	template<typename R, typename I, typename... ARGS>
+	const void* Task<R, I, ARGS...>::getResultPtr() const
 	{
-		//lock, return false if locked
-
-		//create &m_stored to avoid copy
-		m_result = std::apply(m_invocable, m_args);
-		return true;
+		return m_result.data();
 	}
 
-	template<typename T, typename F, typename... ARGS>
-	void* MemberFunctionTask<T, F, ARGS...>::getResult()
+	template<typename R, typename I, typename... ARGS>
+	typename Task<R, I, ARGS...>::ReturnType& Task<R, I, ARGS...>::getResult()
 	{
-		return &(*m_result);
+		return *m_result;
 	}
 
-
-
-	template<typename T, typename F, typename... ARGS>
-	MemberFunPtrWrapper<T, F, ARGS...>::MemberFunPtrWrapper(T ptr, F invocable) :
-		m_ptr(ptr),
-		m_invocable(invocable)
-	{}
-
-	template<typename T, typename F, typename... ARGS>
-	auto MemberFunPtrWrapper<T, F, ARGS...>::operator () (ARGS&... args)
+	template<typename R, typename I, typename... ARGS>
+	const typename Task<R, I, ARGS...>::ReturnType& Task<R, I, ARGS...>::getResult() const
 	{
-		return (m_ptr->*m_invocable)(NOU_CORE::forward<ARGS>(args)...);
-	}
-
-
-
-	template<typename T, typename F, typename... ARGS>
-	MemberFunctionTask<T*, F, ARGS...>::MemberFunctionTask(StoredType stored, InvocableType invocable,
-		ARGS&&...args) :
-		m_invocableAndStored(stored, invocable),
-		m_args(NOU_CORE::forward<ARGS>(args)...)
-	{}
-
-	template<typename T, typename F, typename... ARGS>
-	boolean MemberFunctionTask<T*, F, ARGS...>::execute()
-	{
-		//lock, return false if locked
-
-		m_result = std::apply(m_invocableAndStored, m_args);
-		return true; 
-	}
-
-	template<typename T, typename F, typename... ARGS>
-	void* MemberFunctionTask<T*, F, ARGS...>::getResult()
-	{
-		return &(*m_result);
-	}
-
-
-
-
-	template<typename I, typename... ARGS>
-	NOU_FUNC Task makeTaskFromInvocable(const I &invocable, ARGS&&... args)
-	{
-		///\todo Replace new with appropriate allocator
-		return Task(new InvocableTask<I, ARGS...>(invocable, NOU_CORE::forward<ARGS...>(args)),
-			NOU_MEM_MNGT::defaultDeleter);
+		return *m_result;
 	}
 
 	template<typename I, typename... ARGS>
-	NOU_FUNC Task makeTaskFromInvocable(I &&invocable, ARGS&&... args)
+	Task<std::invoke_result_t<I, std::remove_reference_t<ARGS>...>, I, std::remove_reference_t<ARGS>...>
+		makeTask(I&& invocable, ARGS&&... args)
 	{
-		///\todo Replace new with appropriate allocator
-		return Task(new InvocableTask<I, ARGS...>(NOU_CORE::forward<I>(invocable), NOU_CORE::forward<ARGS...>(args)),
-			NOU_MEM_MNGT::defaultDeleter);
-	}
+		using TaskType = Task<std::invoke_result_t<I, std::remove_reference_t<ARGS>...>, I,
+			std::remove_reference_t<ARGS>...>;
 
-	template<typename T, typename I, typename... ARGS>
-	NOU_FUNC Task makeTaskFromMemberFunction(const T &t, I invocable, ARGS&&... args)
-	{
-		///\todo Replace new with appropriate allocator
-		return Task(new MemberFunctionTask<T, I, ARGS...>(t, invocable,
-			NOU_CORE::forward<ARGS>(args)...), NOU_MEM_MNGT::defaultDeleter);
-	}
-
-	template<typename T, typename I, typename... ARGS>
-	NOU_FUNC Task makeTaskFromMemberFunction(T &&t, I invocable, ARGS&&... args)
-	{
-		///\todo Replace new with appropriate allocator
-		return Task(new MemberFunctionTask<T, I, ARGS...>(NOU_CORE::forward<T>(t), NOU_CORE::forward<I>(invocable),
-			NOU_CORE::forward<ARGS>(args)...), NOU_MEM_MNGT::defaultDeleter);
+		return TaskType(NOU_CORE::forward<typename TaskType::InvocableType>(invocable),
+			NOU_CORE::forward<std::remove_reference_t<ARGS>>(args)...);
 	}
 }
 
