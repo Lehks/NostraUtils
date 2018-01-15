@@ -15,6 +15,7 @@ namespace NOU::NOU_MEM_MNGT
 		sizeType* m_memSizePtr;
 
 	public:
+		Memory(sizeType memSize);
 
 		sizeType getMemSize();
 
@@ -24,10 +25,19 @@ namespace NOU::NOU_MEM_MNGT
 	class NOU_CLASS PoolAllocator
 	{
 	private:
-		static NOU::NOU_DAT_ALG::Vector<Memory*> s_poolAllocator;
+
+		static NOU::NOU_MEM_MNGT::GenericAllocationCallback<const Memory*> s_allocator;
+
+		static NOU::NOU_DAT_ALG::Vector<const Memory*> s_poolAllocator;
+
+		static sizeType *memoryBlock;
 
 	public:
+
+		~PoolAllocator();
 		sizeType getPoolAllocatorSize();
+
+
 	};
 }
 
