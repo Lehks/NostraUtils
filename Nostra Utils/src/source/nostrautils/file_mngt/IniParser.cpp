@@ -10,16 +10,16 @@ namespace NOU::NOU_FILE_MNGT
 
 	int IniParser::getValueQuotationType(std::string line)
 	{
-		int pos_quot_dbl = line.find_first_of('"');
-		int pos_quot_sin = line.find_first_of('\'');
+		int pos_quote_dbl = line.find_first_of('"');
+		int pos_quote_sin = line.find_first_of('\'');
 
 		// Return INI_QUOTE_NONE if no quotes
-		if (pos_quot_dbl == pos_quot_sin) {
+		if (pos_quote_dbl == pos_quote_sin) {
 			return INI_QUOTE_NONE;
 		}
 
 		// Return INI_QUOTE_DOUBLE for double quoation marks
-		if (pos_quot_sin == std::string::npos) {
+		if (pos_quote_sin == std::string::npos) {
 			return INI_QUOTE_DOUBLE;
 		}
 
