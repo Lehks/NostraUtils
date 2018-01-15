@@ -15,9 +15,19 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		private:
 			/**
-			\brief Holds the parsed key value pairs
+			\brief Holds the parsed key value pairs, with the values being strings.
 			*/
-			std::unordered_map<std::string, std::string> m_data;
+			std::unordered_map<std::string, std::string> m_string_data;
+
+			/**
+			\brief Holds the parsed key value pairs, with the values being int32.
+			*/
+			std::unordered_map<std::string, int32> m_int32_data;
+
+			/**
+			\brief Holds the parsed key value pairs, with the values being float 32.
+			*/
+			std::unordered_map<std::string, float32> m_float32_data;
 
 			/**
 			\brief The target file name to parse.
@@ -65,15 +75,7 @@ namespace NOU::NOU_FILE_MNGT
 			       Returns 1 if double quotes were detected.
 				   Returns 2 if single quotes were detected.
 			*/
-			int getValueQuotationType(std::string);
-
-			/**
-			\param The key to store.
-			\param The value to store.
-
-			\brief Stores a key-value pair in m_data.
-			*/
-			void addPair(std::string, std::string);
+			int32 getValueQuotationType(std::string);
 
 		public:
 			/**
@@ -82,11 +84,6 @@ namespace NOU::NOU_FILE_MNGT
 			\brief A file name must be provided to use this class
 			*/
 			IniParser(const char *);
-
-			/**
-			\brief Todo.
-			*/
-			~IniParser();
 
 			/**
 			\brief Parses the target file and returns True on success, False on error.
@@ -100,6 +97,38 @@ namespace NOU::NOU_FILE_MNGT
 			       Returns an empty string if the key was not found.
 			*/
 			std::string getValue(const char *) const;
+
+			/**
+			\param The key to look up.
+
+			\brief Returns the value that corresponds to the given key.
+			Returns an empty string if the key was not found.
+			*/
+			std::string getString(const char *) const;
+
+			/**
+			\param The key to look up.
+
+			\brief Returns the value that corresponds to the given key.
+			Returns an empty string if the key was not found.
+			*/
+			int32 getInt(const char *) const;
+
+			/**
+			\param The key to look up.
+
+			\brief Returns the value that corresponds to the given key.
+			Returns an empty string if the key was not found.
+			*/
+			float32 getFloat(const char *) const;
+
+			/**
+			\param The key to store.
+			\param The value to store.
+
+			\brief Stores a key-value pair in m_data.
+			*/
+			void addString(const std::string &, const std::string &);
 
 			/**
 			\param The key to look up.

@@ -8,10 +8,6 @@ namespace NOU::NOU_FILE_MNGT
 	{}
 
 
-	IniParser::~IniParser()
-	{}
-
-
 	int IniParser::getValueQuotationType(std::string line)
 	{
 		int pos_quot_dbl = line.find_first_of('"');
@@ -32,9 +28,9 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	void IniParser::addPair(std::string key, std::string value)
+	void IniParser::addString(const std::string &key, const std::string &value)
 	{
-		m_data.insert(std::make_pair(key, value));
+		m_string_data.insert(std::make_pair(key, value));
 	}
 
 
@@ -144,7 +140,7 @@ namespace NOU::NOU_FILE_MNGT
 		value = this->parseValue(line.substr(pos_eq + 1));
 
 		// Add pair
-		this->addPair(key, value);
+		this->addString(key, value);
 	}
 
 
@@ -175,9 +171,9 @@ namespace NOU::NOU_FILE_MNGT
 
 	std::string IniParser::getValue(const char *key) const
 	{
-		std::unordered_map<std::string, std::string>::const_iterator i = m_data.find(key);
+		std::unordered_map<std::string, std::string>::const_iterator i = m_string_data.find(key);
 
-		if (i == m_data.end()) {
+		if (i == m_string_data.end()) {
 			return std::string();
 		}
 
@@ -187,6 +183,6 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean  IniParser::keyExists(const char *key) const
 	{
-		return (m_data.count(key) > 0);
+		return (m_string_data.count(key) > 0);
 	}
 }
