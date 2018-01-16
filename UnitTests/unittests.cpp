@@ -15,6 +15,7 @@
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils\dat_alg\Uninitialized.hpp"
 
 #include "DebugClass.hpp"
 
@@ -877,6 +878,43 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(123.456, 123.457, 0.1) == 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
 
+		}
+
+		TEST_METHOD(InvokeResult)
+		{
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<void, NOU::NOU_CORE::InvokeResult_t<
+				decltype(dummyFunc0), int>>::value);
+			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, NOU::NOU_CORE::InvokeResult_t<
+				decltype(dummyFunc1), int>>::value);
+		}
+
+		TEST_METHOD(Uninitialized)
+		{
+			{
+				NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> ui;
+
+				Assert::IsFalse(ui.isValid());
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+				ui = NOU::DebugClass(5);
+
+				Assert::IsTrue(ui.isValid());
+
+				Assert::IsTrue(ui->get() == 5);
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
+
+				ui = NOU::DebugClass(10);
+
+				Assert::IsTrue(ui.isValid());
+
+				Assert::IsTrue(ui->get() == 10);
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 		}
 	};
 }
