@@ -476,6 +476,11 @@ namespace NOU::NOU_CORE
 			INVALID_OBJECT,
 
 			/**
+			\brief An error has occrued in a mutex.
+			*/
+			MUTEX_ERROR,
+
+			/**
 			\brief Not an actual error, but always the last element in the enum. The error codes 0 - 
 			LAST_ELEMENT are always reserved for the default error pool.
 			*/
