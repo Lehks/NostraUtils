@@ -41,7 +41,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			for (sizeType i = 0; i < m_size - 1; i++)
 			{
-				m_data[i].nextPoolBlock = NOU_ADDRESS_OF(m_data[i + 1]);
+				m_data[i].nextPoolBlock = NOU::NOU_MEM_MNGT::addressof(m_data[i + 1]);
 			}
 			m_data[m_size - 1].nextPoolBlock = nullptr;
 		}
@@ -68,7 +68,9 @@ namespace NOU::NOU_MEM_MNGT
 
 			PoolBlock<T>* poolBlock = m_head;
 			m_head = m_head->nextPoolBlock;
-			T* retVal = new (NOU_ADDRESS_OF(poolBlock->value)) T(<arguments>(args)...);
+			T* retVal = new (NOU::NOU_MEM_MNGT::addressof(poolBlock->value)) 
+				T(NOU::NOU_CORE::forward<arguments>(args)...);
+
 			return retVal;
 		}
 

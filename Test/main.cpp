@@ -35,18 +35,18 @@ public:
 int main()
 {
 	NOU::NOU_MEM_MNGT::PoolAllocator<Person> personenAllocator;
-	while (true)
-	{
-		Person* p1 = personenAllocator.allocate(18, "Peter", "Braun");
-		Person* p2 = personenAllocator.allocate(20, "Karl", "Blond");
-
-		p1->print();
-		p2->print();
-
-		personenAllocator.deallocate(p1);
-		personenAllocator.deallocate(p2);
-	}
 	
+	Person* p1 = personenAllocator.allocate(18, "Peter", "Braun");
+	Person* p2 = personenAllocator.allocate(20, "Karl", "Blond");
+
+	p1->print();
+	p2->print();
+
+	personenAllocator.deallocate(p1);
+	personenAllocator.deallocate(p2);
+	
+	const int i = 5;
+	const int* iPtr = NOU::NOU_MEM_MNGT::addressof(i);
 
 	std::cin.get();
 }
