@@ -3,6 +3,8 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 
+#include <memory>
+
 /**
 \file mem_mngt/Utils.hpp
 
@@ -81,6 +83,8 @@ namespace NOU::NOU_MEM_MNGT
 	{
 		return reinterpret_cast<T*>(alignedAlloc(sizeof(T) * amount, alignof(T)));
 	}
+
+#define NOU_ADDRESS_OF std::addressof
 }
 
 #endif
