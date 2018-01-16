@@ -3,7 +3,36 @@
 
 namespace NOU::NOU_THREAD
 {
-	void Mutex::readLock()
+	void Mutex::lock()
+	{
+		m_mutex.lock();
+	}
+
+	void Mutex::unlock()
+	{
+		m_mutex.unlock();
+	}
+
+	boolean Mutex::tryLock()
+	{
+		return m_mutex.try_lock();
+	}
+
+	typename Mutex::UnderlyingType& Mutex::getUnderlying()
+	{
+		return m_mutex;
+	}
+	
+	const typename Mutex::UnderlyingType& Mutex::getUnderlying() const
+	{
+		return m_mutex;
+	}
+
+	ReadWriteMutex::ReadWriteMutex() :
+		m_lock(Lock::NONE)
+	{}
+
+	void ReadWriteMutex::readLock()
 	{
 		switch (m_lock)
 		{
@@ -19,7 +48,7 @@ namespace NOU::NOU_THREAD
 		}
 	}
 
-	void Mutex::writeLock()
+	void ReadWriteMutex::writeLock()
 	{
 		switch (m_lock)
 		{
@@ -34,7 +63,7 @@ namespace NOU::NOU_THREAD
 		}
 	}
 
-	boolean Mutex::tryReadLock()
+	boolean ReadWriteMutex::tryReadLock()
 	{
 		if (!isWriteLocked())
 		{
@@ -45,7 +74,7 @@ namespace NOU::NOU_THREAD
 		return false;
 	}
 
-	boolean Mutex::tryWriteLock()
+	boolean ReadWriteMutex::tryWriteLock()
 	{
 		if (!isLocked())
 		{
@@ -56,7 +85,7 @@ namespace NOU::NOU_THREAD
 		return false;
 	}
 
-	void Mutex::unlock()
+	void ReadWriteMutex::unlock()
 	{
 		NOU_COND_PUSH_DBG_ERROR(m_lock == Lock::NONE, NOU_CORE::getErrorHandler(),
 			NOU_CORE::ErrorCodes::MUTEX_ERROR, "A mutex that was not locked has been unlocked.");
@@ -65,7 +94,7 @@ namespace NOU::NOU_THREAD
 		m_mutex.unlock();
 	}
 
-	void Mutex::unlockToRead()
+	void ReadWriteMutex::unlockToRead()
 	{
 		if (m_lock == Lock::WRITE)
 		{
@@ -79,32 +108,32 @@ namespace NOU::NOU_THREAD
 		}
 	}
 
-	typename Mutex::Lock Mutex::getLockLevel() const
+	typename ReadWriteMutex::Lock ReadWriteMutex::getLockLevel() const
 	{
 		return m_lock;
 	}
 
-	boolean Mutex::isLocked() const
+	boolean ReadWriteMutex::isLocked() const
 	{
 		return m_lock != Lock::NONE;
 	}
 
-	boolean Mutex::isReadLocked() const
+	boolean ReadWriteMutex::isReadLocked() const
 	{
 		return m_lock == Lock::READ;
 	}
 
-	boolean Mutex::isWriteLocked() const
+	boolean ReadWriteMutex::isWriteLocked() const
 	{
 		return m_lock == Lock::WRITE;
 	}
 
-	Mutex::UnderlyingType& Mutex::getUnderlying()
+	ReadWriteMutex::UnderlyingType& ReadWriteMutex::getUnderlying()
 	{
 		return m_mutex;
 	}
 
-	const Mutex::UnderlyingType& Mutex::getUnderlying() const
+	const ReadWriteMutex::UnderlyingType& ReadWriteMutex::getUnderlying() const
 	{
 		return m_mutex;
 	}
