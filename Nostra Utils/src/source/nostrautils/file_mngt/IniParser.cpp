@@ -8,10 +8,10 @@ namespace NOU::NOU_FILE_MNGT
 	{}
 
 
-	int IniParser::getValueQuotationType(std::string line)
+	int32 IniParser::getValueQuotationType(std::string line)
 	{
-		int pos_quote_dbl = line.find_first_of('"');
-		int pos_quote_sin = line.find_first_of('\'');
+		int32 pos_quote_dbl = line.find_first_of('"');
+		int32 pos_quote_sin = line.find_first_of('\'');
 
 		// Return INI_QUOTE_NONE if no quotes
 		if (pos_quote_dbl == pos_quote_sin) {
@@ -25,6 +25,22 @@ namespace NOU::NOU_FILE_MNGT
 
 		// Return INI_QUOTE_SINGLE for single quotation marks
 		return INI_QUOTE_SINGLE;
+	}
+
+
+	int32 IniParser::getValueDataType(const std::string &line)
+	{
+		// If the value is in quotes, we assume a string
+		if (this->getValueQuotationType(line) != INI_QUOTE_NONE) {
+			return INI_TYPE_STRING;
+		}
+
+		// If we dont find a ".", we assume an integer
+		if (line.find_first_of('.') == std::string::npos) {
+			return INI_TYPE_INT;
+		}
+
+		return INI_TYPE_FLOAT;
 	}
 
 
@@ -46,10 +62,12 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
+	
+
 	std::string IniParser::cleanString(std::string string)
 	{
-		int pos_ltrim = 0;
-		int pos_rtrim = 0;
+		int32 pos_ltrim = 0;
+		int32 pos_rtrim = 0;
 
 		// Left trim
 		for (pos_ltrim = 0; pos_ltrim < string.length(); pos_ltrim++)
@@ -80,7 +98,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	std::string IniParser::parseKey(std::string line)
+	std::string IniParser::parseKey(const std::string &line)
 	{
 		// Clean line
 		std::string key = this->cleanString(line);
@@ -89,11 +107,11 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	std::string IniParser::parseValue(std::string line)
+	std::string IniParser::parseStringValue(const std::string &line)
 	{
-		int pos_quote_first;
-		int pos_quote_last;
-		int quote_type;
+		int32 pos_quote_first;
+		int32 pos_quote_last;
+		int32 quote_type;
 		char quote;
 
 		// Clean line
@@ -123,11 +141,25 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
+	int32 IniParser::parseIntValue(const std::string &line)
+	{
+		return std::atoi(line.c_str());
+	}
+
+
+	float32 IniParser::parseFloatValue(const std::string &line)
+	{
+		return std::stof(line);
+	}
+
+
 	void IniParser::parseLine(std::string line)
 	{
+		std::string line_lft;
+		std::string line_rgt;
 		std::string key;
-		std::string value;
-		int pos_eq;
+		int32 pos_eq;
+
 
 		// Clean string
 		line = this->cleanString(line);
@@ -145,14 +177,25 @@ namespace NOU::NOU_FILE_MNGT
 			return;
 		}
 
-		// Get the key
-		key = this->parseKey(line.substr(0, pos_eq));
+		// Split the string into a left and right part
+		line_lft = line.substr(0, pos_eq);
+		line_rgt = line.substr(pos_eq + 1);
 
-		// Get the value
-		value = this->parseValue(line.substr(pos_eq + 1));
+		// Add key-value pair
+		switch (this->getValueDataType(line_rgt))
+		{
+			case INI_TYPE_INT:
+				this->addInt(this->parseKey(line_lft), this->parseIntValue(line_rgt));
+			break;
 
-		// Add pair
-		this->addString(key, value);
+			case INI_TYPE_FLOAT:
+				this->addFloat(this->parseKey(line_lft), this->parseFloatValue(line_rgt));
+				break;
+
+			default:
+				this->addString(this->parseKey(line_lft), this->parseStringValue(line_rgt));
+				break;
+		}
 	}
 
 

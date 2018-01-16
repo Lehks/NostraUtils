@@ -8,9 +8,12 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	int const INI_QUOTE_NONE = 0;
-	int const INI_QUOTE_DOUBLE = 1;
-	int const INI_QUOTE_SINGLE = 2;
+	int32 const INI_QUOTE_NONE = 0;
+	int32 const INI_QUOTE_DOUBLE = 1;
+	int32 const INI_QUOTE_SINGLE = 2;
+	int32 const INI_TYPE_STRING = 1;
+	int32 const INI_TYPE_INT = 2;
+	int32 const INI_TYPE_FLOAT = 3;
 
 	/**
 	\brief Parses .ini files into usable key-value pairs.
@@ -55,14 +58,28 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Parses the key from a given line.
 			*/
-			std::string parseKey(std::string);
+			std::string parseKey(const std::string &);
 
 			/**
 			\param A single line of text.
 
-			\brief Parses the value from a given line.
+			\brief Parses the value from a given line as a string.
 			*/
-			std::string parseValue(std::string);
+			std::string parseStringValue(const std::string &);
+
+			/**
+			\param A single line of text.
+
+			\brief Parses the value from a given line as an integer.
+			*/
+			int32 parseIntValue(const std::string &);
+
+			/**
+			\param A single line of text.
+
+			\brief Parses the value from a given line as a float.
+			*/
+			float32 parseFloatValue(const std::string &);
 
 			/**
 			\param A single line of text.
@@ -80,6 +97,16 @@ namespace NOU::NOU_FILE_MNGT
 				   Returns 2 if single quotes were detected.
 			*/
 			int32 getValueQuotationType(std::string);
+
+			/**
+			\param A single line of text
+
+			\brief Detects the data type of the value that is in a specific line.
+			Returns INI_TYPE_STRING if it is a string.
+			Returns INI_TYPE_INT if it is an integer.
+			Returns INI_TYPE_FLOAT if it is a float.
+			*/
+			int32 getValueDataType(const std::string &);
 
 		public:
 			/**
