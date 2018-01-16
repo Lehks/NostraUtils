@@ -148,6 +148,9 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		String(CharType c);
 
+		String(const String &other);
+		String(String &&other);
+
 		/**
 		\param i The integer to convert and use as initial value.
 
@@ -1032,6 +1035,18 @@ namespace NOU::NOU_DAT_ALG
 
 		setSize(m_data.size() - 1);
 	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(const String<CHAR_TYPE> &other) :
+		m_data(other.m_data),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), other.size())
+	{}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(String<CHAR_TYPE> &&other) :
+		m_data(NOU_CORE::forward<decltype(m_data)>(other.m_data)),
+		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), other.size())
+	{}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(int32 i) : 
