@@ -44,19 +44,19 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	void IniParser::addString(const std::string &key, const std::string &value)
+	void IniParser::addString(const std::string &key, const std::string &value, const char * section = INI_DEFAULT_SECTION)
 	{
 		m_string_data.insert(std::make_pair(key, value));
 	}
 
 
-	void IniParser::addInt(const std::string &key, const int32 &value)
+	void IniParser::addInt(const std::string &key, const int32 &value, const char * section = INI_DEFAULT_SECTION)
 	{
 		m_int_data.insert(std::make_pair(key, value));
 	}
 
 
-	void IniParser::addFloat(const std::string &key, const float32 &value)
+	void IniParser::addFloat(const std::string &key, const float32 &value, const char * section = INI_DEFAULT_SECTION)
 	{
 		m_float_data.insert(std::make_pair(key, value));
 	}
@@ -222,7 +222,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	std::string IniParser::getString(const char *key) const
+	std::string IniParser::getString(const char *key, const char * section = INI_DEFAULT_SECTION) const
 	{
 		std::unordered_map<std::string, std::string>::const_iterator i = m_string_data.find(key);
 
@@ -234,7 +234,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	int32 IniParser::getInt(const char *key) const
+	int32 IniParser::getInt(const char *key, const char * section = INI_DEFAULT_SECTION) const
 	{
 		std::unordered_map<std::string, int32>::const_iterator i = m_int_data.find(key);
 
@@ -246,7 +246,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	float32 IniParser::getFloat(const char *key) const
+	float32 IniParser::getFloat(const char *key, const char * section = INI_DEFAULT_SECTION) const
 	{
 		std::unordered_map<std::string, float32>::const_iterator i = m_float_data.find(key);
 
@@ -258,25 +258,25 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean IniParser::keyExists(const char * key) const
+	boolean IniParser::keyExists(const char * key, const char * section = INI_DEFAULT_SECTION) const
 	{
 		return (this->keyExistsString(key) || this->keyExistsInt(key) || this->keyExistsFloat(key));
 	}
 
 
-	boolean IniParser::keyExistsString(const char * key) const
+	boolean IniParser::keyExistsString(const char * key, const char * section = INI_DEFAULT_SECTION) const
 	{
 		return (m_string_data.count(key) > 0);
 	}
 
 
-	boolean IniParser::keyExistsInt(const char * key) const
+	boolean IniParser::keyExistsInt(const char * key, const char * section = INI_DEFAULT_SECTION) const
 	{
 		return (m_int_data.count(key) > 0);
 	}
 
 
-	boolean IniParser::keyExistsFloat(const char * key) const
+	boolean IniParser::keyExistsFloat(const char * key, const char * section = INI_DEFAULT_SECTION) const
 	{
 		return (m_float_data.count(key) > 0);
 	}

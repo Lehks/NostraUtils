@@ -14,6 +14,7 @@ namespace NOU::NOU_FILE_MNGT
 	int32 const INI_TYPE_STRING = 1;
 	int32 const INI_TYPE_INT = 2;
 	int32 const INI_TYPE_FLOAT = 3;
+	const char * INI_DEFAULT_SECTION = "undefined";
 
 	/**
 	\brief Parses .ini files into usable key-value pairs.
@@ -127,7 +128,7 @@ namespace NOU::NOU_FILE_MNGT
 			\brief Returns the value that corresponds to the given key.
 			Returns an empty string if the key was not found.
 			*/
-			std::string getString(const char *) const;
+			std::string getString(const char *, const char * section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param The key to look up.
@@ -135,7 +136,7 @@ namespace NOU::NOU_FILE_MNGT
 			\brief Returns the value that corresponds to the given key.
 			Returns 0 if the key was not found.
 			*/
-			int32 getInt(const char *) const;
+			int32 getInt(const char *, const char * section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param The key to look up.
@@ -143,7 +144,7 @@ namespace NOU::NOU_FILE_MNGT
 			\brief Returns the value that corresponds to the given key.
 			Returns 0.0 if the key was not found.
 			*/
-			float32 getFloat(const char *) const;
+			float32 getFloat(const char *, const char * section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param The key to store.
@@ -151,7 +152,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Stores a key-value pair in m_string_data.
 			*/
-			void addString(const std::string &, const std::string &);
+			void addString(const std::string &, const std::string &, const char * section = INI_DEFAULT_SECTION);
 
 			/**
 			\param The key to store.
@@ -159,7 +160,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Stores a key-value pair in m_int32_data.
 			*/
-			void addInt(const std::string &, const int32 &);
+			void addInt(const std::string &, const int32 &, const char * section = INI_DEFAULT_SECTION);
 
 			/**
 			\param The key to store.
@@ -167,35 +168,35 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Stores a key-value pair in m_float32_data.
 			*/
-			void addFloat(const std::string &, const float32 &);
+			void addFloat(const std::string &, const float32 &, const char * section = INI_DEFAULT_SECTION);
 
 			/**
 			\param The key to look up.
 
 			\brief Returns True if the key exists. Returns False if it does not exist.
 			*/
-			boolean keyExists(const char *) const;
+			boolean keyExists(const char *, const char * section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param The key to look up.
 
 			\brief Returns True if the key exists. Returns False if it does not exist.
 			*/
-			boolean keyExistsString(const char *) const;
+			boolean keyExistsString(const char *, const char * section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param The key to look up.
 
 			\brief Returns True if the key exists. Returns False if it does not exist.
 			*/
-			boolean keyExistsInt(const char *) const;
+			boolean keyExistsInt(const char *, const char * section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param The key to look up.
 
 			\brief Returns True if the key exists. Returns False if it does not exist.
 			*/
-			boolean keyExistsFloat(const char *) const;
+			boolean keyExistsFloat(const char *, const char * section = INI_DEFAULT_SECTION) const;
 	};
 }
 #endif
