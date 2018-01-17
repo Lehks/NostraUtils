@@ -62,8 +62,6 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	
-
 	std::string IniParser::cleanString(std::string string)
 	{
 		int32 pos_ltrim = 0;

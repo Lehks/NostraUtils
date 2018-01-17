@@ -125,14 +125,6 @@ namespace NOU::NOU_FILE_MNGT
 			\param The key to look up.
 
 			\brief Returns the value that corresponds to the given key.
-			       Returns an empty string if the key was not found.
-			*/
-			std::string getValue(const char *) const;
-
-			/**
-			\param The key to look up.
-
-			\brief Returns the value that corresponds to the given key.
 			Returns an empty string if the key was not found.
 			*/
 			std::string getString(const char *) const;
