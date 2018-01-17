@@ -2,6 +2,7 @@
 #define	NOU_THREAD_MUTEX_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\core\Utils.hpp"
 
 #include <mutex>
 
@@ -58,6 +59,21 @@ namespace NOU::NOU_THREAD
 		const UnderlyingType& getUnderlying() const;
 	};
 
+	/**
+	\brief An advanced mutex that is built atop of nostra::utils::thread::Mutex. Instead of just being able to
+	       lock and unlock, this mutex has three levels of being locked.
+	
+	\details
+	An advanced mutex that is built atop of nostra::utils::thread::Mutex. Instead of just being able to lock 
+	and unlock, this mutex has three levels of being locked.
+
+	These three levels are (as represented by the enum Lock): 
+	- NONE
+	- READ
+	- WRITE
+	
+	\todo Add levels
+	*/
 	class NOU_CLASS ReadWriteMutex
 	{
 	public:
@@ -110,6 +126,9 @@ namespace NOU::NOU_THREAD
 	public:
 		explicit Protection(StoredType&& stored);
 
+		template<typename... ARGS>
+		explicit Protection(ARGS... args);
+
 		StoredType& get();
 		const StoredType& get() const;
 
@@ -127,11 +146,91 @@ namespace NOU::NOU_THREAD
 		const StoredType& operator * () const;
 	};
 
+	/**
+	\todo implement
+	*/
 	template<typename T>
 	class NOU_CLASS ReadWriteProtection
 	{
 
 	};
+
+	template<typename T>
+	template<typename... ARGS>
+	Protection<T>::Protection(ARGS... args) :
+		m_stored(NOU_CORE::forward<ARGS>(args)...)
+	{}
+
+	template<typename T>
+	Protection<T>::Protection(StoredType&& stored) :
+		m_stored(NOU_CORE::forward<StoredType>(stored))
+	{}
+
+	template<typename T>
+	typename Protection<T>::StoredType& Protection<T>::get()
+	{
+		return m_stored;
+	}
+
+	template<typename T>
+	const typename Protection<T>::StoredType& Protection<T>::get() const
+	{
+		return m_stored;
+	}
+
+	template<typename T>
+	void Protection<T>::lock()
+	{
+		m_mutex.lock();
+	}
+
+	template<typename T>
+	void Protection<T>::unlock()
+	{
+		m_mutex.unlock();
+	}
+
+	template<typename T>
+	boolean Protection<T>::tryLock()
+	{
+		return m_mutex.tryLock();
+	}
+
+	template<typename T>
+	Mutex& Protection<T>::getMutex()
+	{
+		return m_mutex;
+	}
+
+	template<typename T>
+	const Mutex& Protection<T>::getMutex() const
+	{
+		return m_mutex;
+	}
+
+	template<typename T>
+	typename Protection<T>::StoredType* Protection<T>::operator -> ()
+	{
+		return &m_stored;
+	}
+
+	template<typename T>
+	const typename Protection<T>::StoredType* Protection<T>::operator -> () const
+	{
+		return &m_stored;
+	}
+
+	template<typename T>
+	typename Protection<T>::StoredType& Protection<T>::operator * ()
+	{
+		return get();
+	}
+
+	template<typename T>
+	const typename Protection<T>::StoredType& Protection<T>::operator * () const
+	{
+		return get();
+	}
 }
 
 #endif
