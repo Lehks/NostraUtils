@@ -324,6 +324,7 @@
     <ClInclude Include="src\header\nostrautils\thread\AsyncTaskResult.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Mutex.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Task.hpp" />
+    <ClInclude Include="src\header\nostrautils\thread\TaskQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\ThreadManager.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\ThreadWrapper.hpp" />
   </ItemGroup>
@@ -332,6 +333,7 @@
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\Mutex.cpp" />
+    <ClCompile Include="src\source\nostrautils\thread\ThreadManager.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\ThreadWrapper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
