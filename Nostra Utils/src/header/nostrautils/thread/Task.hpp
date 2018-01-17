@@ -11,16 +11,13 @@
 
 namespace NOU::NOU_THREAD
 {
+	///\todo make work w/ lambdas
 	class NOU_CLASS AbstractTask
 	{
 	public:
 		virtual ~AbstractTask() = default;
 
-		virtual boolean execute() = 0;
-
-		virtual void* getResultPtr() = 0;
-		virtual const void* getResultPtr() const = 0;
-	};
+		virtual boolean execute() = 0;};
 
 	template<typename R, typename I, typename... ARGS>
 	class NOU_CLASS Task final : AbstractTask
@@ -41,8 +38,6 @@ namespace NOU::NOU_THREAD
 
 		virtual boolean execute() override;
 
-		virtual void* getResultPtr() override;
-		virtual const void* getResultPtr() const override;
 		ReturnType& getResult();
 		const ReturnType& getResult() const;
 	};
@@ -65,14 +60,16 @@ namespace NOU::NOU_THREAD
 
 		virtual boolean execute() override;
 
-		virtual void* getResultPtr() override;
-		virtual const void* getResultPtr() const override;
-		ReturnType getResult();
+		ReturnType getResult() const;
 	};
 
 	template<typename I, typename... ARGS>
-	NOU_FUNC Task<std::invoke_result_t<I, std::remove_reference_t<ARGS>...>, I, 
-		std::remove_reference_t<ARGS>...>makeTask(I&& invocable, ARGS&&... args);
+	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I,
+		NOU_CORE::remove_reference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args);
+
+	template<typename T, typename I, typename... ARGS>
+	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, T, NOU_CORE::remove_reference_t<ARGS>...>, I, T, 
+		NOU_CORE::remove_reference_t<ARGS>...> makeMemFuncTask(T&& obj, I&& invocable, ARGS&&...args);
 
 //	template<typename I, typename... ARGS>
 //	NOU_FUNC Task makeTaskFromInvocable(I &&invocable, ARGS&&... args);
@@ -91,18 +88,6 @@ namespace NOU::NOU_THREAD
 	{
 		m_result = std::apply(m_invocable, m_args);
 		return false;
-	}
-
-	template<typename R, typename I, typename... ARGS>
-	void* Task<R, I, ARGS...>::getResultPtr()
-	{
-		return m_result.data();
-	}
-
-	template<typename R, typename I, typename... ARGS>
-	const void* Task<R, I, ARGS...>::getResultPtr() const
-	{
-		return m_result.data();
 	}
 
 	template<typename R, typename I, typename... ARGS>
@@ -133,33 +118,30 @@ namespace NOU::NOU_THREAD
 	}
 
 	template<typename I, typename... ARGS>
-	void* Task<void, I, ARGS...>::getResultPtr()
-	{
-		return nullptr;
-	}
-
-	template<typename I, typename... ARGS>
-	const void* Task<void, I, ARGS...>::getResultPtr() const
-	{
-		return nullptr;
-	}
-
-	template<typename I, typename... ARGS>
-	typename Task<void, I, ARGS...>::ReturnType Task<void, I, ARGS...>::getResult()
+	typename Task<void, I, ARGS...>::ReturnType Task<void, I, ARGS...>::getResult() const
 	{}
 
 
 
 	template<typename I, typename... ARGS>
-	Task<std::invoke_result_t<I, std::remove_reference_t<ARGS>...>, I, std::remove_reference_t<ARGS>...>
-		makeTask(I&& invocable, ARGS&&... args)
+	Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I, 
+		NOU_CORE::remove_reference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args)
 	{
-		using TaskType = Task<std::invoke_result_t<I, std::remove_reference_t<ARGS>...>, I,
-			std::remove_reference_t<ARGS>...>;
+		using TaskType = Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I,
+			NOU_CORE::remove_reference_t<ARGS>...>;
 
 		return TaskType(NOU_CORE::forward<typename TaskType::InvocableType>(invocable),
-			NOU_CORE::forward<std::remove_reference_t<ARGS>>(args)...);
+			NOU_CORE::forward<NOU_CORE::remove_reference_t<ARGS>>(args)...);
 	}
+
+	template<typename T, typename I, typename... ARGS>
+	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, T, NOU_CORE::remove_reference_t<ARGS>...>, I, T,
+		NOU_CORE::remove_reference_t<ARGS>...> makeMemFuncTask(T&& obj, I&& invocable, ARGS&&...args)
+	{
+		return makeTask(NOU_CORE::forward<I>(invocable), NOU_CORE::forward<T>(obj), 
+			NOU_CORE::forward<ARGS>(args)...);
+	}
+
 }
 
 #endif
