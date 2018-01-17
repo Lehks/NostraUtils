@@ -944,9 +944,52 @@ namespace NOU::NOU_DAT_ALG
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)					///TODO
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)	
 	{
-		return *this;
+
+		IT tempFloat = f;
+		int integ_part = (int)f;
+		int integPartdigitCount = integ_part;
+		int i = 0;
+
+		while (integPartdigitCount != 0)
+		{
+			integPartdigitCount = integPartdigitCount / 10;
+			i++;
+		}
+
+		i = 16 - i;
+
+		String<CHAR_TYPE> str;
+		String<CHAR_TYPE> int_part;
+
+		int_part.append(genericIntToString(integ_part));
+		str.append(int_part);
+		str.append('.');
+
+		tempFloat = f - integ_part;
+
+		if (tempFloat == 0)
+		{
+			str.append('0');
+			return str;
+		}
+
+		while (i > 0)
+		{
+			tempFloat *= 10;
+			if ((int)tempFloat * (i * 10) == 0)
+			{
+				return str;
+			}
+			char8 c = ((int)tempFloat) + '0';
+			str.append(c);
+			integ_part = (int)tempFloat;
+			tempFloat -= integ_part;
+			i--;
+		}
+
+		return str;
 	}
 
 	template<typename CHAR_TYPE>
@@ -1097,7 +1140,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		for (sizeType i = 0; i < str.size(); i++)
 		{
-			m_data.insert(str[i], index + i);
+			insert(index + i, str[i]);
 
 		}
 		setSize(m_data.size() - 1);
@@ -1107,7 +1150,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int32 nr)
 	{
-		m_data.insert(intToString(nr), index);
+		insert(index, intToString(nr));
 		setSize(m_data.size() - 1);
 		return *this;
 	}
@@ -1115,7 +1158,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int64 nr)
 	{
-		m_data.insert(intToString(nr), index);
+		insert(index, intToString(nr));
 		setSize(m_data.size() - 1);
 		return *this;
 	}
@@ -1123,7 +1166,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint32 nr)
 	{
-		m_data.insert(intToString(nr), index);
+		insert(index, intToString(nr));
 		setSize(m_data.size() - 1);
 		return *this;
 	}
@@ -1131,7 +1174,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint64 nr)
 	{
-		m_data.insert(intToString(nr), index);
+		insert(index, intToString(nr));
 		setSize(m_data.size() - 1);
 		return *this;
 	}
@@ -1139,7 +1182,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float32 nr)
 	{
-		m_data.insert(floatToString(nr), index);
+		insert(index, floatToString(nr));
 		setSize(m_data.size() - 1);
 		return *this;
 	}
@@ -1147,7 +1190,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float64 nr)
 	{
-		m_data.insert(floatToString(nr), index);
+		insert(index, floatToString(nr));
 		setSize(m_data.size() - 1);
 		return *this;
 	}

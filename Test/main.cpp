@@ -10,5 +10,11 @@
 int main()
 {
 
+	NOU::NOU_DAT_ALG::String<NOU::char8> str;
 
+	str.append(5123.2576780);
+
+	std::cout << str.rawStr() << std::endl;
+
+	system("pause");
 }

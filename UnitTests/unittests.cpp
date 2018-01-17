@@ -934,8 +934,8 @@ namespace UnitTests
 			str.appendIf(1, 'T');
 			Assert::AreEqual(str[str.size() -1], 'T');
 
-			str.insert(0, 1);
-			Assert::AreEqual(str[0], '1');
+			str.append(1);
+			Assert::AreEqual(str[str.size() -1], '1');
 		}
 	};
 }
