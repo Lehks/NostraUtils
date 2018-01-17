@@ -48,6 +48,29 @@ namespace NOU::NOU_THREAD
 	};
 
 	template<typename I, typename... ARGS>
+	class NOU_CLASS Task<void, I, ARGS...> final : AbstractTask
+	{
+		static_assert(NOU_CORE::IsInvocableR<void, I, ARGS...>::value);
+
+	public:
+		using ReturnType = void;
+		using InvocableType = I;
+
+	private:
+		std::tuple<ARGS...> m_args;
+		InvocableType m_invocable;
+
+	public:
+		explicit Task(InvocableType&& invocable, ARGS&&... args);
+
+		virtual boolean execute() override;
+
+		virtual void* getResultPtr() override;
+		virtual const void* getResultPtr() const override;
+		ReturnType getResult();
+	};
+
+	template<typename I, typename... ARGS>
 	NOU_FUNC Task<std::invoke_result_t<I, std::remove_reference_t<ARGS>...>, I, 
 		std::remove_reference_t<ARGS>...>makeTask(I&& invocable, ARGS&&... args);
 
@@ -93,6 +116,39 @@ namespace NOU::NOU_THREAD
 	{
 		return *m_result;
 	}
+
+
+
+	template<typename I, typename... ARGS>
+	Task<void, I, ARGS...>::Task(InvocableType&& invocable, ARGS&&... args) :
+		m_invocable(NOU_CORE::forward<InvocableType>(invocable)),
+		m_args(NOU_CORE::forward<ARGS>(args)...)
+	{}
+
+	template<typename I, typename... ARGS>
+	boolean Task<void, I, ARGS...>::execute()
+	{
+		std::apply(m_invocable, m_args);
+		return false;
+	}
+
+	template<typename I, typename... ARGS>
+	void* Task<void, I, ARGS...>::getResultPtr()
+	{
+		return nullptr;
+	}
+
+	template<typename I, typename... ARGS>
+	const void* Task<void, I, ARGS...>::getResultPtr() const
+	{
+		return nullptr;
+	}
+
+	template<typename I, typename... ARGS>
+	typename Task<void, I, ARGS...>::ReturnType Task<void, I, ARGS...>::getResult()
+	{}
+
+
 
 	template<typename I, typename... ARGS>
 	Task<std::invoke_result_t<I, std::remove_reference_t<ARGS>...>, I, std::remove_reference_t<ARGS>...>
