@@ -118,7 +118,7 @@ namespace NOU::NOU_DAT_ALG
 		Note that the Vectors memory isnt alloced with the new keyword therefore the memory gets not dealocated with the delete keyword. 
 		For more deatils look at the implication.
 		*/
-		~Vector<T>();
+		virtual ~Vector<T>();
 
 		/**
 		\return      Returns a boolean.
