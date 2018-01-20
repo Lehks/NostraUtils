@@ -6,6 +6,7 @@
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 
+#include <iostream>
 #include <stdlib.h>
 
 
@@ -410,6 +411,8 @@ namespace NOU::NOU_DAT_ALG
 		\brief Appends the provided  if the passed boolean is \c true.
 		*/
 		String& appendIf(boolean b, float64 nr);
+
+		void replace(CharType replacement, sizeType index);
 
 		/**
 		\param target      The characters that will be replaced with \p replacement.
@@ -1250,6 +1253,13 @@ namespace NOU::NOU_DAT_ALG
 	{
 		insert(m_data.size() - 1, floatToString(nr));
 		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	void String<CHAR_TYPE>::replace(CharType replacement, sizeType)
+	{
+
+		m_data.at(i) = replacement;
 	}
 
 	template<typename CHAR_TYPE>

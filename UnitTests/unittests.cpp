@@ -936,6 +936,20 @@ namespace UnitTests
 
 			str.append(1);
 			Assert::AreEqual(str[str.size() -1], '1');
+
+			str.append(-1);
+			Assert::AreEqual(str[str.size() - 2], '-');
+			Assert::AreEqual(str[str.size() - 1], '1');
+
+			NOU::sizeType i = 0;
+			str.clear();
+			Assert::AreEqual(str.size(), i);
+
+			str.append("Hallo Welt");
+			str.replace('l', 'V', 0 , str.size() - 1);
+			Assert::AreEqual(str[2],  'V');
+			Assert::AreEqual(str[3], 'V');
+			Assert::AreEqual(str[8], 'V');
 		}
 	};
 }
