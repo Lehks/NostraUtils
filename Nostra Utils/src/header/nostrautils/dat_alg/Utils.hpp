@@ -14,6 +14,13 @@
 
 namespace NOU::NOU_DAT_ALG
 {
+	template<typename O, typename T>
+	struct NOU_CLASS Pair
+	{
+		O	dataOne;
+		T	dataTwo;
+		Pair<O,T>(T dataOne, O dataTwo);
+	};
 	/**
 	\param dataone First Type.
 	\param datatwo Second Type.
@@ -59,6 +66,13 @@ namespace NOU::NOU_DAT_ALG
 		T abs = (diff < 0 ? -diff : diff);
 		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
 	}
+
+
+	template<typename O, typename T>
+	Pair<O, T>::Pair(T dataOne, O dataTwo) :
+		dataOne(dataOne),
+		dataTwo(dataTwo)
+	{}
 }
 
 #endif
