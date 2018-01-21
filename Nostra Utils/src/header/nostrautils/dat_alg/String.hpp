@@ -951,9 +951,10 @@ namespace NOU::NOU_DAT_ALG
 	{
 
 		IT tempFloat = f;
-		int integ_part = (int)f;
-		int integPartdigitCount = integ_part;
-		int i = 0;
+		NOU::uint32 integ_part = (int)f;
+		NOU::uint32 integPartdigitCount = integ_part;
+		NOU::uint32 i = 0;
+		NOU::uint32 zerocounter = 0;
 
 		while (integPartdigitCount != 0)
 		{
@@ -961,7 +962,7 @@ namespace NOU::NOU_DAT_ALG
 			i++;
 		}
 
-		i = 16 - i;
+		i = 17 - i;
 
 		String<CHAR_TYPE> str;
 		String<CHAR_TYPE> int_part;
@@ -974,22 +975,48 @@ namespace NOU::NOU_DAT_ALG
 
 		if (tempFloat == 0)
 		{
-			str.append('0');
+			str.insert(0, '0');
 			return str;
 		}
 
 		while (i > 0)
 		{
 			tempFloat *= 10;
-			if ((int)tempFloat * (i * 10) == 0)
+			if (static_cast<NOU::uint32>(tempFloat) == 0)
 			{
-				return str;
+				zerocounter++;
 			}
-			char8 c = ((int)tempFloat) + '0';
-			str.append(c);
-			integ_part = (int)tempFloat;
-			tempFloat -= integ_part;
 			i--;
+		}
+
+		NOU::int64 tempint = static_cast<NOU::uint64>(tempFloat);
+		tempint = tempint / 10;
+
+		if (tempint % 10 >= 5)
+		{
+			NOU::int64 lastdigit = tempint % 10;
+			tempint += (10 - lastdigit);
+		}
+
+		sizeType endOfString = str.size();
+
+		while (tempint != 0)
+		{
+			if (tempint % 10 != 0)
+			{
+				char8 c = (tempint % 10) + '0';
+				str.insert(endOfString, c);
+			}
+			else if (str[str.size() - 1] != '.')
+			{
+				str.insert(endOfString, '0');
+			}
+			tempint = tempint / 10;
+		}
+
+		for (sizeType z = 0; z < zerocounter; z++)
+		{
+			str.insert(endOfString, '0');
 		}
 
 		return str;
