@@ -27,6 +27,9 @@ namespace NOU::NOU_MEM_MNGT
 	class NOU_CLASS AllocationCallback
 	{
 	public:
+
+		virtual AllocationCallback() = default;
+
 		/**
 		\param amount The amount of objects to allocate.
 
