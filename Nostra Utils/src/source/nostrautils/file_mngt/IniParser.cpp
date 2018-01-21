@@ -1,6 +1,7 @@
 #include "nostrautils\file_mngt\IniParser.hpp"
 #include <fstream>
 
+
 namespace NOU::NOU_FILE_MNGT
 {
 	IniParser::IniParser(const char filename[]) :
@@ -51,19 +52,19 @@ namespace NOU::NOU_FILE_MNGT
 
 	void IniParser::addString(const std::string &key, const std::string &value, const std::string & section)
 	{
-		m_string_data.insert(std::make_pair(key, value));
+		m_string_data.insert(std::make_pair(section + "." + key, value));
 	}
 
 
 	void IniParser::addInt(const std::string &key, const int32 &value, const std::string & section)
 	{
-		m_int_data.insert(std::make_pair(key, value));
+		m_int_data.insert(std::make_pair(section + "." + key, value));
 	}
 
 
 	void IniParser::addFloat(const std::string &key, const float32 &value, const std::string & section)
 	{
-		m_float_data.insert(std::make_pair(key, value));
+		m_float_data.insert(std::make_pair(section + "." + key, value));
 	}
 
 
@@ -167,6 +168,12 @@ namespace NOU::NOU_FILE_MNGT
 		// Clean string
 		line = this->cleanString(line);
 
+		// Check if we have a section
+		if (line[0] == '[' && line[(line.length() - 1)] == ']') {
+			this->setCurrentSection(line.substr(1, line.length() - 2));
+			return;
+		}
+
 		// Get position of the first equal symbol
 		pos_eq = line.find_first_of("=");
 
@@ -232,7 +239,7 @@ namespace NOU::NOU_FILE_MNGT
 
 	std::string IniParser::getString(const char *key, const std::string & section) const
 	{
-		std::unordered_map<std::string, std::string>::const_iterator i = m_string_data.find(key);
+		std::unordered_map<std::string, std::string>::const_iterator i = m_string_data.find(section + "." + key);
 
 		if (i == m_string_data.end()) {
 			return std::string();
@@ -244,7 +251,7 @@ namespace NOU::NOU_FILE_MNGT
 
 	int32 IniParser::getInt(const char *key, const std::string & section) const
 	{
-		std::unordered_map<std::string, int32>::const_iterator i = m_int_data.find(key);
+		std::unordered_map<std::string, int32>::const_iterator i = m_int_data.find(section + "." + key);
 
 		if (i == m_int_data.end()) {
 			return 0;
@@ -256,7 +263,7 @@ namespace NOU::NOU_FILE_MNGT
 
 	float32 IniParser::getFloat(const char *key, const std::string & section) const
 	{
-		std::unordered_map<std::string, float32>::const_iterator i = m_float_data.find(key);
+		std::unordered_map<std::string, float32>::const_iterator i = m_float_data.find(section + "." + key);
 
 		if (i == m_float_data.end()) {
 			return 0.0;
@@ -268,24 +275,24 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean IniParser::keyExists(const char * key, const std::string & section) const
 	{
-		return (this->keyExistsString(key) || this->keyExistsInt(key) || this->keyExistsFloat(key));
+		return (this->keyExistsString(key, section) || this->keyExistsInt(key, section) || this->keyExistsFloat(key, section));
 	}
 
 
 	boolean IniParser::keyExistsString(const char * key, const std::string & section) const
 	{
-		return (m_string_data.count(key) > 0);
+		return (m_string_data.count(section + "." + key) > 0);
 	}
 
 
 	boolean IniParser::keyExistsInt(const char * key, const std::string & section) const
 	{
-		return (m_int_data.count(key) > 0);
+		return (m_int_data.count(section + "." + key) > 0);
 	}
 
 
 	boolean IniParser::keyExistsFloat(const char * key, const std::string & section) const
 	{
-		return (m_float_data.count(key) > 0);
+		return (m_float_data.count(section + "." + key) > 0);
 	}
 }

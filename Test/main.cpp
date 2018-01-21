@@ -14,7 +14,7 @@ namespace NOU::NOU_FILE_MNGT
 		IniParser p("C:\\Git\\NostraUtils\\Test\\Test.ini");
 		p.parse();
 
-		test_string = p.getString("STRING_A");
+		test_string = p.getString("STRING_A", "general");
 		std::cout << "STRING_A = " << test_string << std::endl;
 
 		test_string = p.getString("STRING_B");
