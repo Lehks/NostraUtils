@@ -2,6 +2,7 @@
 #define	NOU_DAT_ALG_STRING_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
@@ -68,8 +69,6 @@ namespace NOU::NOU_DAT_ALG
 		\brief The vector that stores the single characters of the string.
 		*/
 		Vector<CharType> m_data;
-
-		NOU::NOU_CORE::ErrorHandler handler;
 
 		/**
 		\param size The new size (without the null-terminator).
@@ -148,8 +147,17 @@ namespace NOU::NOU_DAT_ALG
 		\brief Constructs a new instance that is filled with the one character that was passed.
 		*/
 		String(CharType c);
+		/**
+		\param c Another String.
 
+		\brief Copy Constructor.
+		*/
 		String(const String &other);
+		/**
+		\param c Another String.
+
+		\brief Move Constructor.
+		*/
 		String(String &&other);
 
 		/**
@@ -411,7 +419,12 @@ namespace NOU::NOU_DAT_ALG
 		\brief Appends the provided  if the passed boolean is \c true.
 		*/
 		String& appendIf(boolean b, float64 nr);
+		/**
+		\param replacement the charrachter wich will be used to replace.
+		\param index The index.
 
+		\brief Replaces a single charrachter.
+		*/
 		void replace(CharType replacement, sizeType index);
 
 		/**
@@ -1089,7 +1102,6 @@ namespace NOU::NOU_DAT_ALG
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 
-		NOU::NOU_CORE::ErrorHandler handler;
 
 		setSize(str.size() - 1);
 	}
@@ -1104,7 +1116,6 @@ namespace NOU::NOU_DAT_ALG
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 
-		NOU::NOU_CORE::ErrorHandler handler;
 
 		setSize(m_data.size() - 1);
 	}
@@ -1294,11 +1305,6 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
-			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
-
-			std::cout << handler.peekError().getMsg() << std::endl;
-			std::cout << handler.peekError().getFile() << std::endl;
-			std::cout << handler.peekError().getLine() << std::endl;
 		}
 
 		for (sizeType i = start; i < end; i++)
@@ -1317,11 +1323,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
-			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
 
-			std::cout << handler.peekError().getMsg() << std::endl;
-			std::cout << handler.peekError().getFile() << std::endl;
-			std::cout << handler.peekError().getLine() << std::endl;
 		}
 
 		for (sizeType i = start; i < end; i++)
@@ -1340,11 +1342,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
-			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
 
-			std::cout << handler.peekError().getMsg() << std::endl;
-			std::cout << handler.peekError().getFile() << std::endl;
-			std::cout << handler.peekError().getLine() << std::endl;
 		}
 
 		for (sizeType i = start; i <end; i++)
@@ -1445,11 +1443,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1)
 		{
-			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
 
-			std::cout << handler.peekError().getMsg() << std::endl;
-			std::cout << handler.peekError().getFile() << std::endl;
-			std::cout << handler.peekError().getLine() << std::endl;
 		}
 		else if (start <= m_data.capacity() && end > m_data.capacity())
 		{
@@ -1483,11 +1477,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		if (start > m_data.size() - 1 || end > m_data.size() - 1)
 		{
-			NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of bounds.");
 
-			std::cout << handler.peekError().getMsg() << std::endl;
-			std::cout << handler.peekError().getFile() << std::endl;
-			std::cout << handler.peekError().getLine() << std::endl;
 		}
 
 		for (sizeType i = 0; i < m_data.size() - 1; i++)
@@ -1521,7 +1511,10 @@ namespace NOU::NOU_DAT_ALG
 	{
 		String<CHAR_TYPE> strnew;
 
-		strnew = m_data;
+		for (sizeType i = 0; i < m_data.size()-1; i++)
+		{
+			strnew.append(m_data[i]);
+		}
 
 		return strnew;
 	}
@@ -1693,12 +1686,21 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::trim()
 	{
-		for (sizeType i = 0; i < m_data.size() - 1; i++)
+		sizeType endofstring = m_data.size() - 2;
+
+		while (m_data.at(endofstring) == '\u0020' || m_data.at(endofstring) == '\u000A')
 		{
-			if (m_data.at(i) == '\u0020') // \u0020 unicode space ( )
-			{
-				m_data.remove(i);
-			}
+			m_data.remove(endofstring);
+			endofstring--;
+		}
+
+		sizeType startofstring = 0;
+
+		while (m_data.at(startofstring) == '\u0020' || m_data.at(startofstring) == '\u000A')
+		{
+			m_data.remove(startofstring);
+			startofstring++;
+
 		}
 		setSize(m_data.size() - 1);
 		return *this;
@@ -1708,6 +1710,9 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::clear()
 	{
 		m_data.clear();
+		setSize(m_data.size());
+		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
+		setSize(m_data.size() - 1);
 		return *this;
 	}
 

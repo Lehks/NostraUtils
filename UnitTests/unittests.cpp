@@ -941,15 +941,45 @@ namespace UnitTests
 			Assert::AreEqual(str[str.size() - 2], '-');
 			Assert::AreEqual(str[str.size() - 1], '1');
 
-			NOU::sizeType i = 0;
+			NOU::sizeType i = 0; // becasue of NULLTERMINATOR
 			str.clear();
-			Assert::AreEqual(str.size(), i);
-
+			Assert::AreEqual(str.size(), i); 
+			
 			str.append("Hallo Welt");
 			str.replace('l', 'V', 0 , str.size() - 1);
 			Assert::AreEqual(str[2],  'V');
 			Assert::AreEqual(str[3], 'V');
 			Assert::AreEqual(str[8], 'V');
+			
+			str.clear();
+			str.append(17.025);
+			Assert::AreEqual(str[0] , '1');
+			Assert::AreEqual(str[1] , '7');
+			Assert::AreEqual(str[2] , '.');
+			Assert::AreEqual(str[3] , '0');
+			Assert::AreEqual(str[4] , '2');
+			Assert::AreEqual(str[5] , '5');
+
+			str.remove(2,str.size());
+			Assert::AreEqual(str[0], '1');
+			Assert::AreEqual(str[1], '7');
+			Assert::AreNotEqual(str[0], '.');
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> substr;
+
+			substr.append(str.substring(0,1));
+			Assert::AreEqual(str[0], '1');
+
+			substr.clear();
+			substr.append(str.copy());
+			Assert::AreEqual(str[0], '1');
+			Assert::AreEqual(str[1], '7');
+
+			substr.clear();
+			str.clear();
+			substr.append("AAAAA");
+			str.append("Hallo");
+
 		}
 	};
 }

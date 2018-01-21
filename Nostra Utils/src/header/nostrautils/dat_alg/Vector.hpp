@@ -864,6 +864,11 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::clear()
 	{
+		for (sizeType i = 0; i < m_size; i++)
+		{
+			at(i).~T();
+		}
+		m_size = 0;
 		reallocateData(1);
 	}
 
