@@ -5,21 +5,25 @@
 #include "nostrautils\thread\Task.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\core\Utils.hpp"
+#include "nostrautils\dat_alg\Uninitialized.hpp"
 
 namespace NOU::NOU_THREAD
 {
 	template<typename ACCUM, typename R, typename I, typename... ARGS>
 	class TaskQueue final
 	{
+		static_assert(NOU_CORE::IsInvocableR<R, ACCUM, const R&, const R&>::value);
+
 	public:
 		using Accumulator = ACCUM;
 		using TaskType = Task<R, I, ARGS...>;
 		using ResultType = typename TaskType::ResultType;
-		using TaskId = uint64;
 
 	private:
-		NOU_DAT_ALG::FastQueue<TaskType> m_queue;
+		Accumulator m_accumulator;
+		NOU_DAT_ALG::FastQueue<Task> m_queue;
 		TaskId m_nextId;
+		NOU_DAT_ALG::Uninitialized<ResultType> m_result;
 
 	public:
 		TaskQueue();
@@ -28,9 +32,7 @@ namespace NOU::NOU_THREAD
 		TaskQueue(TaskQueue&&) = delete;
 		TaskQueue() = default; //notify thread mngr of deletion ?
 
-		TaskId pushTask(TaskType &&task);
-
-		void removeTask(TaskId);
+		void pushTask(TaskType &&task);
 
 		ResultType& getResult();
 		const ResultType& getResult() const;
@@ -43,10 +45,37 @@ namespace NOU::NOU_THREAD
 	};
 
 	template<typename ACCUM, typename R, typename I, typename... ARGS>
-	typename TaskQueue<ACCUM, R, I, ARGS...>::TaskId TaskQueue<ACCUM, R, I, ARGS...>::
-		pushTask(TaskQueue<ACCUM, R, I, ARGS...>::TaskType &&task)
+	void TaskQueue<ACCUM, R, I, ARGS...>::pushTask(TaskType &&task)
 	{
 		m_queue.pushBack(NOU_CORE::forward<TaskType>(task));
+	}
+
+	template<typename ACCUM, typename R, typename I, typename... ARGS>
+	typename TaskQueue<ACCUM, R, I, ARGS...>::ResultType& TaskQueue<ACCUM, R, I, ARGS...>::getResult()
+	{
+		//wait for queue to be finished
+		return *m_result;
+	}
+
+	template<typename ACCUM, typename R, typename I, typename... ARGS>
+	const typename TaskQueue<ACCUM, R, I, ARGS...>::ResultType& 
+		TaskQueue<ACCUM, R, I, ARGS...>::getResult() const
+	{
+		//wait for queue to be finished
+		return *m_result;
+	}
+
+	template<typename ACCUM, typename R, typename I, typename... ARGS>
+	typename TaskQueue<ACCUM, R, I, ARGS...>::ResultType& TaskQueue<ACCUM, R, I, ARGS...>::getCurrentResult()
+	{
+		return *m_result;
+	}
+
+	template<typename ACCUM, typename R, typename I, typename... ARGS>
+	const typename TaskQueue<ACCUM, R, I, ARGS...>::ResultType&
+		TaskQueue<ACCUM, R, I, ARGS...>::getCurrentResult() const
+	{
+		return *m_result;
 	}
 }
 
