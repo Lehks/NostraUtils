@@ -7,6 +7,11 @@ namespace NOU::NOU_FILE_MNGT
 		m_filename(filename)
 	{}
 
+	void IniParser::setCurrentSection(const std::string & section)
+	{
+		this->current_section = section;
+	}
+
 
 	int32 IniParser::getValueQuotationType(std::string line)
 	{
@@ -44,19 +49,19 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	void IniParser::addString(const std::string &key, const std::string &value, const char * section = INI_DEFAULT_SECTION)
+	void IniParser::addString(const std::string &key, const std::string &value, const std::string & section)
 	{
 		m_string_data.insert(std::make_pair(key, value));
 	}
 
 
-	void IniParser::addInt(const std::string &key, const int32 &value, const char * section = INI_DEFAULT_SECTION)
+	void IniParser::addInt(const std::string &key, const int32 &value, const std::string & section)
 	{
 		m_int_data.insert(std::make_pair(key, value));
 	}
 
 
-	void IniParser::addFloat(const std::string &key, const float32 &value, const char * section = INI_DEFAULT_SECTION)
+	void IniParser::addFloat(const std::string &key, const float32 &value, const std::string & section)
 	{
 		m_float_data.insert(std::make_pair(key, value));
 	}
@@ -158,7 +163,7 @@ namespace NOU::NOU_FILE_MNGT
 		std::string key;
 		int32 pos_eq;
 
-
+		
 		// Clean string
 		line = this->cleanString(line);
 
@@ -183,15 +188,15 @@ namespace NOU::NOU_FILE_MNGT
 		switch (this->getValueDataType(line_rgt))
 		{
 			case INI_TYPE_INT:
-				this->addInt(this->parseKey(line_lft), this->parseIntValue(line_rgt));
+				this->addInt(this->parseKey(line_lft), this->parseIntValue(line_rgt), current_section);
 			break;
 
 			case INI_TYPE_FLOAT:
-				this->addFloat(this->parseKey(line_lft), this->parseFloatValue(line_rgt));
+				this->addFloat(this->parseKey(line_lft), this->parseFloatValue(line_rgt), current_section);
 				break;
 
 			default:
-				this->addString(this->parseKey(line_lft), this->parseStringValue(line_rgt));
+				this->addString(this->parseKey(line_lft), this->parseStringValue(line_rgt), current_section);
 				break;
 		}
 	}
@@ -210,6 +215,9 @@ namespace NOU::NOU_FILE_MNGT
 			return false;
 		}
 
+		// Set the current section as default
+		this->setCurrentSection(INI_DEFAULT_SECTION);
+
 		// Parse file content line by line
 		while (std::getline(inifile, line))
 		{
@@ -222,7 +230,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	std::string IniParser::getString(const char *key, const char * section = INI_DEFAULT_SECTION) const
+	std::string IniParser::getString(const char *key, const std::string & section) const
 	{
 		std::unordered_map<std::string, std::string>::const_iterator i = m_string_data.find(key);
 
@@ -234,7 +242,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	int32 IniParser::getInt(const char *key, const char * section = INI_DEFAULT_SECTION) const
+	int32 IniParser::getInt(const char *key, const std::string & section) const
 	{
 		std::unordered_map<std::string, int32>::const_iterator i = m_int_data.find(key);
 
@@ -246,7 +254,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	float32 IniParser::getFloat(const char *key, const char * section = INI_DEFAULT_SECTION) const
+	float32 IniParser::getFloat(const char *key, const std::string & section) const
 	{
 		std::unordered_map<std::string, float32>::const_iterator i = m_float_data.find(key);
 
@@ -258,25 +266,25 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean IniParser::keyExists(const char * key, const char * section = INI_DEFAULT_SECTION) const
+	boolean IniParser::keyExists(const char * key, const std::string & section) const
 	{
 		return (this->keyExistsString(key) || this->keyExistsInt(key) || this->keyExistsFloat(key));
 	}
 
 
-	boolean IniParser::keyExistsString(const char * key, const char * section = INI_DEFAULT_SECTION) const
+	boolean IniParser::keyExistsString(const char * key, const std::string & section) const
 	{
 		return (m_string_data.count(key) > 0);
 	}
 
 
-	boolean IniParser::keyExistsInt(const char * key, const char * section = INI_DEFAULT_SECTION) const
+	boolean IniParser::keyExistsInt(const char * key, const std::string & section) const
 	{
 		return (m_int_data.count(key) > 0);
 	}
 
 
-	boolean IniParser::keyExistsFloat(const char * key, const char * section = INI_DEFAULT_SECTION) const
+	boolean IniParser::keyExistsFloat(const char * key, const std::string & section) const
 	{
 		return (m_float_data.count(key) > 0);
 	}
