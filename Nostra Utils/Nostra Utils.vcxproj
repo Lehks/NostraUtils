@@ -324,6 +324,7 @@
     <ClInclude Include="src\header\nostrautils\thread\AsyncTaskResult.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Lock.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Mutex.hpp" />
+    <ClInclude Include="src\header\nostrautils\thread\Protection.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Task.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\TaskQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\ThreadManager.hpp" />
