@@ -945,7 +945,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)			
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)
 	{
 		String<CHAR_TYPE> str;
 
@@ -958,6 +958,8 @@ namespace NOU::NOU_DAT_ALG
 
 		return str;
 	}
+
+	/// ---------------------------------  DONT LOOK AT IT	-------------------------------
 	template<typename CHAR_TYPE>
 	template<typename IT>
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)	
