@@ -768,7 +768,7 @@ namespace NOU::NOU_DAT_ALG
 		const StringView &str1)
 	{
 		if (str0.rawStr() == str1.rawStr()) //the underlying strings are the same objects (since the ptr's are the same)
-			return CompareResult::EQUAL;
+			return 0;
 
 		//the size of the smaller string (stored to avoid recalculating this value each iteration)
 		sizeType smallerSize = NOU_CORE::min(str0.size(), str1.size());
@@ -777,7 +777,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			CompareResult charCompareResult = genericComparator<CharType>(str0[i], str1[i]);
 
-			if (charCompareResult != CompareResult::EQUAL)
+			if (charCompareResult != 0)
 				return charCompareResult;
 		}
 
@@ -1063,7 +1063,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	constexpr boolean StringView<CHAR_TYPE>::operator == (const StringView &str) const
 	{
-		return compareTo(str) == CompareResult::EQUAL;
+		return compareTo(str) == 0;
 	}
 
 	template<typename CHAR_TYPE>
@@ -1075,29 +1075,25 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	constexpr boolean StringView<CHAR_TYPE>::operator > (const StringView &str) const
 	{
-		return compareTo(str) == CompareResult::BIGGER;
+		return compareTo(str) > 0;
 	}
 
 	template<typename CHAR_TYPE>
 	constexpr boolean StringView<CHAR_TYPE>::operator < (const StringView &str) const
 	{
-		return compareTo(str) == CompareResult::SMALLER;
+		return compareTo(str) < 0;
 	}
 
 	template<typename CHAR_TYPE>
 	constexpr boolean StringView<CHAR_TYPE>::operator >= (const StringView &str) const
 	{
-		CompareResult result = compareTo(str);
-
-		return result == CompareResult::EQUAL || result == CompareResult::BIGGER;
+		return compareTo(str) >= 0;
 	}
 
 	template<typename CHAR_TYPE>
 	constexpr boolean StringView<CHAR_TYPE>::operator <= (const StringView &str) const
 	{
-		CompareResult result = compareTo(str);
-
-		return result == CompareResult::EQUAL || result == CompareResult::SMALLER;
+		return compareTo(str) <= 0;
 	}
 
 	template<typename CHAR_TYPE>
