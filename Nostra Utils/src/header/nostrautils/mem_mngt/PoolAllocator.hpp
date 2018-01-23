@@ -41,6 +41,8 @@ namespace NOU::NOU_MEM_MNGT
 		PoolAllocator& operator=(const PoolAllocator& other)	= delete; //Copy Assignment
 		PoolAllocator& operator=(const PoolAllocator&& other)	= delete; //Move Assignment
 
+		void newPool(sizeType size = POOL_ALLOCATOR_DEFAULT_SIZE);
+
 		~PoolAllocator();
 
 		template <typename... arguments>
@@ -54,16 +56,7 @@ namespace NOU::NOU_MEM_MNGT
 		m_size(size),
 		m_blocks(BLOCK_BUFFER_DEFAULT_SIZE, allocator)
 	{
-		PoolBlock<T>* m_data = new PoolBlock<T>[size];
-		m_head = m_data;
-
-		for (sizeType i = 0; i < m_size - 1; i++)
-		{
-			m_data[i].nextPoolBlock = NOU::NOU_MEM_MNGT::addressof(m_data[i + 1]);
-		}
-		m_data[m_size - 1].nextPoolBlock = nullptr;
-
-		m_blocks.pushBack(m_data);
+		newPool(size);
 	}
 
 	template <typename T>
@@ -79,9 +72,34 @@ namespace NOU::NOU_MEM_MNGT
 	}
 
 	template <typename T>
+	void PoolAllocator<T>::newPool(sizeType size)
+	{
+		PoolBlock<T>* m_data = new PoolBlock<T>[size];
+		m_head = m_data;
+
+		for (sizeType i = 0; i < m_size - 1; i++)
+		{
+			m_data[i].nextPoolBlock = NOU::NOU_MEM_MNGT::addressof(m_data[i + 1]);
+		}
+		m_data[m_size - 1].nextPoolBlock = nullptr;
+
+		m_blocks.pushBack(m_data);
+	}
+
+	template <typename T>
 	template <typename... arguments>
 	T* PoolAllocator<T>::allocate(arguments&&... args)
 	{	
+
+		if (m_blocks.size() + 1 > POOL_ALLOCATOR_DEFAULT_SIZE)
+		{
+			newPool();
+			PoolAllocator<T>::m_head = m_blocks.at(m_blocks.size() - 1);
+			m_blocks.m_data = PoolAllocator<T>::m_head;
+
+			std::cout << "new pool" << std::endl;
+		}
+
 		if (m_head == nullptr)
 		{
 			return nullptr;
