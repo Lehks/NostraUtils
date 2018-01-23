@@ -14,24 +14,30 @@ namespace NOU::NOU_DAT_ALG
 	{
 	public:
 		using PriorityTypePart = NOU::uint32;
+
 		using PriorityType = NOU::uint64;
 
 	private:
-		boolean										isMinHeap;
+		boolean													m_isMinHeap;
 
 		Vector<NOU::NOU_DAT_ALG::Pair<T, PriorityType>>			m_data;
 		
-		PriorityTypePart m_nextPriorityCounter;
+		PriorityTypePart										m_nextPriorityCounter;
+
 
 		PriorityTypePart getNextPriorityCounter();
+
 		PriorityType makePriority(PriorityTypePart rawPriority);
+
 		PriorityTypePart getPriority(PriorityType priority) const;
 
 		void checkForLaw(sizeType i = m_data.size());
 
 	public:
 		BinaryHeap(boolean isMinHeap = true, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance());
+
 		BinaryHeap(const BinaryHeap<T> &other);
+
 		BinaryHeap(BinaryHeap<T> && otehr);
 
 		void enqueue(const T& data, PriorityTypePart priority);
@@ -68,11 +74,11 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void BinaryHeap<T>::checkForLaw(sizeType i)
 	{
-		if (isMinHeap)
+		if (m_isMinHeap)
 		{
 			while (1 > 0)
 			{
-				sizeType p = static_cast<int>(i - 1) / 2;
+				sizeType p = static_cast<sizeType>(i - 1) / 2;
 
 				if (getPriority(m_data[i].dataTwo) < getPriority(m_data[p].dataTwo))
 				{
@@ -88,7 +94,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			while (1 > 0)
 			{
-				sizeType p = static_cast<int>(i - 1) / 2;
+				sizeType p = static_cast<sizeType>(i - 1) / 2;
 
 				if (getPriority(m_data[i].dataTwo) > getPriority(m_data[p].dataTwo))
 				{
@@ -104,21 +110,21 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename T>
 	BinaryHeap<T>::BinaryHeap(boolean isMinHeap, NOU::NOU_MEM_MNGT::AllocationCallback<T>& allocator) :
-		isMinHeap(isMinHeap),
+		m_isMinHeap(isMinHeap),
 		m_data(0, allocator),
 		m_nextPriorityCounter(-1) //counter still starts at 0
 	{}
 
 	template<typename T>
 	BinaryHeap<T>::BinaryHeap(const BinaryHeap<T> &other) :
-		isMinHeap(other.isMinHeap),
+		m_isMinHeap(other.m_isMinHeap),
 		m_data(other.m_data),
 		m_nextPriorityCounter(other.m_nextPriorityCounter)
 	{}
 
 	template<typename T>
 	BinaryHeap<T>::BinaryHeap(BinaryHeap &&other) :
-		isMinHeap(other.isMinHeap),
+		m_isMinHeap(other.m_isMinHeap),
 		m_data(other.m_data),
 		m_nextPriorityCounter(other.m_nextPriorityCounter)
 	{}
@@ -141,7 +147,7 @@ namespace NOU::NOU_DAT_ALG
 
 		sizeType i = m_data.size() - 1;
 
-		if (isMinHeap)
+		if (m_isMinHeap)
 		{
 			while (1 < n / 2 - 2)
 			{
@@ -216,4 +222,4 @@ namespace NOU::NOU_DAT_ALG
 
 
 
-#endif
+#endif 
