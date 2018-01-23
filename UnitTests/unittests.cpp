@@ -317,63 +317,60 @@ namespace UnitTests
 			Assert::IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>,
 				decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(NOU::NOU_DAT_ALG::CompareResult::BIGGER) ==
-				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(NOU::NOU_DAT_ALG::CompareResult::EQUAL) ==
-				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(NOU::NOU_DAT_ALG::CompareResult::SMALLER) ==
-				NOU::NOU_DAT_ALG::CompareResult::BIGGER);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(-1) == 1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(0) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::invert(1) == -1);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(1, 5) ==
-				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(1, 5) < 0);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 5) ==
-				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 5) == 0);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 1) ==
-				NOU::NOU_DAT_ALG::CompareResult::BIGGER);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 1) > 0);
 
 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(1, 5) < 0);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(5, 5) == 0);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(5, 1) > 0);
 
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'a') ==
-				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'A') ==
-				NOU::NOU_DAT_ALG::CompareResult::EQUAL);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'b') ==
-				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'a') == 0);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') ==
-				NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'A') == 0);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'b') < 0);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') < 0);
 		
 
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
-				static_cast<NOU::char16>('a')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+				static_cast<NOU::char16>('a')) == 0);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
-				static_cast<NOU::char16>('A')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+				static_cast<NOU::char16>('A')) == 0);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
-				static_cast<NOU::char16>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+				static_cast<NOU::char16>('b')) < 0);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
-				static_cast<NOU::char16>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+				static_cast<NOU::char16>('b')) < 0);
 
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
-				static_cast<NOU::char32>('a')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+				static_cast<NOU::char32>('a')) == 0);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
-				static_cast<NOU::char32>('A')) == NOU::NOU_DAT_ALG::CompareResult::EQUAL);
+				static_cast<NOU::char32>('A')) == 0);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
-				static_cast<NOU::char32>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+				static_cast<NOU::char32>('b')) < 0);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
-				static_cast<NOU::char32>('b')) == NOU::NOU_DAT_ALG::CompareResult::SMALLER);
+				static_cast<NOU::char32>('b')) < 0);
 		}
 
 		TEST_METHOD(UniquePtr)
@@ -699,12 +696,12 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.endsWith("rld!")>::value);
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.endsWith("World")>::value);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.compareTo("Abc")
-				== NOU::NOU_DAT_ALG::CompareResult::BIGGER>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.compareTo("Hello World!")
-				== NOU::NOU_DAT_ALG::CompareResult::EQUAL>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.compareTo("Xyz")
-				== NOU::NOU_DAT_ALG::CompareResult::SMALLER>::value);
+			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Abc")
+				> 0)>::value);
+			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Hello World!")
+				== 0)>::value);
+			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Xyz")
+				< 0)>::value);
 
 			constexpr NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
 
