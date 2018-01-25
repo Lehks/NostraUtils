@@ -175,7 +175,7 @@ namespace NOU::NOU_MEM_MNGT
 		*/
 		SmartPtrTempl(T *ptr);
 
-		virtual ~SmartPtrTmpl() = default;
+		virtual ~SmartPtrTempl() = default;
 
 		/**
 		\return The raw pointer.
