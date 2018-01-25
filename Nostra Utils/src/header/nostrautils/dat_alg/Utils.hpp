@@ -38,9 +38,21 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void swap(T *dataone, T *datatwo) 
 	{
-		T tempdata = NOU_CORE::move(*dataone);
-		*dataone = NOU_CORE::move(*datatwo);
-		*datatwo = NOU_CORE::move(tempdata);
+		struct alignas (T)
+		{
+			byte data[sizeof(T)];
+		} tmpdata;
+
+		T *tmp = (T*)tmpdata.data;
+
+		new (tmpdata.data) T(NOU_CORE::move(*dataone));
+		dataone->~T();
+
+		new (dataone) T(NOU_CORE::move(*datatwo));
+		datatwo->~T();
+
+		new (datatwo) T(NOU_CORE::move(*tmp));
+		tmp->~T();
 	}
 
 	template<typename CHAR_TYPE>

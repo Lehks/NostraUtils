@@ -246,12 +246,17 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		void remove(sizeType index);
 
+		template<typename... ARGS>
+		void emplace(sizeType index, ARGS&&... args);
+
 		/**
 		\param data The data to insert.
 		\param index The index at wich the data gets inserted.
 
 		\brief Inserts an element at a given index.
 		*/
+		void insert(T &&data, sizeType index);
+
 		void insert(const T &data, sizeType index);
 		/**
 		\brief Sorts the Vector.
@@ -265,7 +270,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Creates an object with the given parametas and appends it at the end of the vector.
 		*/
 		template <class... Args>
-		void emplace_back(Args&&... args);
+		void emplaceBack(Args&&... args);
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -677,11 +682,11 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename T>
 	template<typename ...Args>
-	void Vector<T>::emplace_back(Args&& ...args)
+	void Vector<T>::emplaceBack(Args&& ...args)
 	{
 		expandIfNeeded(1);
 
-		new (m_data + m_size) T(NOU::NOU_CORE::forward<Args>(args)...);
+	//	new (m_data + m_size) T(NOU_CORE::forward<Args>(args)...);
 
 		m_size++;
 	}
@@ -735,21 +740,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::pushBack(const T &data)
 	{
-		expandIfNeeded(1);
-
-		new (m_data + m_size) T(data); //initialize next object
-
-		m_size++;
+		emplaceBack(data);
 	}
 
 	template<typename T>
 	void Vector<T>::pushBack(T &&data)
 	{
-		expandIfNeeded(1);
-
-		new (m_data + m_size) T(data); //initialize next object
-
-		m_size++;
+		emplaceBack(NOU_CORE::move(data));
 	}
 
 	template<typename T>
@@ -824,7 +821,8 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	void Vector<T>::insert(const T &data, sizeType index)
+	template<typename... ARGS>
+	void Vector<T>::emplace(sizeType index, ARGS&&... args)
 	{
 		expandIfNeeded(1);
 
@@ -833,13 +831,25 @@ namespace NOU::NOU_DAT_ALG
 			if (i != m_size)
 				at(i).~T(); //delete old element (if not outside array bounds)
 
-			new (m_data + i) T(m_data[i - 1]); //shift element to the right using move constructor
+			new (m_data + i) T(NOU_CORE::move(m_data[i - 1])); //shift element to the right using move constructor
 		}
 
 		m_data[index].~T();
-		new (m_data + index) T(data); //copy new element into the vector
+		new (m_data + index) T(NOU_CORE::move(args)...); //move new element into the vector
 
 		m_size++;
+	}
+
+	template<typename T>
+	void Vector<T>::insert(T &&data, sizeType index)
+	{
+		emplace(index, data);
+	}
+
+	template<typename T>
+	void Vector<T>::insert(const T &data, sizeType index)
+	{
+		emplace(index, data);
 	}
 
 	template<typename T>
