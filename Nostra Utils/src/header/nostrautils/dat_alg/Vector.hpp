@@ -7,8 +7,11 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
 
+#include <new>
+
 /** \file Vector.hpp
 \author  Dennis Franz
+\author  Lukas Reichmann
 \since   0.0.1
 \version 0.0.1
 \brief   This file provides a Vector implementation.
@@ -41,6 +44,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>, public RandomAccess<T>
 	{
+
 	private:
 		NOU::NOU_MEM_MNGT::AllocationCallback<T>	&m_allocator;
 
@@ -118,7 +122,7 @@ namespace NOU::NOU_DAT_ALG
 		Note that the Vectors memory isnt alloced with the new keyword therefore the memory gets not dealocated with the delete keyword. 
 		For more deatils look at the implication.
 		*/
-		~Vector<T>();
+		virtual ~Vector<T>();
 
 		/**
 		\return      Returns a boolean.
@@ -260,9 +264,28 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		void sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp);
 		/**
+		\brief returns a pointer reference to the current data.
+		*/
+		T*& data();
+		/**
+		\brief returns a const pointer reference to the current data.
+		*/
+		const T*& data() const;
+		/**
+		\brief Clears the Vector.
+		*/
+		void clear();
+		/**
 		\brief Sets the size of the Vector.
 		*/
 		void setSize(sizeType size);
+		/**
+		\param replacement The data to insert.
+		\param index The index at wich the data gets replaced.
+
+		\brief replaces the data at the index with the passed data.
+		*/
+		Vector& replace(const T& replacement, sizeType index);
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -833,9 +856,39 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	const T*& Vector<T>::data() const
+	{
+		return m_data;
+	}
+
+	template<typename T>
+	void Vector<T>::clear()
+	{
+		for (sizeType i = 0; i < m_size; i++)
+		{
+			at(i).~T();
+		}
+		m_size = 0;
+		reallocateData(1);
+	}
+
+	template<typename T>
 	void Vector<T>::setSize(sizeType size)
 	{
 		m_size = size;
+	}
+
+	template<typename T>
+	T*& Vector<T>::data()
+	{
+		return m_data;
+	}
+
+	template<typename T>
+	Vector<T>& Vector<T>::replace(const T& replacement, sizeType index)
+	{
+		at(index) = replacement;
+		return *this;
 	}
 
 	template<typename T>
