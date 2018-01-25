@@ -25,6 +25,11 @@ namespace NOU::NOU_FILE_MNGT
 
 		test_float = p.getFloat("FLOAT_A");
 		std::cout << "FLOAT_A = " << test_float << std::endl;
+
+		// Override string
+		p.setString("STRING_A", "Off ya pop!", "general");
+		test_string = p.getString("STRING_A", "general");
+		std::cout << "STRING_A = " << test_string << std::endl;
 	}
 }
 
