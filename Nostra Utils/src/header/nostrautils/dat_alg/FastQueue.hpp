@@ -27,7 +27,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief A simple implementation of a queue which can be used in O(1).
 	*/
 	template<typename T>
-	class NOU_CLASS FastQueue : public Queue<T>, public FifoQueue<T>, public RandomAccess<T>
+	class NOU_CLASS FastQueue final : public Queue<T>, public FifoQueue<T>, public RandomAccess<T>
 	{
 	public:
 		/**

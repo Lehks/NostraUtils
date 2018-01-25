@@ -291,6 +291,8 @@ namespace NOU::NOU_DAT_ALG
 		///\todo check if correct constructors are getting called.
 		constexpr StringView(const StringView &other); 
 
+		virtual ~StringView() = default;
+
 		/**
 		\param str        The substring to find.
 		\param startIndex The first index at which the method will look for a matching substring.
