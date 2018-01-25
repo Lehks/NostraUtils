@@ -40,14 +40,24 @@ int main()
 		Person* p1 = personenAllocator.allocate(18, "Peter", "Braun");
 		Person* p2 = personenAllocator.allocate(20, "Karl", "Blond");
 		Person* p3 = personenAllocator.allocate(22, "Gustav", "Rot");
+		p3->print();
+		personenAllocator.deallocate(p3);
+		Person* p4 = personenAllocator.allocate(44, "Jan", "Rot");
+		Person* p5 = personenAllocator.allocate(32, "Sabine", "Braun");
+		Person* p6 = personenAllocator.allocate(79, "Karl-Heinz", "Grau");
 
 		p1->print();
 		p2->print();
-		p3->print();
+		p4->print();
+		p5->print();
+		p6->print();
+
 
 		personenAllocator.deallocate(p1);
 		personenAllocator.deallocate(p2);
-		personenAllocator.deallocate(p3);
+		personenAllocator.deallocate(p4);
+		personenAllocator.deallocate(p5);
+		personenAllocator.deallocate(p6);
 	}
-	std::cin.get();
+	system("pause");
 }

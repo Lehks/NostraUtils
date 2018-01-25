@@ -18,6 +18,7 @@ namespace NOU::NOU_MEM_MNGT
 		~PoolBlock() {};
 	};
 
+
 	template <typename T>
 	class NOU_CLASS PoolAllocator
 	{
@@ -25,6 +26,8 @@ namespace NOU::NOU_MEM_MNGT
 
 		static constexpr sizeType POOL_ALLOCATOR_DEFAULT_SIZE = 1024;
 		static constexpr sizeType BLOCK_BUFFER_DEFAULT_SIZE = 5;
+
+		static sizeType m_usedSize;
 
 		NOU_DAT_ALG::Vector<PoolBlock<T>*> m_blocks;
 
@@ -50,6 +53,9 @@ namespace NOU::NOU_MEM_MNGT
 
 		void deallocate(T* data);
 	};
+
+	template <typename T>
+	sizeType PoolAllocator<T>::m_usedSize = 0;
 
 	template <typename T>
 	PoolAllocator<T>::PoolAllocator(sizeType size, AllocationCallback<PoolBlock<T>*> &allocator) :
@@ -90,13 +96,12 @@ namespace NOU::NOU_MEM_MNGT
 	template <typename... arguments>
 	T* PoolAllocator<T>::allocate(arguments&&... args)
 	{	
-
-		if (m_blocks.size() + 1 > POOL_ALLOCATOR_DEFAULT_SIZE)
+		if (PoolAllocator<T>::m_usedSize == (m_blocks.size()) * POOL_ALLOCATOR_DEFAULT_SIZE)
 		{
+			PoolBlock<T>* temp = m_blocks.at(m_blocks.size() - 1);
 			newPool();
-			PoolAllocator<T>::m_head = m_blocks.at(m_blocks.size() - 1);
-			m_blocks.m_data = PoolAllocator<T>::m_head;
-
+			temp->nextPoolBlock = m_blocks.at(m_blocks.size() - 1);
+			m_head = temp;
 			std::cout << "new pool" << std::endl;
 		}
 
@@ -105,6 +110,7 @@ namespace NOU::NOU_MEM_MNGT
 			return nullptr;
 		}
 
+		m_usedSize++;
 		PoolBlock<T>* poolBlock = m_head;
 		m_head = m_head->nextPoolBlock;
 		T* retVal = new (NOU::NOU_MEM_MNGT::addressof(poolBlock->value))
@@ -121,6 +127,7 @@ namespace NOU::NOU_MEM_MNGT
 		PoolBlock<T>* poolBlock = reinterpret_cast<PoolBlock<T>*>(data);
 		poolBlock->nextPoolBlock = m_head;
 		m_head = poolBlock;
+		m_usedSize--;
 	}
 }
 
