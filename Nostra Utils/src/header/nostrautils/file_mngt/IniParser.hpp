@@ -183,6 +183,30 @@ namespace NOU::NOU_FILE_MNGT
 			void addFloat(const std::string &, const float32 &, const std::string & section = INI_DEFAULT_SECTION);
 
 			/**
+			\param The key to store.
+			\param The string value to store.
+
+			\brief Updates a key-value string pair if it exists, otherwise creates it.
+			*/
+			void setString(const std::string &, const std::string &, const std::string & section = INI_DEFAULT_SECTION);
+
+			/**
+			\param The key to store.
+			\param The int32 value to store.
+
+			\brief Updates a key-value integer pair if it exists, otherwise creates it.
+			*/
+			void setInt(const std::string &, const int32 &, const std::string & section = INI_DEFAULT_SECTION);
+
+			/**
+			\param The key to store.
+			\param The float32 value to store.
+
+			\brief Updates a key-value float pair if it exists, otherwise creates it.
+			*/
+			void setFloat(const std::string &, const float32 &, const std::string & section = INI_DEFAULT_SECTION);
+
+			/**
 			\param The key to look up.
 
 			\brief Returns True if the key exists. Returns False if it does not exist.

@@ -68,6 +68,39 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
+	void IniParser::setString(const std::string &key, const std::string &value, const std::string & section)
+	{
+		if (!this->keyExistsString(key.c_str(), section)) {
+			this->addString(key, value, section);
+		}
+
+		m_string_data.erase(key);
+		this->addString(key, value, section);
+	}
+
+
+	void IniParser::setInt(const std::string &key, const int32 &value, const std::string & section)
+	{
+		if (!this->keyExistsInt(key.c_str(), section)) {
+			this->addInt(key, value, section);
+		}
+
+		m_int_data.erase(key);
+		this->addInt(key, value, section);
+	}
+
+
+	void IniParser::setFloat(const std::string &key, const float32 &value, const std::string & section)
+	{
+		if (!this->keyExistsFloat(key.c_str(), section)) {
+			this->addFloat(key, value, section);
+		}
+
+		m_float_data.erase(key);
+		this->addFloat(key, value, section);
+	}
+
+
 	std::string IniParser::cleanString(std::string string)
 	{
 		int32 pos_ltrim = 0;
