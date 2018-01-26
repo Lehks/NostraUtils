@@ -19,7 +19,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		O	dataOne;
 		T	dataTwo;
-		Pair<O,T>(T dataOne, O dataTwo);
+		Pair<O,T>(const T& dataOne, const O& dataTwo);
 	};
 	/**
 	\param dataone First Type.
@@ -69,7 +69,7 @@ namespace NOU::NOU_DAT_ALG
 
 
 	template<typename O, typename T>
-	Pair<O, T>::Pair(T dataOne, O dataTwo) :
+	Pair<O, T>::Pair(const T& dataOne, const O& dataTwo) :
 		dataOne(dataOne),
 		dataTwo(dataTwo)
 	{}
