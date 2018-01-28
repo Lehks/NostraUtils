@@ -27,7 +27,13 @@ namespace NOU::NOU_MATH
 
 	float32 Vec3::dot(const Vec3 & vec)
 	{
-		// Todo
+		return m_data[0] * vec.m_data[0] + m_data[1] * vec.m_data[1] + m_data[2] * vec.m_data[2];
+	}
+
+
+	Vec3 Vec3::mult(const float32 num)
+	{
+		return Vec3(m_data[0] * num, m_data[1] * num, m_data[3] * num);
 	}
 
 
@@ -38,19 +44,32 @@ namespace NOU::NOU_MATH
 	}
 
 
-	Vec3 Vec3::operator + (const Vec3 & vek)
+	Vec3 Vec3::operator + (const Vec3 & vec)
 	{
-		return add(vek);
+		return add(vec);
 	}
 
 
-	Vec3 Vec3::operator - (const Vec3 & vek)
+	Vec3 Vec3::operator - (const Vec3 & vec)
 	{
-		return sub(vek);
+		return sub(vec);
 	}
 
-	Vec3 Vec3::operator / (const Vec3 & vek)
+
+	float32 Vec3::operator * (const Vec3 & vec)
 	{
-		return div(vek);
+		return dot(vec);
+	}
+
+
+	Vec3 Vec3::operator * (const float32 num)
+	{
+		return mult(num);
+	}
+
+
+	Vec3 Vec3::operator / (const Vec3 & vec)
+	{
+		return div(vec);
 	}
 }

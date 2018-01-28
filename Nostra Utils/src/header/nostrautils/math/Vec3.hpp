@@ -21,7 +21,7 @@ namespace NOU::NOU_MATH
 
 			Vec3 operator + (const Vec3 & vec);
 			Vec3 operator - (const Vec3 & vec);
-			Vec3 operator * (const Vec3 & vec);
+			float32 operator * (const Vec3 & vec);
 			Vec3 operator * (const float32 num);
 			Vec3 operator / (const Vec3 & vec);
 	};
