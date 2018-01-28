@@ -316,6 +316,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
+    <ClInclude Include="src\header\nostrautils\file_mngt\IniDocument.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\IniParser.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
@@ -327,6 +328,7 @@
     <ClCompile Include="src\source\nostrautils\file_mngt\IniParser.cpp" />
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
+    <ClCompile Include="src\source\nostrautils\file_mngt\IniDocument.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
