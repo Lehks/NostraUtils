@@ -53,7 +53,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			for (int j = i + 1; j < size; j++)
 			{
-				if (comp(container[i], container[j]) == NOU::NOU_DAT_ALG::CompareResult::BIGGER)
+				if (comp(container[i], container[j]) > 0)
 				{
 					swap(&container[i], &container[j]);
 				}
