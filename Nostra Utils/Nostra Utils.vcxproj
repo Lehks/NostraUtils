@@ -316,6 +316,8 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
+    <ClInclude Include="src\header\nostrautils\math\Matrix3.hpp" />
+    <ClInclude Include="src\header\nostrautils\math\Vec3.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />
@@ -323,9 +325,10 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\header\nostrautils\math\Vec.cpp" />
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
+    <ClCompile Include="src\source\nostrautils\math\Matrix3.cpp" />
+    <ClCompile Include="src\source\nostrautils\math\Vec3.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
