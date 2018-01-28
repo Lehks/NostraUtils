@@ -16,6 +16,7 @@
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
+#include "nostrautils\mem_mngt\PoolAllocator.hpp"
 
 #include "DebugClass.hpp"
 
@@ -915,6 +916,33 @@ namespace UnitTests
 			}
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(PoolAllocator)
+		{
+			NOU::NOU_MEM_MNGT::PoolAllocator<NOU::DebugClass> pa;
+
+			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass*> dbgCls;
+
+			const NOU::sizeType ALLOC_SIZE = 500;
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				dbgCls.push(pa.allocate());
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == ALLOC_SIZE);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				pa.deallocate(dbgCls.pop());
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 		}
 	};
 }

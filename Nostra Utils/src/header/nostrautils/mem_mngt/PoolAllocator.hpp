@@ -3,6 +3,7 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\mem_mngt\Utils.hpp"
 
@@ -27,7 +28,7 @@ namespace NOU::NOU_MEM_MNGT
 		static constexpr sizeType POOL_ALLOCATOR_DEFAULT_SIZE = 1024;
 		static constexpr sizeType BLOCK_BUFFER_DEFAULT_SIZE = 5;
 
-		static sizeType m_usedSize;
+		sizeType m_usedSize = 0;
 
 		NOU_DAT_ALG::Vector<PoolBlock<T>*> m_blocks;
 
@@ -55,9 +56,6 @@ namespace NOU::NOU_MEM_MNGT
 	};
 
 	template <typename T>
-	sizeType PoolAllocator<T>::m_usedSize = 0;
-
-	template <typename T>
 	PoolAllocator<T>::PoolAllocator(sizeType size, AllocationCallback<PoolBlock<T>*> &allocator) :
 		m_size(size),
 		m_blocks(BLOCK_BUFFER_DEFAULT_SIZE, allocator)
@@ -71,9 +69,8 @@ namespace NOU::NOU_MEM_MNGT
 		for (PoolBlock<T>* block : m_blocks)
 		{
 			delete[] block;
-			std::cout << "block deleted" << std::endl; ///\Todo delete this line
 		}
-
+		
 		m_head = nullptr;
 	}
 
@@ -102,7 +99,6 @@ namespace NOU::NOU_MEM_MNGT
 			newPool();
 			temp->nextPoolBlock = m_blocks.at(m_blocks.size() - 1);
 			m_head = temp;
-			std::cout << "new pool" << std::endl;
 		}
 
 		if (m_head == nullptr)
@@ -116,13 +112,33 @@ namespace NOU::NOU_MEM_MNGT
 		T* retVal = new (NOU::NOU_MEM_MNGT::addressof(poolBlock->value))
 			T(NOU::NOU_CORE::forward<arguments>(args)...);
 
-		return retVal;	
+		return retVal;
 	}
 
 	template <typename T>
 	void PoolAllocator<T>::deallocate(T* data)
 	{
-		///\TODO what if data is not part of m_data?
+		if (data == nullptr)
+			return;
+
+#ifdef NOU_DEBUG
+		boolean found = false;
+
+		for (sizeType i = 0; i < m_blocks.size() && !found; i++)
+		{
+			if (static_cast<void*>(data) >= static_cast<void*>(m_blocks[i]) && 
+				static_cast<void*>(data) <= static_cast<void*>(m_blocks[i] + POOL_ALLOCATOR_DEFAULT_SIZE))
+				found = true;
+		}
+
+		if (!found)
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_DEALLOCATION, "A chunk of data passed to a Pool"
+				" Allocator was not allocated using that allocator.");
+		
+			return;
+		}
+#endif
 		data->~T();
 		PoolBlock<T>* poolBlock = reinterpret_cast<PoolBlock<T>*>(data);
 		poolBlock->nextPoolBlock = m_head;
