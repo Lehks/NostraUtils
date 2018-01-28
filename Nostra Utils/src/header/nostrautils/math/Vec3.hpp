@@ -17,13 +17,11 @@ namespace NOU::NOU_MATH
 			float32 dot(const Vec3 & vec);
 			Vec3 cross(const Vec3 & vec);
 			Vec3 mult(const float32);
-		    Vec3 div(const Vec3 & vec);
 
 			Vec3 operator + (const Vec3 & vec);
 			Vec3 operator - (const Vec3 & vec);
 			float32 operator * (const Vec3 & vec);
 			Vec3 operator * (const float32 num);
-			Vec3 operator / (const Vec3 & vec);
 	};
 }
 
