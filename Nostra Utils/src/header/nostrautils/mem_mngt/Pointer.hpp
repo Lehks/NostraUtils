@@ -4,6 +4,7 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\Utils.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
+#include "nostrautils\core\Meta.hpp"
 
 namespace NOU::NOU_MEM_MNGT
 {
@@ -67,6 +68,8 @@ namespace NOU::NOU_MEM_MNGT
 		*/
 		AllocationCallbackDeleter(ALLOCATOR &allocator);
 
+		virtual ~AllocationCallbackDeleter() = default;
+
 		/**
 		\return m_allocator.
 
@@ -112,6 +115,8 @@ namespace NOU::NOU_MEM_MNGT
 		\brief Constructs a new AllocationCallbackRefDeleter.
 		*/
 		AllocationCallbackRefDeleter(NOU_MEM_MNGT::AllocationCallback<T> &allocator);
+
+		virtual ~AllocationCallbackRefDeleter() = default;
 
 		/**
 		\return m_allocator.
@@ -169,6 +174,8 @@ namespace NOU::NOU_MEM_MNGT
 		\brief Constructs a new SmartPtrTempl and initializes it's internal pointer with the passed parameter.
 		*/
 		SmartPtrTempl(T *ptr);
+
+		virtual ~SmartPtrTmpl() = default;
 
 		/**
 		\return The raw pointer.
@@ -313,6 +320,8 @@ namespace NOU::NOU_MEM_MNGT
 		*/
 		ManagedPtrTemplate(DELETER deleter);
 
+		virtual ~ManagedPtrTemplate() = default;
+
 		/**
 		\return The deleter.
 
@@ -357,7 +366,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\brief When called, deletes the data that this pointer points to.
 		*/
-		~UniquePtr();
+		virtual ~UniquePtr();
 
 		/**
 		\param other The pointer to move the data from.
