@@ -115,6 +115,7 @@ namespace NOU::NOU_FILE_MNGT
 			*/
 			void decSection(const std::string &);
 
+
 		public:
 			INIFile(const std::string);
 
@@ -126,7 +127,7 @@ namespace NOU::NOU_FILE_MNGT
 			/**
 			\brief Writes the INI file
 			*/
-			boolean write();
+			boolean write(const std::string & = "");
 
 			/**
 			\param The key to remove

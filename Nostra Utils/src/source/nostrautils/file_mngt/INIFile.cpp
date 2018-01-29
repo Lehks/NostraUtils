@@ -5,9 +5,11 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	INIFile::INIFile(const std::string filename) :
-		m_filename(filename)
-	{}
+	INIFile::INIFile(const std::string filename)
+	{
+		m_filename = filename;
+		m_data_sections.insert(std::make_pair(INI_DEFAULT_SECTION, 0));
+	}
 
 
 	void INIFile::incSection(const std::string & section)
@@ -219,20 +221,24 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean INIFile::write()
+	boolean INIFile::write(const std::string & filename)
 	{
 		std::unordered_map<std::string, std::string>::const_iterator istr;
 		std::unordered_map<std::string, int32>::const_iterator iint;
 		std::unordered_map<std::string, float32>::const_iterator ifloat;
 		std::ofstream inifile;
-		std::string section;
 		std::string key_section;
 		int32 pos_dot;
 		int32 pos_sec;
 		
 		// Open file stream
-		inifile.open(this->m_filename);
-
+		if (!filename.empty()) {
+			inifile.open(filename);
+		}
+		else {
+			inifile.open(this->m_filename);
+		}
+		
 		if (!inifile) {
 			return false;
 		}
@@ -242,7 +248,7 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			// Write section
 			if (isec->first != INI_DEFAULT_SECTION && isec->second > 0) {
-				inifile << "[" << section << "]" << std::endl;
+				inifile << "[" << isec->first << "]" << std::endl;
 			}
 
 			// Save string size for later
@@ -257,7 +263,7 @@ namespace NOU::NOU_FILE_MNGT
 				key_section = istr->first.substr(0, pos_dot);
 				if (key_section != isec->first) continue;
 
-				inifile << istr->first.substr(pos_sec) << " = ";
+				inifile << istr->first.substr(pos_sec + 1) << " = ";
 				inifile << "\"" << istr->second << "\"" << std::endl;
 			}
 
@@ -270,7 +276,7 @@ namespace NOU::NOU_FILE_MNGT
 				key_section = iint->first.substr(0, pos_dot);
 				if (key_section != isec->first) continue;
 
-				inifile << iint->first.substr(pos_sec) << " = ";
+				inifile << iint->first.substr(pos_sec + 1) << " = ";
 				inifile << iint->second << std::endl;
 			}
 
@@ -283,7 +289,7 @@ namespace NOU::NOU_FILE_MNGT
 				key_section = ifloat->first.substr(0, pos_dot);
 				if (key_section != isec->first) continue;
 
-				inifile << ifloat->first.substr(pos_sec) << " = ";
+				inifile << ifloat->first.substr(pos_sec + 1) << " = ";
 				inifile << ifloat->second << std::endl;
 			}
 		}
