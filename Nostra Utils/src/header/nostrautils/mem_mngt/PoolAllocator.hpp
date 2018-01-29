@@ -19,18 +19,21 @@ namespace NOU::NOU_MEM_MNGT
 {
 
 	/**
-	\tparam T The type of the PoolBlock
-
-	\param value The value of the PoolBlock.
-
-	\param nextPoolBlock A pointer to the next PoolBlock.
+	\tparam T The type of the elements that are stored in the PoolBlock.
 
 	\brief An union that defines the PoolBlock.
 	*/
 	template <typename T>
 	union PoolBlock
 	{
+		/**
+		brief The value of the PoolBlock.
+		*/
 		T value;
+
+		/**
+		\brief A pointer to the next PoolBlock.
+		*/
 		PoolBlock<T>* nextPoolBlock;
 
 		PoolBlock() {};
@@ -38,7 +41,7 @@ namespace NOU::NOU_MEM_MNGT
 	};
 
 	/**
-	\tparam T The type of the PoolAllocator.
+	\tparam T The type of the stored elements.
 
 	\brief A class that defines the PoolAllocator.
 	*/
