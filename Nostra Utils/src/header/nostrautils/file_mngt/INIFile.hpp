@@ -117,15 +117,82 @@ namespace NOU::NOU_FILE_MNGT
 
 		public:
 			INIFile(const std::string);
+
+			/**
+			\brief Parses the INI file
+			*/
 			boolean read();
+
+			/**
+			\brief Writes the INI file
+			*/
 			boolean write();
+
+			/**
+			\param The key to remove
+			\param The target section (Optional)
+
+			\brief Removes a key-value pair from the ini
+			*/
 			void remove(const std::string &, const std::string & = INI_DEFAULT_SECTION);
+
+			/**
+			\param The key to set
+			\param The string to set
+			\param The section to set
+
+			\brief Sets a key-value string pair, overriding any existing key.
+			*/
 			void setString(const std::string &, const std::string &, const std::string & = INI_DEFAULT_SECTION);
+
+			/**
+			\param The key to set
+			\param The string to set
+			\param The section to set
+
+			\brief Sets a key-value integer pair, overriding any existing key.
+			*/
 			void setInt(const std::string &, int32, const std::string & = INI_DEFAULT_SECTION);
+
+			/**
+			\param The key to set
+			\param The string to set
+			\param The section to set
+
+			\brief Sets a key-value float pair, overriding any existing key.
+			*/
 			void setFloat(const std::string &, float32, const std::string & = INI_DEFAULT_SECTION);
+
+			/**
+			\param The key to search
+			\param The section to search in
+
+			\brief Retrieves a value of a given key as string.
+			*/
 			std::string getString(const std::string &, const std::string & = INI_DEFAULT_SECTION) const;
+
+			/**
+			\param The key to search
+			\param The section to search in
+
+			\brief Retrieves a value of a given key as integer.
+			*/
 			int32 getInt(const std::string &, const std::string & = INI_DEFAULT_SECTION) const;
+
+			/**
+			\param The key to search
+			\param The section to search in
+
+			\brief Retrieves a value of a given key as float.
+			*/
 			float32 getFloat(const std::string &, const std::string & = INI_DEFAULT_SECTION) const;
+
+			/**
+			\param The key to search
+			\param The section to search in
+
+			\brief Checks if a given key exists in the given section.
+			*/
 			boolean keyExists(const std::string &, const std::string & = INI_DEFAULT_SECTION) const;
 	};
 }
