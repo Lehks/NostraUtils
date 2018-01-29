@@ -35,6 +35,11 @@ namespace NOU::NOU_FILE_MNGT
 			std::unordered_map<std::string, float32> m_data_float;
 
 			/**
+			\brief Holds the parsed sections and the amount of keys within that section
+			*/
+			std::unordered_map<std::string, int32> m_data_sections;
+
+			/**
 			\brief The target file name to read from/write to.
 			*/
 			std::string m_filename;
@@ -95,6 +100,20 @@ namespace NOU::NOU_FILE_MNGT
 				   Returns 2 if single quotes were detected.
 			*/
 			int32 parseValueQuote(const std::string &) const;
+
+			/**
+			\param The section name.
+
+			\brief Registers a section in m_data_sections, and increases the counter by 1.
+			*/
+			void incSection(const std::string &);
+
+			/**
+			\param The section name.
+
+			\brief Decreases the value counter of a section by 1.
+			*/
+			void decSection(const std::string &);
 
 		public:
 			INIFile(const std::string);

@@ -10,6 +10,35 @@ namespace NOU::NOU_FILE_MNGT
 	{}
 
 
+	void INIFile::incSection(const std::string & section)
+	{
+		if (m_data_sections.count(section) == 0) {
+			m_data_sections.insert(std::make_pair(section, 1));
+			return;
+		}
+
+		std::unordered_map<std::string, int32>::const_iterator i = m_data_sections.find(section);
+		int32 value = i->second + 1;
+
+		m_data_sections.erase(section);
+		m_data_sections.insert(std::make_pair(section, value));
+	}
+
+
+	void INIFile::decSection(const std::string & section)
+	{
+		if (m_data_sections.count(section) == 0) {
+			return;
+		}
+
+		std::unordered_map<std::string, int32>::const_iterator i = m_data_sections.find(section);
+		int32 value = i->second - 1;
+
+		m_data_sections.erase(section);
+		m_data_sections.insert(std::make_pair(section, value));
+	}
+
+
 	std::string INIFile::parseKey(const std::string &line) const
 	{
 		return this->parseCleanString(line);
@@ -192,9 +221,15 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean INIFile::write()
 	{
+		std::unordered_map<std::string, std::string>::const_iterator istr;
+		std::unordered_map<std::string, int32>::const_iterator iint;
+		std::unordered_map<std::string, float32>::const_iterator ifloat;
 		std::ofstream inifile;
 		std::string section;
-
+		std::string key_section;
+		int32 pos_dot;
+		int32 pos_sec;
+		
 		// Open file stream
 		inifile.open(this->m_filename);
 
@@ -202,11 +237,62 @@ namespace NOU::NOU_FILE_MNGT
 			return false;
 		}
 
-		// Set the default section
-		section = INI_DEFAULT_SECTION;
+		// Loop through all the sections
+		for (auto isec = m_data_sections.begin(); isec != m_data_sections.end(); ++isec)
+		{
+			// Write section
+			if (isec->first != INI_DEFAULT_SECTION && isec->second > 0) {
+				inifile << "[" << section << "]" << std::endl;
+			}
+
+			// Save string size for later
+			pos_sec = isec->first.length();
+
+			// Write string data
+			for (istr = m_data_string.begin(); istr != m_data_string.end(); ++istr)
+			{
+				pos_dot = istr->first.find_first_of('.');
+				if (pos_dot == std::string::npos) continue;
+
+				key_section = istr->first.substr(0, pos_dot);
+				if (key_section != isec->first) continue;
+
+				inifile << istr->first.substr(pos_sec) << " = ";
+				inifile << "\"" << istr->second << "\"" << std::endl;
+			}
+
+			// Write int data
+			for (iint = m_data_integer.begin(); iint != m_data_integer.end(); ++iint)
+			{
+				pos_dot = iint->first.find_first_of('.');
+				if (pos_dot == std::string::npos) continue;
+
+				key_section = iint->first.substr(0, pos_dot);
+				if (key_section != isec->first) continue;
+
+				inifile << iint->first.substr(pos_sec) << " = ";
+				inifile << iint->second << std::endl;
+			}
+
+			// Write float data
+			for (ifloat = m_data_float.begin(); ifloat != m_data_float.end(); ++ifloat)
+			{
+				pos_dot = ifloat->first.find_first_of('.');
+				if (pos_dot == std::string::npos) continue;
+
+				key_section = ifloat->first.substr(0, pos_dot);
+				if (key_section != isec->first) continue;
+
+				inifile << ifloat->first.substr(pos_sec) << " = ";
+				inifile << ifloat->second << std::endl;
+			}
+		}
+
+		inifile.close();
 
 		return true;
 	}
+
 
 	void INIFile::remove(const std::string & key, const std::string & section)
 	{
@@ -228,6 +314,10 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		this->remove(key, section);
 
+		if (section != INI_DEFAULT_SECTION) {
+			this->incSection(section);
+		}
+		
 		m_data_string.insert(std::make_pair(section + "." + key, value));
 	}
 
