@@ -56,14 +56,14 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Parses the key from a given line.
 			*/
-			std::string parseKey(const std::string &);
+			std::string parseKey(const std::string &) const;
 
 			/**
 			\param A single line of text.
 
 			\brief Parses the value from a given line as a string.
 			*/
-			std::string parseStringValue(const std::string &);
+			std::string parseStringValue(const std::string &, const int32);
 
 			/**
 			\param A single line of text.

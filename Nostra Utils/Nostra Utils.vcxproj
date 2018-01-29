@@ -317,6 +317,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\IniDocument.hpp" />
+    <ClInclude Include="src\header\nostrautils\file_mngt\INIFile.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\IniParser.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
@@ -325,6 +326,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\source\nostrautils\file_mngt\INIFile.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\IniParser.cpp" />
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />

@@ -1,6 +1,7 @@
 #include "nostrautils\file_mngt\INIFile.hpp"
 #include <string>
 #include <fstream>
+#include <iostream>
 
 namespace NOU::NOU_FILE_MNGT
 {
@@ -9,27 +10,20 @@ namespace NOU::NOU_FILE_MNGT
 	{}
 
 
-	std::string IniParser::parseKey(const std::string &line)
+	std::string INIFile::parseKey(const std::string &line) const
 	{
-		// Clean line
-		std::string key = this->cleanString(line);
-
-		return key;
+		return this->parseCleanString(line);
 	}
 
 
-	std::string INIFile::parseStringValue(const std::string &line)
+	std::string INIFile::parseStringValue(const std::string & line, const int32 quote_type)
 	{
 		int32 pos_quote_first;
 		int32 pos_quote_last;
-		int32 quote_type;
 		char quote;
 
 		// Clean line
-		std::string value = this->cleanString(line);
-
-		// Get the quotation type
-		quote_type = this->getValueQuotationType(line);
+		std::string value = this->parseCleanString(line);
 
 		// If there are no quotes, we are done here.
 		if (quote_type == INI_QUOTE_NONE) {
@@ -123,6 +117,7 @@ namespace NOU::NOU_FILE_MNGT
 		std::string line_lft;
 		std::string line_rgt;
 		int32 pos_eq;
+		int32 quote_type;
 
 		// Get position of the first equal symbol
 		pos_eq = line.find_first_of("=");
@@ -141,7 +136,9 @@ namespace NOU::NOU_FILE_MNGT
 		line_lft = line.substr(0, pos_eq);
 		line_rgt = line.substr(pos_eq + 1);
 
-		if (this->parseValueQuote(line_rgt) == INI_QUOTE_NONE) {
+		quote_type = this->parseValueQuote(line_rgt);
+
+		if (quote_type == INI_QUOTE_NONE) {
 			if (line_rgt.find_first_of('.') == std::string::npos) {
 				// Add int
 				this->setInt(this->parseKey(line_lft), this->parseIntValue(line_rgt), section);
@@ -153,7 +150,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Add string
-		this->setString(this->parseKey(line_lft), this->parseStringValue(line_rgt), section);
+		this->setString(this->parseKey(line_lft), this->parseStringValue(line_rgt, quote_type), section);
 	}
 
 
@@ -188,6 +185,25 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		inifile.close();
+
+		return true;
+	}
+
+
+	boolean INIFile::write()
+	{
+		std::ofstream inifile;
+		std::string section;
+
+		// Open file stream
+		inifile.open(this->m_filename);
+
+		if (!inifile) {
+			return false;
+		}
+
+		// Set the default section
+		section = INI_DEFAULT_SECTION;
 
 		return true;
 	}
