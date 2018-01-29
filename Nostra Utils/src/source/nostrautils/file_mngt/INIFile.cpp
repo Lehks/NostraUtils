@@ -307,16 +307,15 @@ namespace NOU::NOU_FILE_MNGT
 		else if (m_data_float.count(search) > 0) {
 			m_data_float.erase(search);
 		}
+
+		this->decSection(section);
 	}
 
 
 	void INIFile::setString(const std::string & key, const std::string & value, const std::string & section)
 	{
 		this->remove(key, section);
-
-		if (section != INI_DEFAULT_SECTION) {
-			this->incSection(section);
-		}
+		this->incSection(section);
 		
 		m_data_string.insert(std::make_pair(section + "." + key, value));
 	}
@@ -325,6 +324,7 @@ namespace NOU::NOU_FILE_MNGT
 	void INIFile::setInt(const std::string & key, const int32 value, const std::string & section)
 	{
 		this->remove(key, section);
+		this->incSection(section);
 
 		m_data_integer.insert(std::make_pair(section + "." + key, value));
 	}
@@ -333,6 +333,7 @@ namespace NOU::NOU_FILE_MNGT
 	void INIFile::setFloat(const std::string & key, const float32 value, const std::string & section)
 	{
 		this->remove(key, section);
+		this->incSection(section);
 
 		m_data_float.insert(std::make_pair(section + "." + key, value));
 	}
