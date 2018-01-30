@@ -255,7 +255,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Inserts an element at a given index.
 		*/
-		void insert(T &&data, sizeType index);
+		void insert(T &&data, sizeType index); //sawp args
 
 		void insert(const T &data, sizeType index);
 		/**
@@ -835,7 +835,10 @@ namespace NOU::NOU_DAT_ALG
 		}
 
 		m_data[index].~T();
-		new (m_data + index) T(NOU_CORE::move(args)...); //move new element into the vector
+
+		T t(NOU_CORE::move(args)...);
+
+//		new (m_data + index) T(NOU_CORE::move(args)...); //move new element into the vector
 
 		m_size++;
 	}
