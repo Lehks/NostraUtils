@@ -4,8 +4,6 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Meta.hpp"
 
-#include <utility>
-
 /**
 \file core/Utils.hpp
 
@@ -65,7 +63,25 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr NOU_FUNC const T& max(const T &a,const T &b);
 
+	/**
+	\param arg The argument to forward.
 
+	\return The passed argument as either an l- or r-value.
+
+	\brief Forwards the argument as an l-value if it is an l-value, and as an r-value if it is an r-value.
+	*/
+	template<typename T>
+	constexpr NOU_FUNC auto forward(remove_reference_t<T>& arg);
+
+	/**
+	\param arg The argument to forward.
+
+	\return The passed argument as either an l- or r-value.
+
+	\brief Forwards the argument as an l-value if it is an l-value, and as an r-value if it is an r-value.
+	*/
+	template<typename T>
+	constexpr NOU_FUNC auto forward(remove_reference_t<T>&& arg);
 
 	template<typename T>
 	typename remove_reference<T>::type&& move(T&& t)
@@ -150,6 +166,19 @@ namespace NOU::NOU_CORE
 		else
 			return t;
 	}
+
+	template<typename T>
+	constexpr NOU_FUNC auto forward(remove_reference_t<T>& arg)
+	{
+		return std::forward<T>(arg);
+	}
+
+	template<typename T>
+	constexpr NOU_FUNC auto forward(remove_reference_t<T>&& arg)
+	{
+		return std::forward<T>(arg);
+	}
+
 }
 
 #endif
