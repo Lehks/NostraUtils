@@ -125,6 +125,17 @@ namespace NOU::NOU_DAT_ALG
 		virtual ~Vector<T>();
 
 		/**
+		\tparam ARGS The types of the arguments that will be passed to the constructor of the type T.
+		\param args The parameters that will be passed to the constructor of T.
+
+		\brief Like pushBack, this function inserts an element in the vector at the end. However, instead of 
+		       copying the element, it will construct a new element from the arguments that were passed to the
+			   function.
+		*/
+		template<typename... ARGS>
+		void emplaceBack(ARGS&&... args);
+
+		/**
 		\return      Returns a boolean.
 
 		\brief Checks wehter the Vector is empty or not.
@@ -698,12 +709,12 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	template<typename ...Args>
-	void Vector<T>::emplace_back(Args&& ...args)
+	template<typename ...ARGS>
+	void Vector<T>::emplaceBack(ARGS&& ...args)
 	{
 		expandIfNeeded(1);
 
-		new (m_data + m_size) T(NOU::NOU_CORE::forward<Args>(args)...);
+		new (m_data + m_size) T(NOU::NOU_CORE::forward<ARGS>(args)...);
 
 		m_size++;
 	}

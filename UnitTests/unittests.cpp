@@ -335,17 +335,6 @@ namespace UnitTests
 
 		}
 
-		TEST_METHOD(Swap)
-		{
-			NOU::int32 a = 1;
-			NOU::int32 b = 2;
-
-			NOU::NOU_DAT_ALG::swap(&a, &b);
-
-			Assert::AreEqual(2, a);
-			Assert::AreEqual(1, b);
-		}
-
 		TEST_METHOD(Comparator)
 		{
 			//int as dummy type

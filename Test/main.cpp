@@ -6,9 +6,20 @@
 
 #include <iostream>
 
-
+using namespace NOU;
+using namespace NOU_DAT_ALG;
 
 int main()
 {
+	class A
+	{
+	public:
+		A() = default;
+		A(const A&) = delete;
+		A(A&&) = default;
+	};
 
+	A a;
+
+	Vector<A> v;
 }
