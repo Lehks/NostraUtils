@@ -117,7 +117,7 @@ namespace NOU::NOU_FILE_MNGT
 
 
 		public:
-			INIFile(const std::string);
+			INIFile(const std::string &);
 
 			/**
 			\brief Parses the INI file

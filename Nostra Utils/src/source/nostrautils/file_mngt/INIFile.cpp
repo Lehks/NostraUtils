@@ -5,7 +5,7 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	INIFile::INIFile(const std::string filename)
+	INIFile::INIFile(const std::string & filename)
 	{
 		m_filename = filename;
 		m_data_sections.insert(std::make_pair(INI_DEFAULT_SECTION, 0));
@@ -405,7 +405,7 @@ namespace NOU::NOU_FILE_MNGT
 			return std::stof(this->getString(key, section));
 		}
 
-		// Search in integer map and cast to string if found
+		// Search in integer map and cast to float if found
 		if (m_data_integer.count(search) > 0) {
 			return static_cast<float32>(this->getInt(key, section));
 		}
