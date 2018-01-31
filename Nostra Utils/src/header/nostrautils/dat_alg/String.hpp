@@ -738,6 +738,20 @@ namespace NOU::NOU_DAT_ALG
 		\brief Clears the string from all characters and sets the size to 0.
 		*/
 		String& clear();
+		/**
+		\return The index of the given char.
+
+		\brief Simply looks and gives back the first index of the given char.
+		returns -1 if nothing got found.
+		*/
+		sizeType find_first_of(CharType c);
+		/**
+		\return The index of the given char.
+
+		\brief Simply looks and gives back the last index of the given char.
+		returns -1 if nothing got found.
+		*/
+		sizeType find_last_of(CharType c);
 
 		/**
 		\return A StringIterator that points to the first character in the string.
@@ -1714,6 +1728,34 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 		setSize(m_data.size() - 1);
 		return *this;
+	}
+
+	template<typename CHAR_TYPE>
+	sizeType String<CHAR_TYPE>::find_first_of(CharType c)
+	{
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (m_data.at(i) == c)
+			{
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	template<typename CHAR_TYPE>
+	sizeType String<CHAR_TYPE>::find_last_of(CharType c)
+	{
+		for (sizeType i = m_data.size(); i > 0; i++)
+		{
+			if (m_data.at(i) == c)
+			{
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	template<typename CHAR_TYPE>
