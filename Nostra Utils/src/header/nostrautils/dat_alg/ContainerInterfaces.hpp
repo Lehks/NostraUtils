@@ -48,6 +48,10 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the first element of the queue.
 		*/
 		virtual const T& peekFront() const = 0;
+		/**
+		\brief Virtual Destructor.
+		*/
+		virtual ~FifoQueue() = default;
 	};
 
 
@@ -84,6 +88,10 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the first element of the queue.
 		*/
 		virtual const T& peekFront() const = 0;
+		/**
+		\brief Virtual Destructor.
+		*/
+		virtual ~LifoQueue() = default;
 	};
 
 
@@ -124,6 +132,10 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the first element of the queue.
 		*/
 		virtual const T& peek() const = 0;
+		/**
+		\brief Virtual Destructor.
+		*/
+		virtual ~Queue() = default;
 	};
 
 	/**
@@ -184,6 +196,10 @@ namespace NOU::NOU_DAT_ALG
 		\see at()
 		*/
 		virtual const T& operator [] (sizeType index) const;
+		/**
+		\brief Virtual Destructor.
+		*/
+		virtual ~RandomAccess() = default;
 	};
 
 	template<typename T>

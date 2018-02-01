@@ -8,6 +8,13 @@
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 
+/** \file Vector.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides a String implementation.
+*/
+
 namespace NOU::NOU_DAT_ALG
 {
 	/**
@@ -174,7 +181,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Constructs a new instance using a pointer to a pointer to the actual string and the passed size. This
 		constructor is used by nostra::utils::data_alg::String.
 		*/
-		constexpr StringView(ConstCharType * const * const dataPtr, sizeType size);
+		constexpr StringView(ConstCharType ** dataPtr, sizeType size);
 
 	public:
 		/**
@@ -844,7 +851,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr StringView<CHAR_TYPE>::StringView(ConstCharType * const * const dataPtr, sizeType size) :
+	constexpr StringView<CHAR_TYPE>::StringView(ConstCharType ** dataPtr, sizeType size) :
 		m_dataPtr(dataPtr),
 		m_size(size),
 		m_string(nullptr)

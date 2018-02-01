@@ -1,5 +1,5 @@
-#ifndef NOU_DAT_ALG_POINTER_HPP
-#define NOU_DAT_ALG_POINTER_HPP
+#ifndef NOU_MEMORY_MNGT_POINTER_HPP
+#define NOU_MEMORY_MNGT_POINTER_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\Utils.hpp"
