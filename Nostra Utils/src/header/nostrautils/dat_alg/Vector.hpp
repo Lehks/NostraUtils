@@ -284,8 +284,6 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief returns a pointer reference to the current data.
 		*/
-		template <class... Args>
-		void emplaceBack(Args&&... args);
 		T*& data();
 		/**
 		\brief returns a const pointer reference to the current data.
@@ -664,7 +662,7 @@ namespace NOU::NOU_DAT_ALG
 
 		for (sizeType i = 0; i < m_size; i++)
 		{
-			new (newData + i) T(NOU::NOU_CORE::move(at(i))); //move data to new buffer
+//			new (newData + i) T(NOU::NOU_CORE::move(at(i))); //move data to new buffer
 			at(i).~T(); //delete old objects
 		}
 
@@ -700,8 +698,8 @@ namespace NOU::NOU_DAT_ALG
 		m_size(other.m_size),
 		m_allocator(other.m_allocator)
 	{
-		for (sizeType i = 0; i < other.m_size; i++)
-			new (m_data + i) T(other.at(i));
+	/*	for (sizeType i = 0; i < other.m_size; i++)
+			new (m_data + i) T(other.at(i));*/
 	}
 
 	template<typename T>
@@ -846,7 +844,7 @@ namespace NOU::NOU_DAT_ALG
 		for (sizeType i = index; i < m_size - 1; i++) //shift all element to the left, until the index
 		{
 			at(i).~T(); //delete old element
-			new (m_data + i) T(NOU::NOU_CORE::move(at(i + 1))); //override old element using move constr
+	//		new (m_data + i) T(NOU::NOU_CORE::move(at(i + 1))); //override old element using move constr
 		}
 
 		//destroy last element in the vector (it was moved and will not be overridden at this point)
@@ -866,14 +864,14 @@ namespace NOU::NOU_DAT_ALG
 			if (i != m_size)
 				at(i).~T(); //delete old element (if not outside array bounds)
 
-			new (m_data + i) T(NOU_CORE::move(m_data[i - 1])); //shift element to the right using move constructor
+	//		new (m_data + i) T(NOU_CORE::move(m_data[i - 1])); //shift element to the right using move constructor
 		}
 
 		m_data[index].~T();
 
-		T t(NOU_CORE::move(args)...);
+//		T t(std::move(args)...);
 
-//		new (m_data + index) T(NOU_CORE::move(args)...); //move new element into the vector
+		new (m_data + index) T(NOU_CORE::forward<ARGS>(args)...); //move new element into the vector
 
 		m_size++;
 	}
@@ -965,10 +963,10 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		//####
 		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //cpy-assign part
-			at(i) = other.at(i);
+	//		at(i) = other.at(i);
 
-		for (; i < other.m_size; i++) //cpy-constr part
-			new (m_data + i) T(other.at(i));
+		//for (; i < other.m_size; i++) //cpy-constr part
+		//	new (m_data + i) T(other.at(i));
 		//####
 
 		m_size = other.m_size;
