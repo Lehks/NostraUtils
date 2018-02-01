@@ -20,12 +20,10 @@ public:
 		m_age(age),
 		m_name(name),
 		m_haircolor(haircolor)
-	{
-	}
+	{}
 
 	~Person()
-	{
-	}
+	{}
 
 	void print()
 	{
@@ -43,13 +41,18 @@ int main()
 
 		std::cout << NOU::NOU_CORE::getErrorHandler().peekError().getName() << std::endl;
 	}
+
 	NOU::NOU_MEM_MNGT::PoolAllocator<Person> personenAllocator;
 
 	NOU::NOU_DAT_ALG::Vector<Person*> test;
 
 	test.push(personenAllocator.allocate(12, "Hans", "Blond"));
+	test.push(personenAllocator.allocate(32, "Peter", "Rot"));
 
-	test.at(0)->print();
+	for (Person* pers : test)
+	{
+		pers->print();
+	}
 
 	personenAllocator.deallocate(test.pop());
 	 
