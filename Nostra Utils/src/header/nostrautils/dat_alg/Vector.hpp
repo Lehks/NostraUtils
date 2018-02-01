@@ -7,8 +7,6 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
 
-#include <new>
-
 /** \file Vector.hpp
 \author  Dennis Franz
 \author  Lukas Reichmann
@@ -42,7 +40,7 @@ namespace NOU::NOU_DAT_ALG
 	\details The most basic of our containers. It can act like a dynamic array a FIFO-Queue, LIFO-Queue or a normal Queue.
 	*/
 	template<typename T>
-	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>, public RandomAccess<T>
+	class NOU_CLASS Vector// : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>, public RandomAccess<T>
 	{
 
 	private:
@@ -140,13 +138,13 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Checks wehter the Vector is empty or not.
 		*/
-		boolean empty() const override;
+		boolean empty() const ;
 		/**
 		\return      Returns the size of the Vector.
 
 		\brief Returns the size of the Vector.
 		*/
-		sizeType size() const override;
+		sizeType size() const ;
 		/**
 		\return      Returns the capacity of the Vector.
 
@@ -184,15 +182,17 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Inserts an element at the last position.
 		*/
-		void pushBack(const T &data) override;
-
 		void pushBack(T &&data);
+
+		void pushBack(const T &data);
+
 		/**
 		\param data The data to insert.
 
 		\brief Inserts an element at the first position.
 		*/
-		void pushFront(const T &data) override;
+		void pushFront(T &&data);
+		void pushFront(const T &data);
 		/**
 		\param data The data to insert.
 
@@ -200,13 +200,14 @@ namespace NOU::NOU_DAT_ALG
 		\details 
 		This methode calls pushBack() .
 		*/
+		void push(T &&data);
 		void push(const T &data);
 		/**
 		\return      The element at the first position.
 
 		\brief Returns the element at the first position and delets it.
 		*/
-		T popFront() override;
+		T popFront() ;
 		/**
 		\return      The element at the first position.
 
@@ -214,27 +215,19 @@ namespace NOU::NOU_DAT_ALG
 		\details 
 		This methode calls popFront() .
 		*/
-		T pop() override;
+		T pop() ;
 		/**
 		\return      The element at the first position.
 
 		\brief Returns the element at the first position.
 		*/
-		T& peekFront() override;
+		T& peekFront() ;
 		/**
 		\return      The element at the first position.
 
 		\brief Returns the element at the first position.
 		*/
-		const T& peekFront() const override;
-		/**
-		\return      The element at the first position.
-
-		\brief Returns the element at the first position.
-		\details
-		This methode calls peakFront() .
-		*/
-		T& peek() override;
+		const T& peekFront() const ;
 		/**
 		\return      The element at the first position.
 
@@ -242,7 +235,15 @@ namespace NOU::NOU_DAT_ALG
 		\details
 		This methode calls peakFront() .
 		*/
-		const T& peek() const override;
+		T& peek() ;
+		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		\details
+		This methode calls peakFront() .
+		*/
+		const T& peek() const ;
 		/**
 		\param index0 The first index.
 		\param index1 The second index.
@@ -253,7 +254,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\see nostra::utils::dat_alg::utils
 		*/
-		void swap(sizeType index0, sizeType index1) override;
+		void swap(sizeType index0, sizeType index1) ;
 		/**
 		\param index Removes the element at the given index.
 
@@ -270,9 +271,9 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Inserts an element at a given index.
 		*/
-		void insert(T &&data, sizeType index); //sawp args
+		void insert(sizeType index, T &&data); //sawp args
+		void insert(sizeType index, const T &data);
 
-		void insert(const T &data, sizeType index);
 		/**
 		\brief Sorts the Vector.
 		*/
@@ -303,7 +304,8 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief replaces the data at the index with the passed data.
 		*/
-		Vector& replace(const T& replacement, sizeType index);
+		Vector& replace(sizeType index, T &&replacement);
+		Vector& replace(sizeType index, const T &replacement);
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -662,7 +664,7 @@ namespace NOU::NOU_DAT_ALG
 
 		for (sizeType i = 0; i < m_size; i++)
 		{
-//			new (newData + i) T(NOU::NOU_CORE::move(at(i))); //move data to new buffer
+			new (newData + i) T(NOU::NOU_CORE::move(at(i))); //move data to new buffer
 			at(i).~T(); //delete old objects
 		}
 
@@ -698,8 +700,8 @@ namespace NOU::NOU_DAT_ALG
 		m_size(other.m_size),
 		m_allocator(other.m_allocator)
 	{
-	/*	for (sizeType i = 0; i < other.m_size; i++)
-			new (m_data + i) T(other.at(i));*/
+		for (sizeType i = 0; i < other.m_size; i++)
+			new (m_data + i) T(other.at(i));
 	}
 
 	template<typename T>
@@ -719,7 +721,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		expandIfNeeded(1);
 
-	//	new (m_data + m_size) T(NOU_CORE::forward<Args>(args)...);
+		new (m_data + m_size) T(NOU_CORE::forward<ARGS>(args)...);
 
 		m_size++;
 	}
@@ -771,21 +773,27 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	void Vector<T>::pushBack(T &&data)
+	{
+		emplaceBack(NOU_CORE::forward<T>(data));
+	}
+
+	template<typename T>
 	void Vector<T>::pushBack(const T &data)
 	{
 		emplaceBack(data);
 	}
 
 	template<typename T>
-	void Vector<T>::pushBack(T &&data)
+	void Vector<T>::pushFront(T &&data)
 	{
-		emplaceBack(NOU_CORE::move(data));
+		insert(0, NOU_CORE::forward<T>(data));
 	}
 
 	template<typename T>
 	void Vector<T>::pushFront(const T &data)
 	{
-		insert(data, 0);
+		insert(0, data);
 	}
 
 	template<typename T>
@@ -794,6 +802,12 @@ namespace NOU::NOU_DAT_ALG
 		T element = NOU_CORE::move(*m_data);
 		remove(0);
 		return element;
+	}
+
+	template<typename T>
+	void Vector<T>::push(T &&data)
+	{
+		pushBack(NOU_CORE::forward<T>(data));
 	}
 
 	template<typename T>
@@ -844,7 +858,7 @@ namespace NOU::NOU_DAT_ALG
 		for (sizeType i = index; i < m_size - 1; i++) //shift all element to the left, until the index
 		{
 			at(i).~T(); //delete old element
-	//		new (m_data + i) T(NOU::NOU_CORE::move(at(i + 1))); //override old element using move constr
+			new (m_data + i) T(NOU::NOU_CORE::move(at(i + 1))); // old element using move constr
 		}
 
 		//destroy last element in the vector (it was moved and will not be overridden at this point)
@@ -852,38 +866,35 @@ namespace NOU::NOU_DAT_ALG
 
 		m_size--;
 	}
-
+	
 	template<typename T>
 	template<typename... ARGS>
 	void Vector<T>::emplace(sizeType index, ARGS&&... args)
 	{
 		expandIfNeeded(1);
-
 		for (sizeType i = m_size; i > index; i--)
 		{
 			if (i != m_size)
 				at(i).~T(); //delete old element (if not outside array bounds)
-
-	//		new (m_data + i) T(NOU_CORE::move(m_data[i - 1])); //shift element to the right using move constructor
+	
+			new (m_data + i) T(NOU_CORE::move(m_data[i - 1])); //shift element to the right using move constructor
 		}
 
 		m_data[index].~T();
 
-//		T t(std::move(args)...);
-
-		new (m_data + index) T(NOU_CORE::forward<ARGS>(args)...); //move new element into the vector
+		new (m_data + index) T(std::forward<ARGS>(args)...); //move new element into the vector
 
 		m_size++;
 	}
 
 	template<typename T>
-	void Vector<T>::insert(T &&data, sizeType index)
+	void Vector<T>::insert(sizeType index, T &&data)
 	{
-		emplace(index, data);
+		emplace(index, NOU_CORE::forward<T>(data));
 	}
 
 	template<typename T>
-	void Vector<T>::insert(const T &data, sizeType index)
+	void Vector<T>::insert(sizeType index, const T &data)
 	{
 		emplace(index, data);
 	}
@@ -932,7 +943,14 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	Vector<T>& Vector<T>::replace(const T& replacement, sizeType index)
+	Vector<T>& Vector<T>::replace(sizeType index, T&& replacement)
+	{
+		at(index) = NOU_CORE::forward<T>(replacement);
+		return *this;
+	}
+
+	template<typename T>
+	Vector<T>& Vector<T>::replace(sizeType index, const T& replacement)
 	{
 		at(index) = replacement;
 		return *this;
@@ -963,10 +981,10 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		//####
 		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //cpy-assign part
-	//		at(i) = other.at(i);
+			at(i) = other.at(i);
 
-		//for (; i < other.m_size; i++) //cpy-constr part
-		//	new (m_data + i) T(other.at(i));
+		for (; i < other.m_size; i++) //cpy-constr part
+			new (m_data + i) T(other.at(i));
 		//####
 
 		m_size = other.m_size;

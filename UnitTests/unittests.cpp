@@ -200,6 +200,12 @@ namespace UnitTests
 			{}
 		};
 
+		struct Bar
+		{
+			Bar() = default;
+			Bar(const Bar&) = delete;
+			Bar(Bar&&) = default;
+		};
 
 		TEST_METHOD(Vector)
 		{
@@ -330,9 +336,8 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 
-
-
-
+			//Check if this compiles
+			NOU::NOU_DAT_ALG::Vector<Bar> vec;
 		}
 
 		TEST_METHOD(Comparator)
