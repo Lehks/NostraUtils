@@ -470,6 +470,10 @@ namespace NOU::NOU_CORE
 			*/
 			INVALID_STRING_CONVERSION,
 
+			/**
+			\brief An object of some kind is invalid.
+			*/
+			INVALID_OBJECT,
 
 			/**
 			\brief Not an actual error, but always the last element in the enum. The error codes 0 - 
@@ -504,6 +508,29 @@ namespace NOU::NOU_CORE
 #        define NOU_PUSH_DBG_ERROR(handler, error, msg) NOU_PUSH_ERROR(handler, error, msg)
 #    else
 #        define NOU_PUSH_DBG_ERROR(handler, error, msg)
+#    endif
+#endif
+
+/**
+\brief This macro is a convenience macro for pushing errors to the specified handler. This macro automatically
+       passes the functionname, line number and filename. This macro will only bush the error, if \p b 
+	   evaluates to <tt>true.</tt>
+*/
+#ifndef NOU_COND_PUSH_ERROR
+#define NOU_COND_PUSH_ERROR(b, handler, error, msg) \
+	if (b) { handler.pushError(NOU_FUNC_NAME, __LINE__, __FILE__, error, msg); }
+#endif
+
+/**
+\brief This macro is a convenience macro, that behaves exactly like NOU_PUSH_ERROR, but only if NOU_DEBUG is
+       defined. Otherwise, it will do nothing. This macro will only bush the error, if \p b evaluates to 
+	   <tt>true.</tt>
+*/
+#ifndef NOU_COND_PUSH_DBG_ERROR
+#    ifdef  NOU_DEBUG
+#        define NOU_COND_PUSH_DBG_ERROR(b, handler, error, msg) NOU_COND_PUSH_ERROR(b, handler, error, msg)
+#    else
+#        define NOU_COND_PUSH_DBG_ERROR(b, handler, error, msg)
 #    endif
 #endif
 
