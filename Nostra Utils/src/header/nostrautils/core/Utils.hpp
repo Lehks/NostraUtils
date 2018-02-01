@@ -3,6 +3,7 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Meta.hpp"
+#include "nostrautils\dat_alg\Comparator.hpp"
 
 /**
 \file core/Utils.hpp
@@ -43,7 +44,25 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
+	constexpr NOU_FUNC T& min(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp); ///\todo min/max: add specialisations for primitve types w/o references
+	/**
+	\param a First Type.
+	\param b Second Type.
+	\return Minimum of the two types.
+
+	\brief A Function to return the minimum of two given types.
+	*/
+	template<typename T>
 	constexpr NOU_FUNC const T& min(const T &a,const T &b); ///\todo min/max: add specialisations for primitve types w/o references
+	/**
+	\param a First Type.
+	\param b Second Type.
+	\return Minimum of the two types.
+
+	\brief A Function to return the minimum of two given types.
+	*/
+	template<typename T>
+	constexpr NOU_FUNC const T& min(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp); ///\todo min/max: add specialisations for primitve types w/o references
 	/**
 	\param a First Type.
 	\param b Second Type.
@@ -61,8 +80,25 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the maximum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& max(const T &a,const T &b);
+	constexpr NOU_FUNC T& max(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
+	/**
+	\param a First Type.
+	\param b Second Type.
+	\return Maximum of the two types.
 
+	\brief A Function to return the maximum of two given types.
+	*/
+	template<typename T>
+	constexpr NOU_FUNC const T& max(const T &a, const T &b);
+	/**
+	\param a First Type.
+	\param b Second Type.
+	\return Maximum of the two types.
+
+	\brief A Function to return the maximum of two given types.
+	*/
+	template<typename T>
+	constexpr NOU_FUNC const T& max(const T &a,const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
 	/**
 	\param arg The argument to forward.
 
@@ -96,10 +132,23 @@ namespace NOU::NOU_CORE
 	}
 
 	template<typename T>
+	constexpr T& min(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp)
+	{
+		return (comp(a, b) < 0) ? a : b;
+	}
+
+	template<typename T>
 	constexpr const T& min(const T &a, const T &b)
 	{
 		return a < b ? a : b;
 	}
+
+	template<typename T>
+	constexpr const T & min(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp)
+	{
+		return (comp(a, b) < a) ? a : b; 
+	}
+
 
 	template<typename T>
 	constexpr T& max(T &a, T &b)
@@ -108,11 +157,22 @@ namespace NOU::NOU_CORE
 	}
 
 	template<typename T>
+	constexpr T & max(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp)
+	{
+		return (comp(a, b) > 0) ? a : b; 
+	}
+
+	template<typename T>
 	constexpr const T& max(const T &a, const T &b)
 	{
 		return a > b ? a : b;
 	}
 
+	template<typename T>
+	constexpr const T& max(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp)
+	{
+		return (comp(a, b) > 0) ? a : b;
+	}
 	/**
 	\tparam The type of the values to clamp.
 
@@ -144,6 +204,37 @@ namespace NOU::NOU_CORE
 	*/
 	template<typename T>
 	constexpr NOU_FUNC T& clamp(T &t, T &min, T &max);
+	/**
+	\tparam The type of the values to clamp.
+
+	\param t   The value to clamp.
+	\param min The minimum value for \p t.
+	\param max The maximum value for \p t.
+
+	\brief Clamps a value.
+
+	\details
+	Clamps a value. If t is within the interval \f$\left[min, max\right[\f$, t is returned, if \f$ t < min\f$,
+	min is returned and if \f$t > max\f$, max is returned. This function uses the operators > and <.
+	*/
+	template<typename T>
+	constexpr NOU_FUNC const T& clamp(const T &t, const T &min, const T &max, NOU::NOU_DAT_ALG::Comparator<T> comp);
+
+	/**
+	\tparam The type of the values to clamp.
+
+	\param t   The value to clamp.
+	\param min The minimum value for \p t.
+	\param max The maximum value for \p t.
+
+	\brief Clamps a value.
+
+	\details
+	Clamps a value. If t is within the interval \f$\left[min, max\right[\f$, t is returned, if \f$ t < min\f$,
+	min is returned and if \f$t > max\f$, max is returned. This function uses the operators > and <.
+	*/
+	template<typename T>
+	constexpr NOU_FUNC T& clamp(T &t, T &min, T &max, NOU::NOU_DAT_ALG::Comparator<T> comp);
 
 	template<typename T>
 	constexpr const T& clamp(const T &t, const T &min, const T &max)
@@ -162,6 +253,28 @@ namespace NOU::NOU_CORE
 		if (t < min)
 			return min;
 		else if (t > max)
+			return max;
+		else
+			return t;
+	}
+
+	template<typename T>
+	constexpr const T& clamp(const T &t, const T &min, const T &max, NOU::NOU_DAT_ALG::Comparator<T> comp)
+	{
+		if (comp(t, min) < 0)
+			return min;
+		else if (comp(t, min) > 0)
+			return max;
+		else
+			return t;
+	}
+
+	template<typename T>
+	constexpr T& clamp(T &t, T &min, T &max, NOU::NOU_DAT_ALG::Comparator<T> comp)
+	{
+		if (comp(t, min) < 0)
+			return min;
+		else if (comp(t, min) > 0)
 			return max;
 		else
 			return t;
