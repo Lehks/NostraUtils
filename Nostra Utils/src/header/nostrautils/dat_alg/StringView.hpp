@@ -291,7 +291,7 @@ namespace NOU::NOU_DAT_ALG
 		///\todo check if correct constructors are getting called.
 		constexpr StringView(const StringView &other); 
 
-		virtual ~StringView() = default;
+	//	virtual ~StringView() = default;
 
 		/**
 		\param str        The substring to find.

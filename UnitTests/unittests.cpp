@@ -372,6 +372,16 @@ namespace UnitTests
 				static_cast<NOU::char32>('b')) < 0);
 		}
 
+
+		struct TestDeleter
+		{
+			void operator () (int* i)
+			{
+				testVar = true;
+				delete i;
+			}
+		};
+
 		TEST_METHOD(UniquePtr)
 		{
 			//use string for testing.
@@ -402,15 +412,6 @@ namespace UnitTests
 			Assert::IsTrue(uPtr1.rawPtr() == nullptr);
 
 			Assert::IsTrue(uPtr.rawPtr() == rawPtr1);
-
-			struct TestDeleter
-			{
-				void operator () (int* i)
-				{
-					testVar = true;
-					delete i;
-				}
-			};
 
 			{
 				//check if this compiles
@@ -692,8 +693,8 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.startsWith("Hell")>::value);
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.startsWith("World")>::value);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.endsWith("rld!")>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.endsWith("World")>::value);
+			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.endsWith("rld!")>::value == true);
+			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.endsWith("World")>::value == true);
 
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Abc")
 				> 0)>::value);
