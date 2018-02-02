@@ -102,6 +102,76 @@ namespace NOU::NOU_MEM_MNGT
 			}
 		};
 	}
+
+	class GeneralPurposeAllocator
+	{
+	public:
+
+		template <typename T>
+		class GeneralPurposeAllocatorPointer
+		{
+			friend class GeneralPurposeAllocator;
+
+		private:
+
+			T * m_pdata;
+			sizeType m_size;
+
+		public:
+			GeneralPurposeAllocatorPointer(T* pdata, sizeType size) :
+				m_pdata(pdata),
+				m_size(size)
+			{
+				//do nothing
+			}
+
+			T* operator->()
+			{
+				return m_pdata;
+			}
+
+			const T* operator->() const
+			{
+				return m_pdata;
+			}
+
+			T& operator*()
+			{
+				return *m_pdata;
+			}
+
+			const T& operator*() const
+			{
+				return *m_pdata;
+			}
+
+			T& operator[](int index)
+			{
+				return *(m_pdata + index);
+			}
+
+			const T& operator[](int index) const
+			{
+				return *(m_pdata + index);
+			}
+
+			T* getRaw()
+			{
+				return m_pdata;
+			}
+
+			boolean operator==(void* ptr) const
+			{
+				return m_pdata == ptr;
+			}
+
+			boolean operator!=(void ptr) const
+			{
+				return m_pdata != ptr;
+			}
+		};
+
+	};
 }
 
 #endif
