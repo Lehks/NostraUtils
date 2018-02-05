@@ -7,7 +7,7 @@
 namespace NOU::NOU_DAT_ALG
 {
 
-
+	fadsfdsf HFDGHDFGHN java ultiul haf fuhghtin uDF DFJUBwb bjljbdhbf DFU g NLKDJsk bnjN ndjkv
 
 }
 

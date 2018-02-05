@@ -311,6 +311,7 @@
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\BinaryHeap.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Quicksort.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Uninitialized.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Version.hpp" />

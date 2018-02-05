@@ -91,10 +91,10 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Uninitialized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
+    <ClInclude Include="src\header\nostrautils\dat_alg\BinaryHeap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\dat_alg\BinaryHeap.hpp">
+    <ClInclude Include="src\header\nostrautils\dat_alg\Quicksort.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -37,7 +37,7 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename T>
 	constexpr NOU_FUNC int32 epsilonCompare(const T &t0, const T &t1, const T &epsilon);
-
+	
 	template<typename T>
 	void swap(T *dataone, T *datatwo) 
 	{
@@ -59,6 +59,8 @@ namespace NOU::NOU_DAT_ALG
 		T abs = (diff < 0 ? -diff : diff);
 		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
 	}
+
+
 }
 
 #endif
