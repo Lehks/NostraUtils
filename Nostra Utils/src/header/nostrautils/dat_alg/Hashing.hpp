@@ -19,7 +19,7 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template <typename T>
-	constexpr uint64 hashObj(T* inputObject, uint64_t max) {
+	constexpr uint64 hashObj(T* inputObject, uint64 max) {
 		uint64 h;
 		T** address;
 
