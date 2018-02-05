@@ -979,5 +979,11 @@ namespace UnitTests
 			str.append("Hallo");
 
 		}
+
+
+		TEST_METHOD(Hashfunction)
+		{
+			
+		}
 	};
 }

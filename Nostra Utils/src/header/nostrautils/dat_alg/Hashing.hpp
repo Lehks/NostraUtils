@@ -15,16 +15,16 @@ namespace NOU::NOU_DAT_ALG
 	\param inputObject the input that will be hashed.
 	\param max 0 <= output < max.
 
-	\brief A Function to swap the two given types.
+	\brief A Function to hash an Object for a HashTable
 	*/
 
 	template <typename T>
-	uint64_t hashObj(T* inputObject, uint64_t max) {
-		uint64_t h;
+	constexpr uint64 hashObj(T* inputObject, uint64_t max) {
+		uint64 h;
 		T** address;
 
 		address = &inputObject;
-		h = (uint64_t)*address;
+		h = (uint64)*address;
 
 		return h % max;
 	};
