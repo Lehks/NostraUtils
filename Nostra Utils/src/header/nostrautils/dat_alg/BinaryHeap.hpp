@@ -5,6 +5,7 @@
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
 
 /** \file BinaryHeap.hpp
 \author  Dennis Franz
@@ -319,8 +320,7 @@ namespace NOU::NOU_DAT_ALG
 				break;
 			}
 			else {
-				NOU_COND_PUSH_ERROR((index > m_data.size()),
-					NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found with the given Id.");
+				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found with the given Id.");
 			}
 		}
 	}

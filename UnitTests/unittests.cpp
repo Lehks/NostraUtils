@@ -921,7 +921,37 @@ namespace UnitTests
 
 		TEST_METHOD(BinaryHeap)
 		{
+			NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> b;
 
+			b.enqueue(10, 1);
+			b.enqueue(11, 2);
+			b.enqueue(12, 3);
+			b.enqueue(13, 4);
+			b.enqueue(14, 1);
+			b.enqueue(15, 4);
+
+			Assert::IsTrue(b.at(0) == 10);
+			Assert::IsTrue(b.at(1) == 14);
+			Assert::IsTrue(b.at(2) == 12);
+			Assert::IsTrue(b.at(3) == 13);
+			Assert::IsTrue(b.at(4) == 11);
+			Assert::IsTrue(b.at(5) == 15);
+
+			b.dequeue();
+
+			Assert::IsTrue(b.at(0) == 14);
+			Assert::IsTrue(b.at(1) == 12);
+			Assert::IsTrue(b.at(2) == 13);
+			Assert::IsTrue(b.at(3) == 11);
+			Assert::IsTrue(b.at(4) == 15);
+			
+			b.decreaseKey(2, 2);
+			
+			Assert::IsTrue(b.at(0) == 14);
+			Assert::IsTrue(b.at(1) == 12);
+			Assert::IsTrue(b.at(2) == 13);
+			Assert::IsTrue(b.at(3) == 11);
+			Assert::IsTrue(b.at(4) == 15);
 		}
 	};
 }
