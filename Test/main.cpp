@@ -7,7 +7,17 @@
 #include <iostream>
 
 
+class A
+{
+public:
+	A() = default;
+	A(const A&) = delete;
+	A(A&&) = default;
+};
+
 int main()
 {
+	NOU::NOU_DAT_ALG::BinaryHeap<A> binH;
 
+	binH.enqueue(A(), 5);
 }

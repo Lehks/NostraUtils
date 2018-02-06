@@ -102,11 +102,29 @@ namespace NOU::NOU_DAT_ALG
 		BinaryHeap(BinaryHeap<T> && otehr);
 		/**
 		\param data				The data that will be one part of the Pair wich gets inserted in the vector.
-		\param priority			Wich is the other part of the Pair thats get inserted in the vector.
+		\param priority			Which is the other part of the Pair thats get inserted in the vector.
 
-		\brief Inserts a Pair of data and priority intothe Vector and checks at the end if the heap law is correct or not.
+		\brief Inserts a Pair of data and priority into the Vector and checks at the end if the heap law is correct or not.
 		*/
-		void enqueue(const T& data, PriorityTypePart priority);
+		PriorityTypePart enqueue(const T& data, PriorityTypePart priority);
+		/**
+		\param data				The data that will be one part of the Pair wich gets inserted in the vector.
+		\param priority			Which is the other part of the Pair thats get inserted in the vector.
+
+		\brief Inserts a Pair of data and priority into the Vector and checks at the end if the heap law is correct or not.
+		*/
+		PriorityTypePart enqueue(T&& data, PriorityTypePart priority);
+		/**
+		\tparam ARGS    The types of the arguments that will be used to construct a new instance of T.
+
+		\param priority The priority that the inserted element will have. 
+		\param args     The arguments that will be used to construct a new instance of T.
+
+		\brief This works very much like enqueue(), but instead of taking a constructed instance of T, this 
+		       method will construct a new instance from the parameters that were passed to it.
+		*/
+		template<typename... ARGS>
+		PriorityTypePart emplace(PriorityTypePart priority, ARGS&&... args);
 		/**
 		\brief Deletes the root of the heap.
 		*/
@@ -239,15 +257,29 @@ namespace NOU::NOU_DAT_ALG
 	{}
 
 	template<typename T>
-	void BinaryHeap<T>::enqueue(const T& data, PriorityTypePart priority)
+	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::enqueue(const T& data, PriorityTypePart priority)
 	{
-		
-		PriorityType pt = makePriority(priority);
-		NOU::NOU_DAT_ALG::Pair<T, PriorityType> p(data, pt);
+		return emplace(priority, data);
+	}
 
-		m_data.pushBack(p);
+	template<typename T>
+	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::enqueue(T&& data, PriorityTypePart priority)
+	{
+		return emplace(priority, NOU_CORE::move(data));
+	}
+
+	template<typename T>
+	template<typename... ARGS>
+	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::emplace(PriorityTypePart priority, ARGS&&... args)
+	{
+		PriorityType pt = makePriority(priority);
+		NOU::NOU_DAT_ALG::Pair<T, PriorityType> p(T(NOU_CORE::forward<ARGS>(args)...), pt);
+
+		m_data.pushBack(NOU_CORE::move(p));
 
 		checkForLaw();
+
+		return getPriorityId(pt);
 	}
 
 	template<typename T>
