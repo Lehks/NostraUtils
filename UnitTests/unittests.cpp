@@ -200,11 +200,11 @@ namespace UnitTests
 			{}
 		};
 
-		struct Bar
+		struct NotCopiable
 		{
-			Bar() = default;
-			Bar(const Bar&) = delete;
-			Bar(Bar&&) = default;
+			NotCopiable() = default;
+			NotCopiable(const NotCopiable&) = delete;
+			NotCopiable(NotCopiable&&) = default;
 		};
 
 		TEST_METHOD(Vector)
@@ -213,7 +213,7 @@ namespace UnitTests
 
 			Assert::AreEqual(static_cast<NOU::sizeType>(0), vec1.size());
 
-			for (NOU::sizeType i = 0; i < 10; i++)
+			for (NOU::int32 i = 0; i < 10; i++)
 			{
 				vec1.pushBack(i);
 			}
@@ -255,7 +255,7 @@ namespace UnitTests
 			vec2.remove(0);
 			Assert::AreEqual(0, vec2[0]);
 
-			int i = 0;
+			NOU::sizeType i = 0;
 
 			for (NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> it = vec2.begin(); it != vec2.end(); it++)
 			{
@@ -337,7 +337,7 @@ namespace UnitTests
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 
 			//Check if this compiles
-			NOU::NOU_DAT_ALG::Vector<Bar> vec;
+			NOU::NOU_DAT_ALG::Vector<NotCopiable> vec;
 		}
 
 		TEST_METHOD(Comparator)
@@ -524,6 +524,9 @@ namespace UnitTests
 			Assert::IsTrue(fq.pop() == 4);
 
 			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			//Check if this compiles
+			NOU::NOU_DAT_ALG::FastQueue<NotCopiable>();
 		}
 
 		TEST_METHOD(AreSame)
