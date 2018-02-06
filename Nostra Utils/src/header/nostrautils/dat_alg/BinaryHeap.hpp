@@ -42,7 +42,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The Vector that stores the Pairs(the data and the priority).
 		*/
-		Vector<NOU::NOU_DAT_ALG::Pair<T, PriorityType>>			m_data;
+		Vector<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>			m_data;
 		/**
 		\brief A counter that provides a uniqe identifiyer for every priority.
 		*/
@@ -87,7 +87,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief "Standard" constructor.
 		*/
-		BinaryHeap(boolean isMinHeap = true, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<T, PriorityType>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<NOU::NOU_DAT_ALG::Pair<T, PriorityType>>::getInstance());
+		BinaryHeap(boolean isMinHeap = true, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>::getInstance());
 		/**
 		\param other			An onther BinaryHeap.
 
@@ -205,7 +205,7 @@ namespace NOU::NOU_DAT_ALG
 			{
 				int p = (i - 1) / 2;
 
-				if (getPriority(m_data[i].dataTwo) < getPriority(m_data[p].dataTwo))
+				if (getPriority(m_data[i].dataOne) < getPriority(m_data[p].dataOne))
 				{
 					m_data.swap(i, p);
 					i = p;
@@ -222,7 +222,7 @@ namespace NOU::NOU_DAT_ALG
 			{
 				sizeType p = static_cast<sizeType>(i - 1) / 2;
 
-				if (getPriority(m_data[i].dataTwo) > getPriority(m_data[p].dataTwo))
+				if (getPriority(m_data[i].dataOne) > getPriority(m_data[p].dataOne))
 				{
 					m_data.swap(i, p);
 					i = p;
@@ -236,7 +236,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	BinaryHeap<T>::BinaryHeap(boolean isMinHeap, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<T, PriorityType>> &allocator) :
+	BinaryHeap<T>::BinaryHeap(boolean isMinHeap, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator) :
 		m_isMinHeap(isMinHeap),
 		m_data(0, allocator),
 		m_nextPriorityCounter(-1) //counter still starts at 0
@@ -273,7 +273,8 @@ namespace NOU::NOU_DAT_ALG
 	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::emplace(PriorityTypePart priority, ARGS&&... args)
 	{
 		PriorityType pt = makePriority(priority);
-		NOU::NOU_DAT_ALG::Pair<T, PriorityType> p(T(NOU_CORE::forward<ARGS>(args)...), pt);
+
+		Pair<PriorityType, T> p(NOU_CORE::move(pt), T(NOU_CORE::forward<ARGS>(args)...));
 
 		m_data.pushBack(NOU_CORE::move(p));
 

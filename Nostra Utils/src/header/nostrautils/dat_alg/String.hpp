@@ -425,7 +425,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Replaces a single charrachter.
 		*/
-		void replace(CharType replacement, sizeType index);
+		void replace(sizeType index, CharType replacement);
 
 		/**
 		\param target      The characters that will be replaced with \p replacement.
@@ -958,7 +958,7 @@ namespace NOU::NOU_DAT_ALG
 		return str;
 	}
 
-	/// ---------------------------------  DONT LOOK AT IT	-------------------------------
+	// ---------------------------------  DONT LOOK AT IT	-------------------------------
 	template<typename CHAR_TYPE>
 	template<typename IT>
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)	
@@ -1175,7 +1175,7 @@ namespace NOU::NOU_DAT_ALG
 		NOU_COND_PUSH_ERROR((index > m_data.size() - 1),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		m_data.insert(c, index);
+		m_data.insert(index, c);
 		setSize(m_data.size() - 1);
 		return *this;
 	}
@@ -1300,10 +1300,9 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	void String<CHAR_TYPE>::replace(CharType replacement, sizeType)
+	void String<CHAR_TYPE>::replace(sizeType i, CharType replacement)
 	{
-
-		m_data.at(i) = replacement;
+		m_data.replace(i, replacement);
 	}
 
 	template<typename CHAR_TYPE>
@@ -1316,7 +1315,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			if (target == m_data.at(i))
 			{
-				m_data.replace(replacement, i);
+				m_data.replace(i, replacement);
 			}
 		}
 
