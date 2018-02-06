@@ -61,12 +61,10 @@ int main()
 
 	binH.decreaseKey(priority3, 0);
 
-	sizeType i = 0;
 
 	while (binH.size() != 0)
 	{
 		std::cout << binH.get().get();
-		std::cout << " " << binH.priorityNAt(i) << std::endl;
 		binH.dequeue();
 	}
 
