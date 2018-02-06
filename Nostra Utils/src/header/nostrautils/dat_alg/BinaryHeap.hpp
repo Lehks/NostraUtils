@@ -318,6 +318,10 @@ namespace NOU::NOU_DAT_ALG
 				checkForLaw();
 				break;
 			}
+			else {
+				NOU_COND_PUSH_ERROR((index > m_data.size()),
+					NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found with the given Id.");
+			}
 		}
 	}
 
@@ -330,6 +334,9 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	T& BinaryHeap<T>::at(sizeType index)
 	{
+		NOU_COND_PUSH_ERROR((index > m_data.size()),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at the given Index.");
+
 		return m_data.at(index).dataOne;
 	}
 
