@@ -134,7 +134,7 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr T& min(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
-		return (comp(a, b) == NOU::NOU_DAT_ALG::CompareResult::SMALLER) ? a : b;
+		return (comp(a, b) < 0) ? a : b;
 	}
 
 	template<typename T>
@@ -146,7 +146,7 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr const T & min(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
-		return (comp(a, b) == NOU::NOU_DAT_ALG::CompareResult::SMALLER) ? a : b; 
+		return (comp(a, b) < a) ? a : b; 
 	}
 
 
@@ -159,7 +159,7 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr T & max(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
-		return (comp(a, b) == NOU::NOU_DAT_ALG::CompareResult::BIGGER) ? a : b; 
+		return (comp(a, b) > 0) ? a : b; 
 	}
 
 	template<typename T>
@@ -171,7 +171,7 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr const T& max(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
-		return (comp(a, b) == NOU::NOU_DAT_ALG::CompareResult::BIGGER) ? a : b;
+		return (comp(a, b) > 0) ? a : b;
 	}
 	/**
 	\tparam The type of the values to clamp.
@@ -261,9 +261,9 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr const T& clamp(const T &t, const T &min, const T &max, NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
-		if (comp(t , min) == NOU::NOU_DAT_ALG::CompareResult::SMALLER)
+		if (comp(t, min) < 0)
 			return min;
-		else if (comp(t, min) == NOU::NOU_DAT_ALG::CompareResult::BIGGER)
+		else if (comp(t, min) > 0)
 			return max;
 		else
 			return t;
@@ -272,9 +272,9 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr T& clamp(T &t, T &min, T &max, NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
-		if (comp(t, min) == NOU::NOU_DAT_ALG::CompareResult::SMALLER)
+		if (comp(t, min) < 0)
 			return min;
-		else if (comp(t, min) == NOU::NOU_DAT_ALG::CompareResult::BIGGER)
+		else if (comp(t, min) > 0)
 			return max;
 		else
 			return t;
