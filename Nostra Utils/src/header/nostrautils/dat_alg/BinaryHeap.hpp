@@ -30,9 +30,11 @@ namespace NOU::NOU_DAT_ALG
 	class NOU_CLASS BinaryHeap
 	{
 	public:
-		using PriorityTypePart = NOU::uint64;
+		using PriorityTypePart = NOU::uint32;
 
 		using PriorityType = NOU::uint64;
+
+		static_assert(sizeof(PriorityType) == sizeof(PriorityTypePart) * 2);
 
 	private:
 		/**
@@ -129,6 +131,21 @@ namespace NOU::NOU_DAT_ALG
 		\brief Deletes the root of the heap.
 		*/
 		void dequeue();
+
+		/**
+		\return The first element (aka. the one with the largest / smallest priority).
+
+		\brief Returns the first element.
+		*/
+		const T& get() const;
+
+		/**
+		\return The first element (aka. the one with the largest / smallest priority).
+
+		\brief Returns the first element.
+		*/
+		T& get();
+
 		/**
 		\param is				The id that is searched.
 		\param newpriority		The new priority that will be replace the old one.
@@ -149,6 +166,12 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param index			An index.
 
+		\brief Returns the data part of the object at the given index.
+		*/
+		const T& at(sizeType index) const;
+		/**
+		\param index			An index.
+
 		\brief Returns the FULL priority at the given index.
 		*/
 		typename BinaryHeap<T>::PriorityType priorityAt(sizeType index);
@@ -158,6 +181,12 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T>::at)
 		*/
 		T& operator [] (sizeType index);
+		/**
+		\param index			An index.
+
+		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T>::at)
+		*/
+		const T& operator [] (sizeType index) const;
 	};
 
 	template<typename T>
@@ -203,7 +232,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			while (i > 0)
 			{
-				int p = (i - 1) / 2;
+				sizeType p = (i - 1) / 2;
 
 				if (getPriority(m_data[i].dataOne) < getPriority(m_data[p].dataOne))
 				{
@@ -298,10 +327,10 @@ namespace NOU::NOU_DAT_ALG
 
 				sizeType s = l;					//smaller child
 
-				if (getPriority(m_data[r].dataTwo) < getPriority(m_data[l].dataTwo))
+				if (getPriority(m_data[r].dataOne) < getPriority(m_data[l].dataOne))
 					s = r;
 
-				if (getPriority(m_data[s].dataTwo) < getPriority(m_data[b].dataTwo))
+				if (getPriority(m_data[s].dataOne) < getPriority(m_data[b].dataOne))
 				{
 					m_data.swap(s, b);
 					b = s;
@@ -322,10 +351,10 @@ namespace NOU::NOU_DAT_ALG
 
 				sizeType s = l;					//smaller child
 
-				if (getPriority(m_data[r].dataTwo) > getPriority(m_data[l].dataTwo))
+				if (getPriority(m_data[r].dataOne) > getPriority(m_data[l].dataOne))
 					s = r;
 
-				if (getPriority(m_data[s].dataTwo) > getPriority(m_data[b].dataTwo))
+				if (getPriority(m_data[s].dataOne) > getPriority(m_data[b].dataOne))
 				{
 					m_data.swap(s, b);
 					b = s;
@@ -340,20 +369,33 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	const T& BinaryHeap<T>::get() const
+	{
+		return at(0);
+	}
+
+	template<typename T>
+	T& BinaryHeap<T>::get()
+	{
+		return at(0);
+	}
+
+	template<typename T>
 	void BinaryHeap<T>::decreaseKey(PriorityTypePart id , PriorityTypePart newpriority)
 	{
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
-			if (getPriorityId(m_data[i].dataTwo) == id)
+			if (getPriorityId(m_data[i].dataOne) == id)
 			{
 				PriorityType p = makePriority(newpriority, id);
-				m_data.at(i).dataTwo = p;
+				m_data.at(i).dataOne = p;
 				checkForLaw();
 				break;
 			}
-			else {
-				NOU_COND_PUSH_ERROR((index > m_data.size()),
-					NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found with the given Id.");
+			else 
+			{
+				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, 
+					"No object was found with the given Id.");
 			}
 		}
 	}
@@ -370,7 +412,16 @@ namespace NOU::NOU_DAT_ALG
 		NOU_COND_PUSH_ERROR((index > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at the given Index.");
 
-		return m_data.at(index).dataOne;
+		return m_data.at(index).dataTwo;
+	}
+
+	template<typename T>
+	const T& BinaryHeap<T>::at(sizeType index) const
+	{
+		NOU_COND_PUSH_ERROR((index > m_data.size()),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at the given Index.");
+
+		return m_data.at(index).dataTwo;
 	}
 
 	template<typename T>
@@ -381,6 +432,12 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename T>
 	T& BinaryHeap<T>::operator[](sizeType index)
+	{
+		return at(index);
+	}
+	
+	template<typename T>
+	const T& BinaryHeap<T>::operator[](sizeType index) const
 	{
 		return at(index);
 	}
