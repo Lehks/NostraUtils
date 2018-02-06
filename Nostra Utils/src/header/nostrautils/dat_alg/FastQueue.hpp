@@ -283,7 +283,7 @@ namespace NOU::NOU_DAT_ALG
 	void FastQueue<T>::pushBack(Type &&data)
 	{
 		resize(1);
-		new (m_queue.rawPtr() + m_endIndex) Type(std::forward<Type>(data));
+		new (m_queue.rawPtr() + m_endIndex) Type(NOU_CORE::forward<Type>(data));
 		m_endIndex++;
 	}
 
@@ -296,7 +296,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void FastQueue<T>::push(Type &&data)
 	{
-		pushBack(std::forward<Type>(data));
+		pushBack(NOU_CORE::forward<Type>(data));
 	}
 
 	template<typename T>

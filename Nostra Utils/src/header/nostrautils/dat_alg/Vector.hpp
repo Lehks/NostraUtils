@@ -6,10 +6,6 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
 
-#include <memory>
-#include <vector>
-#include <new>
-
 /** \file Vector.hpp
 \author  Dennis Franz
 \author  Lukas Reichmann
@@ -767,7 +763,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename... ARGS>
 	void Vector<T>::construct(sizeType index, ARGS&&... args)
 	{
-		new (m_data + index) T(std::forward<ARGS>(args)...);
+		new (m_data + index) T(NOU_CORE::forward<ARGS>(args)...);
 	}
 
 	template<typename T>
@@ -818,7 +814,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		expandIfNeeded(1);
 
-		construct(m_size, std::forward<ARGS>(args)...);
+		construct(m_size, NOU_CORE::forward<ARGS>(args)...);
 
 		m_size++;
 	}
@@ -878,7 +874,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::pushBack(T &&data)
 	{
-		emplaceBack(std::move(data));
+		emplaceBack(NOU_CORE::move(data));
 	}
 
 	template<typename T>
@@ -979,7 +975,7 @@ namespace NOU::NOU_DAT_ALG
 
 		m_data[index].~T();
 
-		construct(index, std::forward<ARGS>(args)...);
+		construct(index, NOU_CORE::forward<ARGS>(args)...);
 
 		m_size++;
 	}
