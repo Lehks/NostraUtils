@@ -168,13 +168,53 @@ namespace UnitTests
 			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
 		}
 
+		TEST_METHOD(Swap)
+		{
+			NOU::int32 a = 1;
+			NOU::int32 b = 2;
+
+			NOU::NOU_DAT_ALG::swap(&a, &b);
+
+			Assert::AreEqual(2,a);
+			Assert::AreEqual(1,b);
+		}
+
+
+		struct NOU_CLASS Foo
+		{
+		public:
+			int m_i;
+			bool m_b;
+			float m_f;
+
+			Foo() = default;
+			Foo(Foo &&other)
+			{
+				m_i = other.m_i;
+				m_b = other.m_b;
+				m_f = other.m_f;
+			}
+			Foo(int i, bool b, float f) :
+				m_i(i),
+				m_b(b),
+				m_f(f)
+			{}
+		};
+
+		struct NotCopiable
+		{
+			NotCopiable() = default;
+			NotCopiable(const NotCopiable&) = delete;
+			NotCopiable(NotCopiable&&) = default;
+		};
+
 		TEST_METHOD(Vector)
 		{
 			NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
 
 			Assert::AreEqual(static_cast<NOU::sizeType>(0), vec1.size());
 
-			for (NOU::sizeType i = 0; i < 10; i++)
+			for (NOU::int32 i = 0; i < 10; i++)
 			{
 				vec1.pushBack(i);
 			}
@@ -216,7 +256,7 @@ namespace UnitTests
 			vec2.remove(0);
 			Assert::AreEqual(0, vec2[0]);
 
-			int i = 0;
+			NOU::sizeType i = 0;
 
 			for (NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> it = vec2.begin(); it != vec2.end(); it++)
 			{
@@ -296,17 +336,9 @@ namespace UnitTests
 			Assert::AreEqual(0, vec1.peekFront());
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
-		}
 
-		TEST_METHOD(Swap)
-		{
-			NOU::int32 a = 1;
-			NOU::int32 b = 2;
-
-			NOU::NOU_DAT_ALG::swap(&a, &b);
-
-			Assert::AreEqual(2, a);
-			Assert::AreEqual(1, b);
+			//Check if this compiles
+			NOU::NOU_DAT_ALG::Vector<NotCopiable> vec;
 		}
 
 		TEST_METHOD(Comparator)
@@ -493,6 +525,9 @@ namespace UnitTests
 			Assert::IsTrue(fq.pop() == 4);
 
 			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			//Check if this compiles
+			NOU::NOU_DAT_ALG::FastQueue<NotCopiable>();
 		}
 
 		TEST_METHOD(AreSame)

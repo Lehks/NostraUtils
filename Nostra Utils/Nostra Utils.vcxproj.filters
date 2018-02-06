@@ -46,9 +46,6 @@
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
