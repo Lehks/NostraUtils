@@ -203,6 +203,10 @@ namespace NOU::NOU_DAT_ALG
 
 		if (counter == 0)
 		{
+			if (m_nextPriorityCounter >= 10000)
+			{
+				m_nextPriorityCounter = 0;
+			}
 			ret += getNextPriorityCounter();
 		}
 		else 
@@ -215,13 +219,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::getPriority(PriorityType priority) const
 	{
-		return (priority / 100000000); 
+		return (priority / 100000000);
 	}
 
 	template<typename T>
 	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::getPriorityId(PriorityType priority) const
 	{
-		return (priority % 100000000);
+		return (priority % 10000);
 	}
 
 	template<typename T>
@@ -269,7 +273,7 @@ namespace NOU::NOU_DAT_ALG
 	BinaryHeap<T>::BinaryHeap(boolean isMinHeap, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator) :
 		m_isMinHeap(isMinHeap),
 		m_data(0, allocator),
-		m_nextPriorityCounter(-1) //counter still starts at 0
+		m_nextPriorityCounter(0) //counter still starts at 0
 	{}
 
 	template<typename T>
@@ -317,6 +321,11 @@ namespace NOU::NOU_DAT_ALG
 	void BinaryHeap<T>::dequeue()
 	{
 		m_data.remove(0);
+
+		if (m_data.size() <= 3)
+		{
+			return;
+		}
 
 		sizeType b = 0;
 		if (m_isMinHeap)
@@ -391,14 +400,12 @@ namespace NOU::NOU_DAT_ALG
 				PriorityType p = makePriority(newpriority, id);
 				m_data.at(i).dataOne = p;
 				checkForLaw();
-				break;
-			}
-			else 
-			{
-				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, 
-					"No object was found with the given Id.");
+				return;
 			}
 		}
+
+		NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT,
+			"No object was found with the given Id.");
 	}
 
 	template<typename T>
@@ -428,7 +435,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	typename BinaryHeap<T>::PriorityType BinaryHeap<T>::priorityAt(sizeType index)
 	{
-		return m_data.at(index).dataTwo;
+		return m_data.at(index).dataOne;
 	}
 
 	template<typename T>

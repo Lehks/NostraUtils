@@ -30,7 +30,7 @@ public:
 
 int main()
 {
-	ErrorHandler::setCallback(callback);
+	//ErrorHandler::setCallback(callback);
 
 	NOU::NOU_DAT_ALG::BinaryHeap<A> binH(true);
 
@@ -57,6 +57,7 @@ int main()
 	auto priority1 = binH.enqueue(A(1), 1);
 	auto priority3 = binH.enqueue(A(3), 3);
 	auto priority6 = binH.enqueue(A(6), 6);
+
 
 	binH.decreaseKey(priority3, 0);
 
