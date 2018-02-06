@@ -399,7 +399,21 @@ namespace NOU::NOU_DAT_ALG
 			{
 				PriorityType p = makePriority(newpriority, id);
 				m_data.at(i).dataOne = p;
-				checkForLaw();
+				sizeType c = i;
+				while (c > 0)
+				{
+					sizeType p = (i - 1) / 2;
+
+					if (getPriority(m_data[c].dataOne) < getPriority(m_data[p].dataOne))
+					{
+						m_data.swap(c, p);
+						c = p;
+					}
+					else
+					{
+						break;
+					}
+				}
 				return;
 			}
 		}
