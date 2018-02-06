@@ -185,17 +185,17 @@ namespace NOU::NOU_DAT_ALG
 		{
 			while (i > 0)
 			{
-				sizeType p = static_cast<sizeType>(i - 1) / 2;
+				int p = (i - 1) / 2;
 
 				if (getPriority(m_data[i].dataTwo) < getPriority(m_data[p].dataTwo))
 				{
 					m_data.swap(i, p);
+					i = p;
 				}
 				else
 				{
 					break;
 				}
-				i--;
 			}
 		}
 		else
@@ -207,12 +207,12 @@ namespace NOU::NOU_DAT_ALG
 				if (getPriority(m_data[i].dataTwo) > getPriority(m_data[p].dataTwo))
 				{
 					m_data.swap(i, p);
+					i = p;
 				}
 				else
 				{
 					break;
 				}
-				i--;
 			}
 		}
 	}
@@ -255,11 +255,10 @@ namespace NOU::NOU_DAT_ALG
 	{
 		m_data.remove(0);
 
-		sizeType i = m_data.size() - 1;
 		sizeType b = 0;
 		if (m_isMinHeap)
 		{
-			while (b < (i / 2 - 2))
+			while (b < (m_data.size() / 2) - 2)
 			{
 				sizeType l = 2 * b + 1;			//left child
 				sizeType r = 2 * b + 2;			//right child
@@ -268,8 +267,6 @@ namespace NOU::NOU_DAT_ALG
 
 				if (getPriority(m_data[r].dataTwo) < getPriority(m_data[l].dataTwo))
 					s = r;
-
-				b = static_cast<sizeType>(i - 1) / 2;
 
 				if (getPriority(m_data[s].dataTwo) < getPriority(m_data[b].dataTwo))
 				{
@@ -285,7 +282,7 @@ namespace NOU::NOU_DAT_ALG
 		}
 		else
 		{
-			while (b < (i / 2 - 2))
+			while (b < (m_data.size() / 2) - 2)
 			{
 				sizeType l = 2 * b + 1;			//left child
 				sizeType r = 2 * b + 2;			//right child
