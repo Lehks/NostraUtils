@@ -200,7 +200,7 @@ namespace NOU::NOU_DAT_ALG
 		}
 		else
 		{
-			while (1 > 0)
+			while (i > 0)
 			{
 				sizeType p = static_cast<sizeType>(i - 1) / 2;
 

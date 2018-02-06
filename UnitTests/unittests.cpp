@@ -16,6 +16,7 @@
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
+#include "nostrautils\dat_alg\BinaryHeap.hpp"
 
 #include "DebugClass.hpp"
 
@@ -915,6 +916,12 @@ namespace UnitTests
 			}
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+
+		TEST_METHOD(BinaryHeap)
+		{
+
 		}
 	};
 }
