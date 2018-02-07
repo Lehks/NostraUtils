@@ -25,6 +25,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+#define NOU_CHECK_ERROR_HANDLER Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0)
 
 //both functions are used in test IsInvocable
 void dummyFunc0(int)
@@ -67,6 +68,8 @@ namespace UnitTests
 			*/
 			Assert::IsTrue(sizeof(NOU::float32) == 4 && sizeof(long double) >= 4);
 			Assert::IsTrue(sizeof(NOU::float64) == 8 && sizeof(long double) >= 8);
+
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(Versions)
@@ -157,6 +160,7 @@ namespace UnitTests
 			Assert::IsTrue(version11 >= version12);
 			Assert::IsFalse(version11 <= version12);
 
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(Clamp)
@@ -166,6 +170,8 @@ namespace UnitTests
 			Assert::AreEqual(NOU::NOU_CORE::clamp(2, 3, 3), 3); //on max border
 			Assert::AreEqual(NOU::NOU_CORE::clamp(1, 2, 3), 2); //smaller than min
 			Assert::AreEqual(NOU::NOU_CORE::clamp(4, 3, 3), 3); //greater than max
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(Swap)
@@ -177,6 +183,8 @@ namespace UnitTests
 
 			Assert::AreEqual(2,a);
 			Assert::AreEqual(1,b);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 
@@ -339,6 +347,8 @@ namespace UnitTests
 
 			//Check if this compiles
 			NOU::NOU_DAT_ALG::Vector<NotCopiable> vec;
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(Comparator)
@@ -404,6 +414,8 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
 				static_cast<NOU::char32>('b')) < 0);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 
@@ -462,6 +474,8 @@ namespace UnitTests
 			uPtr3 = new int;
 
 			Assert::IsTrue(testVar); //if testVar is true, the destructor has been called.
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(FastQueue)
@@ -528,6 +542,8 @@ namespace UnitTests
 
 			//Check if this compiles
 			NOU::NOU_DAT_ALG::FastQueue<NotCopiable>();
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(AreSame)
@@ -542,6 +558,8 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
 			Assert::IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
 			Assert::IsFalse(NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(IsInvocable)
@@ -555,6 +573,8 @@ namespace UnitTests
 			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<std::string, decltype(dummyFunc1), int>::value);
 
 			Assert::IsFalse(NOU::NOU_CORE::IsInvocableR<int, int, int>::value);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(DebugAllocationCallback)
@@ -568,6 +588,8 @@ namespace UnitTests
 			alloc.deallocate(iPtr);
 
 			Assert::IsTrue(alloc.getCounter() == 0);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 		
 		TEST_METHOD(AllocationCallbackDeleter)
@@ -590,6 +612,8 @@ namespace UnitTests
 			deleter1(iPtr1); //delete using deleter
 
 			Assert::IsTrue(deleter1.getAllocator().getCounter() == 0);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(StringView)
@@ -784,6 +808,8 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(DebugClass)
@@ -836,6 +862,8 @@ namespace UnitTests
 
 			Assert::IsTrue(dbgCls3.get() == 1);
 			Assert::IsTrue(dbgCls4.get() == 3);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(IsDefaultConstructible)
@@ -852,6 +880,8 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_CORE::IsDefaultConstructible
 				<NOU::NOU_MEM_MNGT::GenericAllocationCallback<int>>::value);
 			Assert::IsFalse(NOU::NOU_CORE::IsDefaultConstructible<NotDefaultConstructible>::value);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(ErrorHandler)
@@ -905,6 +935,8 @@ namespace UnitTests
 
 			Assert::IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
 			Assert::IsTrue(handler.peekError().getActualID() == error);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(EpsilonCompare)
@@ -913,6 +945,7 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(123.456, 123.457, 0.1) == 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
 
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(InvokeResult)
@@ -921,6 +954,8 @@ namespace UnitTests
 				decltype(dummyFunc0), int>>::value);
 			Assert::IsTrue(NOU::NOU_CORE::AreSame<int, NOU::NOU_CORE::InvokeResult_t<
 				decltype(dummyFunc1), int>>::value);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(Uninitialized)
@@ -950,6 +985,8 @@ namespace UnitTests
 			}
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(String)
@@ -1012,6 +1049,8 @@ namespace UnitTests
 			str.clear();
 			substr.append("AAAAA");
 			str.append("Hallo");
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(BinaryHeap)
@@ -1048,6 +1087,8 @@ namespace UnitTests
 			Assert::IsTrue(b.at(2) == 13);
 			Assert::IsTrue(b.at(3) == 11);
 			Assert::IsTrue(b.at(4) == 15);
+		
+			NOU_CHECK_ERROR_HANDLER;
 		}
 	};
 }
