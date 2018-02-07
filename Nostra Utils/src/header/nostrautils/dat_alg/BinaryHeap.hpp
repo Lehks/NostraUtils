@@ -90,7 +90,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief "Standard" constructor.
 		*/
-		BinaryHeap(boolean isMinHeap = true, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>::getInstance());
+		BinaryHeap(boolean isMinHeap = true, sizeType size = 0, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>::getInstance());
 		/**
 		\param other			An onther BinaryHeap.
 
@@ -270,9 +270,9 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	BinaryHeap<T>::BinaryHeap(boolean isMinHeap, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator) :
+	BinaryHeap<T>::BinaryHeap(boolean isMinHeap, sizeType size,NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator) :
 		m_isMinHeap(isMinHeap),
-		m_data(0, allocator),
+		m_data(size, allocator),
 		m_nextPriorityCounter(0) //counter still starts at 0
 	{}
 

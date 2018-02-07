@@ -32,7 +32,7 @@ int main()
 {
 	//ErrorHandler::setCallback(callback);
 
-	NOU::NOU_DAT_ALG::BinaryHeap<A> binH(true);
+	NOU::NOU_DAT_ALG::BinaryHeap<A> binH(true,10);
 
 	binH.enqueue(A(5), 5);
 	binH.enqueue(A(1), 1);
@@ -70,6 +70,7 @@ int main()
 
 	while (getErrorHandler().getErrorCount() != 0)
 		std::cout << getErrorHandler().popError().getName() << std::endl;
+
 
 	std::cin.get();
 }
