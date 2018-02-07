@@ -229,17 +229,6 @@ namespace NOU::NOU_THREAD
 //	template<typename T, typename I, typename... ARGS>
 //	NOU_FUNC Task makeTaskFromMemberFunction(T &&t, I invocable, ARGS&&... args);
 
-	void AbstractTask::reset()
-	{
-		if (m_state == State::DONE)
-			m_state = State::NOT_STARTED;
-	}
-
-	typename AbstractTask::State AbstractTask::getState() const
-	{
-		return m_state;
-	}
-
 
 
 	template<typename R, typename I, typename... ARGS>
