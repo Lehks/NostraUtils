@@ -52,7 +52,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\brief Defines the default size of one PoolAllocator.
 		*/
-		static constexpr sizeType POOL_ALLOCATOR_DEFAULT_SIZE = 2;
+		static constexpr sizeType POOL_ALLOCATOR_DEFAULT_SIZE = 1024;
 
 		/**
 		\brief Defines the default size of m_blocks.
