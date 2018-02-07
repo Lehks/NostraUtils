@@ -48,12 +48,15 @@ int main()
 
 	test.push(personenAllocator.allocate(12, "Hans", "Blond"));
 	test.push(personenAllocator.allocate(32, "Peter", "Rot"));
+	test.push(personenAllocator.allocate(32, "Klaus", "Rot"));
 
 	for (Person* pers : test)
 	{
 		pers->print();
 	}
 
+	personenAllocator.deallocate(test.pop());
+	personenAllocator.deallocate(test.pop());
 	personenAllocator.deallocate(test.pop());
 	 
 	system("pause");
