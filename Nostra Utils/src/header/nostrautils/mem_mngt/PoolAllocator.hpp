@@ -158,7 +158,6 @@ namespace NOU::NOU_MEM_MNGT
 		for (PoolBlock<T>* block : m_blocks)
 		{
 			delete[] block;
-			std::cout << "Test" << std::endl;
 		}
 		
 		m_head = nullptr;
