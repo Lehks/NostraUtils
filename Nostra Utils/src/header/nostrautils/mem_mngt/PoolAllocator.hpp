@@ -158,6 +158,7 @@ namespace NOU::NOU_MEM_MNGT
 		for (PoolBlock<T>* block : m_blocks)
 		{
 			delete[] block;
+			std::cout << "Test" << std::endl;
 		}
 		
 		m_head = nullptr;
@@ -182,7 +183,7 @@ namespace NOU::NOU_MEM_MNGT
 	template <typename... arguments>
 	T* PoolAllocator<T>::allocate(arguments&&... args)
 	{	
-		if (PoolAllocator<T>::m_usedSize == (m_blocks.size()) * POOL_ALLOCATOR_DEFAULT_SIZE)
+		if (PoolAllocator<T>::m_usedSize == m_blocks.size() * m_size)
 		{
 			PoolBlock<T>* temp = m_blocks.at(m_blocks.size() - 1);
 			newPool();
