@@ -323,6 +323,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\AsyncTaskResult.hpp" />
+    <ClInclude Include="src\header\nostrautils\thread\ConditionVariable.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Lock.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Mutex.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Protection.hpp" />
