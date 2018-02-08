@@ -34,5 +34,6 @@ int main()
 {
 	ThreadManager& tm = ThreadManager::getInstance();
 
+
 	std::cin.get();
 }
