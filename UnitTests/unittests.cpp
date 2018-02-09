@@ -17,6 +17,7 @@
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
 #include "nostrautils\dat_alg\String.hpp"
+#include "nostrautils\dat_alg\Hashing.hpp"
 
 #include "DebugClass.hpp"
 
@@ -983,7 +984,18 @@ namespace UnitTests
 
 		TEST_METHOD(Hashfunction)
 		{
-			
+			NOU::sizeType testInt = 42;
+			NOU::sizeType hashSize = 5;
+			NOU::sizeType test;
+			test = NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize);
+			testInt = 9234978;
+			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize));
+
+			testInt = 42;
+			test = NOU::NOU_DAT_ALG::hashObj(&testInt);
+			testInt = 9234978;
+			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt));
+
 		}
 	};
 }

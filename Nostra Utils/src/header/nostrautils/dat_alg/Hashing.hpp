@@ -1,4 +1,6 @@
-#include "nostrautils\core\StdIncludes.hpp";
+#include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
+#include <limits>
 
 
 /** \file Vector.hpp
@@ -13,22 +15,20 @@ namespace NOU::NOU_DAT_ALG
 
 	/**
 	\param inputObject the input that will be hashed.
-	\param max 0 <= output < max.
+	\param max 0 < output < max. defaults to the biggest number available for ease of use
 
 	\brief A Function to hash an Object for a HashTable
 	*/
 
 	template <typename T>
-	constexpr uint64 hashObj(T* inputObject, uint64 max) {
-		uint64 h;
+	constexpr sizeType hashObj(T* inputObject, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max())) {
+		NOU_COND_PUSH_ERROR((max < 1), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Value max cannot be below 1");
+		sizeType h;
 		T** address;
 
 		address = &inputObject;
-		h = (uint64)*address;
+		h = reinterpret_cast<sizeType>(*address);
 
 		return h % max;
 	};
-
-
-
 }
