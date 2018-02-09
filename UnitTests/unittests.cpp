@@ -923,13 +923,20 @@ namespace UnitTests
 
 			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass*> dbgCls;
 
-			const NOU::sizeType ALLOC_SIZE = 500;
+			NOU::sizeType testValue = 1234;
+
+			const NOU::sizeType ALLOC_SIZE = 4321;
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 
 			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
 			{
-				dbgCls.push(pa.allocate());
+				dbgCls.push(pa.allocate(testValue));
+			}
+
+			for (NOU::DebugClass* value : dbgCls)
+			{
+				Assert::IsTrue(value->get() == testValue);
 			}
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == ALLOC_SIZE);
