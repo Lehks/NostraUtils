@@ -1,4 +1,6 @@
-#pragma once
+#ifndef NOU_DAT_ALG_HASHMAP_HPP
+#define	NOU_DAT_ALG_HASHMAP_HPP
+
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\dat_alg\Hashing.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
@@ -126,3 +128,4 @@ namespace NOU::NOU_DAT_ALG {
 		return this->get(key);
 	}
 }
+#endif
