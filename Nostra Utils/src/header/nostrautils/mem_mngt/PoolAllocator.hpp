@@ -9,7 +9,7 @@
 /**
 \file mem_mngt/PoolAllocator.hpp
 
-\author	 Lukas Groﬂ
+\author	 Lukas Gross
 \version 0.0.1
 \since	 1.0.0
 
@@ -84,12 +84,15 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\param size The size of the PoolAllocator. Can be set manually or can use the default size.
 
-		\param allocator A reference to an AllocationCallback that is used for initialising the m_blocks vector.
+		\param allocator Reference to an AllocationCallback that is used for initializing the m_blocks
+		vector.
 
-		\brief Constructs a new PoolAllocator. Calls the newPool(sizeType size), which creates the PoolAllocator.
+		\brief Constructs a new PoolAllocator. Calls the newPool(sizeType size), which creates the 
+		PoolAllocator.
 		*/
 		explicit PoolAllocator(sizeType size = POOL_ALLOCATOR_DEFAULT_SIZE, 
-			AllocationCallback<PoolBlock<T>*> &allocator = GenericAllocationCallback<PoolBlock<T>*>::getInstance());
+			AllocationCallback<PoolBlock<T>*> &allocator = 
+			GenericAllocationCallback<PoolBlock<T>*>::getInstance());
 
 		/**
 		\brief Deleted copy constructor.
@@ -220,8 +223,8 @@ namespace NOU::NOU_MEM_MNGT
 
 		if (!found)
 		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_DEALLOCATION, "A chunk of data passed to a Pool"
-				" Allocator was not allocated using that allocator.");
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_DEALLOCATION, 
+				"A chunk of data passed to a PoolAllocator was not allocated using that allocator.");
 		
 			return;
 		}

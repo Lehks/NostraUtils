@@ -89,7 +89,8 @@ namespace NOU::NOU_MEM_MNGT
 
 		sizeType m_size;
 
-		NOU_DAT_ALG::Vector<INTERNAL::GeneralPurposeAllocatorFreeChunk> m_freeChunks; ///\todo sorting mit insert func
+		NOU_DAT_ALG::Vector<INTERNAL::GeneralPurposeAllocatorFreeChunk> m_freeChunks; 
+		///\todo sorting with insert function
 
 	public:
 		explicit GeneralPurposeAllocator(sizeType size = GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
@@ -121,7 +122,8 @@ namespace NOU::NOU_MEM_MNGT
 		//do nothing
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::touches(const GeneralPurposeAllocatorFreeChunk& other) const
+	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::touches
+	(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		if (m_addr + m_size == other.m_addr)
 		{
@@ -136,33 +138,39 @@ namespace NOU::NOU_MEM_MNGT
 		return false;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator>(const GeneralPurposeAllocatorFreeChunk& other) const
+	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator>
+		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr > other.m_addr;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator<(const GeneralPurposeAllocatorFreeChunk& other) const
+	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator<
+		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr < other.m_addr;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator>=(const GeneralPurposeAllocatorFreeChunk& other) const
+	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator>=
+		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr >= other.m_addr;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator<=(const GeneralPurposeAllocatorFreeChunk& other) const
+	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator<=
+		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr <= other.m_addr;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator==(const GeneralPurposeAllocatorFreeChunk& other) const
+	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator==
+		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr == other.m_addr;
 	}
 
 	template <typename T, typename... arguments>
-	T* INTERNAL::GeneralPurposeAllocatorFreeChunk::allocateObject(sizeType amountofObjects, arguments&&... args)
+	T* INTERNAL::GeneralPurposeAllocatorFreeChunk::allocateObject
+	(sizeType amountofObjects, arguments&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 		byte* allocationLocation = (byte*)nextMultiple(alignof(T), ((sizeType)m_addr) + 1);
@@ -193,7 +201,8 @@ namespace NOU::NOU_MEM_MNGT
 	}
 
 	template <typename T>
-	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T>::GeneralPurposeAllocatorPointer(T* pdata, sizeType size) :
+	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T>::GeneralPurposeAllocatorPointer(T* pdata, 
+		sizeType size) :
 		m_pdata(pdata),
 		m_size(size)
 	{
@@ -271,12 +280,14 @@ namespace NOU::NOU_MEM_MNGT
 	}
 
 	template <typename T, typename... arguments>
-	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects, arguments&&... args)
+	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> 
+		GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects, arguments&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 		for (sizeType i = 0; i < m_freeChunks.size(); i++)
 		{
-			T* data = m_freeChunks[i].allocateObject<T>(amountOfObjects, NOU_CORE::forward<arguments>(args)...);
+			T* data = m_freeChunks[i].allocateObject<T>(amountOfObjects, 
+				NOU_CORE::forward<arguments>(args)...);
 			if (data != nullptr)
 			{
 				if (m_freeChunks[i].m_size == 0)
@@ -287,11 +298,12 @@ namespace NOU::NOU_MEM_MNGT
 			}
 		}
 
-		return GeneralPurposeAllocatorPointer<T>(nullptr, 0);///\Todo besseres errorhandling???
+		return GeneralPurposeAllocatorPointer<T>(nullptr, 0);///\todo better error handling???
 	}
 
 	template<typename T, typename... arguments>
-	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> GeneralPurposeAllocator::allocateObject(arguments&&...args)
+	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> 
+		GeneralPurposeAllocator::allocateObject(arguments&&...args)
 	{
 		return allocateObjects<T>(1, NOU_CORE::forward<arguments>(args)...);
 	}
