@@ -2,12 +2,10 @@
 #define	NOU_DAT_ALG_VECTOR_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\ContainerInterfaces.hpp"
 #include "nostrautils\dat_alg\Bubblesort.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
-
-#include <new>
+#include "nostrautils\core\ErrorHandler.hpp"
 
 /** \file Vector.hpp
 \author  Dennis Franz
@@ -19,7 +17,6 @@
 
 namespace NOU::NOU_DAT_ALG
 {
-
 	///\cond
 	template<typename T>
 	class VectorIterator;
@@ -42,44 +39,52 @@ namespace NOU::NOU_DAT_ALG
 	\details The most basic of our containers. It can act like a dynamic array a FIFO-Queue, LIFO-Queue or a normal Queue.
 	*/
 	template<typename T>
-	class NOU_CLASS Vector : public FifoQueue<T> , public LifoQueue<T>, public Queue<T>, public RandomAccess<T>
+	class NOU_CLASS Vector final
 	{
 
 	private:
+		/**
+		\brief The allocation callback that will allocate and deallocate the memory for the vector.
+		*/
 		NOU::NOU_MEM_MNGT::AllocationCallback<T>	&m_allocator;
 
 		/**
 		\brief A Constant for the minimal size of the Vector.
 		*/
 		static constexpr sizeType	                MIN_CAPACITY = 1;
+
 		/**
 		\brief The actuall capacity of the Vector (memory allocation).
 
 		\details 
-		The capacity isnt the same as the size of the Vcetor even if it looks like it duedo the constructor implementation.
-		The capacity is the total amount of space the vector hase. The size is the amount of the actuall stored elements of the vector.
+		The amount of memory 
 		*/
 		sizeType								    m_capacity;
+
 		/**
 		\brief The actuall size of the Vector (elements stored).
 		*/
 		sizeType								    m_size;
+
 		/**
 		\brief A pointer to the array that stores data.
 		*/
 		T										   *m_data;
+
 		/**
 		\brief Allocates an memory amount for the vector.
 
 		\see nostra::utils::mem_mngt::AllocationCallback
 		*/
 		T* alloc(sizeType amount);
+
 		/**
 		\brief Frees the amount of the Vector.
 
 		\see nostra::utils::mem_mngt::AllocationCallback
 		*/
 		void free(T *data);
+
 		/**
 		\brief Reallocate memory for the vector.
 
@@ -87,6 +92,17 @@ namespace NOU::NOU_DAT_ALG
 		If a new element gets inserted to the vector it has to reallocate the memory for it.
 		*/
 		void reallocateData(sizeType capacity);
+
+		/**
+		\tparam ARGS The types of the arguments that will be passed to the constructor of T.
+
+		\param index The index at which the instance will be inserted at.
+		\param args  The arguments that will be passed to the constructor of T.
+
+		\brief Constructs a new instance of T and inserts it at the passed index. 
+		*/
+		template<typename... ARGS>
+		void construct(sizeType index, ARGS&&... args);
 
 	public:
 		/**
@@ -102,19 +118,23 @@ namespace NOU::NOU_DAT_ALG
 		\see   nostra::utils::mem_mngt::AllocationCallback
 		\see   nostra::utils::mem_mngt::GenericAllocationCallback
 		*/
-		Vector<T>(sizeType size = MIN_CAPACITY, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance());
+		Vector<T>(sizeType size = MIN_CAPACITY, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = 
+			NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance());
+
 		/**
 		\param other Takes an other vector for moving.
 
 		\brief For Moving the \p other Vector.
 		*/
 		Vector<T>(Vector<T> &&other);
+
 		/**
 		\param other Takes an other vector for copying.
 
 		\brief For Copying the \p other Vector.
 		*/
 		Vector<T>(const Vector<T> &other);
+
 		/**
 		\brief Standard destructor.
 
@@ -122,26 +142,40 @@ namespace NOU::NOU_DAT_ALG
 		Note that the Vectors memory isnt alloced with the new keyword therefore the memory gets not dealocated with the delete keyword. 
 		For more deatils look at the implication.
 		*/
-		virtual ~Vector<T>();
+		~Vector<T>();
+
+		/**
+		\tparam ARGS The types of the arguments that will be passed to the constructor of the type T.
+		\param args The parameters that will be passed to the constructor of T.
+
+		\brief Like pushBack, this function inserts an element in the vector at the end. However, instead of 
+		       copying the element, it will construct a new element from the arguments that were passed to the
+			   function.
+		*/
+		template<typename... ARGS>
+		void emplaceBack(ARGS&&... args);
 
 		/**
 		\return      Returns a boolean.
 
 		\brief Checks wehter the Vector is empty or not.
 		*/
-		boolean empty() const override;
+		boolean empty() const ;
+
 		/**
 		\return      Returns the size of the Vector.
 
 		\brief Returns the size of the Vector.
 		*/
-		sizeType size() const override;
+		sizeType size() const ;
+
 		/**
 		\return      Returns the capacity of the Vector.
 
 		\brief Returns the capacity of the Vector.
 		*/
 		sizeType capacity() const;
+
 		/**
 		\param index The index of the element to show.
 		\return      The element that should be shown.
@@ -149,6 +183,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns a reference of the object at the given index.
 		*/
 		T& at(sizeType index);
+
 		/**
 		\param index The index of the element to show.
 		\return      The element that should be shown.
@@ -156,30 +191,49 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns a const reference of the object at the given index.
 		*/
 		const T& at(sizeType index) const;
+
 		/**
 		\param additionalCapactiy Additional capacity amount.
 
 		\brief Expends the capacity of the vector.
 		*/
 		void expandCapacity(sizeType additionalCapacity);
+
 		/**
 		\param additionalCapactiy Additional capacity amount.
 
 		\brief Checks if the capacity of the vector needs to be extended.
 		*/
 		void expandIfNeeded(sizeType additionalCapactiy);
+
 		/**
 		\param data The data to insert.
 
 		\brief Inserts an element at the last position.
 		*/
-		void pushBack(const T &data) override;
+		void pushBack(const T &data);
+
+		/**
+		\param data The data to insert.
+
+		\brief Inserts an element at the last position.
+		*/
+		void pushBack(T &&data);
+
 		/**
 		\param data The data to insert.
 
 		\brief Inserts an element at the first position.
 		*/
-		void pushFront(const T &data) override;
+		void pushFront(T &&data);
+
+		/**
+		\param data The data to insert.
+
+		\brief Inserts an element at the first position.
+		*/
+		void pushFront(const T &data);
+
 		/**
 		\param data The data to insert.
 
@@ -187,13 +241,24 @@ namespace NOU::NOU_DAT_ALG
 		\details 
 		This methode calls pushBack() .
 		*/
+		void push(T &&data);
+
+		/**
+		\param data The data to insert.
+
+		\brief Inserts an element at the last position.
+		\details
+		This methode calls pushBack() .
+		*/
 		void push(const T &data);
+
 		/**
 		\return      The element at the first position.
 
 		\brief Returns the element at the first position and delets it.
 		*/
-		T popFront() override;
+		T popFront();
+
 		/**
 		\return      The element at the first position.
 
@@ -201,27 +266,22 @@ namespace NOU::NOU_DAT_ALG
 		\details 
 		This methode calls popFront() .
 		*/
-		T pop() override;
+		T pop();
+
 		/**
 		\return      The element at the first position.
 
 		\brief Returns the element at the first position.
 		*/
-		T& peekFront() override;
+		T& peekFront();
+
 		/**
 		\return      The element at the first position.
 
 		\brief Returns the element at the first position.
 		*/
-		const T& peekFront() const override;
-		/**
-		\return      The element at the first position.
+		const T& peekFront() const;
 
-		\brief Returns the element at the first position.
-		\details
-		This methode calls peakFront() .
-		*/
-		T& peek() override;
 		/**
 		\return      The element at the first position.
 
@@ -229,7 +289,17 @@ namespace NOU::NOU_DAT_ALG
 		\details
 		This methode calls peakFront() .
 		*/
-		const T& peek() const override;
+		T& peek();
+
+		/**
+		\return      The element at the first position.
+
+		\brief Returns the element at the first position.
+		\details
+		This methode calls peakFront() .
+		*/
+		const T& peek() const;
+
 		/**
 		\param index0 The first index.
 		\param index1 The second index.
@@ -240,7 +310,8 @@ namespace NOU::NOU_DAT_ALG
 
 		\see nostra::utils::dat_alg::utils
 		*/
-		void swap(sizeType index0, sizeType index1) override;
+		void swap(sizeType index0, sizeType index1);
+
 		/**
 		\param index Removes the element at the given index.
 
@@ -249,43 +320,79 @@ namespace NOU::NOU_DAT_ALG
 		void remove(sizeType index);
 
 		/**
+		\tparam ARGS The types of the arguments that will be passed to the constructor of the type T.
+		\param index The index at which the new instance will be inserted.
+		\param args  The parameters that will be passed to the constructor of T.
+
+		\brief Like insert, this function inserts an element in the vector at a given index. However, instead 
+		of copying the element, it will construct a new element from the arguments that were passed to the
+		function.
+		*/
+		template<typename... ARGS>
+		void emplace(sizeType index, ARGS&&... args);
+
+		/**
 		\param data The data to insert.
 		\param index The index at wich the data gets inserted.
 
-		\brief Inserts an element at a given index.
+		\brief Inserts an element at a given index while keeping the order of the other elements in tact.
 		*/
-		void insert(const T &data, sizeType index);
+		void insert(sizeType index, T &&data);
+
+		/**
+		\param data The data to insert.
+		\param index The index at wich the data gets inserted.
+
+		\brief Inserts an element at a given index while keeping the order of the other elements in tact.
+		*/
+		void insert(sizeType index, const T &data);
+
 		/**
 		\brief Sorts the Vector.
 		*/
 		void sort();
+
 		/**
 		\brief Sorts the Vector using comperators.
 		*/
 		void sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp);
+
 		/**
 		\brief returns a pointer reference to the current data.
 		*/
-		T*& data();
+		T* const & data();
+
 		/**
 		\brief returns a const pointer reference to the current data.
 		*/
-		const T*& data() const;
+		const T* const & data() const;
+
 		/**
 		\brief Clears the Vector.
 		*/
 		void clear();
+
 		/**
 		\brief Sets the size of the Vector.
 		*/
 		void setSize(sizeType size);
+
 		/**
 		\param replacement The data to insert.
 		\param index The index at wich the data gets replaced.
 
 		\brief replaces the data at the index with the passed data.
 		*/
-		Vector& replace(const T& replacement, sizeType index);
+		Vector& replace(sizeType index, T &&replacement);
+
+		/**
+		\param replacement The data to insert.
+		\param index The index at wich the data gets replaced.
+
+		\brief replaces the data at the index with the passed data.
+		*/
+		Vector& replace(sizeType index, const T &replacement);
+
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -654,6 +761,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	template<typename... ARGS>
+	void Vector<T>::construct(sizeType index, ARGS&&... args)
+	{
+		new (m_data + index) T(NOU_CORE::forward<ARGS>(args)...);
+	}
+
+	template<typename T>
 	Vector<T>::Vector(sizeType size, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator) :
 		m_capacity(NOU::NOU_CORE::max(MIN_CAPACITY, size)),
 		m_data(alloc(m_capacity)),
@@ -696,6 +810,17 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	template<typename ...ARGS>
+	void Vector<T>::emplaceBack(ARGS&& ...args)
+	{
+		expandIfNeeded(1);
+
+		construct(m_size, NOU_CORE::forward<ARGS>(args)...);
+
+		m_size++;
+	}
+
+	template<typename T>
 	boolean Vector<T>::empty() const
 	{
 		return m_size > 0 ? false : true;
@@ -716,20 +841,26 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	T& Vector<T>::at(sizeType index)
 	{
+		NOU_COND_PUSH_ERROR((index > m_size),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
+
 		return m_data[index];
 	}
 
 	template<typename T>
 	const T& Vector<T>::at(sizeType index) const
 	{
+		NOU_COND_PUSH_ERROR((index > m_size),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
+
 		return m_data[index];
 	}
 
 	template<typename T>
 	void Vector<T>::expandCapacity(sizeType additionalCapacity)
 	{
-		//sizeType newCapacity = m_capacity + (m_capacity * ((m_capacity + additionalCapacity) / additionalCapacity));
-		sizeType newCapacity = m_capacity + (((m_capacity + additionalCapacity) / m_capacity) * m_capacity); //dividing by m_capacity is safe b/c m_capacity is always > 0
+		//dividing by m_capacity is safe b/c m_capacity is always > 0
+		sizeType newCapacity = m_capacity + (((m_capacity + additionalCapacity) / m_capacity) * m_capacity); 
 
 		reallocateData(newCapacity);
 	}
@@ -744,27 +875,44 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::pushBack(const T &data)
 	{
-		expandIfNeeded(1);
+		emplaceBack(data);
+	}
 
-		new (m_data + m_size) T(data); //initialize next object
+	template<typename T>
+	void Vector<T>::pushBack(T &&data)
+	{
+		emplaceBack(NOU_CORE::move(data));
+	}
 
-		m_size++;
+	template<typename T>
+	void Vector<T>::pushFront(T &&data)
+	{
+		insert(0, NOU_CORE::move(data));
 	}
 
 	template<typename T>
 	void Vector<T>::pushFront(const T &data)
 	{
-		insert(data, 0);
+		insert(0, data);
 	}
 
 	template<typename T>
 	T Vector<T>::popFront()
 	{
+		NOU_COND_PUSH_ERROR((m_size == 0),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
+
 		T element = NOU_CORE::move(*m_data);
 		remove(0);
 		return element;
 	}
 
+	template<typename T>
+	void Vector<T>::push(T &&data)
+	{
+		pushBack(NOU_CORE::move(data));
+	}
+	
 	template<typename T>
 	void Vector<T>::push(const T &data)
 	{
@@ -804,16 +952,25 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::swap(sizeType index0, sizeType index1)
 	{
+		NOU_COND_PUSH_ERROR((index0 > m_size),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
+
+		NOU_COND_PUSH_ERROR((index1 > m_size),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
+
 		NOU::NOU_DAT_ALG::swap(m_data + index0, m_data + index1);
 	}
 
 	template<typename T>
 	void Vector<T>::remove(sizeType index)
 	{
+		NOU_COND_PUSH_ERROR((index > m_size),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
+
 		for (sizeType i = index; i < m_size - 1; i++) //shift all element to the left, until the index
 		{
 			at(i).~T(); //delete old element
-			new (m_data + i) T(NOU::NOU_CORE::move(at(i + 1))); //override old element using move constr
+			new (m_data + i) T(NOU::NOU_CORE::move(at(i + 1))); // old element using move constr
 		}
 
 		//destroy last element in the vector (it was moved and will not be overridden at this point)
@@ -821,24 +978,40 @@ namespace NOU::NOU_DAT_ALG
 
 		m_size--;
 	}
-
+	
 	template<typename T>
-	void Vector<T>::insert(const T &data, sizeType index)
+	template<typename... ARGS>
+	void Vector<T>::emplace(sizeType index, ARGS&&... args)
 	{
-		expandIfNeeded(1);
+		NOU_COND_PUSH_ERROR((index > m_size),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index is bigger then the size of the vector.");
 
+		expandIfNeeded(1);
 		for (sizeType i = m_size; i > index; i--)
 		{
 			if (i != m_size)
 				at(i).~T(); //delete old element (if not outside array bounds)
-
-			new (m_data + i) T(m_data[i - 1]); //shift element to the right using move constructor
+	
+			new (m_data + i) T(NOU_CORE::move(m_data[i - 1])); //shift element to the right using move constructor
 		}
 
 		m_data[index].~T();
-		new (m_data + index) T(data); //copy new element into the vector
+
+		construct(index, NOU_CORE::forward<ARGS>(args)...);
 
 		m_size++;
+	}
+
+	template<typename T>
+	void Vector<T>::insert(sizeType index, T &&data)
+	{
+		emplace(index, NOU_CORE::move(data));
+	}
+
+	template<typename T>
+	void Vector<T>::insert(sizeType index, const T &data)
+	{
+		emplace(index, data);
 	}
 
 	template<typename T>
@@ -856,7 +1029,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	const T*& Vector<T>::data() const
+	T* const & Vector<T>::data()
+	{
+		return m_data;
+	}
+
+	template<typename T>
+	const T* const & Vector<T>::data() const
 	{
 		return m_data;
 	}
@@ -879,14 +1058,18 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	T*& Vector<T>::data()
+	Vector<T>& Vector<T>::replace(sizeType index, T&& replacement)
 	{
-		return m_data;
+		at(index) = NOU_CORE::move(replacement);
+		return *this;
 	}
 
 	template<typename T>
-	Vector<T>& Vector<T>::replace(const T& replacement, sizeType index)
+	Vector<T>& Vector<T>::replace(sizeType index, const T& replacement)
 	{
+		NOU_COND_PUSH_ERROR((index > m_size),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "No object was found at this index.");
+
 		at(index) = replacement;
 		return *this;
 	}
@@ -903,7 +1086,8 @@ namespace NOU::NOU_DAT_ALG
 			m_data = alloc(m_capacity);
 		}
 
-		//Delete all objects that are in the current vector, but will not overridden by elements in the other one
+		//Delete all objects that are in the current vector, but will not overridden by elements in the other
+		//one
 		//If there are fewer elements in this vector than in the other one, nothing will happen
 		for (sizeType i = other.m_size; i < m_size; i++)
 			at(i).~T();
@@ -911,7 +1095,7 @@ namespace NOU::NOU_DAT_ALG
 		sizeType i;
 
 		/*
-		First:  Override existing elements with the values from the other vector using cpy-assign
+		First:  existing elements with the values from the other vector using cpy-assign
 		Second: Set uninitialized elements with the values from the other vector using cpy-constr
 		*/
 		//####

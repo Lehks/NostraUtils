@@ -298,6 +298,7 @@ namespace NOU::NOU_DAT_ALG
 		///\todo check if correct constructors are getting called.
 		constexpr StringView(const StringView &other); 
 
+	//  no need to exist (and it breaks the constexpr of the class)
 	//	virtual ~StringView() = default;
 
 		/**
