@@ -155,7 +155,7 @@ namespace NOU::NOU_MEM_MNGT
 	}
 
 	template <typename T, typename... arguments>
-	T* GeneralPurposeAllocatorFreeChunk::allocateObject(sizeType amountofObjects = 1, arguments&&... args)
+	T* INTERNAL::GeneralPurposeAllocatorFreeChunk::allocateObject(sizeType amountofObjects = 1, arguments&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 		byte* allocationLocation = (byte*)nextMultiple(alignof(T), ((sizeType)m_addr) + 1);
@@ -303,6 +303,8 @@ namespace NOU::NOU_MEM_MNGT
 
 
 	}
+
+
 }
 
 #endif
