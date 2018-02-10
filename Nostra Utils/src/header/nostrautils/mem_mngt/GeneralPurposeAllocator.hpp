@@ -4,6 +4,7 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\dat_alg\BinarySearch.hpp"
 #include "nostrautils\mem_mngt\Utils.hpp"
 
 namespace NOU::NOU_MEM_MNGT
@@ -78,7 +79,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			boolean operator==(void* ptr) const;
 
-			boolean operator!=(void ptr) const;
+			boolean operator!=(void* ptr) const;
 		};
 
 	private:
@@ -103,8 +104,14 @@ namespace NOU::NOU_MEM_MNGT
 		template <typename T, typename... arguments>
 		GeneralPurposeAllocatorPointer<T> allocateObjects(sizeType amountOfObjects = 1, arguments&&... args);
 
+		template <typename T, typename... arguments>
+		GeneralPurposeAllocatorPointer<T> allocateObject(arguments&&... args);
+
 		template <typename T>
 		void deallocateObjects(GeneralPurposeAllocatorPointer<T> pointer);
+
+		template<typename T>
+		void getNeigbors(const T& val, T*& left, T*& right, sizeType insertionIndex);
 	};
 
 	INTERNAL::GeneralPurposeAllocatorFreeChunk::GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size) :
@@ -155,7 +162,7 @@ namespace NOU::NOU_MEM_MNGT
 	}
 
 	template <typename T, typename... arguments>
-	T* INTERNAL::GeneralPurposeAllocatorFreeChunk::allocateObject(sizeType amountofObjects = 1, arguments&&... args)
+	T* INTERNAL::GeneralPurposeAllocatorFreeChunk::allocateObject(sizeType amountofObjects, arguments&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 		byte* allocationLocation = (byte*)nextMultiple(alignof(T), ((sizeType)m_addr) + 1);
@@ -242,12 +249,12 @@ namespace NOU::NOU_MEM_MNGT
 	}
 
 	template <typename T>
-	boolean GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T>::operator!=(void ptr) const
+	boolean GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T>::operator!=(void* ptr) const
 	{
 		return m_pdata != ptr;
 	}
 
-	GeneralPurposeAllocator::GeneralPurposeAllocator(sizeType size = GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE) :
+	GeneralPurposeAllocator::GeneralPurposeAllocator(sizeType size) :
 		m_size(size)
 	{
 		m_data = new byte[m_size];
@@ -264,7 +271,7 @@ namespace NOU::NOU_MEM_MNGT
 	}
 
 	template <typename T, typename... arguments>
-	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects = 1, arguments&&... args)
+	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects, arguments&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 		for (sizeType i = 0; i < m_freeChunks.size(); i++)
@@ -283,6 +290,12 @@ namespace NOU::NOU_MEM_MNGT
 		return GeneralPurposeAllocatorPointer<T>(nullptr, 0);///\Todo besseres errorhandling???
 	}
 
+	template<typename T, typename... arguments>
+	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> GeneralPurposeAllocator::allocateObject(arguments&&...args)
+	{
+		return allocateObjects<T>(1, NOU_CORE::forward<arguments>(args)...);
+	}
+
 	template <typename T>
 	void GeneralPurposeAllocator::deallocateObjects(GeneralPurposeAllocatorPointer<T> pointer)
 	{
@@ -297,14 +310,58 @@ namespace NOU::NOU_MEM_MNGT
 
 		INTERNAL::GeneralPurposeAllocatorFreeChunk gpafc(bytePointer - offset, amountOfBytes + offset);
 
+		sizeType insertionIndex;
+		NOU_DAT_ALG::binarySearch(m_freeChunks, gpafc, 0, -1, &insertionIndex);
+
 		INTERNAL::GeneralPurposeAllocatorFreeChunk* p_gpafc = &gpafc;
 		INTERNAL::GeneralPurposeAllocatorFreeChunk* left;
 		INTERNAL::GeneralPurposeAllocatorFreeChunk* right;
 
+		getNeigbors(*p_gpafc, left, right, insertionIndex);
 
+		boolean didMerge = false;
+
+		if (left->m_addr != m_freeChunks.at(-1).m_addr)
+		{
+			if (left->touches(*p_gpafc))
+			{
+				left->m_size += p_gpafc->m_size;
+				p_gpafc = left;
+				didMerge = true;
+			}
+		}
+
+		if(right->m_addr != m_freeChunks.at(m_freeChunks.size()).m_addr)
+		{ 
+			if (right->touches(*p_gpafc))
+			{
+				if (didMerge)
+				{
+					p_gpafc->m_size += right->m_size;
+					m_freeChunks.remove(insertionIndex);
+				}
+				else
+				{
+					right->m_size += p_gpafc->m_size;
+					right->m_addr = p_gpafc->m_addr;
+				}
+
+				didMerge = true;
+			}
+		}
+
+		if (!didMerge)
+		{
+			m_freeChunks.pushBack(gpafc);
+		}
 	}
 
-
+	template<typename T>
+	void GeneralPurposeAllocator::getNeigbors(const T& val, T*& left, T*& right, sizeType insertionIndex)
+	{
+		left = reinterpret_cast<T*>(m_freeChunks.data() + insertionIndex - 1);
+		right = reinterpret_cast<T*>(m_freeChunks.data() + insertionIndex);
+	}
 }
 
 #endif

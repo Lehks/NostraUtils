@@ -5,6 +5,7 @@
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\mem_mngt\PoolAllocator.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils\mem_mngt\GeneralPurposeAllocator.hpp"
 
 #include <iostream>
 #include <string>
@@ -20,10 +21,14 @@ public:
 		m_age(age),
 		m_name(name),
 		m_haircolor(haircolor)
-	{}
+	{
+		std::cout << "Konstruktor" << std::endl;
+	}
 
 	~Person()
-	{}
+	{
+		std::cout << "Destruktor" << std::endl;
+	}
 
 	void print()
 	{
@@ -33,31 +38,15 @@ public:
 
 int main()
 {
-	int alloc = 0;
-	{
-		NOU::NOU_MEM_MNGT::PoolAllocator<Person> personenAllocator;
+	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
+	auto p1 = gpa.allocateObject<Person>(40, "Petra", "Braun");
 
-		personenAllocator.deallocate(((Person*)nullptr) + 15);
+	p1->print();
+	p1->m_age = 50;
+	p1->m_haircolor = "Brown";
+	p1->m_name = "Peter";
+	p1->print();
+	gpa.deallocateObjects(p1);
 
-		std::cout << NOU::NOU_CORE::getErrorHandler().peekError().getName() << std::endl;
-	}
-
-	NOU::NOU_MEM_MNGT::PoolAllocator<Person> personenAllocator;
-
-	NOU::NOU_DAT_ALG::Vector<Person*> test;
-
-	test.push(personenAllocator.allocate(12, "Hans", "Blond"));
-	test.push(personenAllocator.allocate(32, "Peter", "Rot"));
-	test.push(personenAllocator.allocate(32, "Klaus", "Rot"));
-
-	for (Person* pers : test)
-	{
-		pers->print();
-	}
-
-	personenAllocator.deallocate(test.pop());
-	personenAllocator.deallocate(test.pop());
-	personenAllocator.deallocate(test.pop());
-	 
 	system("pause");
 }
