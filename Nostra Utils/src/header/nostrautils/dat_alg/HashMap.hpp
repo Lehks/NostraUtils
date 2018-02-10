@@ -18,13 +18,14 @@ namespace NOU::NOU_DAT_ALG {
 	class NOU_CLASS HashMap {
 	private:
 
-		const sizeType LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more ofthen O(1) occurs
+		const static sizeType LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more ofthen O(1) occurs
 
 		struct Pair {
-			K *key;
-			V *value;
+		public:
+			K &key;
+			V &value;
 		};	//helper struct to help identify Values
-		Vector<*Pair> *pairs[LOAD_SIZE]; //actual storage
+		Vector<Pair> pairs[LOAD_SIZE]; //actual storage
 	public:
 
 		/**
@@ -38,13 +39,13 @@ namespace NOU::NOU_DAT_ALG {
 		\return true if sucessfully mapped
 		\brief maps a value to a specific key;
 		*/
-		boolean add(K *key, V *value);//WIP
+		boolean add(K &key, V &value);//WIP
 
 		/**
 		\param key the key on where a value will be returned
 		\brief returns the corresponding value mapped to a specific key
 		*/
-		V* get(K *key);//WIP
+		V& get(K &key);//WIP
 
 		//TODO:
 		/*
@@ -58,21 +59,21 @@ namespace NOU::NOU_DAT_ALG {
 		Vector entrySet();
 		*/
 
-		V* operator [](K* key);
+		V& operator [](K& key);
 
 
 	};
 	template <typename K, typename V>
 	HashMap<K,V>::HashMap() {
-		//initialize all Vectors to null
+		//initialize all Vectors;
 		for (int i = 0; i < LOAD_SIZE; i++) {
-			pairs[i] = NULL;
+			pairs[i]();
 		}
 	}
 
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::add(K *key, V *value) {
+	boolean HashMap<K, V>::add(K &key, V &value) {
 		sizeType n;
 		Vector tmpVector;
 		Pair tmpPair;
@@ -81,28 +82,27 @@ namespace NOU::NOU_DAT_ALG {
 		tmpPair.key = key;
 		tmpPair.value = value;
 
-		if (pairs[n] == NULL) {	//if no vector is at this position, create a new one with the KV Pair inside and return true -> O(1)
-			tmp = Vector<Pair*>();
-			tmp.emplaceBack(&tmpPair);
-			pairs[n] = &tmpVector;
+		if (pairs[n].size() == 0) {	//if Vector at this position is empty, fill it -> O(1)
+			tmp.emplaceBack(tmpPair);
+			pairs[n] = tmpVector;
 			return true;
 		}
-		else {	//if a Vector exists at this position, search if the given Key is already existing. If yes return true;
+		else {	//if a Vector in this position has elements, search if the given Key is already existing. If yes return false;
 			for (int i = 0; i < pairs[n].size(); i++) {
-				if (*(pairs[n][i]->key) == *(tmpPair.key)) {
+				if (pairs[n][i].key == tmpPair.key) {
 					return false;
 				}
 			}
 
 			//add tmp Pair at the end of the Vector -> O(n)
-			pairs[n].emplaceBack(&tmpPair)
+			pairs[n].emplaceBack(tmpPair)
 			return true;
 		}
 		
 	}
 
 	template <typename K, typename V>
-	V* HashMap<K,V>::get(K *key) {
+	V& HashMap<K,V>::get(K &key) {
 		sizeType n;
 		
 		n = hashObj(key, LOAD_SIZE);
@@ -124,7 +124,7 @@ namespace NOU::NOU_DAT_ALG {
 
 
 	template<typename K, typename V>
-	V* HashMap<K,V>::operator [](K* key) {
+	V& HashMap<K,V>::operator [](K &key) {
 		return this->get(key);
 	}
 }
