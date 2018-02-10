@@ -7,6 +7,8 @@
 
 /** \file Utils.hpp
 \author  Dennis Franz
+\author	 Lukas Reichmann
+\author	 Lukas Gross
 \since   0.0.1
 \version 0.0.1
 \brief   This file provides usefull utility funcitions for dat_alg.
@@ -35,8 +37,21 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
 
+	/**
+	\tparam The type of the parameters.
+
+	\param t0 A const reference to the first compared parameter.
+
+	\param t1 A const reference to the second compared parameter.
+
+	\param epsilon A const reference to the passed epsilon.
+
+	\return True if the difference between the two parameters is smaller than the epsilon.
+
+	\brief Compares two parameters to a passed epsilon. 
+	*/
 	template<typename T>
-	constexpr NOU_FUNC int32 epsilonCompare(const T &t0, const T &t1, const T &epsilon);
+	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon);
 
 	template<typename T>
 	void swap(T *dataone, T *datatwo) 
@@ -53,7 +68,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC int32 epsilonCompare(const T &t0, const T &t1, const T &epsilon)
+	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon)
 	{
 		T diff = t0 - t1;
 		T abs = (diff < 0 ? -diff : diff);
