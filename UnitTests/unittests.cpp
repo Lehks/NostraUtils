@@ -1103,6 +1103,11 @@ namespace UnitTests
 			testInt = 9234978;
 			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize));
 
+			NOU::NOU_DAT_ALG::String<NOU::char8> str("Hallo");
+			NOU::sizeType strtest;
+			strtest = NOU::NOU_DAT_ALG::hashObj(&str, hashSize);
+			str.append("you");
+			Assert::AreEqual(strtest, NOU::NOU_DAT_ALG::hashObj(&str, hashSize));
 		}
 
 		TEST_METHOD(HashMap) {
