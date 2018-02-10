@@ -16,7 +16,7 @@
 /**
 \file core/Logging.hpp
 
-\author	 Lukas Groﬂ
+\author	 Lukas Gross
 \version 0.0.1
 \since	 1.0.0
 
@@ -35,7 +35,7 @@ namespace NOU::NOU_CORE
 		   Info:	Runtime information like start/stop of the application, user login/logout, transactions.
 		   Debug:	Information about the application execution. Usually only used during development or
 					debugging errors.
-		   Trace:	Detailled tracing of the application during runtime, especially for tracking errors.
+		   Trace:	Detailed tracing of the application during runtime, especially for tracking errors.
 	*/
 	enum class EventLevelCodes
 	{
@@ -167,7 +167,7 @@ namespace NOU::NOU_CORE
 		/**
 		\param event A const reference to an event object.
 
-		\brief A overriden function of the write() in the ILogger interface. Writes the log entry to the
+		\brief A overridden function of the write() in the ILogger interface. Writes the log entry to the
 			   console.
 		*/
 		void write(const Event& event) override
@@ -178,7 +178,7 @@ namespace NOU::NOU_CORE
 		}
 	};
 	/**
-	\brief A class for storeing the different logger and writing logs to all of them.
+	\brief A class for storing the different logger and writing logs to all of them.
 	*/
 	class NOU_CLASS Logger
 	{
@@ -197,7 +197,7 @@ namespace NOU::NOU_CORE
 		static NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> s_allocator;
 
 		/**
-		\brief Creates a new vector from ILogger pointern.
+		\brief Creates a new vector from ILogger pointers.
 		*/
 		static NOU::NOU_DAT_ALG::Vector<ILogger*> s_logger;
 
@@ -222,7 +222,7 @@ namespace NOU::NOU_CORE
 
 		\param msg A const reference to the message, which specifies the event.
 
-		\brief Creates a new event object from the level and msg parametern and calls the logAll() with this
+		\brief Creates a new event object from the level and msg parameters and calls the logAll() with this
 			   event object.
 		*/
 		static void write(EventLevelCodes level, const StringType &msg);
