@@ -18,6 +18,9 @@ namespace NOU::NOU_THREAD
 
 	void ThreadManager::threadLoop(ThreadManager &manager)
 	{
+		UniqueLock lock(manager.m_taskQueueMutex);
+		manager.m_threadLoopVariable.wait(lock, [&manager] { return manager.m_tasks->size() == 0; });
+
 
 	}
 
@@ -28,9 +31,8 @@ namespace NOU::NOU_THREAD
 		//capacity() b/c must store the same amounts of handlers as there are threads
 		m_handlers(new NOU_DAT_ALG::Vector<NOU_CORE::ErrorHandler> 
 			(m_threads->capacity(), m_handlerAllocator), NOU_MEM_MNGT::defaultDeleter),
-		//add default task capacity as soon as it is supported by the binary heap
 		m_tasks(new NOU_DAT_ALG::BinaryHeap<AbstractTask*>
-		(true, m_taskAllocator), NOU_MEM_MNGT::defaultDeleter)
+		(true, DEFAULT_TASK_CAPACITY, m_taskAllocator), NOU_MEM_MNGT::defaultDeleter)
 	{
 
 	}

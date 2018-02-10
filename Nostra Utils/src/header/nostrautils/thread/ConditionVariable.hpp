@@ -22,16 +22,22 @@ namespace NOU::NOU_THREAD
 		void notifyOne();
 		void notifyAll();
 
-		void wait(const Lock &lock);
+		void wait(UniqueLock &lock);
 
 		template<typename PRED>
-		void wait(const Lock &lock, PRED predicate);
+		void wait(UniqueLock &lock, PRED predicate);
 
 
 
 		ConditionVariable(const ConditionVariable&) = delete;
 		ConditionVariable& operator = (const ConditionVariable&) = delete;
 	};
+
+	template<typename PRED>
+	void ConditionVariable::wait(UniqueLock &lock, PRED predicate)
+	{
+		m_variable.wait(lock.getUnderlying(), predicate);
+	}
 }
 
 #endif

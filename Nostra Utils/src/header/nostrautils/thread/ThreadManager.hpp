@@ -7,6 +7,7 @@
 #include "nostrautils\thread\ThreadWrapper.hpp"
 #include "nostrautils\thread\Task.hpp"
 #include "nostrautils\thread\Mutex.hpp"
+#include "nostrautils\thread\ConditionVariable.hpp"
 
 ///\cond
 namespace NOU::NOU_DAT_ALG
@@ -52,8 +53,11 @@ namespace NOU::NOU_THREAD
 	private:
 		static void threadLoop(ThreadManager &manager);
 
+		Mutex m_taskQueueMutex;
+		ConditionVariable m_threadLoopVariable;
+
 	public:
-		using ThreadType = int; //temporary thread type
+		using ThreadType = ThreadWrapper; 
 
 		NOU_MEM_MNGT::GenericAllocationCallback<ThreadType> m_threadAllocator;
 		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::Vector<ThreadType>> m_threads;

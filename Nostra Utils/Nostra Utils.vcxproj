@@ -336,6 +336,7 @@
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
+    <ClCompile Include="src\source\nostrautils\thread\ConditionVariable.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\Lock.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\Mutex.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\Task.cpp" />
