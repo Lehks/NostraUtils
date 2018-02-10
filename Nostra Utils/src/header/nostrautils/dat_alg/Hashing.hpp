@@ -15,13 +15,10 @@ namespace NOU::NOU_DAT_ALG
 
 	/**
 	\param inputObject the input that will be hashed.
-	\param max 0 < output < max. defaults to the biggest number available for ease of use
+	\param max 0 <= output < max.
 
 	\brief A Function to hash an Object for a HashTable
 	*/
-
-	template <typename T>
-	constexpr sizeType hashObj(T* inputObject, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()));
 
 	template <typename T>
 	constexpr sizeType hashObj(T* inputObject, sizeType max) {
