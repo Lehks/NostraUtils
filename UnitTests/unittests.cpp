@@ -19,6 +19,7 @@
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\Hashing.hpp"
+#include "nostrautils\dat_alg\HashMap.hpp"
 
 #include "DebugClass.hpp"
 
@@ -1106,6 +1107,10 @@ namespace UnitTests
 			test = NOU::NOU_DAT_ALG::hashObj(&testInt);
 			testInt = 9234978;
 			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt));
+
+		}
+
+		TEST_METHOD(HashMap) {
 
 		}
 	};
