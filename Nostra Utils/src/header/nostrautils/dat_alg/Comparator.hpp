@@ -103,7 +103,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T, typename R>
 	constexpr R genericComparator(const T &a, const T &b)
 	{
-		return a - b;
+		return static_cast<R>(a - b);
 	}
 
 	template<typename T, typename R>
