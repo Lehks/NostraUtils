@@ -4,7 +4,7 @@
 
 namespace NOU::NOU_MATH 
 {
-	Vec3::Vec3(const float32 x, const float32 y, const float32 z) :
+/*	Vec3::Vec3(const float32 x, const float32 y, const float32 z) :
 		m_data{x, y, z}
 	{
 		
@@ -58,5 +58,5 @@ namespace NOU::NOU_MATH
 	Vec3 Vec3::operator * (const float32 num)
 	{
 		return mult(num);
-	}
+	}*/
 }

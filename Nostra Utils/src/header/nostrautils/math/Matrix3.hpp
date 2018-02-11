@@ -6,11 +6,11 @@
 
 namespace NOU::NOU_MATH
 {
-	class NOU_CLASS Matrix3
+/*	class NOU_CLASS Matrix3
 	{
 		public:
 			int32 m_cols;
-			Vec3 m_data[];
+			Vec3i m_data[];
 
 		public:
 			Matrix3(int32 cols);
@@ -21,7 +21,7 @@ namespace NOU::NOU_MATH
 			int32 size();
 
 			Matrix3 operator + (const Matrix3 & matrix);
-	};
+	};*/
 }
 
 #endif
