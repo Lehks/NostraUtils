@@ -638,16 +638,6 @@ namespace NOU::NOU_DAT_ALG
 		constexpr boolean operator != (const VectorIterator &other) const;
 
 		/**
-		\param other The iterator to add.
-
-		\return A new iterator with the added values of the iterators.
-
-		\brief Adds two iterators. E.g. if this iterator points to the first object and \p other to the 
-		       second, the resulting operator would point to the third object.
-		*/
-		constexpr VectorIterator operator + (const VectorIterator &other) const;
-		
-		/**
 		\param value The value to add.
 
 		\return A new iterator with the value of this operator plus the added value.
@@ -657,17 +647,6 @@ namespace NOU::NOU_DAT_ALG
 			   iterators are named (first, second, etc.) is relative to Vector::begin(). 
 		*/
 		constexpr VectorIterator operator + (sizeType value) const;
-
-		/**
-		\param other The iterator to subtract.
-
-		\return A new iterator with the subtracted values of the iterators.
-
-		\brief Subtracts two iterators. E.g. if this iterator points to the second object and \p other to the
-			   first, the resulting operator would point to the first object. Note that the order in which 
-			   these iterators are named (first, second, etc.) is relative to Vector::begin(). 
-		*/
-		constexpr VectorIterator operator - (const VectorIterator &other) const;
 
 		/**
 		\param value The value to subtract.
@@ -681,17 +660,6 @@ namespace NOU::NOU_DAT_ALG
 		constexpr VectorIterator operator - (sizeType value) const;
 
 		/**
-		\param other The iterator to add.
-
-		\return A reference to this instance.
-
-		\brief Adds the passed iterator to this one. E.g. if this iterator points to the first object and 
-		       \p other to the second, this iterator would point to the third object afterwards. Note that the 
-			   order in which these iterators are named (first, second, etc.) is relative to Vector::begin(). 
-		*/
-		constexpr VectorIterator& operator += (const VectorIterator &other);
-
-		/**
 		\param value The value to add.
 
 		\return A reference to this instance.
@@ -703,17 +671,6 @@ namespace NOU::NOU_DAT_ALG
 		constexpr VectorIterator& operator += (sizeType value);
 
 		/**
-		\param other The iterator to subtract.
-
-		\return A reference to this instance.
-
-		\brief Subtracts the passed iterator to this one. E.g. if this iterator points to the second object
-		and \p other to the first, this iterator would point to the first object afterwards. Note that the 
-			   order in which these iterators are named (first, second, etc.) is relative to Vector::begin(). 
-		*/
-		constexpr VectorIterator& operator -= (const VectorIterator &other);
-
-		/**
 		\param value The value to subtract.
 
 		\return A reference to this instance.
@@ -723,42 +680,6 @@ namespace NOU::NOU_DAT_ALG
 			   order in which these iterators are named (first, second, etc.) is relative to Vector::begin(). 
 		*/
 		constexpr VectorIterator& operator -= (sizeType value);
-
-		/**
-		\param other The iterator to compare to.
-
-		\return True, if this iterator is smaller than \p other, false if not.
-
-		\brief Compares two iterators.
-		*/
-		constexpr boolean operator < (const VectorIterator &other) const;
-
-		/**
-		\param other The iterator to compare to.
-
-		\return True, if this iterator is bigger than \p other, false if not.
-
-		\brief Compares two iterators.
-		*/
-		constexpr boolean operator > (const VectorIterator &other) const;
-
-		/**
-		\param other The iterator to compare to.
-
-		\return True, if this iterator is smaller than or equal to \p other, false if not.
-
-		\brief Compares two iterators.
-		*/
-		constexpr boolean operator <= (const VectorIterator &other) const;
-
-		/**
-		\param other The iterator to compare to.
-
-		\return True, if this iterator is smaller than or equal to \p other, false if not.
-
-		\brief Compares two iterators.
-		*/
-		constexpr boolean operator >= (const VectorIterator &other) const;
 	};
 
 	/**
@@ -852,17 +773,6 @@ namespace NOU::NOU_DAT_ALG
 		constexpr boolean operator != (const VectorReverseIterator &other) const;
 
 		/**
-		\param other The iterator to add.
-
-		\return A new iterator with the added values of the iterators.
-
-		\brief Adds two iterators. E.g. if this iterator points to the first object and \p other to the
-		second, the resulting operator would point to the third object. Note that the order in which these 
-		iterators are named (first, second, etc.) is relative to Vector::rbegin().
-		*/
-		constexpr VectorReverseIterator operator + (const VectorReverseIterator &other) const;
-
-		/**
 		\param value The value to add.
 
 		\return A new iterator with the value of this operator plus the added value.
@@ -872,17 +782,6 @@ namespace NOU::NOU_DAT_ALG
 		named (first, second, etc.) is relative to Vector::rbegin().
 		*/
 		constexpr VectorReverseIterator operator + (sizeType value) const;
-
-		/**
-		\param other The iterator to subtract.
-
-		\return A new iterator with the subtracted values of the iterators.
-
-		\brief Subtracts two iterators. E.g. if this iterator points to the second object and \p other to the
-		first, the resulting operator would point to the first object. Note that the order in which these 
-		iterators are named (first, second, etc.) is relative to Vector::rbegin().
-		*/
-		constexpr VectorReverseIterator operator - (const VectorReverseIterator &other) const;
 
 		/**
 		\param value The value to subtract.
@@ -896,17 +795,6 @@ namespace NOU::NOU_DAT_ALG
 		constexpr VectorReverseIterator operator - (sizeType value) const;
 
 		/**
-		\param other The iterator to add.
-
-		\return A reference to this instance.
-
-		\brief Adds the passed iterator to this one. E.g. if this iterator points to the first object and
-		\p other to the second, this iterator would point to the third object afterwards. Note that the order 
-		in which these iterators are named (first, second, etc.) is relative to Vector::rbegin().
-		*/
-		constexpr VectorReverseIterator& operator += (const VectorReverseIterator &other);
-
-		/**
 		\param value The value to add.
 
 		\return A reference to this instance.
@@ -918,17 +806,6 @@ namespace NOU::NOU_DAT_ALG
 		constexpr VectorReverseIterator& operator += (sizeType value);
 
 		/**
-		\param other The iterator to subtract.
-
-		\return A reference to this instance.
-
-		\brief Subtracts the passed iterator to this one. E.g. if this iterator points to the second object
-		and \p other to the first, this iterator would point to the first object afterwards. Note that the 
-		order in which these iterators are named (first, second, etc.) is relative to Vector::rbegin().
-		*/
-		constexpr VectorReverseIterator& operator -= (const VectorReverseIterator &other);
-
-		/**
 		\param value The value to subtract.
 
 		\return A reference to this instance.
@@ -938,58 +815,6 @@ namespace NOU::NOU_DAT_ALG
 		which these iterators are named (first, second, etc.) is relative to Vector::rbegin().
 		*/
 		constexpr VectorReverseIterator& operator -= (sizeType value);
-
-		/**
-		\param other The iterator to compare to.
-
-		\return True, if this iterator is smaller than \p other, false if not.
-
-		\brief Compares two iterators.
-
-		\note Since this is a reverse iterator, this does a comparison in reversed order. E.g. Vector::begin()
-		      is smaller than or equal to Vector::end(), all tough the numeric pointer value of 
-			  Vector::begin() is bigger than or equal to Vector::end().
-		*/
-		constexpr boolean operator < (const VectorReverseIterator &other) const;
-
-		/**
-		\param other The iterator to compare to.
-
-		\return True, if this iterator is bigger than \p other, false if not.
-
-		\brief Compares two iterators.
-
-		\note Since this is a reverse iterator, this does a comparison in reversed order. E.g. Vector::begin()
-		      is smaller than or equal to Vector::end(), all tough the numeric pointer value of 
-			  Vector::begin() is bigger than or equal to Vector::end().
-		*/
-		constexpr boolean operator > (const VectorReverseIterator &other) const;
-
-		/**
-		\param other The iterator to compare to.
-
-		\return True, if this iterator is smaller than or equal to \p other, false if not.
-
-		\brief Compares two iterators.
-
-		\note Since this is a reverse iterator, this does a comparison in reversed order. E.g. Vector::begin()
-		      is smaller than or equal to Vector::end(), all tough the numeric pointer value of 
-			  Vector::begin() is bigger than or equal to Vector::end().
-		*/
-		constexpr boolean operator <= (const VectorReverseIterator &other) const;
-
-		/**
-		\param other The iterator to compare to.
-
-		\return True, if this iterator is smaller than or equal to \p other, false if not.
-
-		\brief Compares two iterators.
-
-		\note Since this is a reverse iterator, this does a comparison in reversed order. E.g. Vector::begin()
-		      is smaller than or equal to Vector::end(), all tough the numeric pointer value of 
-			  Vector::begin() is bigger than or equal to Vector::end().
-		*/
-		constexpr boolean operator >= (const VectorReverseIterator &other) const;
 	};
 
 
@@ -1543,44 +1368,15 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	constexpr VectorIterator<T> VectorIterator<T>::operator + (const VectorIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(), 
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return VectorIterator(m_dataPtr, m_index + other.m_index);
-	}
-
-	template<typename T>
 	constexpr VectorIterator<T> VectorIterator<T>::operator + (sizeType value) const
 	{
-		return VectorIterator(m_dataPtr, m_index + value);
-	}
-
-	template<typename T>
-	constexpr VectorIterator<T> VectorIterator<T>::operator - (const VectorIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return VectorIterator(m_dataPtr, m_index - other.m_index);
+		return VectorIterator<T>(m_index + value, const_cast<const T**>(m_dataPtr));
 	}
 
 	template<typename T>
 	constexpr VectorIterator<T> VectorIterator<T>::operator - (sizeType value) const
 	{
-		return VectorIterator(m_dataPtr, m_index - value);
-	}
-
-	template<typename T>
-	constexpr VectorIterator<T>& VectorIterator<T>::operator += (const VectorIterator &other)
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		m_index += other.m_index;
-
-		return *this;
+		return VectorIterator<T>(m_index - value, const_cast<const T**>(m_dataPtr));
 	}
 
 	template<typename T>
@@ -1592,58 +1388,11 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	constexpr VectorIterator<T>& VectorIterator<T>::operator -= (const VectorIterator &other)
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		m_index -= other.m_index;
-
-		return *this;
-	}
-
-	template<typename T>
 	constexpr VectorIterator<T>& VectorIterator<T>::operator -= (sizeType value)
 	{
-		m_index += value;
+		m_index -= value;
 
 		return *this;
-	}
-
-	template<typename T>
-	constexpr boolean VectorIterator<T>::operator < (const VectorIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return m_index < other.m_index;
-	}
-
-	template<typename T>
-	constexpr boolean VectorIterator<T>::operator > (const VectorIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return m_index > other.m_index;
-	}
-
-	template<typename T>
-	constexpr boolean VectorIterator<T>::operator <= (const VectorIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return m_index <= other.m_index;
-	}
-
-	template<typename T>
-	constexpr boolean VectorIterator<T>::operator >= (const VectorIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return m_index >= other.m_index;
 	}
 
 
@@ -1717,47 +1466,15 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator + 
-		(const VectorReverseIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return VectorReverseIterator(m_dataPtr, m_index - other.m_index);
-	}
-
-	template<typename T>
 	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator + (sizeType value) const
 	{
-		return VectorReverseIterator(m_dataPtr, m_index - value);
-	}
-
-	template<typename T>
-	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator - 
-		(const VectorReverseIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return VectorReverseIterator(m_dataPtr, m_index + other.m_index);
+		return VectorReverseIterator<T>(m_index - value, const_cast<const T**>(m_dataPtr));
 	}
 
 	template<typename T>
 	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator - (sizeType value) const
 	{
-		return VectorReverseIterator(m_dataPtr, m_index + value);
-	}
-
-	template<typename T>
-	constexpr VectorReverseIterator<T>& VectorReverseIterator<T>::operator += 
-		(const VectorReverseIterator &other)
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		m_index -= other.m_index;
-
-		return *this;
+		return VectorReverseIterator<T>(m_index + value, const_cast<const T**>(m_dataPtr));
 	}
 
 	template<typename T>
@@ -1769,59 +1486,11 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	constexpr VectorReverseIterator<T>& VectorReverseIterator<T>::operator -= 
-		(const VectorReverseIterator &other)
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		m_index += other.m_index;
-
-		return *this;
-	}
-
-	template<typename T>
 	constexpr VectorReverseIterator<T>& VectorReverseIterator<T>::operator -= (sizeType value)
 	{
-		m_index -= value;
+		m_index += value;
 
 		return *this;
-	}
-
-	template<typename T>
-	constexpr boolean VectorReverseIterator<T>::operator < (const VectorReverseIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return m_index > other.m_index;
-	}
-
-	template<typename T>
-	constexpr boolean VectorReverseIterator<T>::operator > (const VectorReverseIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return m_index < other.m_index;
-	}
-
-	template<typename T>
-	constexpr boolean VectorReverseIterator<T>::operator <= (const VectorReverseIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return m_index >= other.m_index;
-	}
-
-	template<typename T>
-	constexpr boolean VectorReverseIterator<T>::operator >= (const VectorReverseIterator &other) const
-	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
-			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
-
-		return m_index <= other.m_index;
 	}
 }
 
