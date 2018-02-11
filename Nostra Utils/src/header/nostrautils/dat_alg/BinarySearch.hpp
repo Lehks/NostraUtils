@@ -22,14 +22,16 @@ namespace NOU::NOU_DAT_ALG
 
 	\param end The end index of your search.
 
-	\param insertionIndex A pointer to the index of the array where a new value would be inserted to stay in a sorted order.
+	\param insertionIndex A pointer to the index of the array where a new value would be inserted to stay 
+	in a sorted order.
 
 	\return -1 if the object was not found or the index of the object if it was found.
 
 	\brief Makes a binary search for the key in a passed array.
 	*/
 	template<typename T>
-	NOU_FUNC sizeType binarySearch(const T *vec, const T &key, int64 start, int64 end, sizeType *insertionIndex = nullptr);
+	NOU_FUNC sizeType binarySearch
+	(const T *vec, const T &key, int64 start, int64 end, sizeType *insertionIndex = nullptr);
 
 	/**
 	\tparam T The type of the array.
@@ -43,7 +45,8 @@ namespace NOU::NOU_DAT_ALG
 	\param end The end index of your search. If the parameter is -1 the binarySearch() will be called with
 	end set to vec.size() - 1.
 
-	\param insertionIndex A pointer to the index of the array where a new value would be inserted to stay in a sorted order.
+	\param insertionIndex A pointer to the index of the array where a new value would be inserted to stay in
+	a sorted order.
 
 	\return -1 if the object was not found or the index of the object if it was found.
 
@@ -52,10 +55,12 @@ namespace NOU::NOU_DAT_ALG
 	\details Performs a binary search for the nostra::utils::dat_alg::Vector.
 	*/
 	template<typename T>
-	NOU_FUNC sizeType binarySearch(const NOU::NOU_DAT_ALG::Vector<T> &vec, const T &key, int64 start = 0, int64 end = -1, sizeType *insertionIndex = nullptr);
+	NOU_FUNC sizeType binarySearch(const NOU::NOU_DAT_ALG::Vector<T> &vec, const T &key, 
+		int64 start = 0, int64 end = -1, sizeType *insertionIndex = nullptr);
 
 	template<typename T>
-	NOU_FUNC sizeType binarySearch(const T *vec, const T &key, int64 start, int64 end, sizeType *insertionIndex)
+	NOU_FUNC sizeType binarySearch(const T *vec, const T &key,
+		int64 start, int64 end, sizeType *insertionIndex)
 	{
 		if (start > end)
 		{
@@ -64,7 +69,7 @@ namespace NOU::NOU_DAT_ALG
 
 			return -1;
 		}
-		const sizeType middle = start + ((end - start) / 2);
+		const int64 middle = start + ((end - start) / 2);
 
 		if (vec[middle] == key)
 		{
@@ -79,7 +84,8 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	NOU_FUNC sizeType binarySearch(const NOU::NOU_DAT_ALG::Vector<T> &vec, const T &key, int64 start, int64 end, sizeType *insertionIndex)
+	NOU_FUNC sizeType binarySearch(const NOU::NOU_DAT_ALG::Vector<T> &vec, const T &key,
+		int64 start, int64 end, sizeType *insertionIndex)
 	{
 		return binarySearch(vec.data(), key, start, (end == -1) ? vec.size() - 1 : end, insertionIndex);
 	}

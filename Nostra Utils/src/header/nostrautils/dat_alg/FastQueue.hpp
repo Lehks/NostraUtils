@@ -12,7 +12,7 @@
 /**
 \file core/FastQueue.hpp
 
-\author  Lukas Groﬂ
+\author  Lukas Gross
 \author  Lukas Reichmann
 \version 0.0.1
 \since   1.0.0
@@ -241,13 +241,14 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	FastQueue<T>::FastQueue(sizeType initialCapacity, NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
 		m_allocator(allocator),
-		m_capacity(initialCapacity < MIN_CAPACITY ? MIN_CAPACITY : initialCapacity), ///\todo replace w/ max()
+		m_capacity(initialCapacity < MIN_CAPACITY ? MIN_CAPACITY : initialCapacity),///\todo replace w/ max()
 		m_startIndex(0),
 		m_endIndex(0),
 		m_queue(m_allocator.allocate(m_capacity), m_allocator)
 	{
 		if(m_queue == nullptr)
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION, "The allocation failed.");
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION,
+				"The allocation failed.");
 	}
 
 	template<typename T>
@@ -433,7 +434,8 @@ namespace NOU::NOU_DAT_ALG
 			newBuf = m_allocator.allocate(newCapacity);
 			
 			if (newBuf == nullptr)
-				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION, "The allocation failed.");
+				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION,
+					"The allocation failed.");
 		}
 
 		copyFromTo(m_queue.rawPtr() + m_startIndex, newBuf, size());
