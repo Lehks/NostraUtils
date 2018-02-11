@@ -69,7 +69,7 @@ namespace NOU::NOU_DAT_ALG
 
 			return -1;
 		}
-		const sizeType middle = start + ((end - start) / 2);
+		const int64 middle = start + ((end - start) / 2);
 
 		if (vec[middle] == key)
 		{
