@@ -440,8 +440,8 @@ namespace NOU::NOU_CORE
 		enum Codes : typename ErrorLocation::ErrorType
 		{
 			/**
-			\brief An unknown error has occurred or an invalid error code has been passed to 
-			       ErrorHandler::pushError().
+			\brief An unknown error has occurred or an invalid error code has been passed to
+				   ErrorHandler::pushError().
 			*/
 			UNKNOWN_ERROR = 0,			//Must start at 0!
 
