@@ -2,6 +2,7 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
+#include "nostrautils\dat_alg\ObjectPool.hpp"
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -30,47 +31,20 @@ public:
 
 int main()
 {
-	//ErrorHandler::setCallback(callback);
+	ObjectPool<A> objectPool;
 
-	NOU::NOU_DAT_ALG::BinaryHeap<A> binH(true,10);
+	objectPool.pushObject(A());
+	objectPool.pushObject(A());
+	objectPool.pushObject(A());
 
-	binH.enqueue(A(5), 5);
-	binH.enqueue(A(1), 1);
-	binH.enqueue(A(3), 3);
-	binH.enqueue(A(6), 6);
+	A& a = objectPool.get();
+	A& a1 = objectPool.get();
+	A& a2 = objectPool.get();
 
-	while (getErrorHandler().getErrorCount() != 0)
-		std::cout << "->" << getErrorHandler().popError().getName() << std::endl;
-
-	while (binH.size() != 0)
-	{
-		std::cout << binH.get().get() << std::endl;
-		binH.dequeue();
-	}
-
-	while (getErrorHandler().getErrorCount() != 0)
-		std::cout << "=>" << getErrorHandler().popError().getName() << std::endl;
-
-	std::cout << "\n" << std::endl;
-
-	auto priority5 = binH.enqueue(A(5), 5);
-	auto priority1 = binH.enqueue(A(1), 1);
-	auto priority3 = binH.enqueue(A(3), 3);
-	auto priority6 = binH.enqueue(A(6), 6);
-
-
-	binH.decreaseKey(priority3, 0);
-
-
-	while (binH.size() != 0)
-	{
-		std::cout << binH.get().get();
-		binH.dequeue();
-	}
+	objectPool.giveBack(a);
 
 	while (getErrorHandler().getErrorCount() != 0)
 		std::cout << getErrorHandler().popError().getName() << std::endl;
-
 
 	std::cin.get();
 }
