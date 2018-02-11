@@ -24,10 +24,35 @@
 #include "DebugClass.hpp"
 
 #include <type_traits>
+#include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-#define NOU_CHECK_ERROR_HANDLER Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0)
+void printErrors()
+{
+	while (NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
+	{
+		std::string msg;
+		msg += NOU::NOU_CORE::getErrorHandler().peekError().getName();
+		msg += " ";
+		msg += std::to_string(NOU::NOU_CORE::getErrorHandler().peekError().getLine());
+		msg += " ";
+		msg += NOU::NOU_CORE::getErrorHandler().peekError().getFile();
+		NOU::NOU_CORE::getErrorHandler().popError();
+
+		Logger::WriteMessage(msg.c_str());
+	}
+}
+																				   \
+#define NOU_CHECK_ERROR_HANDLER  												   \
+																				   \
+{																				   \
+	NOU::sizeType __errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount(); \
+																				   \
+	printErrors();																   \
+																				   \
+	Assert::IsTrue(__errorCount == 0);											   \
+}
 
 //both functions are used in test IsInvocable
 void dummyFunc0(int)
@@ -1148,6 +1173,144 @@ namespace UnitTests
 			Assert::IsTrue(insertionIndex == 7);
 			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[7], 0, vec.size() - 1, &insertionIndex);
 			Assert::IsTrue(insertionIndex == 0);
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(VectorIterator)
+		{
+			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec;
+
+			vec.push(NOU::DebugClass(0));
+			vec.push(NOU::DebugClass(1));
+			vec.push(NOU::DebugClass(2));
+			vec.push(NOU::DebugClass(3));
+			vec.push(NOU::DebugClass(4));
+			vec.push(NOU::DebugClass(5));
+
+
+			//Iterator
+			Assert::IsTrue(vec.begin() == vec.begin());
+			Assert::IsTrue(vec.begin() + 3 == vec.begin() + 3);
+			Assert::IsTrue(vec.end() == vec.end());
+
+			Assert::IsTrue(vec.begin() != vec.end());
+			Assert::IsTrue(vec.begin() + 3 != vec.begin() + 4);
+
+
+
+			Assert::IsTrue(vec.begin()->get() == 0);
+			Assert::IsTrue((++vec.begin())->get() == 1);
+			Assert::IsTrue((vec.begin() + 1)->get() == 1);
+			Assert::IsTrue((vec.begin() + 2)->get() == 2);
+			Assert::IsTrue((vec.begin() + 3)->get() == 3);
+			Assert::IsTrue((vec.begin() + 4)->get() == 4);
+			Assert::IsTrue((vec.begin() + 5)->get() == 5);
+
+			Assert::IsTrue((vec.end() - 1)->get() == 5);
+			Assert::IsTrue((vec.end() - 2)->get() == 4);
+			Assert::IsTrue((vec.end() - 3)->get() == 3);
+			Assert::IsTrue((vec.end() - 4)->get() == 2);
+			Assert::IsTrue((vec.end() - 5)->get() == 1);
+			Assert::IsTrue((vec.end() - 6)->get() == 0);
+
+			auto it = vec.begin();
+
+			Assert::IsTrue(it->get() == 0);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 1);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 2);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 3);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 4);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 5);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 4);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 3);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 2);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 1);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 0);
+
+
+
+
+			//Reverse Iterator
+			Assert::IsTrue(vec.rbegin() == vec.rbegin());
+			Assert::IsTrue(vec.rbegin() + 3 == vec.rbegin() + 3);
+			Assert::IsTrue(vec.end() == vec.end());
+
+			Assert::IsTrue(vec.rbegin() != vec.rend());
+			Assert::IsTrue(vec.rbegin() + 3 != vec.rbegin() + 4);
+
+
+
+			Assert::IsTrue(vec.rbegin()->get() == 5);
+			Assert::IsTrue((++vec.rbegin())->get() == 4);
+			Assert::IsTrue((vec.rbegin() + 1)->get() == 4);
+			Assert::IsTrue((vec.rbegin() + 2)->get() == 3);
+			Assert::IsTrue((vec.rbegin() + 3)->get() == 2);
+			Assert::IsTrue((vec.rbegin() + 4)->get() == 1);
+			Assert::IsTrue((vec.rbegin() + 5)->get() == 0);
+
+			Assert::IsTrue((vec.rend() - 1)->get() == 0);
+			Assert::IsTrue((vec.rend() - 2)->get() == 1);
+			Assert::IsTrue((vec.rend() - 3)->get() == 2);
+			Assert::IsTrue((vec.rend() - 4)->get() == 3);
+			Assert::IsTrue((vec.rend() - 5)->get() == 4);
+			Assert::IsTrue((vec.rend() - 6)->get() == 5);
+
+			auto rit = vec.rbegin();
+
+			Assert::IsTrue(rit->get() == 5);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 4);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 3);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 2);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 1);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 0);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 1);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 2);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 3);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 4);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 5);
+
+			NOU_CHECK_ERROR_HANDLER;
 		}
 	};
 }
