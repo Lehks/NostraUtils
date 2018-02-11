@@ -18,6 +18,41 @@
 
 namespace NOU::NOU_DAT_ALG
 {
+	namespace internal
+	{
+		/**
+		\brief A struct that will be used to store the data and pointer to build a double linked list. This is
+		only public to allow a custom nostra::utils::mem_mngt::AllocationCallback.
+		*/
+		template<typename T>
+		struct ObjectPoolChunk
+		{
+			using Type = T;
+
+			/**
+			\brief The stored data.
+			*/
+			Type m_data;
+
+			/**
+			\brief A pointer to the left neighbor in the linked list.
+			*/
+			ObjectPoolChunk* m_left;
+
+			/**
+			\brief A pointer to the right neighbor in the linked list.
+			*/
+			ObjectPoolChunk* m_right;
+
+			/**
+			\param data The data to store.
+
+			\brief Constructs a new instance that stores the passed data.
+			*/
+			ObjectPoolChunk(Type &&data);
+		};
+	}
+
 	/**
 	\tparam T The type of objects to store.
 
@@ -44,37 +79,9 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		using Type = T;
 
-	public:
-		/**
-		\brief A struct that will be used to store the data and pointer to build a double linked list. This is
-		       only public to allow a custom nostra::utils::mem_mngt::AllocationCallback.
-		*/
-		struct Chunk
-		{
-			/**
-			\brief The stored data.
-			*/
-			Type m_data;
-
-			/**
-			\brief A pointer to the left neighbor in the linked list.
-			*/
-			Chunk* m_left;
-
-			/**
-			\brief A pointer to the right neighbor in the linked list.
-			*/
-			Chunk* m_right;
-
-			/**
-			\param data The data to store.
-
-			\brief Constructs a new instance that stores the passed data.
-			*/
-			Chunk(Type &&data);
-		};
-
 	private:
+		using Chunk = internal::ObjectPoolChunk<Type>;
+
 		/**
 		\brief The vector in which the different chunks are being stored.
 		*/
@@ -198,7 +205,7 @@ namespace NOU::NOU_DAT_ALG
 	};
 
 	template<typename T>
-	ObjectPool<T>::Chunk::Chunk(Type &&data) :
+	internal::ObjectPoolChunk<T>::ObjectPoolChunk(Type &&data) :
 		m_data(NOU_CORE::forward<Type>(data))
 	{}
 
