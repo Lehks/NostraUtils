@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <string>
+#include <type_traits>
 
 class Person
 {
@@ -38,15 +39,35 @@ public:
 
 int main()
 {
-	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
-	auto p1 = gpa.allocateObject<Person>(40, "Petra", "Braun");
+	using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<Person>;
 
-	p1->print();
-	p1->m_age = 50;
-	p1->m_haircolor = "Brown";
-	p1->m_name = "Peter";
-	p1->print();
-	gpa.deallocateObjects(p1);
+	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
+	NOU::NOU_DAT_ALG::Vector<HandleType> test;
+	
+
+	test.push(gpa.allocateObjects<Person>(1, 40, "Petra", "Braun"));
+
+	
+
+	for (HandleType &pers : test)
+	{
+		pers[0].print();
+		//pers[1].print();
+		//pers[2].print();
+		//pers[3].print();
+		//pers[4].print();
+		//pers[5].print();
+		//pers[6].print();
+		//pers[7].print();
+		//pers[8].print();
+		//pers[9].print();
+		//pers[10].print();
+		//pers[11].print();
+		//pers[12].print();
+		//gpa.deallocateObjects(pers);
+	}
+	
+	
 
 	system("pause");
 }

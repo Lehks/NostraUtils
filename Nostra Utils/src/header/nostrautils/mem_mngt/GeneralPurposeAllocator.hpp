@@ -9,7 +9,7 @@
 
 namespace NOU::NOU_MEM_MNGT
 {
-	namespace INTERNAL
+	namespace internal
 	{
 		template <typename T>
 		T nextMultiple(T multipleOf, T value)
@@ -83,13 +83,13 @@ namespace NOU::NOU_MEM_MNGT
 		};
 
 	private:
-		static const sizeType GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE = 1024;
+		static const sizeType GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE = 10 * 1024;
 
 		byte* m_data;
 
 		sizeType m_size;
 
-		NOU_DAT_ALG::Vector<INTERNAL::GeneralPurposeAllocatorFreeChunk> m_freeChunks; 
+		NOU_DAT_ALG::Vector<internal::GeneralPurposeAllocatorFreeChunk> m_freeChunks; 
 		///\todo sorting with insert function
 
 	public:
@@ -115,14 +115,14 @@ namespace NOU::NOU_MEM_MNGT
 		void getNeigbors(const T& val, T*& left, T*& right, sizeType insertionIndex);
 	};
 
-	INTERNAL::GeneralPurposeAllocatorFreeChunk::GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size) :
+	internal::GeneralPurposeAllocatorFreeChunk::GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size) :
 		m_addr(addr),
 		m_size(size)
 	{
 		//do nothing
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::touches
+	boolean internal::GeneralPurposeAllocatorFreeChunk::touches
 	(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		if (m_addr + m_size == other.m_addr)
@@ -138,41 +138,42 @@ namespace NOU::NOU_MEM_MNGT
 		return false;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator>
+	boolean internal::GeneralPurposeAllocatorFreeChunk::operator>
 		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr > other.m_addr;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator<
+	boolean internal::GeneralPurposeAllocatorFreeChunk::operator<
 		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr < other.m_addr;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator>=
+	boolean internal::GeneralPurposeAllocatorFreeChunk::operator>=
 		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr >= other.m_addr;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator<=
+	boolean internal::GeneralPurposeAllocatorFreeChunk::operator<=
 		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr <= other.m_addr;
 	}
 
-	boolean INTERNAL::GeneralPurposeAllocatorFreeChunk::operator==
+	boolean internal::GeneralPurposeAllocatorFreeChunk::operator==
 		(const GeneralPurposeAllocatorFreeChunk& other) const
 	{
 		return m_addr == other.m_addr;
 	}
 
 	template <typename T, typename... arguments>
-	T* INTERNAL::GeneralPurposeAllocatorFreeChunk::allocateObject
+	T* internal::GeneralPurposeAllocatorFreeChunk::allocateObject
 	(sizeType amountofObjects, arguments&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
+
 		byte* allocationLocation = (byte*)nextMultiple(alignof(T), ((sizeType)m_addr) + 1);
 		sizeType amountOfBytes = amountofObjects * sizeof(T);
 		byte* newAddr = allocationLocation + amountOfBytes;
@@ -267,7 +268,7 @@ namespace NOU::NOU_MEM_MNGT
 		m_size(size)
 	{
 		m_data = new byte[m_size];
-		m_freeChunks.pushBack(INTERNAL::GeneralPurposeAllocatorFreeChunk(m_data, m_size));
+		m_freeChunks.pushBack(internal::GeneralPurposeAllocatorFreeChunk(m_data, m_size));
 	}
 
 	GeneralPurposeAllocator::~GeneralPurposeAllocator()
@@ -320,14 +321,14 @@ namespace NOU::NOU_MEM_MNGT
 		sizeType amountOfBytes = sizeof(T) * pointer.m_size;
 		byte offset = bytePointer[-1];
 
-		INTERNAL::GeneralPurposeAllocatorFreeChunk gpafc(bytePointer - offset, amountOfBytes + offset);
+		internal::GeneralPurposeAllocatorFreeChunk gpafc(bytePointer - offset, amountOfBytes + offset);
 
 		sizeType insertionIndex;
 		NOU_DAT_ALG::binarySearch(m_freeChunks, gpafc, 0, -1, &insertionIndex);
 
-		INTERNAL::GeneralPurposeAllocatorFreeChunk* p_gpafc = &gpafc;
-		INTERNAL::GeneralPurposeAllocatorFreeChunk* left;
-		INTERNAL::GeneralPurposeAllocatorFreeChunk* right;
+		internal::GeneralPurposeAllocatorFreeChunk* p_gpafc = &gpafc;
+		internal::GeneralPurposeAllocatorFreeChunk* left;
+		internal::GeneralPurposeAllocatorFreeChunk* right;
 
 		getNeigbors(*p_gpafc, left, right, insertionIndex);
 
