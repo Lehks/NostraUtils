@@ -1148,6 +1148,8 @@ namespace UnitTests
 			Assert::IsTrue(insertionIndex == 7);
 			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[7], 0, vec.size() - 1, &insertionIndex);
 			Assert::IsTrue(insertionIndex == 0);
+
+			NOU_CHECK_ERROR_HANDLER;
 		}
 	};
 }
