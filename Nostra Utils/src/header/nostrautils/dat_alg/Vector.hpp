@@ -360,12 +360,12 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief returns a pointer reference to the current data.
 		*/
-		T*& data();
+		T* const & data();
 
 		/**
 		\brief returns a const pointer reference to the current data.
 		*/
-		const T*& data() const;
+		const T* const & data() const;
 
 		/**
 		\brief Clears the Vector.
@@ -1029,7 +1029,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	const T*& Vector<T>::data() const
+	T* const & Vector<T>::data()
+	{
+		return m_data;
+	}
+
+	template<typename T>
+	const T* const & Vector<T>::data() const
 	{
 		return m_data;
 	}
@@ -1049,12 +1055,6 @@ namespace NOU::NOU_DAT_ALG
 	void Vector<T>::setSize(sizeType size)
 	{
 		m_size = size;
-	}
-
-	template<typename T>
-	T*& Vector<T>::data()
-	{
-		return m_data;
 	}
 
 	template<typename T>

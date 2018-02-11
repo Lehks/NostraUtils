@@ -94,6 +94,12 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\BinarySearch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\ObjectPool.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -18,6 +18,8 @@
 #include "nostrautils\dat_alg\Uninitialized.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\String.hpp"
+#include "nostrautils\dat_alg\Hashing.hpp"
+#include "nostrautils\dat_alg\BinarySearch.hpp"
 
 #include "DebugClass.hpp"
 
@@ -1089,6 +1091,63 @@ namespace UnitTests
 			Assert::IsTrue(b.at(4) == 15);
 		
 			NOU_CHECK_ERROR_HANDLER;
+		}
+
+
+		TEST_METHOD(Hashfunction)
+		{
+			NOU::sizeType testInt = 42;
+			NOU::sizeType hashSize = 5;
+			NOU::sizeType test;
+			test = NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize);
+			testInt = 9234978;
+			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize));
+
+			testInt = 42;
+			test = NOU::NOU_DAT_ALG::hashObj(&testInt);
+			testInt = 9234978;
+			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt));
+
+		}
+
+		TEST_METHOD(BinarySearch)
+		{
+			NOU::NOU_DAT_ALG::Vector<NOU::sizeType> vec;
+			vec.pushBack(1);
+			vec.pushBack(5);
+			vec.pushBack(13);
+			vec.pushBack(18);
+			vec.pushBack(21);
+			vec.pushBack(43);
+			vec.pushBack(92);
+
+			NOU::sizeType search_vals[] = { 1, 5, 19, 21, 92, 43, 103, 0};
+
+			
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[0], 0, vec.size() - 1) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[1], 0, vec.size() - 1) == 1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1) == -1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[3], 0, vec.size() - 1) == 4);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[4], 0, vec.size() - 1) == 6);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[5], 0, vec.size() - 1) == 5);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1) == -1);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[0], 0, -1) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[1], 0, -1) == 1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[2], 0, -1) == -1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[3], 0, -1) == 4);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[4], 0, -1) == 6);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[5], 0, -1) == 5);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[6], 0, -1) == -1);
+
+			NOU::sizeType insertionIndex;
+
+			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1, &insertionIndex);
+			Assert::IsTrue(insertionIndex == 4);
+			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1, &insertionIndex);
+			Assert::IsTrue(insertionIndex == 7);
+			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[7], 0, vec.size() - 1, &insertionIndex);
+			Assert::IsTrue(insertionIndex == 0);
 		}
 	};
 }
