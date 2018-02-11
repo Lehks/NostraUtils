@@ -31,7 +31,7 @@ public:
 
 int main()
 {
-	ObjectPool<A> objectPool;
+	ObjectPool<A> objectPool(3);
 
 	objectPool.pushObject(A());
 	objectPool.pushObject(A());
@@ -42,6 +42,8 @@ int main()
 	A& a2 = objectPool.get();
 
 	objectPool.giveBack(a);
+	objectPool.giveBack(a1);
+	objectPool.giveBack(a2);
 
 	while (getErrorHandler().getErrorCount() != 0)
 		std::cout << getErrorHandler().popError().getName() << std::endl;
