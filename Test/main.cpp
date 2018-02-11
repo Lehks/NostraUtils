@@ -2,6 +2,7 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
+#include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\thread\ThreadManager.hpp"
 #include <iostream>
 #include <vector>
@@ -33,7 +34,6 @@ public:
 int main()
 {
 	ThreadManager& tm = ThreadManager::getInstance();
-
 
 	std::cin.get();
 }

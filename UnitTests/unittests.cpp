@@ -18,14 +18,42 @@
 #include "nostrautils\dat_alg\Uninitialized.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\String.hpp"
+#include "nostrautils\dat_alg\Hashing.hpp"
+#include "nostrautils\dat_alg\BinarySearch.hpp"
+#include "nostrautils\dat_alg\ObjectPool.hpp"
 
 #include "DebugClass.hpp"
 
 #include <type_traits>
+#include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-#define NOU_CHECK_ERROR_HANDLER Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0)
+void printErrors()
+{
+	while (NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
+	{
+		std::string msg;
+		msg += NOU::NOU_CORE::getErrorHandler().peekError().getName();
+		msg += " ";
+		msg += std::to_string(NOU::NOU_CORE::getErrorHandler().peekError().getLine());
+		msg += " ";
+		msg += NOU::NOU_CORE::getErrorHandler().peekError().getFile();
+		NOU::NOU_CORE::getErrorHandler().popError();
+
+		Logger::WriteMessage(msg.c_str());
+	}
+}
+																				   \
+#define NOU_CHECK_ERROR_HANDLER  												   \
+																				   \
+{																				   \
+	NOU::sizeType __errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount(); \
+																				   \
+	printErrors();																   \
+																				   \
+	Assert::IsTrue(__errorCount == 0);											   \
+}
 
 //both functions are used in test IsInvocable
 void dummyFunc0(int)
@@ -1089,6 +1117,242 @@ namespace UnitTests
 			Assert::IsTrue(b.at(4) == 15);
 		
 			NOU_CHECK_ERROR_HANDLER;
+		}
+
+
+		TEST_METHOD(Hashfunction)
+		{
+			NOU::sizeType testInt = 42;
+			NOU::sizeType hashSize = 5;
+			NOU::sizeType test;
+			test = NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize);
+			testInt = 9234978;
+			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize));
+
+			testInt = 42;
+			test = NOU::NOU_DAT_ALG::hashObj(&testInt);
+			testInt = 9234978;
+			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt));
+
+		}
+
+		TEST_METHOD(BinarySearch)
+		{
+			NOU::NOU_DAT_ALG::Vector<NOU::sizeType> vec;
+			vec.pushBack(1);
+			vec.pushBack(5);
+			vec.pushBack(13);
+			vec.pushBack(18);
+			vec.pushBack(21);
+			vec.pushBack(43);
+			vec.pushBack(92);
+
+			NOU::sizeType search_vals[] = { 1, 5, 19, 21, 92, 43, 103, 0};
+
+			
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[0], 0, vec.size() - 1) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[1], 0, vec.size() - 1) == 1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1) == -1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[3], 0, vec.size() - 1) == 4);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[4], 0, vec.size() - 1) == 6);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[5], 0, vec.size() - 1) == 5);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1) == -1);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[0], 0, -1) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[1], 0, -1) == 1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[2], 0, -1) == -1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[3], 0, -1) == 4);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[4], 0, -1) == 6);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[5], 0, -1) == 5);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[6], 0, -1) == -1);
+
+			NOU::sizeType insertionIndex;
+
+			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1, &insertionIndex);
+			Assert::IsTrue(insertionIndex == 4);
+			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1, &insertionIndex);
+			Assert::IsTrue(insertionIndex == 7);
+			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[7], 0, vec.size() - 1, &insertionIndex);
+			Assert::IsTrue(insertionIndex == 0);
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(VectorIterator)
+		{
+			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec;
+
+			vec.push(NOU::DebugClass(0));
+			vec.push(NOU::DebugClass(1));
+			vec.push(NOU::DebugClass(2));
+			vec.push(NOU::DebugClass(3));
+			vec.push(NOU::DebugClass(4));
+			vec.push(NOU::DebugClass(5));
+
+
+			//Iterator
+			Assert::IsTrue(vec.begin() == vec.begin());
+			Assert::IsTrue(vec.begin() + 3 == vec.begin() + 3);
+			Assert::IsTrue(vec.end() == vec.end());
+
+			Assert::IsTrue(vec.begin() != vec.end());
+			Assert::IsTrue(vec.begin() + 3 != vec.begin() + 4);
+
+
+
+			Assert::IsTrue(vec.begin()->get() == 0);
+			Assert::IsTrue((++vec.begin())->get() == 1);
+			Assert::IsTrue((vec.begin() + 1)->get() == 1);
+			Assert::IsTrue((vec.begin() + 2)->get() == 2);
+			Assert::IsTrue((vec.begin() + 3)->get() == 3);
+			Assert::IsTrue((vec.begin() + 4)->get() == 4);
+			Assert::IsTrue((vec.begin() + 5)->get() == 5);
+
+			Assert::IsTrue((vec.end() - 1)->get() == 5);
+			Assert::IsTrue((vec.end() - 2)->get() == 4);
+			Assert::IsTrue((vec.end() - 3)->get() == 3);
+			Assert::IsTrue((vec.end() - 4)->get() == 2);
+			Assert::IsTrue((vec.end() - 5)->get() == 1);
+			Assert::IsTrue((vec.end() - 6)->get() == 0);
+
+			auto it = vec.begin();
+
+			Assert::IsTrue(it->get() == 0);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 1);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 2);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 3);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 4);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 5);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 4);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 3);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 2);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 1);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 0);
+
+
+
+
+			//Reverse Iterator
+			Assert::IsTrue(vec.rbegin() == vec.rbegin());
+			Assert::IsTrue(vec.rbegin() + 3 == vec.rbegin() + 3);
+			Assert::IsTrue(vec.end() == vec.end());
+
+			Assert::IsTrue(vec.rbegin() != vec.rend());
+			Assert::IsTrue(vec.rbegin() + 3 != vec.rbegin() + 4);
+
+
+
+			Assert::IsTrue(vec.rbegin()->get() == 5);
+			Assert::IsTrue((++vec.rbegin())->get() == 4);
+			Assert::IsTrue((vec.rbegin() + 1)->get() == 4);
+			Assert::IsTrue((vec.rbegin() + 2)->get() == 3);
+			Assert::IsTrue((vec.rbegin() + 3)->get() == 2);
+			Assert::IsTrue((vec.rbegin() + 4)->get() == 1);
+			Assert::IsTrue((vec.rbegin() + 5)->get() == 0);
+
+			Assert::IsTrue((vec.rend() - 1)->get() == 0);
+			Assert::IsTrue((vec.rend() - 2)->get() == 1);
+			Assert::IsTrue((vec.rend() - 3)->get() == 2);
+			Assert::IsTrue((vec.rend() - 4)->get() == 3);
+			Assert::IsTrue((vec.rend() - 5)->get() == 4);
+			Assert::IsTrue((vec.rend() - 6)->get() == 5);
+
+			auto rit = vec.rbegin();
+
+			Assert::IsTrue(rit->get() == 5);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 4);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 3);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 2);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 1);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 0);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 1);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 2);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 3);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 4);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 5);
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(ObjectPool)
+		{
+			NOU::NOU_DAT_ALG::ObjectPool<NOU::DebugClass> objPool(5);
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 0);
+			Assert::IsTrue(objPool.remainingObjects() == 0);
+
+			objPool.pushObject(NOU::DebugClass(0));
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 1);
+			Assert::IsTrue(objPool.remainingObjects() == 1);
+
+			objPool.pushObject(NOU::DebugClass(1));
+			objPool.pushObject(NOU::DebugClass(2));
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 3);
+
+			NOU::DebugClass &obj0 = objPool.get();
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 2);
+
+			NOU::DebugClass &obj1 = objPool.get();
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 1);
+
+			objPool.giveBack(obj0);
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 2);
+
 		}
 	};
 }

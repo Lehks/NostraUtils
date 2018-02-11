@@ -87,6 +87,7 @@ namespace NOU::NOU_CORE
 		NOU_ADD_ERROR(s_defaultErrorPool, BAD_ALLOCATION);
 		NOU_ADD_ERROR(s_defaultErrorPool, BAD_DEALLOCATION);
 		NOU_ADD_ERROR(s_defaultErrorPool, INVALID_OBJECT);
+		NOU_ADD_ERROR(s_defaultErrorPool, INVALID_STATE);
 		NOU_ADD_ERROR(s_defaultErrorPool, MUTEX_ERROR);
 	}
 
