@@ -88,7 +88,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The amount of objects left in the pool for distribution.
 		*/
-		sizeType m_objectsLeft;
+		sizeType m_remainingObjects;
 
 		/**
 		\param object The object to determine the chunk of.
@@ -121,7 +121,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Constructs a new instance.
 		*/
-		ObjectPool(sizeType capacity, NOU_MEM_MNGT::AllocationCallback<Chunk> &allocationCallback 
+		explicit ObjectPool(sizeType capacity, NOU_MEM_MNGT::AllocationCallback<Chunk> &allocationCallback 
 			= NOU_MEM_MNGT::GenericAllocationCallback<Chunk>::getInstance());
 
 		ObjectPool(const ObjectPool&) = delete;
@@ -194,13 +194,12 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the amount of objects left for distribution.
 		*/
-		sizeType objectsLeft() const;
+		sizeType remainingObjects() const;
 	};
 
 	template<typename T>
 	ObjectPool<T>::Chunk::Chunk(Type &&data) :
-		m_data(NOU_CORE::forward<Type>(data)),
-		m_objectsLeft(0)
+		m_data(NOU_CORE::forward<Type>(data))
 	{}
 
 	template<typename T>
@@ -233,7 +232,8 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	ObjectPool<T>::ObjectPool(sizeType capacity,
 		NOU_MEM_MNGT::AllocationCallback<Chunk> &allocationCallback):
-		m_data(capacity, allocationCallback),
+		m_data(capacity, allocationCallback), 
+		m_remainingObjects(0),
 		m_head(nullptr)
 	{}
 
@@ -268,7 +268,7 @@ namespace NOU::NOU_DAT_ALG
 
 		m_data.pushBack(Chunk(NOU_CORE::forward<ARGS>(args)...));
 
-		m_objectsLeft++; //there is now one more object left
+		m_remainingObjects++; //there is now one more object left
 
 #ifdef NOU_DEBUG
 		NOU_ASSERT(oldCapacity == m_data.capacity()); //check that the capacity has not changed
@@ -292,7 +292,7 @@ namespace NOU::NOU_DAT_ALG
 			head->m_left = nullptr;
 		}
 
-		m_objectsLeft--;
+		m_remainingObjects--;
 
 		return head->m_data;
 	}
@@ -315,7 +315,7 @@ namespace NOU::NOU_DAT_ALG
 
 		setAsHead(chunk);
 
-		m_objectsLeft++;
+		m_remainingObjects++;
 	}
 
 	template<typename T>
@@ -337,8 +337,8 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	sizeType ObjectPool<T>::objectsLeft() const
+	sizeType ObjectPool<T>::remainingObjects() const
 	{
-		return m_objectsLeft;
+		return m_remainingObjects;
 	}
 }
