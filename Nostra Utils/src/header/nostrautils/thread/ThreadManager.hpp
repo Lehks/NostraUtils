@@ -13,7 +13,7 @@
 namespace NOU::NOU_DAT_ALG
 {
 	template<typename T>
-	class Vector;
+	class ObjectPool;
 
 	template<typename T>
 	class BinaryHeap;
@@ -50,27 +50,37 @@ namespace NOU::NOU_THREAD
 
 		sizeType DEFAULT_TASK_CAPACITY = 50;
 
+		using ThreadType = ThreadWrapper;
+
 	private:
+		template<typename T>
+		using AllocatorType = NOU_MEM_MNGT::GenericAllocationCallback<T>; //abbreviation for the allocator
+
+		template<typename T>
+		using ObjectPoolPtr = NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::ObjectPool<T>>;
+
 		static void threadLoop(ThreadManager &manager);
 
 		Mutex m_taskQueueMutex;
 		ConditionVariable m_threadLoopVariable;
 
+		ObjectPoolPtr<ThreadType> makeThreadPool();
+		ObjectPoolPtr<NOU_CORE::ErrorHandler> makeHandlerPool();
+		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<AbstractTask*>> makeTaskHeap();
+
 	public:
-		using ThreadType = ThreadWrapper; 
+		AllocatorType<NOU_DAT_ALG::ObjectPool<ThreadType>::Chunk> m_threadAllocator;
+		ObjectPoolPtr<ThreadType> m_threads;
 
-		NOU_MEM_MNGT::GenericAllocationCallback<ThreadType> m_threadAllocator;
-		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::Vector<ThreadType>> m_threads;
-
-		NOU_MEM_MNGT::GenericAllocationCallback<NOU_CORE::ErrorHandler> m_handlerAllocator;
-		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::Vector<NOU_CORE::ErrorHandler>> m_handlers;
+		AllocatorType<NOU_DAT_ALG::ObjectPool<NOU_CORE::ErrorHandler>::Chunk> m_handlerAllocator;
+		ObjectPoolPtr<NOU_CORE::ErrorHandler> m_handlers;
 
 		/*
 		 * uint64 is the same type as BinaryHeap's priority type, if the priority type ever changes,
 		 * this must change too. BinaryHeap::Priority type is not defined at this point, since 
 		 * BinaryHeap.hpp is not included.
 		 */
-		NOU_MEM_MNGT::GenericAllocationCallback<NOU_DAT_ALG::Pair<uint64, AbstractTask*>> m_taskAllocator;
+		AllocatorType<NOU_DAT_ALG::Pair<uint64, AbstractTask*>> m_taskAllocator;
 		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<AbstractTask*>> m_tasks;
 	};
 }
