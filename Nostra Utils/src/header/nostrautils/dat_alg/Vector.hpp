@@ -636,6 +636,22 @@ namespace NOU::NOU_DAT_ALG
 		= would return.
 		*/
 		constexpr boolean operator != (const VectorIterator &other) const;
+
+		constexpr VectorIterator operator + (const VectorIterator &other) const;
+		constexpr VectorIterator operator + (sizeType value) const;
+		constexpr VectorIterator operator - (const VectorIterator &other) const;
+		constexpr VectorIterator operator - (sizeType value) const;
+
+		constexpr VectorIterator& operator += (const VectorIterator &other);
+		constexpr VectorIterator& operator += (sizeType value);
+		constexpr VectorIterator& operator -= (const VectorIterator &other);
+		constexpr VectorIterator& operator -= (sizeType value);
+
+		constexpr boolean operator < (const VectorIterator &other) const;
+		constexpr boolean operator > (const VectorIterator &other) const;
+
+		constexpr boolean operator >= (const VectorIterator &other) const;
+		constexpr boolean operator >= (const VectorIterator &other) const;
 	};
 
 	/**
@@ -1278,6 +1294,115 @@ namespace NOU::NOU_DAT_ALG
 	{
 		return !(*this == other);
 	}
+
+	template<typename T>
+	constexpr VectorIterator<T> VectorIterator<T>::operator + (const VectorIterator &other) const
+	{
+		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(), 
+			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
+
+		return VectorIterator(m_dataPtr, m_index + other.m_index);
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T> VectorIterator<T>::operator + (sizeType value) const
+	{
+		return VectorIterator(m_dataPtr, m_index + value);
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T> VectorIterator<T>::operator - (const VectorIterator &other) const
+	{
+		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
+
+		return VectorIterator(m_dataPtr, m_index - other.m_index);
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T> VectorIterator<T>::operator - (sizeType value) const
+	{
+		return VectorIterator(m_dataPtr, m_index - value);
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T>& VectorIterator<T>::operator += (const VectorIterator &other)
+	{
+		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
+
+		m_index += other.m_index;
+
+		return *this;
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T>& VectorIterator<T>::operator += (sizeType value)
+	{
+		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
+
+		m_index += value;
+
+		return *this;
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T>& VectorIterator<T>::operator -= (const VectorIterator &other)
+	{
+		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
+
+		m_index -= other.m_index;
+
+		return *this;
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T>& VectorIterator<T>::operator -= (sizeType value)
+	{
+		m_index += value;
+
+		return *this;
+	}
+
+	template<typename T>
+	constexpr boolean VectorIterator<T>::operator < (const VectorIterator &other) const
+	{
+		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
+
+		return m_index < other.m_index;
+	}
+
+	template<typename T>
+	constexpr boolean VectorIterator<T>::operator > (const VectorIterator &other) const
+	{
+		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
+
+		return m_index > other.m_index;
+	}
+
+	template<typename T>
+	constexpr boolean VectorIterator<T>::operator >= (const VectorIterator &other) const
+	{
+		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
+
+		return m_index <= other.m_index;
+	}
+
+	template<typename T>
+	constexpr boolean VectorIterator<T>::operator >= (const VectorIterator &other) const
+	{
+		NOU_COND_PUSH_DBG_ERROR(!(m_dataPtr == other.m_dataPtr), NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INCOMPATIBLE_ITERATORS, "The iterators point to two different vectors.");
+
+		return m_index >= other.m_index;
+	}
+
+
 
 	template<typename T>
 	constexpr VectorReverseIterator<T>::VectorReverseIterator(sizeType index, const T **dataPtr) :
