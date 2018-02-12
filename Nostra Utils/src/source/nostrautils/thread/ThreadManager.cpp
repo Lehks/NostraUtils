@@ -6,6 +6,17 @@
 
 namespace NOU::NOU_THREAD
 {
+	void ThreadManager::threadLoop(boolean *shouldShutdown, TaskErrorHandlerPair *taskHandlerPair)
+	{
+		while (!(*shouldShutdown))
+		{
+			//wait for new task
+
+			taskHandlerPair->dataOne->execute();
+		}
+	}
+
+
 	ThreadManager ThreadManager::s_instance;
 
 	NOU_FUNC ThreadManager& getThreadManager()

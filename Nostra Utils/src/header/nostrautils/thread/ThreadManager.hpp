@@ -87,6 +87,8 @@ namespace NOU::NOU_THREAD
 
 		using TaskErrorHandlerPair = NOU_DAT_ALG::Pair<AbstractTask*, NOU_CORE::ErrorHandler*>;
 
+		static void threadLoop(boolean *shouldShutdown, TaskErrorHandlerPair *taskHandlerPair);
+
 		//Thread Pool
 		AllocatorType<NOU_DAT_ALG::internal::ObjectPoolChunk<ThreadType>> m_threadAllocator;
 		ObjectPoolPtr<ThreadType> m_threads;
