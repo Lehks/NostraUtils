@@ -1,34 +1,52 @@
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
-
+#include "nostrautils\dat_alg\BinaryHeap.hpp"
+#include "nostrautils\dat_alg\ObjectPool.hpp"
 #include <iostream>
+#include <vector>
+#include <cstdlib>
 
+using namespace NOU;
+using namespace NOU_CORE;
+using namespace NOU_DAT_ALG;
+
+void callback(const ErrorLocation&)
+{
+	__debugbreak();
+}
+
+class A
+{
+private:
+	int i;
+public:
+	A() = default;
+	A(int i) : i(i) {}
+	A(const A&) = delete;
+	A(A&&) = default;
+
+	int get() const { return i; }
+};
 
 int main()
 {
+	ObjectPool<A> objectPool(3);
 
-	NOU::NOU_DAT_ALG::String<NOU::char8> str;
+	objectPool.pushObject(A());
+	objectPool.pushObject(A());
+	objectPool.pushObject(A());
 
-	str.append(5123.01);
+	A& a = objectPool.get();
+	A& a1 = objectPool.get();
+	A& a2 = objectPool.get();
 
-	std::cout << str.rawStr() << std::endl;
+	objectPool.giveBack(a);
+	objectPool.giveBack(a1);
+	objectPool.giveBack(a2);
 
-	str.replace('1' , 'B', 0, str.size());
+	while (getErrorHandler().getErrorCount() != 0)
+		std::cout << getErrorHandler().popError().getName() << std::endl;
 
-	std::cout << str.rawStr() << std::endl;
-
-	str.clear();
-
-	str.append("Hallo Mein Name ist Dennis             ");
-
-	str.trim();
-
-	str.append(" was geht.");
-
-	std::cout << str.rawStr() << std::endl;
-
-	system("pause");
+	std::cin.get();
 }

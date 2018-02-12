@@ -1,7 +1,6 @@
 #ifndef NOU_DAT_ALG_FAST_QUEUE_HPP
 #define NOU_DAT_ALG_FAST_QUEUE_HPP
 
-#include "nostrautils\dat_alg\ContainerInterfaces.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
@@ -13,7 +12,7 @@
 /**
 \file core/FastQueue.hpp
 
-\author  Lukas Groﬂ
+\author  Lukas Gross
 \author  Lukas Reichmann
 \version 0.0.1
 \since   1.0.0
@@ -27,7 +26,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief A simple implementation of a queue which can be used in O(1).
 	*/
 	template<typename T>
-	class NOU_CLASS FastQueue final : public Queue<T>, public FifoQueue<T>, public RandomAccess<T>
+	class NOU_CLASS FastQueue final
 	{
 	public:
 		/**
@@ -47,7 +46,6 @@ namespace NOU::NOU_DAT_ALG
 		NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
 
 		/** 
-		\Mahan is dumm!
 		\brief The max size of the queue.
 		*/
 		sizeType m_capacity;
@@ -92,86 +90,99 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief Checks if the queue is empty.
 		*/
-		boolean empty() const override;
+		boolean empty() const;
 
 		/**
 		\return The current size of the queue.
 		\brief Returns the current size of the queue.
 		*/
-		sizeType size() const override;
+		sizeType size() const;
 
 		/**
 		\param data The element which will be stored in the queue.
 		\brief Stores a element in the queue
 		*/
-		void pushBack(const Type &data) override;
+		void pushBack(const Type &data);
+
+		/**
+		\param data The element which will be stored in the queue.
+		\brief Stores a element in the queue
+		*/
+		void pushBack(Type &&data);
 
 		/**
 		\param data The element which will be stored in the queue.
 		\brief Calls the pushBack().
 		*/
-		void push(const Type &data) override;
+		void push(const Type &data);
 
+		/*
 		/**
+		\param data The element which will be stored in the queue.
+		\brief Calls the pushBack().
+		*/
+		void push(Type &&data);
+
+		/*
 		\return The first element in the queue.
 		\brief Returns the first element in the queue.
 		*/
-		Type popFront() override;
+		Type popFront();
 
 		/**
 		\return The first element in the queue.
 		\brief Calls the popFront().
 		*/
-		Type pop() override;
+		Type pop();
 
 		/**
 		\return A reference to the first (aka oldest) element in the queue.
 
 		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
 		*/
-		const Type& peekFront() const override;
+		const Type& peekFront() const;
 
 		/**
 		\return A reference to the first (aka oldest) element in the queue.
 
 		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
 		*/
-		Type& peekFront() override;
+		Type& peekFront();
 
 		/**
 		\return A reference to the first (aka oldest) element in the queue.
 
 		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
 		*/
-		const Type& peek() const override;
+		const Type& peek() const;
 
 		/**
 		\return A reference to the first (aka oldest) element in the queue.
 
 		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
 		*/
-		Type& peek() override;
+		Type& peek();
 
 		/**
 		\param index0 The first element.
 		\param index1 The second element.
 		\brief Swaps two elements of the queue.
 		*/
-		void swap(sizeType index0, sizeType index1) override;
+		void swap(sizeType index0, sizeType index1);
 
 		/**
 		\return The element at the index \p index in the queue. 
 
 		\brief Returns the element at the index \p index in the queue.
 		*/
-		Type& at(sizeType index) override;
+		Type& at(sizeType index);
 
 		/**
 		\return The element at the index \p index in the queue.
 
 		\brief Returns the element at the index \p index in the queue.
 		*/
-		const Type& at(sizeType index) const override;
+		const Type& at(sizeType index) const;
 
 		/**
 		\brief Removes all elements from the queue.
@@ -198,6 +209,22 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns m_allocator.
 		*/
 		const NOU_MEM_MNGT::AllocationCallback<Type>& getAllocationCallback() const;
+
+		/**
+		\param index The index of the element that will be returned.
+		\return A const reference to the element at the specified index.
+
+		\brief Returns a const reference to the element at the specified index.
+		*/
+		const Type& operator [] (sizeType index) const;
+
+		/**
+		\param index The index of the element that will be returned.
+		\return A const reference to the element at the specified index.
+
+		\brief Returns a const reference to the element at the specified index.
+		*/
+		Type& operator [] (sizeType index);
 	};
 
 	template<typename T>
@@ -213,13 +240,14 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	FastQueue<T>::FastQueue(sizeType initialCapacity, NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
 		m_allocator(allocator),
-		m_capacity(initialCapacity < MIN_CAPACITY ? MIN_CAPACITY : initialCapacity), ///\todo replace w/ max()
+		m_capacity(initialCapacity < MIN_CAPACITY ? MIN_CAPACITY : initialCapacity),///\todo replace w/ max()
 		m_startIndex(0),
 		m_endIndex(0),
 		m_queue(m_allocator.allocate(m_capacity), m_allocator)
 	{
 		if(m_queue == nullptr)
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION, "The allocation failed.");
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION,
+				"The allocation failed.");
 	}
 
 	template<typename T>
@@ -252,9 +280,23 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	void FastQueue<T>::pushBack(Type &&data)
+	{
+		resize(1);
+		new (m_queue.rawPtr() + m_endIndex) Type(NOU_CORE::forward<Type>(data));
+		m_endIndex++;
+	}
+
+	template<typename T>
 	void FastQueue<T>::push(const Type &data)
 	{
 		pushBack(data);
+	}
+
+	template<typename T>
+	void FastQueue<T>::push(Type &&data)
+	{
+		pushBack(NOU_CORE::forward<Type>(data));
 	}
 
 	template<typename T>
@@ -391,7 +433,8 @@ namespace NOU::NOU_DAT_ALG
 			newBuf = m_allocator.allocate(newCapacity);
 			
 			if (newBuf == nullptr)
-				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION, "The allocation failed.");
+				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION,
+					"The allocation failed.");
 		}
 
 		copyFromTo(m_queue.rawPtr() + m_startIndex, newBuf, size());
@@ -411,6 +454,18 @@ namespace NOU::NOU_DAT_ALG
 		FastQueue<T>::getAllocationCallback() const
 	{
 		return m_allocator;
+	}
+
+	template<typename T>
+	const typename FastQueue<T>::Type& FastQueue<T>::operator [] (sizeType index) const
+	{
+		return at(index);
+	}
+
+	template<typename T>
+	typename FastQueue<T>::Type& FastQueue<T>::operator [] (sizeType index)
+	{
+		return at(index);
 	}
 }
 #endif
