@@ -18,33 +18,31 @@ namespace NOU::NOU_DAT_ALG
 {
 	/**
 	\param CLASSNAME The name of the pair class.
-	\param DATAONE_TYPE The type of the first data field.
 	\param DATAONE_NAME The name of the first data field.
-	\param DATATWO_TYPE The type of the second data field.
 	\param DATATWO_NAME The name of the second data field.
 
-	\brief Defines a pair class with custom names for the two data fields. There is a default implementation 
-	       called Pair.
+	\brief Defines a templated pair class with custom names for the two data fields. There is a default
+	implementation called Pair.
 	*/
-#define NOU_DEFINE_PAIR(CLASSNAME, DATAONE_TYPE, DATAONE_NAME, DATATWO_TYPE, DATATWO_NAME)	\
-	struct NOU_CLASS CLASSNAME																\
-	{																						\
-		DATAONE_TYPE	DATAONE_NAME;														\
-		DATATWO_TYPE	DATATWO_NAME;														\
-																							\
-		CLASSNAME(const DATAONE_TYPE& DATAONE_NAME, const DATATWO_TYPE& DATATWO_NAME) :		\
-			dataOne(DATAONE_NAME),															\
-			dataTwo(DATATWO_NAME)															\
-		{}																					\
-																							\
-		CLASSNAME(DATAONE_TYPE&& DATAONE_NAME, DATATWO_TYPE&& DATATWO_NAME) :				\
-			dataOne(NOU_CORE::move(DATAONE_NAME)),											\
-			dataTwo(NOU_CORE::move(DATATWO_NAME))											\
-		{}																					\
+#define NOU_DEFINE_PAIR(CLASSNAME, DATAONE_NAME, DATATWO_NAME)	 \
+	template<typename O, typename T>							 \
+	struct NOU_CLASS CLASSNAME									 \
+	{															 \
+		O	DATAONE_NAME;										 \
+		T	DATATWO_NAME;										 \
+																 \
+		CLASSNAME(const O &DATAONE_NAME, const T &DATATWO_NAME): \
+			DATAONE_NAME(DATAONE_NAME),							 \
+			DATATWO_NAME(DATATWO_NAME)							 \
+		{}														 \
+																 \
+		CLASSNAME(O&& DATAONE_NAME, T&& DATATWO_NAME) :			 \
+			DATAONE_NAME(NOU_CORE::move(DATAONE_NAME)),			 \
+			DATATWO_NAME(NOU_CORE::move(DATATWO_NAME))			 \
+		{}														 \
 	};
 
-	template<typename O, typename T>
-	NOU_DEFINE_PAIR(Pair, O, dataOne, T, dataTwo)
+	NOU_DEFINE_PAIR(Pair, dataOne, dataTwo)
 
 	/**
 	\param dataone First Type.
