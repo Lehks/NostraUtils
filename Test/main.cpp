@@ -1,6 +1,7 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\thread\ThreadManager.hpp"
@@ -30,6 +31,8 @@ public:
 
 	int get() const { return i; }
 };
+
+NOU_DEFINE_PAIR(P, A, a, A, b)
 
 int main()
 {

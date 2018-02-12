@@ -4,6 +4,7 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\Pointer.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\thread\ThreadWrapper.hpp"
 #include "nostrautils\thread\Task.hpp"
 #include "nostrautils\thread\Mutex.hpp"
@@ -85,7 +86,11 @@ namespace NOU::NOU_THREAD
 		template<typename T>
 		using ObjectPoolPtr = NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::ObjectPool<T>>;
 
-		using TaskErrorHandlerPair = NOU_DAT_ALG::Pair<AbstractTask*, NOU_CORE::ErrorHandler*>;
+		NOU_DEFINE_PAIR(TaskErrorHandlerPairTempl, task, handler)
+
+		using TaskErrorHandlerPair = TaskErrorHandlerPairTempl<AbstractTask*, NOU_CORE::ErrorHandler*>;
+
+//		using TaskErrorHandlerPair = NOU_DAT_ALG::Pair<AbstractTask*, NOU_CORE::ErrorHandler*>;
 
 		static void threadLoop(boolean *shouldShutdown, TaskErrorHandlerPair *taskHandlerPair);
 

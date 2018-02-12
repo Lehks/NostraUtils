@@ -12,7 +12,7 @@ namespace NOU::NOU_THREAD
 		{
 			//wait for new task
 
-			taskHandlerPair->dataOne->execute();
+			taskHandlerPair->task->execute();
 		}
 	}
 
@@ -88,11 +88,11 @@ namespace NOU::NOU_THREAD
 	void ThreadManager::executeTaskWithThread(TaskErrorHandlerPair task, ThreadType &thread)
 	{
 		//If the set handler is nullptr, the task is supposed to run with a handler from the handler pool
-		if (task.dataTwo == nullptr)
+		if (task.handler == nullptr)
 		{
 			NOU_ASSERT(m_handlers->remainingObjects() > 0);
 
-			task.dataTwo = &m_handlers->get();
+			task.handler = &m_handlers->get();
 		}
 
 		//set task for execution in thread
