@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
+#define NOU_DEBUG
+
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
@@ -28,6 +30,7 @@
 #include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
 
 void printErrors()
 {
@@ -1353,6 +1356,11 @@ namespace UnitTests
 			Assert::IsTrue(objPool.size() == 3);
 			Assert::IsTrue(objPool.remainingObjects() == 2);
 
+			Assert::IsTrue(objPool.isPartOf(obj0));
+			Assert::IsTrue(objPool.isPartOf(obj1));
+
+			NOU::DebugClass dbgCls(5);
+			Assert::IsFalse(objPool.isPartOf(dbgCls));
 		}
 	};
 }

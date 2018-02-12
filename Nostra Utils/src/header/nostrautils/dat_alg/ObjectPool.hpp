@@ -57,17 +57,17 @@ namespace NOU::NOU_DAT_ALG
 	\tparam T The type of objects to store.
 
 	\brief A container that stores a pool of pre-allocated objects. The container has a maximum size and can
-	       not grow larger that size.
+	not grow larger that size.
 
 	\details
-	This class is somewhat similar to nostra::utils::mem_mngt::PoolAllocator, but instead of constructing a 
+	This class is somewhat similar to nostra::utils::mem_mngt::PoolAllocator, but instead of constructing a
 	new object each time, the objects in this container stay constructed for the entire lifetime. This is
-	useful if a class does a lot of dynamic allocations during its construction. 
-	After the construction of this object, 
+	useful if a class does a lot of dynamic allocations during its construction.
+	After the construction of this object,
 
 	\note
-	The order in which the objects in the pool will be distributed is not defined - a user can not make any 
-	assumptions on which concrete object will be returned. It is a good practice to have the objects in the 
+	The order in which the objects in the pool will be distributed is not defined - a user can not make any
+	assumptions on which concrete object will be returned. It is a good practice to have the objects in the
 	container share the same state.
 	*/
 	template<typename T>
@@ -122,13 +122,13 @@ namespace NOU::NOU_DAT_ALG
 
 	public:
 		/**
-		\param capacity           The capacity of the pool. It is not possible to push more objects that this 
-		                          capacity.
+		\param capacity           The capacity of the pool. It is not possible to push more objects that this
+		capacity.
 		\param allocationCallback The callback to allocate the chunk of data to store the objects in.
 
 		\brief Constructs a new instance.
 		*/
-		explicit ObjectPool(sizeType capacity, NOU_MEM_MNGT::AllocationCallback<Chunk> &allocationCallback 
+		explicit ObjectPool(sizeType capacity, NOU_MEM_MNGT::AllocationCallback<Chunk> &allocationCallback
 			= NOU_MEM_MNGT::GenericAllocationCallback<Chunk>::getInstance());
 
 		ObjectPool(const ObjectPool&) = delete;
@@ -153,8 +153,8 @@ namespace NOU::NOU_DAT_ALG
 
 		\param args The parameters that will be used to construct the new object.
 
-		\brief Pushes a new object into the pool. This object will be constructed from the parameters that 
-		       were passed to this method. At most, this can be called capacity() times.
+		\brief Pushes a new object into the pool. This object will be constructed from the parameters that
+		were passed to this method. At most, this can be called capacity() times.
 		*/
 		template<typename... ARGS>
 		void emplaceObject(ARGS&&... args);
@@ -169,16 +169,25 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param object The object to return to the pool.
 
-		\brief Gives an object back to the pool. It is only valid to give back objects that were previously 
-		       obtained from get() from that very same pool.
+		\brief Gives an object back to the pool. It is only valid to give back objects that were previously
+		obtained from get() from that very same pool.
 		*/
-		void giveBack(const Type& object);
+		void giveBack(const Type &object);
+
+		/**
+		\param object The object to test.
+
+		\return True, if \p object is part of the pool, false if not.
+
+		\brief Checks whether the passed object is part of the pool or not.
+		*/
+		boolean isPartOf(const Type &object);
 
 		/**
 		\return The size of the pool.
 
-		\brief Returns the amount of objects that are currently in the pool. This includes objects that are 
-		       distributed by the pool and those that are ready for being distributed.
+		\brief Returns the amount of objects that are currently in the pool. This includes objects that are
+		distributed by the pool and those that are ready for being distributed.
 		*/
 		sizeType size() const;
 
@@ -213,14 +222,14 @@ namespace NOU::NOU_DAT_ALG
 	typename ObjectPool<T>::Chunk* ObjectPool<T>::getChunkFromObject(const Type &object)
 	{
 		//calculate address of the chunk
-		return reinterpret_cast<Chunk*>(reinterpret_cast<byte*>(const_cast<Type*>(&object)) 
+		return reinterpret_cast<Chunk*>(reinterpret_cast<byte*>(const_cast<Type*>(&object))
 			- offsetof(Chunk, m_data));
 	}
 
 	template<typename T>
 	void ObjectPool<T>::removeFromList(Chunk *chunk)
 	{
-		if(chunk->m_left != nullptr)
+		if (chunk->m_left != nullptr)
 			chunk->m_left->m_right = chunk->m_right;
 
 		if (chunk->m_right != nullptr)
@@ -238,8 +247,8 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename T>
 	ObjectPool<T>::ObjectPool(sizeType capacity,
-		NOU_MEM_MNGT::AllocationCallback<Chunk> &allocationCallback):
-		m_data(capacity, allocationCallback), 
+		NOU_MEM_MNGT::AllocationCallback<Chunk> &allocationCallback) :
+		m_data(capacity, allocationCallback),
 		m_remainingObjects(0),
 		m_head(nullptr)
 	{}
@@ -268,7 +277,7 @@ namespace NOU::NOU_DAT_ALG
 
 		if (m_data.size() >= m_data.capacity()) //if full \todo set error & prevent vector from reallocating
 		{
-			NOU_PUSH_DBG_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_STATE, 
+			NOU_PUSH_DBG_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_STATE,
 				"The pool is full. No more objects can be pushed to it.");
 			return;
 		}
@@ -283,11 +292,11 @@ namespace NOU::NOU_DAT_ALG
 
 		setAsHead(m_data.data() + m_data.size() - 1); //set the just inserted chunk as head
 	}
-	
+
 	template<typename T>
 	typename ObjectPool<T>::Type& ObjectPool<T>::get()
 	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_head == nullptr), NOU_CORE::getErrorHandler(), 
+		NOU_COND_PUSH_DBG_ERROR(!(m_head == nullptr), NOU_CORE::getErrorHandler(),
 			NOU_CORE::ErrorCodes::INVALID_STATE, "The pool is empty. Use pushObject() to push a new object.");
 
 		Chunk *head = m_head;
@@ -307,16 +316,12 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void ObjectPool<T>::giveBack(const Type& object)
 	{
-		//error if the pointer to the object is not within bounds of the internal vector
-		NOU_COND_PUSH_DBG_ERROR(reinterpret_cast<const Chunk*>(&object) >= m_data.data() && 
-			reinterpret_cast<const Chunk*>(&object) < m_data.data() + m_data.size(),
-			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, 
-			"The passed object is not part of the object pool.");
-
 #ifdef NOU_DEBUG
-		if (!(reinterpret_cast<const Chunk*>(&object) >= m_data.data() &&
-			reinterpret_cast<const Chunk*>(&object) < m_data.data() + m_data.size()))
+		if (!isPartOf(object))
 		{
+			//error if the pointer to the object is not within bounds of the internal vector
+			NOU_PUSH_DBG_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT,
+				"The passed object is not part of the object pool.");
 			return; //abort in debug
 		}
 #endif
@@ -327,6 +332,13 @@ namespace NOU::NOU_DAT_ALG
 		setAsHead(chunk);
 
 		m_remainingObjects++;
+	}
+
+	template<typename T>
+	boolean ObjectPool<T>::isPartOf(const Type &object)
+	{
+		return (reinterpret_cast<const Chunk*>(&object) >= m_data.data() &&
+			reinterpret_cast<const Chunk*>(&object) < m_data.data() + m_data.size());
 	}
 
 	template<typename T>
