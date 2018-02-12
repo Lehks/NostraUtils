@@ -29,7 +29,7 @@ namespace NOU::NOU_THREAD
 		StoredType &m_stored;
 
 		/**
-		\brief The lock that is used to lock and undlock the access to the value.
+		\brief The lock that is used to lock and unlock the access to the value.
 		*/
 		Lock m_lock;
 

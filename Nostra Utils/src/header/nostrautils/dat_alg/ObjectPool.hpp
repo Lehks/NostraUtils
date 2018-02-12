@@ -261,7 +261,7 @@ namespace NOU::NOU_DAT_ALG
 	void ObjectPool<T>::emplaceObject(ARGS&&... args)
 	{
 #ifdef NOU_DEBUG
-		sizeType oldCapacity = m_data.capacity()
+		sizeType oldCapacity = m_data.capacity();
 		NOU_ASSERT(m_data.size() != m_data.capacity()); //check that the capacity has not changed
 #endif
 
@@ -308,13 +308,17 @@ namespace NOU::NOU_DAT_ALG
 	void ObjectPool<T>::giveBack(const Type& object)
 	{
 		//error if the pointer to the object is not within bounds of the internal vector
-		NOU_COND_PUSH_DBG_ERROR(&object >= m_dataPtr && &object < m_dataPtr + m_data.size(),
+		NOU_COND_PUSH_DBG_ERROR(reinterpret_cast<const Chunk*>(&object) >= m_data.data() && 
+			reinterpret_cast<const Chunk*>(&object) < m_data.data() + m_data.size(),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, 
 			"The passed object is not part of the object pool.");
 
 #ifdef NOU_DEBUG
-		if (!(&object >= m_dataPtr && &object < m_dataPtr + m_data.size()))
+		if (!(reinterpret_cast<const Chunk*>(&object) >= m_data.data() &&
+			reinterpret_cast<const Chunk*>(&object) < m_data.data() + m_data.size()))
+		{
 			return; //abort in debug
+		}
 #endif
 		Chunk *chunk = getChunkFromObject(object);
 

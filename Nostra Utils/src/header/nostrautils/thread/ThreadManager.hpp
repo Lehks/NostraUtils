@@ -12,6 +12,12 @@
 ///\cond
 namespace NOU::NOU_DAT_ALG
 {
+	namespace internal
+	{
+		template<typename T>
+		class ObjectPoolChunk;
+	}
+
 	template<typename T>
 	class ObjectPool;
 
@@ -43,6 +49,26 @@ namespace NOU::NOU_THREAD
 		static ThreadManager& getInstance();
 	//End of singleton parts
 
+		struct ThreadHandlerBundle
+		{
+			/**
+			\brief The thread that is used by this bundle.
+			*/
+			ThreadWrapper m_thread;
+
+			/**
+			\brief The error handler that is currently in use by this bundle.
+			*/
+			NOU_CORE::ErrorHandler *m_handler;
+		
+			/**
+			\param thread The thread that will be used by this bundle.
+
+			\brief Constructs a new instance that uses the passed thread. The error remains unset.
+			*/
+			ThreadHandlerBundle(ThreadWrapper &&thread);
+		};
+
 		/**
 		\brief The amount of threads that the manager will work with 
 		*/
@@ -50,7 +76,7 @@ namespace NOU::NOU_THREAD
 
 		sizeType DEFAULT_TASK_CAPACITY = 50;
 
-		using ThreadType = ThreadWrapper;
+		using ThreadType = ThreadHandlerBundle;
 
 	private:
 		template<typename T>
@@ -59,20 +85,14 @@ namespace NOU::NOU_THREAD
 		template<typename T>
 		using ObjectPoolPtr = NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::ObjectPool<T>>;
 
-		static void threadLoop(ThreadManager &manager);
+		using TaskErrorHandlerPair = NOU_DAT_ALG::Pair<AbstractTask*, NOU_CORE::ErrorHandler*>;
 
-		Mutex m_taskQueueMutex;
-		ConditionVariable m_threadLoopVariable;
-
-		ObjectPoolPtr<ThreadType> makeThreadPool();
-		ObjectPoolPtr<NOU_CORE::ErrorHandler> makeHandlerPool();
-		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<AbstractTask*>> makeTaskHeap();
-
-	public:
-		AllocatorType<NOU_DAT_ALG::ObjectPool<ThreadType>::Chunk> m_threadAllocator;
+		//Thread Pool
+		AllocatorType<NOU_DAT_ALG::internal::ObjectPoolChunk<ThreadType>> m_threadAllocator;
 		ObjectPoolPtr<ThreadType> m_threads;
 
-		AllocatorType<NOU_DAT_ALG::ObjectPool<NOU_CORE::ErrorHandler>::Chunk> m_handlerAllocator;
+		//Handler Pool
+		AllocatorType<NOU_DAT_ALG::internal::ObjectPoolChunk<NOU_CORE::ErrorHandler>> m_handlerAllocator;
 		ObjectPoolPtr<NOU_CORE::ErrorHandler> m_handlers;
 
 		/*
@@ -80,8 +100,23 @@ namespace NOU::NOU_THREAD
 		 * this must change too. BinaryHeap::Priority type is not defined at this point, since 
 		 * BinaryHeap.hpp is not included.
 		 */
-		AllocatorType<NOU_DAT_ALG::Pair<uint64, AbstractTask*>> m_taskAllocator;
-		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<AbstractTask*>> m_tasks;
+		AllocatorType<NOU_DAT_ALG::Pair<uint64, TaskErrorHandlerPair>> m_taskAllocator;
+		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>> m_tasks;
+
+		ObjectPoolPtr<ThreadType> makeThreadPool();
+		ObjectPoolPtr<NOU_CORE::ErrorHandler> makeHandlerPool();
+		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>> makeTaskHeap();
+
+		Mutex m_threadPoolAccessMutex;
+
+		void pushTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler = nullptr); //if nullptr, any error handler will be used
+		void enqueueTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler);
+
+		void executeTaskWithThread(TaskErrorHandlerPair task, ThreadType &thread);
+	public:
+		~ThreadManager();
+
+		void giveBackThread(ThreadType &thread);
 	};
 }
 
