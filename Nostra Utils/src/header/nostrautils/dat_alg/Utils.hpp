@@ -21,8 +21,8 @@ namespace NOU::NOU_DAT_ALG
 	\param DATAONE_NAME The name of the first data field.
 	\param DATATWO_NAME The name of the second data field.
 
-	\brief Defines a templated pair class with custom names for the two data fields. There is a default 
-		   implementation called Pair.
+	\brief Defines a templated pair class with custom names for the two data fields. There is a default
+	implementation called Pair.
 	*/
 #define NOU_DEFINE_PAIR(CLASSNAME, DATAONE_NAME, DATATWO_NAME)	 \
 	template<typename O, typename T>							 \
@@ -31,7 +31,7 @@ namespace NOU::NOU_DAT_ALG
 		O	DATAONE_NAME;										 \
 		T	DATATWO_NAME;										 \
 																 \
-		CLASSNAME(const O &DATAONE_NAME, const T &DATATWO_NAME)  \
+		CLASSNAME(const O &DATAONE_NAME, const T &DATATWO_NAME): \
 			DATAONE_NAME(DATAONE_NAME),							 \
 			DATATWO_NAME(DATATWO_NAME)							 \
 		{}														 \

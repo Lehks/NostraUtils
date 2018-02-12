@@ -25,8 +25,6 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	class BinaryHeap;
 
-	template<typename O, typename T>
-	class Pair;
 }
 ///\endcond
 
