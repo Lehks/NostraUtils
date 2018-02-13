@@ -1,4 +1,4 @@
-#include "nostrautils\math\Vec3.hpp"
+#include "nostrautils\math\Vec.hpp"
 #include "nostrautils\core\StdIncludes.hpp"
 #include <iostream>
 

@@ -2,7 +2,7 @@
 #define NOU_MATH_MATRIX3_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\math\Vec3.hpp"
+#include "nostrautils\math\Vec.hpp"
 
 namespace NOU::NOU_MATH
 {
