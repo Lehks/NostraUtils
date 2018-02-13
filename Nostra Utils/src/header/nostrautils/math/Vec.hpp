@@ -1,5 +1,5 @@
-#ifndef NOU_DAT_MATH_VEC3_HPP
-#define NOU_DAT_MATH_VEC3_HPP
+#ifndef NOU_DAT_MATH_VEC_HPP
+#define NOU_DAT_MATH_VEC_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
@@ -10,7 +10,7 @@
 namespace NOU::NOU_MATH
 {
 	template<uint32 N, typename T = float32>
-	class NOU_CLASS Vec3 
+	class NOU_CLASS Vec
 	{
 	public:
 		using Type = T;
@@ -20,27 +20,27 @@ namespace NOU::NOU_MATH
 			Type m_data[N];
 
 		public:
-			Vec3(InitializerList list);
-			Vec3 add(const Vec3 & vec) const;
-			Vec3 sub(const Vec3 & vec) const;
-			Type dot(const Vec3 & vec) const;
-			Vec3 cross(const Vec3 & vec) const;
-			Vec3 mult(const Type) const;
+			Vec(InitializerList list);
+			Vec add(const Vec & vec) const;
+			Vec sub(const Vec & vec) const;
+			Type dot(const Vec & vec) const;
+			Vec cross(const Vec & vec) const;
+			Vec mult(const Type) const;
 
-			Vec3 operator + (const Vec3 & vec);
-			Vec3 operator - (const Vec3 & vec) const;
-			Type operator * (const Vec3 & vec) const;
-			Vec3 operator * (const Type num) const;
+			Vec operator + (const Vec & vec);
+			Vec operator - (const Vec & vec) const;
+			Type operator * (const Vec & vec) const;
+			Vec operator * (const Type num) const;
 	};
 
 
-	using Vec3f = Vec3<3, float32>;
-	using Vec3i = Vec3<3, float32>;
-	using Vec2f = Vec3<2, int32>;
-	using Vec2i = Vec3<2, int32>;
+	using Vecf = Vec<3, float32>;
+	using Veci = Vec<3, float32>;
+	using Vec2f = Vec<2, int32>;
+	using Vec2i = Vec<2, int32>;
 
 	template<uint32 N, typename T>
-	Vec3<N, T>::Vec3(InitializerList list)
+	Vec<N, T>::Vec(InitializerList list)
 	{
 		NOU_COND_PUSH_DBG_ERROR(list.size() != N, NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::SIZE_MISMATCH, 
 			"The size of the vector did not match the size of the initializer list.");
@@ -55,57 +55,57 @@ namespace NOU::NOU_MATH
 	}
 
 	template<uint32 N, typename T>
-	Vec3<N, T> Vec3<N, T>::add(const Vec3 & vec) 
+	Vec<N, T> Vec<N, T>::add(const Vec & vec) 
 	{
-		return Vec3({ m_data[0] + vec.m_data[0],
+		return Vec({ m_data[0] + vec.m_data[0],
 			m_data[1] + vec.m_data[1], m_data[2] + vec.m_data[2] });
 	}
 
 
 	template<uint32 N, typename T>
-	Vec3<N, T> Vec3<N, T>::sub(const Vec3 & vec) const
+	Vec<N, T> Vec<N, T>::sub(const Vec & vec) const
 	{
-		return Vec3({ m_data[0] - vec.m_data[0],
+		return Vec({ m_data[0] - vec.m_data[0],
 			m_data[1] - vec.m_data[1], m_data[2] - vec.m_data[2] });
 	}
 
 
 	template<uint32 N, typename T>
-	typename Vec3<N, T>::Type Vec3<N, T>::dot(const Vec3<N, T> & vec) const
+	typename Vec<N, T>::Type Vec<N, T>::dot(const Vec<N, T> & vec) const
 	{
 		return m_data[0] * vec.m_data[0] + m_data[1] * vec.m_data[1] + m_data[2] * vec.m_data[2];
 	}
 
 
 	template<uint32 N, typename T>
-	Vec3<N, T> Vec3<N, T>::mult(const Type num) const
+	Vec<N, T> Vec<N, T>::mult(const Type num) const
 	{
-		return Vec3({ m_data[0] * num, m_data[1] * num, m_data[3] * num });
+		return Vec({ m_data[0] * num, m_data[1] * num, m_data[3] * num });
 	}
 
 	template<uint32 N, typename T>
-	Vec3<N, T> Vec3<N, T>::operator + (const Vec3<N, T> & vec)
+	Vec<N, T> Vec<N, T>::operator + (const Vec<N, T> & vec)
 	{
 		return add(vec);
 	}
 
 
 	template<uint32 N, typename T>
-	Vec3<N, T> Vec3<N, T>::operator - (const Vec3<N, T> & vec) const
+	Vec<N, T> Vec<N, T>::operator - (const Vec<N, T> & vec) const
 	{
 		return sub(vec);
 	}
 
 
 	template<uint32 N, typename T>
-	typename Vec3<N, T>::Type Vec3<N, T>::operator * (const Vec3<N, T> & vec) const
+	typename Vec<N, T>::Type Vec<N, T>::operator * (const Vec<N, T> & vec) const
 	{
 		return dot(vec);
 	}
 
 
 	template<uint32 N, typename T>
-	Vec3<N, T> Vec3<N, T>::operator * (const Type num) const
+	Vec<N, T> Vec<N, T>::operator * (const Type num) const
 	{
 		return mult(num);
 	}
