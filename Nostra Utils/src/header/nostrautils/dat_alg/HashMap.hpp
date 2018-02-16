@@ -131,7 +131,7 @@ namespace NOU::NOU_DAT_ALG
 	V& HashMap<K,V>::get(const K &key) 
 	{
 		sizeType n;
-		n = hashObj(&key, LOAD_SIZE);
+		n = hashObj(&key, m_data.capacity());
 
 		if (m_data[n].size() == 0) 
 		{	//if nothing is mapped to HashPos n, return null
