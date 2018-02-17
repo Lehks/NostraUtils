@@ -42,7 +42,7 @@ namespace NOU::NOU_DAT_ALG
 		\return true if sucessfully mapped
 		\brief maps a value to a specific key;
 		*/
-		boolean add(const K &key,const V &value);//WIP
+		boolean map(const K &key,const V &value);//WIP
 
 		/**
 		\param key the key on where a value will be returned
@@ -97,7 +97,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::add(const K &key,const V &value) 
+	boolean HashMap<K, V>::map(const K &key,const V &value) 
 	{
 		sizeType n;
 
