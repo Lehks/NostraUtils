@@ -22,9 +22,9 @@ namespace NOU::NOU_DAT_ALG
 	{
 	private:
 
-		const static sizeType							 LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more ofthen O(1) occurs
+		const static NOU::sizeType							 LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more ofthen O(1) occurs
 
-		Vector<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>	 m_data;
+		Vector<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>		m_data;
 
 
 	public:
@@ -42,7 +42,7 @@ namespace NOU::NOU_DAT_ALG
 		\return true if sucessfully mapped
 		\brief maps a value to a specific key;
 		*/
-		boolean map(const K &key,const V &value);//WIP
+		NOU::boolean map(const K &key,const V &value);//WIP
 
 		/**
 		\param key the key on where a value will be returned
@@ -50,9 +50,9 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		V& get(const K &key);//WIP
 
-		boolean isEmpty();
+		NOU::boolean isEmpty();
 
-		sizeType size();
+		NOU::sizeType size();
 
 
 		//TODO:
@@ -97,7 +97,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::map(const K &key,const V &value) 
+	NOU::boolean HashMap<K, V>::map(const K &key,const V &value) 
 	{
 		sizeType n;
 
@@ -150,13 +150,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	boolean HashMap<K, V>::isEmpty()
+	NOU::boolean HashMap<K, V>::isEmpty()
 	{
 		return m_data.empty();
 	}
 
 	template<typename K, typename V>
-	sizeType HashMap<K, V>::size()
+	NOU::sizeType HashMap<K, V>::size()
 	{
 		return m_data.size();
 	}
