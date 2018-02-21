@@ -9,13 +9,21 @@
 
 int main()
 {
-	NOU::NOU_DAT_ALG::HashMap<NOU::NOU_DAT_ALG::StringView<NOU::char8>, NOU::uint32> hm(100);
+	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
+	NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
+	NOU::boolean b;
 
-	NOU::NOU_DAT_ALG::StringView<NOU::char8>str("Hallo");
+	b = hm.isEmpty();
+	std::cout << b;
 
-	hm.add(str, 15);
+	for (NOU::sizeType i = 0; i < str.size(); i++) {
+		b = hm.map(str.at(i), 1);
+	}
 
-	std::cout << hm.get(str) << std::endl;
+	b = hm.isEmpty();
+	std::cout << b;
 
-	system("pause");
+	for (int i = 0; i < str.size(); i++) {
+	//	Assert::AreEqual(hm.get(str.at(i)), 1);
+	}
 }
