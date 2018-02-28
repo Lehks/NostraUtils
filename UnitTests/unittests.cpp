@@ -1115,8 +1115,7 @@ namespace UnitTests
 			NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
 			NOU::boolean b;
 
-			b = hm.isEmpty();
-			Assert::AreEqual(b, true);
+			Assert::AreEqual(hm.isEmpty(), true);
 
 			for (NOU::sizeType i = 0; i < str.size(); i++) {
 				b = hm.map(str.at(i), 1);
@@ -1125,7 +1124,7 @@ namespace UnitTests
 			Assert::AreEqual(hm.isEmpty(), false);
 
 			for (int i = 0; i < str.size(); i++) {
-				//Assert::AreEqual(hm.get(str.at(i)), 1);
+				Assert::AreEqual(hm.get(str.at(i)), 1);
 			}
 
 		}

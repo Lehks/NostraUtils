@@ -22,7 +22,9 @@ namespace NOU::NOU_DAT_ALG
 	{
 	private:
 
-		const static NOU::sizeType							 LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more ofthen O(1) occurs
+		const static NOU::sizeType							LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more ofthen O(1) occurs
+
+		sizeType											m_size;
 
 		Vector<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>		m_data;
 
@@ -72,7 +74,8 @@ namespace NOU::NOU_DAT_ALG
 
 	template <typename K, typename V>
 	HashMap<K,V>::HashMap(sizeType size, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator) :
-		m_data(size, allocator)
+		m_data(size, allocator),
+		m_size(0)
 	{
 		for (sizeType i = 0; i < size; i++)
 		{
@@ -82,7 +85,8 @@ namespace NOU::NOU_DAT_ALG
 	 
 	template<typename K, typename V>
 	HashMap<K, V>::HashMap(const HashMap<K,V> & other) :
-		m_data(other.m_data)
+		m_data(other.m_data),
+		m_size(other.m_size)
 	{
 		other.m_data.clear();
 		other.m_data = NULL;
@@ -90,7 +94,8 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename K, typename V>
 	HashMap<K, V>::HashMap(HashMap<K,V> && other) :
-		m_data(other.m_data)
+		m_data(other.m_data),
+		m_size(other.m_size)
 	{
 		other.m_data.clear();
 		other.m_data = NULL;
@@ -108,6 +113,7 @@ namespace NOU::NOU_DAT_ALG
 		if (m_data[n].size() == 0) 
 		{	//if Vector at this position is empty, fill it -> O(1)
 			m_data[n].emplaceBack(tmpPair);
+			m_size++;
 			return true;
 		}
 		else 
@@ -122,6 +128,7 @@ namespace NOU::NOU_DAT_ALG
 		
 			//add tmp Pair at the end of the Vector -> O(n)
 			m_data[n].emplaceBack(tmpPair);
+			m_size++;
 			return true;
 		}
 
@@ -152,13 +159,20 @@ namespace NOU::NOU_DAT_ALG
 	template<typename K, typename V>
 	NOU::boolean HashMap<K, V>::isEmpty()
 	{
-		return m_data.empty();
+		if (m_size == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	template<typename K, typename V>
 	NOU::sizeType HashMap<K, V>::size()
 	{
-		return m_data.size();
+		return m_size;
 	}
 
 	template<typename K, typename V>
