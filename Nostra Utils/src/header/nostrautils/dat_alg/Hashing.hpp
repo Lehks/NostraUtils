@@ -16,6 +16,17 @@
 namespace NOU::NOU_DAT_ALG
 {
 
+
+	/**
+	\param value input value
+	\param max 0 <= output < max
+
+	\return hased value
+	\brief a function that hashes a value between a specific interval
+	*/
+
+	NOU::sizeType hashValue(NOU::sizeType value, NOU::sizeType max);
+
 	/**
 	\param inputObject the input that will be hashed.
 	\param max 0 <= output < max.
@@ -34,7 +45,9 @@ namespace NOU::NOU_DAT_ALG
 		address = &inputObject;
 		h = reinterpret_cast<sizeType>(*address);
 
-		return h % max;
+		return hashValue(h, max);
 	};
+
+	
 }
 #endif
