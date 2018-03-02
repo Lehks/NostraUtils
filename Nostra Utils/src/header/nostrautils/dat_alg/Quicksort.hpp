@@ -14,107 +14,82 @@
 */
 namespace NOU::NOU_DAT_ALG
 {
-	/**
-	\swap two values in an Array a[i] and a[j].
-	\tparam a Array.
-	\tparam i first index.
-	\tparam j second index .
-	*/
-	template <typename T>
-	void NOU_FUNC swap(T *array, sizeType fristindex, sizeType secondindex);
+	
 
 	/**
 	\ a function that Partitioning an Array with a given pivots.
 	\tparam a Array .
 	\tparam l for the left range limit.
 	\tparam r for the right range limit.
-	\tparam p the Index of the pivots. 
+	\tparam p the Index of the pivots.
 	\return the pivots
 	*/
 	template <typename T>
-	T NOU_FUNC partition(T *array, sizeType leftrangelimit, sizeType rightrangelimit, sizeType pivot);
+	NOU_FUNC T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot);
 
 	/**
-	\Quickort 
+	\Quickort
 	\tparam a that Array will sorted.
 	\tparam l for the left range limit.
 	\tparam r for the right range limit.
-	\return sorted array. 
+	\return sorted array.
 	*/
 	template<typename T >
-	T* NOU_FUNC qsort(T *a, sizeType leftrangelimit, sizeType rightrangelimit);
+	NOU_FUNC T* qsort(T *a, NOU::int64 leftrangelimit, NOU::int64 rightrangelimit);
 
 	/**
-    \Quicksort 
+	\Quicksort
 	\tparam a that array what will be sort
 	\return sorted array
 	*/
-	template<typename T>
-	T* NOU_FUNC quicksort(T*a); 
+	
 
-	template <typename T >
-	void NOU_FUNC swap(T *array, sizeType firstindex, sizeType secondindex) 
-	{
-		T n = NOU_CORE::move(array[firstindex]);
-		array[firstindex] = array[secondindex]; 
-		array[secondindex] = n; 
 
-	}
+	
 
 
 	template<typename T>
-	T NOU_FUNC partition(T *array, sizeType leftrangelimit, sizeType rightrangelimit, sizeType pivot)
+	NOU_FUNC T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot)
 	{
-		sizeType pn = leftrangelimit; 
-		sizeType pv = array[pivot]; 
+		int64 pn = leftrangelimit;
+		int64 pv = array[pivot];
 
 
 		// pivot goes to end 
-		swap(array, pivot, rightrangelimit);
+		swap(array + pivot, array + rightrangelimit);
 
 		// all values smaller as pivot goes to the right side 
-		for (sizeType i = leftrangelimit; i < rightrangelimit; i++) 
+		for (int64 i = leftrangelimit; i < rightrangelimit; i++)
 		{
 			if (array[i] <= pv)
 			{
-				swap(array, pn, i); 
-				pn++
+				swap(array + pn, array + i);
+				pn++;
 			}
 		}
 
 		// pivot goes to his right position 
-		swap(array, r, pn); 
-		 
-		return pn; 
+		swap(array + rightrangelimit, array + pn);
 
+		return pn;
 	}
 
 
 	template<typename T >
-	T* NOU_FUNC qsort(T *a, sizeType leftrangelimit, sizeType rightrangelimit)
+	NOU_FUNC T* qsort(T *a, int64 leftrangelimit, int64 rightrangelimit)
 	{
+		
 		if (rightrangelimit > leftrangelimit) {
-			sizeType p = r; 
-			sizeType pn = partition(a, leftrangelimit, p, rightrangelimit); 
-			NOU_FUNC qsort(a, leftrangelimit, pn - 1); 
-			NOU_FUNC qsort(a, pn + 1, rightrangelimit); 
+			int64 p = rightrangelimit;
+			int64 pn = partition(a, leftrangelimit, p, rightrangelimit);
+			qsort(a, leftrangelimit, pn - 1);
+			qsort(a, pn + 1, rightrangelimit);
 
 		}
-		return a; 
+		return a;
 	}
 
 
-	template<typename T>
-	T* NOU_FUNC quicksort(T*a)
-	{
-		return qsort(a, 0, sizeof(a) - 1); 
-	}
-
-
-
-
-
-
-
+	
 }
 #endif

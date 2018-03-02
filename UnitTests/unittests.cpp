@@ -16,6 +16,8 @@
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
+#include "nostrautils\dat_alg\Quicksort.hpp"
+
 
 #include "DebugClass.hpp"
 
@@ -343,7 +345,7 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'b') < 0);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') < 0);
-		
+
 
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
@@ -386,8 +388,8 @@ namespace UnitTests
 			Assert::IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
 			Assert::IsTrue(*uPtr == *rawPtr);
 			Assert::IsTrue(uPtr);
-			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr, 
-						NOU::NOU_MEM_MNGT::defaultDeleter));
+			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr,
+				NOU::NOU_MEM_MNGT::defaultDeleter));
 			Assert::IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
 			Assert::IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
 			Assert::IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
@@ -415,7 +417,7 @@ namespace UnitTests
 			{
 				//check if this compiles
 				NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
-				
+
 				//destructor is called here
 			}
 
@@ -431,7 +433,7 @@ namespace UnitTests
 
 		TEST_METHOD(FastQueue)
 		{
-			while(NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
+			while (NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
 				NOU::NOU_CORE::getErrorHandler().popError();
 
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
@@ -476,14 +478,14 @@ namespace UnitTests
 			Assert::IsTrue(allocator.getCounter() == 0);
 
 			NOU::NOU_DAT_ALG::FastQueue<int> fq;
-		
+
 			fq.push(1);
 			fq.push(2);
 			fq.push(3);
 			fq.push(4);
-		
+
 			Assert::IsTrue(fq.peek() == 1);
-		
+
 			Assert::IsTrue(fq.pop() == 1);
 			Assert::IsTrue(fq.pop() == 2);
 			Assert::IsTrue(fq.pop() == 3);
@@ -531,7 +533,7 @@ namespace UnitTests
 
 			Assert::IsTrue(alloc.getCounter() == 0);
 		}
-		
+
 		TEST_METHOD(AllocationCallbackDeleter)
 		{
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> dbgAlloc;
@@ -544,7 +546,7 @@ namespace UnitTests
 			Assert::IsTrue(dbgAlloc.getCounter() == 0);
 
 			auto callback = NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>();
-			NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int, 
+			NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int,
 				NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>> deleter1(callback);
 
 			int *iPtr1 = deleter1.getAllocator().allocate();
@@ -657,7 +659,7 @@ namespace UnitTests
 			Assert::IsTrue(
 				NOU::NOU_CORE::BooleanConstant<sv.find('o', 5) == 7>::value);
 			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('z') == 
+				NOU::NOU_CORE::BooleanConstant<sv.find('z') ==
 				NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
 
 			Assert::IsTrue(
@@ -667,7 +669,7 @@ namespace UnitTests
 			Assert::IsTrue(
 				NOU::NOU_CORE::BooleanConstant<sv.find("o", 5) == 7>::value);
 			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("test") == 
+				NOU::NOU_CORE::BooleanConstant<sv.find("test") ==
 				NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
 
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOf('H') == 0>::value);
@@ -696,7 +698,7 @@ namespace UnitTests
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.endsWith("World")>::value);
 
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Abc")
-				> 0)>::value);
+			> 0)>::value);
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Hello World!")
 				== 0)>::value);
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Xyz")
@@ -715,7 +717,7 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv == "Hello World!">::value);
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv != "Hello z World!">::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv < "xyz">::value);
+			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant < sv < "xyz">::value);
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv > "abc")>::value);
 
 			NOU::NOU_DAT_ALG::StringView8 sv1 = "Hello World!";
@@ -831,11 +833,11 @@ namespace UnitTests
 			Assert::IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFnName()) == NOU_FUNC_NAME);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFile()) == __FILE__);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) == 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) ==
 				"The index was out of bounds.");
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) == 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) ==
 				"INDEX_OUT_OF_BOUNDS");
-		
+
 			auto errorPeek = handler.peekError();
 			auto errorPop = handler.popError();
 
@@ -857,7 +859,7 @@ namespace UnitTests
 			//validate that the order in which the errors are popped is correct
 			Assert::IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
 			Assert::IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
-			
+
 			Assert::IsTrue(handler.getErrorCount() == 0);
 
 			NOU::NOU_CORE::ErrorHandler::ErrorType error = 50000;
@@ -871,7 +873,7 @@ namespace UnitTests
 
 		TEST_METHOD(EpsilonCompare)
 		{
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) <  0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) < 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(123.456, 123.457, 0.1) == 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
 
@@ -910,8 +912,24 @@ namespace UnitTests
 
 				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
 			}
-
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(Quicksort)
+
+		{
+
+			int arr[] = {2,1,3,5,4};
+			NOU::NOU_DAT_ALG::qsort(arr, 0, 4);
+			Assert::IsTrue(arr[0] == 1);
+			Assert::IsTrue(arr[1] == 2);
+			Assert::IsTrue(arr[2] == 3);
+			Assert::IsTrue(arr[3] == 4);
+			Assert::IsTrue(arr[4] == 5);
+
+
+
+			
 		}
 	};
 }
