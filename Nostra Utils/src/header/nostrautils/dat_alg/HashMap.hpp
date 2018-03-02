@@ -61,6 +61,7 @@ namespace NOU::NOU_DAT_ALG
 		/*
 		V remove(K key)
 		boolean containsKey(K key);
+		boolean mapIfAbscent(K,V);
 		Vector keySet();
 		Vector entrySet();
 		*/

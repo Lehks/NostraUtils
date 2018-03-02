@@ -3,6 +3,8 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils\dat_alg\StringView.hpp"
+#include "nostrautils\dat_alg\String.hpp"
 #include <limits>
 
 
@@ -25,7 +27,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief a function that hashes a value between a specific interval
 	*/
 
-	NOU::sizeType hashValue(NOU::sizeType value, NOU::sizeType max);
+	NOU_FUNC NOU::sizeType hashValue(NOU::sizeType value, NOU::sizeType max);
 
 	/**
 	\param inputObject the input that will be hashed.
@@ -35,19 +37,32 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template <typename T>
-	constexpr sizeType hashObj(T* inputObject, sizeType max) {
+	NOU_FUNC constexpr sizeType hashObj(T* inputObject, NOU::sizeType max) 
+	{
 		NOU_COND_PUSH_ERROR((max < 1), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Value max cannot be below 1");
+		//T* p = &static_cast<T>(inputObject);
+		
+		const NOU::byte *bytes = reinterpret_cast<const byte*>(inputObject);
+		NOU::sizeType h = 0;
 
-
-		sizeType h;
-		T** address;
-
-		address = &inputObject;
-		h = reinterpret_cast<sizeType>(*address);
+		for (NOU::sizeType i = 0; i < sizeof(T); i++)
+		{
+			h += bytes[i];
+		}
 
 		return hashValue(h, max);
 	};
 
-	
+	template<typename T>
+	NOU_FUNC constexpr sizeType hashObj(NOU_DAT_ALG::StringView<T> *str, sizeType max)
+	{
+		return hashObj(str->rawStr(), max);
+	}
+
+	template<typename T>
+	NOU_FUNC constexpr sizeType hashObj(NOU_DAT_ALG::String<T> *str, sizeType max)
+	{
+		return hashObj(str->rawStr(), max);
+	}
 }
 #endif

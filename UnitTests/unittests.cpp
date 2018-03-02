@@ -1096,21 +1096,22 @@ namespace UnitTests
 
 		TEST_METHOD(Hashfunction)
 		{
-			NOU::sizeType testInt = 42;
-			NOU::sizeType hashSize = 5;
-			NOU::sizeType test;
-			test = NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize);
-			testInt = 9234978;
-			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize));
+			NOU::int64 i1 = 243536768574;
+			NOU::int64 i2 = 243536768574;
 
-			NOU::NOU_DAT_ALG::String<NOU::char8> str("Hallo");
-			NOU::sizeType strtest;
-			strtest = NOU::NOU_DAT_ALG::hashObj(&str, hashSize);
-			str.append("you");
-			Assert::AreEqual(strtest, NOU::NOU_DAT_ALG::hashObj(&str, hashSize));
+			NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
+
+			h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+
 		}
 
-		TEST_METHOD(HashMap) {
+		TEST_METHOD(HashMap) 
+		{
 			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
 			NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
 			NOU::boolean b;

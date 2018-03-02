@@ -9,21 +9,18 @@
 
 int main()
 {
-	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
-	NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
-	NOU::boolean b;
+	NOU::int64 i1 = 243536768574;
+	NOU::int64 i2 = 243536768574;
 
-	b = hm.isEmpty();
-	std::cout << b;
+	NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
+	std::cout << h << std::endl << NOU::NOU_DAT_ALG::hashObj(&i2, 20) << std::endl;
 
-	for (NOU::sizeType i = 0; i < str.size(); i++) {
-		b = hm.map(str.at(i), 1);
-	}
+	NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
+	NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-	b = hm.isEmpty();
-	std::cout << b;
+	h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
 
-	for (int i = 0; i < str.size(); i++) {
-	//	Assert::AreEqual(hm.get(str.at(i)), 1);
-	}
+	std::cout << h << std::endl << NOU::NOU_DAT_ALG::hashObj(&str2, 20) << std::endl;
+
+	system("pause");
 }
