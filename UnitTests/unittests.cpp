@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
+#define NOU_DEBUG
+
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
@@ -21,6 +23,7 @@
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\Hashing.hpp"
 #include "nostrautils\dat_alg\BinarySearch.hpp"
+#include "nostrautils\dat_alg\ObjectPool.hpp"
 
 #include "DebugClass.hpp"
 
@@ -28,6 +31,7 @@
 #include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
 
 void printErrors()
 {
@@ -1346,6 +1350,52 @@ namespace UnitTests
 			Assert::IsTrue(rit->get() == 5);
 
 			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(ObjectPool)
+		{
+			NOU::NOU_DAT_ALG::ObjectPool<NOU::DebugClass> objPool(5);
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 0);
+			Assert::IsTrue(objPool.remainingObjects() == 0);
+
+			objPool.pushObject(NOU::DebugClass(0));
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 1);
+			Assert::IsTrue(objPool.remainingObjects() == 1);
+
+			objPool.pushObject(NOU::DebugClass(1));
+			objPool.pushObject(NOU::DebugClass(2));
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 3);
+
+			NOU::DebugClass &obj0 = objPool.get();
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 2);
+
+			NOU::DebugClass &obj1 = objPool.get();
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 1);
+
+			objPool.giveBack(obj0);
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 2);
+
+			Assert::IsTrue(objPool.isPartOf(obj0));
+			Assert::IsTrue(objPool.isPartOf(obj1));
+
+			NOU::DebugClass dbgCls(5);
+			Assert::IsFalse(objPool.isPartOf(dbgCls));
 		}
 	};
 }
