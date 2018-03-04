@@ -1127,7 +1127,12 @@ namespace UnitTests
 			for (int i = 0; i < str.size(); i++) {
 				Assert::AreEqual(hm.get(str.at(i)), 1);
 			}
+			NOU::char8 k = 'h';
 
+			NOU::int32 count = hm.remove(k);
+			Assert::AreEqual(2, count);
+			
+			Assert::AreEqual(NULL, hm.get(k));
 		}
 	};
 }

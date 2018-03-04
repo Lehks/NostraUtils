@@ -50,21 +50,22 @@ namespace NOU::NOU_DAT_ALG
 		\param key the key on where a value will be returned
 		\brief returns the corresponding value mapped to a specific key
 		*/
-		V& get(const K &key);//WIP
+		V& get(const K &key);
 
 		NOU::boolean isEmpty();
 
 		NOU::sizeType size();
 
 		NOU::NOU_DAT_ALG::Vector<K> keySet();
+		V& remove(K key);
 
 		NOU::NOU_DAT_ALG::Vector<V> entrySet();
 
+		boolean containsKey(K key);
+
+
 		//TODO:
 		/*
-		V remove(K key)
-		boolean containsKey(K key);
-		boolean mapIfAbscent(K,V);
 		Vector keySet();
 		Vector entrySet();
 		*/
@@ -177,6 +178,26 @@ namespace NOU::NOU_DAT_ALG
 	NOU::sizeType HashMap<K, V>::size()
 	{
 		return m_size;
+	}
+
+
+	template <typename K, typename V>
+	V& HashMap<K,V>::remove(K key)
+	{
+		sizeType h;
+		Pair<K, V> tmpPair(key, this->get(key));
+
+		h = hashObj(&key, m_size);
+
+		for (NOU::sizeType i = 0; i < m_data[h].size(); i++)
+		{
+			if (m_data[h][i].dataOne == key)
+			{
+				m_data[h].remove(tmpPair)
+			}
+		}
+
+		return tmpPair.dataTwo;
 	}
 
 	template<typename K, typename V>
