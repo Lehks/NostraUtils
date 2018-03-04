@@ -919,7 +919,7 @@ namespace UnitTests
 
 		{
 
-			int arr[] = {2,1,3,5,4};
+			int arr[5] = {2,1,3,5,4};
 			NOU::NOU_DAT_ALG::qsort(arr, 0, 4);
 			Assert::IsTrue(arr[0] == 1);
 			Assert::IsTrue(arr[1] == 2);
