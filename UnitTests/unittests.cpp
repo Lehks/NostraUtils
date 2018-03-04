@@ -1113,6 +1113,7 @@ namespace UnitTests
 		TEST_METHOD(HashMap) 
 		{
 			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
+			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
 			NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
 			NOU::boolean b;
 
@@ -1130,9 +1131,24 @@ namespace UnitTests
 			NOU::char8 k = 'h';
 
 			NOU::int32 count = hm.remove(k);
-			Assert::AreEqual(2, count);
+			Assert::AreEqual(1, count);
+
+
+			for (NOU::sizeType i = 0; i < str.size(); i++)
+			{
+				k = str.at(i);
+				if (!hm1.containsKey(str.at(i)))
+				{
+					hm1.map(k, 1);
+				}
+				else
+				{
+					hm1.map(k, hm1.get(k) + 1);
+				}
+			}
 			
-			Assert::AreEqual(NULL, hm.get(k));
+			Assert::AreEqual(hm1.get('h'), 2);
+			Assert::AreEqual(hm1.get(' '), 8);
 		}
 	};
 }

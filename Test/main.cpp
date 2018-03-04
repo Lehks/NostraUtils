@@ -7,40 +7,47 @@
 #include <string>
 #include <iostream>
 
-class foo {
-public:
-	std::string name = "Hallo";
-
-	foo(std::string name);
-};
+using namespace std;
 
 int main()
 {
-	foo f1("Dennis");
-	foo f2("Mahan");
-	foo f3("Leslie");
+	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
+	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
+	NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
+	NOU::boolean b;
 
-	NOU::NOU_DAT_ALG::Vector<foo> entrySetVec(1);
-	NOU::NOU_DAT_ALG::Vector<NOU::sizeType> keySetVec(1);
+	//Assert::AreEqual(hm.isEmpty(), true);
 
-	NOU::NOU_DAT_ALG::HashMap<NOU::sizeType, foo> hm(100);
-
-	hm.map(15, f1);
-	hm.map(10, f2);
-	hm.map(17, f3);
-
-	entrySetVec = hm.entrySet();
-	keySetVec = hm.keySet();
-
-	for (int i = 0; i < entrySetVec.size(); i++)
-	{
-		std::cout << keySetVec[i] << " " <<entrySetVec[i].name << std::endl;
+	for (NOU::sizeType i = 0; i < str.size(); i++) {
+		b = hm.map(str.at(i), 1);
 	}
 
-	system("pause");
-}
+	//Assert::AreEqual(hm.isEmpty(), false);
 
-foo::foo(std::string name)	:
-	name(name)
-{
+	for (int i = 0; i < str.size(); i++) {
+		//Assert::AreEqual(hm.get(str.at(i)), 1);
+	}
+	NOU::char8 k = 'h';
+
+	NOU::int32 count = hm.remove(k);
+	//Assert::AreEqual(2, count);
+
+	//Assert::AreEqual(NULL, hm.get(k));
+
+
+	for (NOU::sizeType i = 0; i < str.size(); i++)
+	{
+		k = str.at(i);
+		if (!hm1.containsKey(str.at(i)))
+		{
+			hm1.map(k, 1);
+		}
+		else
+		{
+			hm1.map(k, hm1.get(k) + 1);
+		}
+	}
+
+	cout << hm1.get(' ') << endl;
+	system("pause");
 }
