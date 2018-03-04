@@ -56,6 +56,9 @@ namespace NOU::NOU_DAT_ALG
 
 		NOU::sizeType size();
 
+		NOU::NOU_DAT_ALG::Vector<K> keySet();
+
+		NOU::NOU_DAT_ALG::Vector<V> entrySet();
 
 		//TODO:
 		/*
@@ -174,6 +177,42 @@ namespace NOU::NOU_DAT_ALG
 	NOU::sizeType HashMap<K, V>::size()
 	{
 		return m_size;
+	}
+
+	template<typename K, typename V>
+	NOU::NOU_DAT_ALG::Vector<K> HashMap<K, V>::keySet()
+	{
+		NOU::NOU_DAT_ALG::Vector<K> keySetVec(1);
+
+		for (NOU::sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (m_data[i].size() != 0)
+			{
+				for (NOU::sizeType j = 0; j < m_data[i].size(); j++)
+				{
+					keySetVec.emplaceBack(m_data[i][j].dataOne);
+				}
+			}
+		}
+		return keySetVec;
+	}
+
+	template<typename K, typename V>
+	NOU::NOU_DAT_ALG::Vector<V> HashMap<K, V>::entrySet()
+	{
+		NOU::NOU_DAT_ALG::Vector<V> entrySetVec(1);
+
+		for (NOU::sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (m_data[i].size() != 0)
+			{
+				for (NOU::sizeType j = 0; j < m_data[i].size(); j++)
+				{
+					entrySetVec.emplaceBack(m_data[i][j].dataTwo);
+				}
+			}
+		}
+		return entrySetVec;
 	}
 
 	template<typename K, typename V>

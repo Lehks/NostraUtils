@@ -4,23 +4,43 @@
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\HashMap.hpp"
 #include "nostrautils\dat_alg\String.hpp"
+#include <string>
 #include <iostream>
 
+class foo {
+public:
+	std::string name = "Hallo";
+
+	foo(std::string name);
+};
 
 int main()
 {
-	NOU::int64 i1 = 243536768574;
-	NOU::int64 i2 = 243536768574;
+	foo f1("Dennis");
+	foo f2("Mahan");
+	foo f3("Leslie");
 
-	NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
-	std::cout << h << std::endl << NOU::NOU_DAT_ALG::hashObj(&i2, 20) << std::endl;
+	NOU::NOU_DAT_ALG::Vector<foo> entrySetVec(1);
+	NOU::NOU_DAT_ALG::Vector<NOU::sizeType> keySetVec(1);
 
-	NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
-	NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
+	NOU::NOU_DAT_ALG::HashMap<NOU::sizeType, foo> hm(100);
 
-	h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
+	hm.map(15, f1);
+	hm.map(10, f2);
+	hm.map(17, f3);
 
-	std::cout << h << std::endl << NOU::NOU_DAT_ALG::hashObj(&str2, 20) << std::endl;
+	entrySetVec = hm.entrySet();
+	keySetVec = hm.keySet();
+
+	for (int i = 0; i < entrySetVec.size(); i++)
+	{
+		std::cout << keySetVec[i] << " " <<entrySetVec[i].name << std::endl;
+	}
 
 	system("pause");
+}
+
+foo::foo(std::string name)	:
+	name(name)
+{
 }
