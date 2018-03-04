@@ -4,17 +4,17 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
-
 #include <initializer_list>
+
 
 namespace NOU::NOU_MATH
 {
 	template<uint32 N, typename T = float32>
 	class NOU_CLASS Vec
 	{
-	public:
-		using Type = T;
-		using InitializerList = std::initializer_list<Type>;
+		public:
+			using Type = T;
+			using InitializerList = std::initializer_list<Type>;
 
 		private:
 			Type m_data[N];
@@ -70,6 +70,11 @@ namespace NOU::NOU_MATH
 	}
 
 
+	/**
+	\param A vector of the same size and type.
+
+	\brief Adds this vector with another and returns the resulting new vector.
+	*/
 	template<uint32 N, typename T>
 	Vec<N, T> Vec<N, T>::add(const Vec<N, T> & vec) const
 	{
@@ -85,40 +90,71 @@ namespace NOU::NOU_MATH
 	}
 
 
+	/**
+	\param A vector of the same size and type.
+
+	\brief Subtracts the given vector from this vector and returns the result as a new vector.
+	*/
 	template<uint32 N, typename T>
 	Vec<N, T> Vec<N, T>::sub(const Vec & vec) const
 	{
-		return Vec({ m_data[0] - vec.m_data[0],
-			m_data[1] - vec.m_data[1], m_data[2] - vec.m_data[2] });
+		sizeType i = 0;
+		Type l[N];
+
+		for (i = 0; i < N; i++)
+		{
+			l[i] = this->getCom(i) - vec.getCom(i);
+		}
+
+		return Vec<N, T>(l);
 	}
 
 
 	template<uint32 N, typename T>
 	typename Vec<N, T>::Type Vec<N, T>::dot(const Vec<N, T> & vec) const
 	{
-		return m_data[0] * vec.m_data[0] + m_data[1] * vec.m_data[1] + m_data[2] * vec.m_data[2];
+		sizeType i = 0;
+		Type dot;
+
+		for (i = 0; i < N; i++)
+		{
+			dot += this->getCom(i) * vec.getCom(i);
+		}
+
+		return dot;
 	}
 
 
 	template<uint32 N, typename T>
 	Vec<N, T> Vec<N, T>::mult(const Type num) const
 	{
-		return Vec({ m_data[0] * num, m_data[1] * num, m_data[3] * num });
+		sizeType i = 0;
+		Type l[N];
+
+		for (i = 0; i < N; i++)
+		{
+			l[i] = this->getCom(i) * num;
+		}
+
+		return Vec<N, T>(l);
 	}
 
 
 	/**
-	\param The Vector component index to get. 
+	\param The Vector component to get. 
 
 	\brief Returns the component at the requested index.
 	*/
 	template<uint32 N, typename T>
 	typename Vec<N, T>::Type Vec<N, T>::getCom(uint32 index) const
 	{
-		// TODO: check bounds!
-
+		if (index >= N || index < 0) {
+			// TODO: Throw out of bounds exception
+		}
+		
 		return m_data[index];
 	}
+
 
 	template<uint32 N, typename T>
 	Vec<N, T> Vec<N, T>::operator + (const Vec<N, T> & vec)
@@ -146,7 +182,5 @@ namespace NOU::NOU_MATH
 	{
 		return mult(num);
 	}
-
 }
-
 #endif
