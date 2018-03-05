@@ -57,7 +57,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Parses a single line from the file.
 			*/
-			void parseLine(const NouString &, const NouString &);
+			void parseLine(NouString &, const NouString &);
 
 			/**
 			\param A single line of text.

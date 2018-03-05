@@ -75,7 +75,7 @@ namespace NOU::NOU_FILE_MNGT
 		pos_quote_first = line.firstIndexOf(quote) + 1;
 		pos_quote_last = line.lastIndexOf(quote);
 
-		value = NouString(line.substring(pos_quote_first, pos_quote_last - pos_quote_first));
+		value.clear().append(line.substring(pos_quote_first, pos_quote_last - pos_quote_first));
 
 		return value;
 	}
@@ -113,7 +113,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	void INIFile::parseLine(const NouString & line, const NouString & section)
+	void INIFile::parseLine(NouString & line, const NouString & section)
 	{
 		NouString line_lft;
 		NouString line_rgt;
@@ -129,13 +129,13 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Check if first char indicates comment
-		if (line[0] == ';') {
+		if (line.at(0) == ';') {
 			return;
 		}
 
 		// Split the string into a left and right part
-		line_lft = line.substring(0, pos_eq);
-		line_rgt = line.substring(pos_eq + 1);
+		line_lft.clear().append(line.substring(0, pos_eq));
+		line_rgt.clear().append(line.substring(pos_eq + 1));
 
 		quote_type = this->parseValueQuote(line_rgt);
 
@@ -169,16 +169,16 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Set the default section
-		section = INI_DEFAULT_SECTION;
+		section.append(INI_DEFAULT_SECTION);
 
 		// Parse file content line by line
 		while (std::getline(inifile, line))
 		{
-			line = line.trim();
+			line.clear().append(line.trim());
 
 			// Check if we have a section
-			if (line[0] == '[' && line[(line.size() - 1)] == ']') {
-				section = line.substring(1, line.size() - 2);
+			if (line.at(0) == '[' && line.at((line.size() - 1)) == ']') {
+				section.clear().append(line.substring(1, line.size() - 2));
 			}
 			else {
 				this->parseLine(line, section);
@@ -230,7 +230,7 @@ namespace NOU::NOU_FILE_MNGT
 				pos_dot = istr->first.firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
-				key_section = istr->first.substring(0, pos_dot);
+				key_section.clear().append(istr->first.substring(0, pos_dot));
 				if (key_section != isec->first) continue;
 
 				inifile << istr->first.substring(pos_sec + 1) << " = ";
@@ -243,7 +243,7 @@ namespace NOU::NOU_FILE_MNGT
 				pos_dot = iint->first.firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
-				key_section = iint->first.substring(0, pos_dot);
+				key_section.clear().append(iint->first.substring(0, pos_dot));
 				if (key_section != isec->first) continue;
 
 				inifile << iint->first.substring(pos_sec + 1) << " = ";
@@ -256,7 +256,7 @@ namespace NOU::NOU_FILE_MNGT
 				pos_dot = ifloat->first.firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
-				key_section = ifloat->first.substring(0, pos_dot);
+				key_section.clear().append(ifloat->first.substring(0, pos_dot));
 				if (key_section != isec->first) continue;
 
 				inifile << ifloat->first.substring(pos_sec + 1) << " = ";
@@ -326,12 +326,12 @@ namespace NOU::NOU_FILE_MNGT
 
 		// Search in integer map and cast to string if found
 		if (m_data_integer.count(search) > 0) {
-			return std::to_string(this->getInt(key, section));
+			return NouString(this->getInt(key, section));
 		}
 
 		// Search in float map and cast to string if found
 		if (m_data_float.count(search) > 0) {
-			return std::to_string(this->getFloat(key, section));
+			return NouString(this->getFloat(key, section));
 		}
 
 		return NouString();
@@ -349,7 +349,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		// Search in string map and cast to int if found
 		if (m_data_string.count(search) > 0) {
-			return std::stoi(this->getString(key, section));
+			return key.stringToInt32(this->getString(key, section));
 		}
 
 		// Search in float map and cast to int if found
@@ -372,7 +372,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		// Search in string map and cast to float if found
 		if (m_data_string.count(search) > 0) {
-			return std::stof(this->getString(key, section));
+			return key.stringToFloat32(this->getString(key, section));
 		}
 
 		// Search in integer map and cast to float if found
