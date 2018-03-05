@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 
+
 namespace NOU::NOU_FILE_MNGT
 {
 	using NouString = NOU::NOU_DAT_ALG::String<char8>;
@@ -44,13 +45,13 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	NouString INIFile::parseKey(const NouString &line) const
+	NouString INIFile::parseKey(NouString &line) const
 	{
 		return line.trim();
 	}
 
 
-	NouString INIFile::parseStringValue(const NouString & line, const int32 quote_type)
+	NouString INIFile::parseStringValue(NouString & line, const int32 quote_type)
 	{
 		int32 pos_quote_first;
 		int32 pos_quote_last;
@@ -74,7 +75,7 @@ namespace NOU::NOU_FILE_MNGT
 		pos_quote_first = line.firstIndexOf(quote) + 1;
 		pos_quote_last = line.lastIndexOf(quote);
 
-		value = line.substring(pos_quote_first, pos_quote_last - pos_quote_first);
+		value = NouString(line.substring(pos_quote_first, pos_quote_last - pos_quote_first));
 
 		return value;
 	}
@@ -82,13 +83,13 @@ namespace NOU::NOU_FILE_MNGT
 
 	int32 INIFile::parseIntValue(const NouString &line)
 	{
-		return line.stringToInt32();
+		return line.stringToInt32(line);
 	}
 
 
 	float32 INIFile::parseFloatValue(const NouString &line)
 	{
-		return line.stringToFloat32();
+		return line.stringToFloat32(line);
 	}
 
 
@@ -103,7 +104,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Return INI_QUOTE_DOUBLE for double quoation marks
-		if (pos_quote_sin == NouString::npos) {
+		if (pos_quote_sin == NouString::NULL_INDEX) {
 			return INI_QUOTE_DOUBLE;
 		}
 
@@ -120,10 +121,10 @@ namespace NOU::NOU_FILE_MNGT
 		int32 quote_type;
 
 		// Get position of the first equal symbol
-		pos_eq = line.firstIndexOf("=");
+		pos_eq = line.firstIndexOf('=');
 
 		// Check if we have an equal symbol
-		if (pos_eq == NouString::npos) {
+		if (pos_eq == NouString::NULL_INDEX) {
 			return;
 		}
 
@@ -139,7 +140,7 @@ namespace NOU::NOU_FILE_MNGT
 		quote_type = this->parseValueQuote(line_rgt);
 
 		if (quote_type == INI_QUOTE_NONE) {
-			if (line_rgt.firstIndexOf('.') == NouString::npos) {
+			if (line_rgt.firstIndexOf('.') == NouString::NULL_INDEX) {
 				// Add int
 				this->setInt(this->parseKey(line_lft), this->parseIntValue(line_rgt), section);
 			}
@@ -201,7 +202,7 @@ namespace NOU::NOU_FILE_MNGT
 		int32 pos_sec;
 		
 		// Open file stream
-		if (!filename.empty()) {
+		if (!filename.size()) {
 			inifile.open(filename);
 		}
 		else {
@@ -221,13 +222,13 @@ namespace NOU::NOU_FILE_MNGT
 			}
 
 			// Save string size for later
-			pos_sec = isec->first.length();
+			pos_sec = isec->first.size();
 
 			// Write string data
 			for (istr = m_data_string.begin(); istr != m_data_string.end(); ++istr)
 			{
 				pos_dot = istr->first.firstIndexOf('.');
-				if (pos_dot == NouString::npos) continue;
+				if (pos_dot == NouString::NULL_INDEX) continue;
 
 				key_section = istr->first.substring(0, pos_dot);
 				if (key_section != isec->first) continue;
@@ -240,7 +241,7 @@ namespace NOU::NOU_FILE_MNGT
 			for (iint = m_data_integer.begin(); iint != m_data_integer.end(); ++iint)
 			{
 				pos_dot = iint->first.firstIndexOf('.');
-				if (pos_dot == NouString::npos) continue;
+				if (pos_dot == NouString::NULL_INDEX) continue;
 
 				key_section = iint->first.substring(0, pos_dot);
 				if (key_section != isec->first) continue;
@@ -253,7 +254,7 @@ namespace NOU::NOU_FILE_MNGT
 			for (ifloat = m_data_float.begin(); ifloat != m_data_float.end(); ++ifloat)
 			{
 				pos_dot = ifloat->first.firstIndexOf('.');
-				if (pos_dot == NouString::npos) continue;
+				if (pos_dot == NouString::NULL_INDEX) continue;
 
 				key_section = ifloat->first.substring(0, pos_dot);
 				if (key_section != isec->first) continue;

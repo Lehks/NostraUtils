@@ -64,14 +64,14 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Parses the key from a given line.
 			*/
-			NouString parseKey(const NouString &) const;
+			NouString parseKey(NouString &) const;
 
 			/**
 			\param A single line of text.
 
 			\brief Parses the value from a given line as a NouString.
 			*/
-			NouString parseNouStringValue(const NouString &, const int32);
+			NouString parseStringValue(NouString &, const int32);
 
 			/**
 			\param A single line of text.
