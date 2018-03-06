@@ -10,6 +10,8 @@
 #include "nostrautils\thread\Mutex.hpp"
 #include "nostrautils\thread\ConditionVariable.hpp"
 
+#include <iostream>
+
 ///\cond
 namespace NOU::NOU_DAT_ALG
 {
@@ -28,6 +30,8 @@ namespace NOU::NOU_DAT_ALG
 }
 ///\endcond
 
+#define private public
+
 namespace NOU::NOU_THREAD
 {
 	class ThreadManager;
@@ -38,7 +42,7 @@ namespace NOU::NOU_THREAD
 	{
 	//Parts responsible for creating the singleton
 	private:
-		static ThreadManager s_instance;
+	//	static ThreadManager s_instance;
 
 		ThreadManager();
 		ThreadManager(const ThreadManager&) = delete;
@@ -48,26 +52,6 @@ namespace NOU::NOU_THREAD
 		static ThreadManager& getInstance();
 	//End of singleton parts
 
-		struct ThreadHandlerBundle
-		{
-			/**
-			\brief The thread that is used by this bundle.
-			*/
-			ThreadWrapper m_thread;
-
-			/**
-			\brief The error handler that is currently in use by this bundle.
-			*/
-			NOU_CORE::ErrorHandler *m_handler;
-		
-			/**
-			\param thread The thread that will be used by this bundle.
-
-			\brief Constructs a new instance that uses the passed thread. The error remains unset.
-			*/
-			ThreadHandlerBundle(ThreadWrapper &&thread);
-		};
-
 		/**
 		\brief The amount of threads that the manager will work with 
 		*/
@@ -75,12 +59,7 @@ namespace NOU::NOU_THREAD
 
 		sizeType DEFAULT_TASK_CAPACITY = 50;
 
-		using ThreadType = ThreadHandlerBundle;
-
 	private:
-		template<typename T>
-		using AllocatorType = NOU_MEM_MNGT::GenericAllocationCallback<T>; //abbreviation for the allocator
-
 		template<typename T>
 		using ObjectPoolPtr = NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::ObjectPool<T>>;
 
@@ -88,40 +67,49 @@ namespace NOU::NOU_THREAD
 
 		using TaskErrorHandlerPair = TaskErrorHandlerPairTempl<AbstractTask*, NOU_CORE::ErrorHandler*>;
 
-//		using TaskErrorHandlerPair = NOU_DAT_ALG::Pair<AbstractTask*, NOU_CORE::ErrorHandler*>;
+		struct ThreadDataBundle
+		{
+			ThreadWrapper thread;
+			TaskErrorHandlerPair taskHandlerPair;
+			Mutex mutex;
+			ConditionVariable variable;
 
-		static void threadLoop(boolean *shouldShutdown, TaskErrorHandlerPair *taskHandlerPair);
+			ThreadDataBundle(ThreadWrapper &&thread);
+
+			ThreadDataBundle(ThreadDataBundle&& tdb);
+		};
+
+		static void threadLoop(ThreadManager *threadManager, ThreadDataBundle **threadData, 
+			Mutex *startupMutex, ConditionVariable *startupVariable);
+
+		boolean m_shouldShutdown;
 
 		//Thread Pool
-		AllocatorType<NOU_DAT_ALG::internal::ObjectPoolChunk<ThreadType>> m_threadAllocator;
-		ObjectPoolPtr<ThreadType> m_threads;
+		ObjectPoolPtr<ThreadDataBundle> m_threads;
 
 		//Handler Pool
-		AllocatorType<NOU_DAT_ALG::internal::ObjectPoolChunk<NOU_CORE::ErrorHandler>> m_handlerAllocator;
 		ObjectPoolPtr<NOU_CORE::ErrorHandler> m_handlers;
 
-		/*
-		 * uint64 is the same type as BinaryHeap's priority type, if the priority type ever changes,
-		 * this must change too. BinaryHeap::Priority type is not defined at this point, since 
-		 * BinaryHeap.hpp is not included.
-		 */
-		AllocatorType<NOU_DAT_ALG::Pair<uint64, TaskErrorHandlerPair>> m_taskAllocator;
+		//Task queue
 		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>> m_tasks;
 
-		ObjectPoolPtr<ThreadType> makeThreadPool();
+		ObjectPoolPtr<ThreadDataBundle> makeThreadPool();
 		ObjectPoolPtr<NOU_CORE::ErrorHandler> makeHandlerPool();
 		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>> makeTaskHeap();
 
 		Mutex m_threadPoolAccessMutex;
 
-		void pushTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler = nullptr); //if nullptr, any error handler will be used
 		void enqueueTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler);
 
-		void executeTaskWithThread(TaskErrorHandlerPair task, ThreadType &thread);
+		boolean addThread();
+
+		void executeTaskWithThread(TaskErrorHandlerPair task, ThreadDataBundle &thread);
 	public:
 		~ThreadManager();
 
-		void giveBackThread(ThreadType &thread);
+		//if handler == nullptr, an error handler from the handler pool will be used
+		void pushTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler = nullptr); 
+		void giveBackThread(ThreadDataBundle &thread);
 	};
 }
 

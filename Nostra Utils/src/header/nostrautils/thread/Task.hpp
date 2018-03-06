@@ -60,7 +60,7 @@ namespace NOU::NOU_THREAD
 			DONE
 		};
 
-	private:
+	protected:
 		/**
 		\brief The current state.
 		*/
@@ -99,7 +99,7 @@ namespace NOU::NOU_THREAD
 	       invocable as defined by nostra::utils::core::IsInvocableR.
 	*/
 	template<typename R, typename I, typename... ARGS>
-	class NOU_CLASS Task final : AbstractTask
+	class NOU_CLASS Task final : public AbstractTask
 	{
 		static_assert(NOU_CORE::IsInvocableR<R, I, ARGS...>::value);
 
@@ -170,9 +170,9 @@ namespace NOU::NOU_THREAD
 	};
 
 	///\cond
-	//A specilsation for the task when the return type is void.
+	//A specialization for the task when the return type is void.
 	template<typename I, typename... ARGS>
-	class NOU_CLASS Task<void, I, ARGS...> final : AbstractTask
+	class NOU_CLASS Task<void, I, ARGS...> final : public AbstractTask
 	{
 		static_assert(NOU_CORE::IsInvocableR<void, I, ARGS...>::value);
 
@@ -216,7 +216,7 @@ namespace NOU::NOU_THREAD
 	\param invocable The invocable.
 	\param args      The arguments.
 
-	\brief This convenience function constructs a task from a member function and an object that that function
+	\brief This convenience function constructs a task from a member function and an object that function
 	       will be called on.
 	*/
 	template<typename T, typename I, typename... ARGS>

@@ -8,7 +8,7 @@ namespace NOU::NOU_THREAD
 	}
 	
 	ThreadWrapper::ThreadWrapper(ThreadWrapper &&other) :
-		m_thread(NOU_CORE::forward<UnderylingType>(other.m_thread))
+		m_thread(NOU_CORE::move(other.m_thread))
 	{}
 	
 	typename ThreadWrapper::UnderylingType& ThreadWrapper::getUnderlying()
