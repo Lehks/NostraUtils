@@ -18,30 +18,13 @@ namespace NOU::NOU_THREAD
 		*/
 		Mutex *m_mutex;
 
-		/**
-		\brief If true, the destructor will unlock the mutex, if false it will not.
-		*/
-		boolean m_needsUnlocking;
-
 	public:
-		/**
-		\brief Constructs without any mutex. Nothing will happen.
-		*/
-		Lock();
-
 		/**
 		\param mutex The mutex to lock.
 
 		\brief If not already locked, will lock the mutex.
 		*/
-		Lock(Mutex &mutex);
-
-		/**
-		\brief other The Lock to move from.
-
-		\brief Moves one lock to another one. The one that was moved from will not trigger the unlock.
-		*/
-		Lock(Lock&& other);
+		Lock(Mutex &mutex, boolean lock = true);
 
 		Lock(const Lock&) = delete;
 

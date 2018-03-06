@@ -40,9 +40,9 @@ void func()
 	std::cout << "Func" << std::endl;
 }
 
-void func1()
+void func1(int32 i)
 {
-	std::cout << "Func1" << std::endl;
+	std::cout << "Func #" << i << std::endl;
 }
 
 struct Print
@@ -97,11 +97,28 @@ int main()
 	
 	ThreadManager& tm = ThreadManager::getInstance();
 
-	auto task = makeTask(&func);
-	auto task1 = makeTask(&func1);
+	//for (uint32 i = 0; i < 10; i++)
+	//{
+	//	auto task = makeTask(&func1, i);
+	//
+	//	tm.pushTask(&task, 0);
+	//
+	//	for (uint64 i = 0; i < 100'000'000; i++)
+	//	{
+	//		i++;
+	//		i--;
+	//	}
+	//}
+	
+	auto task1 = makeTask(&func);
+	auto task2 = makeTask(&func);
+	auto task3 = makeTask(&func);
+	auto task4 = makeTask(&func);
 
-	tm.pushTask(&task, 0);
-//	tm.pushTask(&task1, 0);
+	tm.pushTask(&task1, 0);
+	tm.pushTask(&task2, 0);
+	tm.pushTask(&task3, 0);
+	tm.pushTask(&task4, 0);
 
 	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
 		std::cout << NOU_CORE::getErrorHandler().popError().getName() << std::endl;

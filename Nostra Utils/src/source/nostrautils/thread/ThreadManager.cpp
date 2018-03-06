@@ -216,8 +216,6 @@ namespace NOU::NOU_THREAD
 		NOU_DBG_INFO("Giving back thread #" << thread.thread.getID());
 		NOU_DBG_INFO("Task queue size: " << m_tasks->size());
 
-		Lock lock(m_threadPoolAccessMutex);
-
 		//if there is a task left, execute it immediately with the thread, otherwise put it back in the pool
 		if (m_tasks->size() > 0)
 		{
@@ -230,6 +228,8 @@ namespace NOU::NOU_THREAD
 		}
 		else
 		{
+			Lock lock(m_threadPoolAccessMutex);
+
 			NOU_DBG_INFO("Thread was given back.");
 
 			m_threads->giveBack(thread);
