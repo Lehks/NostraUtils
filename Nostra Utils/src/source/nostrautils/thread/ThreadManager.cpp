@@ -122,7 +122,7 @@ namespace NOU::NOU_THREAD
 
 		//store task and handler as-is, do not appoint a handler from the pool to a task that comes with an 
 		//nullptr as error handler
-		return TaskInformation(m_tasks->enqueue(TaskErrorHandlerPair(task, handler), priority));
+		return TaskInformation(m_tasks->enqueue(priority, TaskErrorHandlerPair(task, handler)));
 	}
 
 	boolean ThreadManager::addThread()
@@ -259,9 +259,9 @@ namespace NOU::NOU_THREAD
 		{
 			Lock taskLock(m_taskHeapAccessMutex);
 			
-			if (/*replace with check if taskInfo.m_id is in the heap*/true)
+			if (m_tasks->checkIfPresent(taskInfo.m_id))
 			{
-				//remove task from heap
+				m_tasks->deleteById(taskInfo.m_id);
 
 				return true;
 			}
