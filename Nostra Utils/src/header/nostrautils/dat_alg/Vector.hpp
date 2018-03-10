@@ -983,9 +983,6 @@ namespace NOU::NOU_DAT_ALG
 	template<typename... ARGS>
 	void Vector<T>::emplace(sizeType index, ARGS&&... args)
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
-			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index is bigger then the size of the vector.");
-
 		expandIfNeeded(1);
 		for (sizeType i = m_size; i > index; i--)
 		{

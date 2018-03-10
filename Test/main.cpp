@@ -7,40 +7,30 @@
 #include <string>
 #include <iostream>
 
-class foo {
-public:
-	std::string name = "Hallo";
-
-	foo(std::string name);
-};
-
 int main()
 {
-	foo f1("Dennis");
-	foo f2("Mahan");
-	foo f3("Leslie");
+	NOU::NOU_DAT_ALG::BinaryHeap<NOU::uint32> b(15);
 
-	NOU::NOU_DAT_ALG::Vector<foo> entrySetVec(1);
-	NOU::NOU_DAT_ALG::Vector<NOU::sizeType> keySetVec(1);
+	b.enqueue(10, 1);
+	b.enqueue(11, 2);
+	b.enqueue(12, 3);
+	b.enqueue(13, 4);
+	b.enqueue(14, 1);
+	b.enqueue(15, 4);
 
-	NOU::NOU_DAT_ALG::HashMap<NOU::sizeType, foo> hm(100);
-
-	hm.map(15, f1);
-	hm.map(10, f2);
-	hm.map(17, f3);
-
-	entrySetVec = hm.entrySet();
-	keySetVec = hm.keySet();
-
-	for (int i = 0; i < entrySetVec.size(); i++)
+	for (int i = 0; i < b.size(); i++)
 	{
-		std::cout << keySetVec[i] << " " <<entrySetVec[i].name << std::endl;
+		std::cout << b.priorityAt(i) << " " << b.at(i) << std::endl;
+	}
+
+	b.dequeue();
+	b.decreaseKey(2, 2);
+
+	for (int i = 0; i < b.size(); i++)
+	{
+		std::cout << b.priorityAt(i) << " " << b.at(i) << std::endl;
 	}
 
 	system("pause");
 }
 
-foo::foo(std::string name)	:
-	name(name)
-{
-}
