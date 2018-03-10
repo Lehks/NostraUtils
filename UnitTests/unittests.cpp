@@ -27,7 +27,13 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-#define NOU_CHECK_ERROR_HANDLER Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0)
+#define NOU_CHECK_ERROR_HANDLER 																		 \
+				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
+				while(NOU::NOU_CORE::getErrorHandler().getErrorCount() > 0)								 \
+				{																						 \
+					NOU::NOU_CORE::getErrorHandler().popError();										 \
+				}																						 \
+				Assert::IsTrue(errorCount == 0);					 
 
 //both functions are used in test IsInvocable
 void dummyFunc0(int)
@@ -1123,6 +1129,8 @@ namespace UnitTests
 		
 			h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
 			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+
+			NOU_CHECK_ERROR_HANDLER;
 		
 		}
 
@@ -1165,6 +1173,33 @@ namespace UnitTests
 			
 			Assert::AreEqual(hm1.get('h'), 2);
 			Assert::AreEqual(hm1.get(' '), 8);
+
+			NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
+
+			cm.map(5, 1);
+			cm.map(41, 2);
+			cm.map(10, 3);
+			cm.map(49875, 4);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
+
+			c = cm.entrySet();
+
+			Assert::AreEqual(c[0], 1);
+			Assert::AreEqual(c[1], 4);
+			Assert::AreEqual(c[2], 3);
+			Assert::AreEqual(c[3], 2);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
+
+			a = cm.keySet();
+
+			Assert::AreEqual(a[0], 5);
+			Assert::AreEqual(a[1], 49875);
+			Assert::AreEqual(a[2], 10);
+			Assert::AreEqual(a[3], 41);
+
+			NOU_CHECK_ERROR_HANDLER;
 		}
 	};
 }

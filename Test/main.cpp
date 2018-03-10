@@ -11,43 +11,30 @@ using namespace std;
 
 int main()
 {
-	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
-	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
-	NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
-	NOU::boolean b;
+	NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
 
-	//Assert::AreEqual(hm.isEmpty(), true);
+	cm.map(5, 1);
+	cm.map(41, 2);
+	cm.map(10, 3);
+	cm.map(49875, 4);
 
-	for (NOU::sizeType i = 0; i < str.size(); i++) {
-		b = hm.map(str.at(i), 1);
-	}
+	NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
 
-	//Assert::AreEqual(hm.isEmpty(), false);
+	c = cm.entrySet();
 
-	for (int i = 0; i < str.size(); i++) {
-		//Assert::AreEqual(hm.get(str.at(i)), 1);
-	}
-	NOU::char8 k = 'h';
-
-	NOU::int32 count = hm.remove(k);
-	//Assert::AreEqual(2, count);
-
-	//Assert::AreEqual(NULL, hm.get(k));
-
-
-	for (NOU::sizeType i = 0; i < str.size(); i++)
+	for (int i = 0; i < cm.size(); i++)
 	{
-		k = str.at(i);
-		if (!hm1.containsKey(str.at(i)))
-		{
-			hm1.map(k, 1);
-		}
-		else
-		{
-			hm1.map(k, hm1.get(k) + 1);
-		}
+		std::cout << c[i] << std::endl;
 	}
 
-	cout << hm1.get(' ') << endl;
+	NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
+
+	a = cm.keySet();
+
+	for (int i = 0; i < cm.size(); i++)
+	{
+		std::cout << a[i] << std::endl;
+	}
+
 	system("pause");
 }
