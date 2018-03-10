@@ -7,30 +7,47 @@
 #include <string>
 #include <iostream>
 
+using namespace std;
+
 int main()
 {
-	NOU::NOU_DAT_ALG::BinaryHeap<NOU::uint32> b(15);
+	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
+	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
+	NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
+	NOU::boolean b;
 
-	b.enqueue(10, 1);
-	b.enqueue(11, 2);
-	b.enqueue(12, 3);
-	b.enqueue(13, 4);
-	b.enqueue(14, 1);
-	b.enqueue(15, 4);
+	//Assert::AreEqual(hm.isEmpty(), true);
 
-	for (int i = 0; i < b.size(); i++)
-	{
-		std::cout << b.priorityAt(i) << " " << b.at(i) << std::endl;
+	for (NOU::sizeType i = 0; i < str.size(); i++) {
+		b = hm.map(str.at(i), 1);
 	}
 
-	b.dequeue();
-	b.decreaseKey(2, 2);
+	//Assert::AreEqual(hm.isEmpty(), false);
 
-	for (int i = 0; i < b.size(); i++)
+	for (int i = 0; i < str.size(); i++) {
+		//Assert::AreEqual(hm.get(str.at(i)), 1);
+	}
+	NOU::char8 k = 'h';
+
+	NOU::int32 count = hm.remove(k);
+	//Assert::AreEqual(2, count);
+
+	//Assert::AreEqual(NULL, hm.get(k));
+
+
+	for (NOU::sizeType i = 0; i < str.size(); i++)
 	{
-		std::cout << b.priorityAt(i) << " " << b.at(i) << std::endl;
+		k = str.at(i);
+		if (!hm1.containsKey(str.at(i)))
+		{
+			hm1.map(k, 1);
+		}
+		else
+		{
+			hm1.map(k, hm1.get(k) + 1);
+		}
 	}
 
+	cout << hm1.get(' ') << endl;
 	system("pause");
 }
-

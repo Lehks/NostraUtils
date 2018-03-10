@@ -63,15 +63,7 @@ namespace NOU::NOU_DAT_ALG
 
 		boolean containsKey(K key);
 
-
-		//TODO:
-		/*
-		Vector keySet();
-		Vector entrySet();
-		*/
-
 		V& operator [](const K& key);
-
 
 	};
 
@@ -122,12 +114,12 @@ namespace NOU::NOU_DAT_ALG
 			return true;
 		}
 		else 
-		{	//if a Vector in this position has elements, search if the given Key is already existing. If yes return false;
+		{	//if a Vector in this position has elements, search if the given Key is already existing. If yes overwrite it;
 			for (sizeType i = 0; i < m_data[n].size(); i++) 
 			{
 				if (m_data[n][i].dataOne == tmpPair.dataOne) 
 				{
-					return false;
+					m_data[n][i].dataTwo = tmpPair.dataTwo;
 				}
 			}
 		
@@ -193,7 +185,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			if (m_data[h][i].dataOne == key)
 			{
-				m_data[h].remove(tmpPair)
+				m_data[h].remove(i);
 			}
 		}
 
@@ -234,6 +226,19 @@ namespace NOU::NOU_DAT_ALG
 			}
 		}
 		return entrySetVec;
+	}
+	template <typename K, typename V>
+	boolean HashMap<K, V>::containsKey(K key) 
+	{
+		Vector<K> tmp = keySet();
+
+		for (NOU::sizeType i = 0; i < tmp.size(); i++)
+		{
+			if (tmp.at(i) == key) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	template<typename K, typename V>
