@@ -137,7 +137,7 @@ namespace NOU::NOU_THREAD
 
 		\brief Constructs a new Task that will execute the passed invocable using the passed arguments.
 		*/
-		explicit Task(InvocableType&& invocable, ARGS&&... args);
+		explicit Task(InvocableType &&invocable, ARGS&&... args);
 
 		/**
 		\return True, if the invocable was actually executed, false if not.

@@ -8,41 +8,45 @@
 
 NOU::NOU_THREAD::Mutex logMutex;
 
-#define NOU_DBG_INFO(msg) 															   \
-{																					   \
-	logMutex.lock();																   \
-	std::cout << "[INFO#" << std::this_thread::get_id() << "] " << msg << std::endl;   \
-	logMutex.unlock();																   \
-}
-
 namespace NOU::NOU_THREAD
 {
+	ThreadManager::TaskInformation::TaskInformation(Priority id) :
+		m_id(id)
+	{}
+
+	ThreadManager::TaskInformation::TaskInformation() :
+		m_id(INVALID_ID)
+	{}
+
 	void ThreadManager::threadLoop(ThreadManager *threadManager, ThreadDataBundle **threadDataPtr, 
-		Mutex *startupMutex, ConditionVariable *startupVariable)
+		Mutex *startupMutex, ConditionVariable *startupVariable, boolean *startupDone)
 	{
+		static thread_local int i = 0;
+
 		ThreadDataBundle *threadData;
 
 		{
-			startupMutex->lock();
+			Lock lock(*startupMutex);
 
 			threadData = *threadDataPtr;
-
-			startupMutex->unlock();
 		}
 
+		*startupDone = true;
 		startupVariable->notifyAll();
-
-		NOU_DBG_INFO("Thread initialization complete.");
 
 		while (!(threadManager->m_shouldShutdown))
 		{
 			UniqueLock lock(threadData->mutex);
-			threadData->variable.wait(lock);
+			threadData->variable.wait(lock, [threadData]() { return threadData->taskReady; });
 
+			i++;
 
-			NOU_DBG_INFO("Thread execution started.");
+			AbstractTask *t = threadData->taskHandlerPair.task;
+
 			threadData->taskHandlerPair.task->execute();
-			NOU_DBG_INFO("Thread execution complete.");
+
+			//Set to false for the next iteration, must be set to true by the thread manager
+			threadData->taskReady = false;
 
 			threadManager->giveBackThread(*threadData);
 		}
@@ -52,12 +56,14 @@ namespace NOU::NOU_THREAD
 
 	ThreadManager::ThreadDataBundle::ThreadDataBundle(ThreadWrapper &&thread) :
 		thread(NOU_CORE::move(thread)),
-		taskHandlerPair(nullptr, nullptr) //taskHandlerPair will be initialized later
+		taskHandlerPair(nullptr, nullptr), //taskHandlerPair will be initialized later
+		taskReady(false)
 	{}
 
 	ThreadManager::ThreadDataBundle::ThreadDataBundle(ThreadDataBundle&& tdb) :
 		thread(NOU_CORE::move(tdb.thread)),
-		taskHandlerPair(NOU_CORE::move(tdb.taskHandlerPair))
+		taskHandlerPair(NOU_CORE::move(tdb.taskHandlerPair)),
+		taskReady(tdb.taskReady)
 	{}
 
 	//ThreadManager ThreadManager::s_instance;
@@ -106,83 +112,51 @@ namespace NOU::NOU_THREAD
 				NOU_MEM_MNGT::defaultDeleter);
 	}
 
-	void ThreadManager::pushTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler)
+	ThreadManager::TaskInformation ThreadManager::enqueueTask(AbstractTask *task, int32 priority, 
+		NOU_CORE::ErrorHandler *handler)
 	{
-		NOU_DBG_INFO("Pushing task.");
+		/**
+		 * No need to lock, since enqueueTask() is called by pushTask() which already locks the
+		 * m_taskHeapAccessMutex.
+		 */
 
-		/*
-         * If the priority is smaller than the priority at the root of the heap, the manager will try to 
-		 * execute it immediately if a thread is available.
-         */
-
-		//if the priority is smaller than the first one in the heap or there is no task in the heap (aka. 
-		//this would be the first task to execute anyway)
-		if (m_tasks->size() == 0 || priority <= m_tasks->priorityAt(0)) 
-		{
-			Lock lock(m_threadPoolAccessMutex);
-
-			//if a thread is available or a new one could still be created, execute task immediately, 
-			//otherwise enqueue in heap
-			if (m_threads->remainingObjects() > 0 || addThread())
-			{
-				executeTaskWithThread(TaskErrorHandlerPair(task, handler), m_threads->get());
-				return;
-			}
-		}
-
-		//if the task would not be the first one in the heap and no thread is available
-		enqueueTask(task, priority, handler);
-	}
-
-	void ThreadManager::enqueueTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler)
-	{
-		NOU_DBG_INFO("Pushing task in queue.");
 		//store task and handler as-is, do not appoint a handler from the pool to a task that comes with an 
 		//nullptr as error handler
-		m_tasks->enqueue(TaskErrorHandlerPair(task, handler), priority);
+		return TaskInformation(m_tasks->enqueue(TaskErrorHandlerPair(task, handler), priority));
 	}
 
 	boolean ThreadManager::addThread()
 	{
-		NOU_DBG_INFO("Trying to add thread.");
-	
 		if (m_threads->size() != m_threads->capacity())
 		{
-			NOU_DBG_INFO("Adding thread successful.");
-
 			Mutex startupVariableMutex;
 			ConditionVariable startupVariable;
-
 			Mutex startupMutex;
+			boolean startupDone = false;
 
-			startupMutex.lock();
+			{
+				Lock startupLock(startupMutex);
 
-			ThreadDataBundle *threadDataPtr;
-			ThreadDataBundle &threadData = m_threads->emplaceObject(NOU_CORE::move(ThreadWrapper(threadLoop, 
-				this, &threadDataPtr, &startupMutex, &startupVariable)));
-			threadDataPtr = &threadData;
-
-			startupMutex.unlock();
+				ThreadDataBundle *threadDataPtr;
+				ThreadDataBundle &threadData = m_threads->emplaceObject(NOU_CORE::move(
+					ThreadWrapper(threadLoop, this, &threadDataPtr, &startupMutex, &startupVariable, 
+						&startupDone)));
+				threadDataPtr = &threadData;
+			}
 
 			UniqueLock startupVariableLock(startupVariableMutex);
-			startupVariable.wait(startupVariableLock);
+			startupVariable.wait(startupVariableLock, [&startupDone]() { return startupDone; });
 
 			m_handlers->pushObject(NOU_CORE::ErrorHandler());
-
-			NOU_DBG_INFO("While adding thread, added error handler.");
 
 			return true;
 		}
 
-		NOU_DBG_INFO("Adding thread failed.");
-
 		return false;
 	}
 
-	void ThreadManager::executeTaskWithThread(TaskErrorHandlerPair task, ThreadDataBundle &thread)
+	void ThreadManager::executeTaskWithThread(TaskErrorHandlerPair task, ThreadDataBundle &threadData)
 	{
-		NOU_DBG_INFO("Executing task in thread.");
-
 		//If the set handler is nullptr, the task is supposed to run with a handler from the handler pool
 		if (task.handler == nullptr)
 		{
@@ -191,8 +165,9 @@ namespace NOU::NOU_THREAD
 			task.handler = &m_handlers->get();
 		}
 
-		thread.taskHandlerPair = task;
-		thread.variable.notifyAll();
+		threadData.taskHandlerPair = task;
+		threadData.taskReady = true;
+		threadData.variable.notifyAll();
 	}
 
 	ThreadManager::ThreadManager() : 
@@ -200,26 +175,28 @@ namespace NOU::NOU_THREAD
 		m_threads(makeThreadPool()),
 		m_handlers(makeHandlerPool()),
 		m_tasks(makeTaskHeap())
-	{}
+	{
+		static_assert(NOU_CORE::AreSame<typename 
+			NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>::PriorityTypePart, Priority>::value);
+	}
 
 	ThreadManager::~ThreadManager()
 	{
 		m_shouldShutdown = true;
 
+		Lock threadLock(m_threadPoolAccessMutex);
+
 		m_threads->foreach([](ThreadDataBundle& tdb) { if (tdb.thread.joinable()) { tdb.thread.join(); } });
-	
-		std::cout << "Thrd Destructor" << std::endl;
 	}
 
 	void ThreadManager::giveBackThread(ThreadDataBundle &thread)
 	{
-		NOU_DBG_INFO("Giving back thread #" << thread.thread.getID());
-		NOU_DBG_INFO("Task queue size: " << m_tasks->size());
-
 		//if there is a task left, execute it immediately with the thread, otherwise put it back in the pool
-		if (m_tasks->size() > 0)
+		if (Lock taskLock(m_taskHeapAccessMutex);  m_tasks->size() > 0)
 		{
-			NOU_DBG_INFO("Not giving back thread, executing next task instead.");
+			//give back handler b/c the task may have it's own handler & executeTaskWithThread() 
+			//will get a new one from the pool.
+			giveBackHandler(*thread.taskHandlerPair.handler);
 
 			TaskErrorHandlerPair &task = m_tasks->get();
 			m_tasks->dequeue();
@@ -228,16 +205,68 @@ namespace NOU::NOU_THREAD
 		}
 		else
 		{
-			Lock lock(m_threadPoolAccessMutex);
-
-			NOU_DBG_INFO("Thread was given back.");
+			Lock threadLock(m_threadPoolAccessMutex);
 
 			m_threads->giveBack(thread);
 
-			if (m_handlers->isPartOf(*thread.taskHandlerPair.handler))
+			giveBackHandler(*thread.taskHandlerPair.handler);
+		}
+	}
+
+	void ThreadManager::giveBackHandler(NOU_CORE::ErrorHandler &handler)
+	{
+		if (m_handlers->isPartOf(handler))
+		{
+			while (handler.getErrorCount() > 0)
+				handler.popError();
+
+			m_handlers->giveBack(handler);
+		}
+	}
+
+	ThreadManager::TaskInformation ThreadManager::pushTask(AbstractTask *task, Priority priority,
+		NOU_CORE::ErrorHandler *handler)
+	{
+		/*
+		* If the priority is smaller than the priority at the root of the heap, the manager will try to
+		* execute it immediately if a thread is available.
+		*/
+
+		Lock taskLock(m_taskHeapAccessMutex);
+
+		//if the priority is smaller than the first one in the heap or there is no task in the heap (aka. 
+		//this would be the first task to execute anyway)
+		if (m_tasks->size() == 0 || priority <= m_tasks->priorityAt(0))
+		{
+			Lock threadLock(m_threadPoolAccessMutex);
+
+			//if a thread is available or a new one could still be created, execute task immediately, 
+			//otherwise enqueue in heap
+			if (m_threads->remainingObjects() > 0 || addThread())
 			{
-				m_handlers->giveBack(*thread.taskHandlerPair.handler);
+				executeTaskWithThread(TaskErrorHandlerPair(task, handler), m_threads->get());
+				return TaskInformation(TaskInformation::INVALID_ID);
 			}
 		}
+
+		//if the task would not be the first one in the heap and no thread is available
+		return enqueueTask(task, priority, handler);
+	}
+
+	boolean ThreadManager::removeTask(const TaskInformation &taskInfo)
+	{
+		if (taskInfo.m_id != TaskInformation::INVALID_ID)
+		{
+			Lock taskLock(m_taskHeapAccessMutex);
+			
+			if (/*replace with check if taskInfo.m_id is in the heap*/true)
+			{
+				//remove task from heap
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

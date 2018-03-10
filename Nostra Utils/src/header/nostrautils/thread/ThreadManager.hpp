@@ -52,6 +52,36 @@ namespace NOU::NOU_THREAD
 		static ThreadManager& getInstance();
 	//End of singleton parts
 
+		/*
+		* Since BinaryHeap.hpp can not be included at this point, uint32 is used instead of
+		* BinaryHeap::PriorityTypePart. If the type of BinaryHeap::PriorityTypePart is ever changed, this
+		* must be changed too. The constructor of ThreadManager contains a static_assert to check
+		* whether the types still match.
+		*/
+		using Priority = uint32;
+
+		class TaskInformation
+		{
+			friend class ThreadManager;
+
+		private:
+			constexpr static Priority INVALID_ID = -1;
+
+			Priority m_id;
+
+			/*
+			 * should only be constructed by ThreadManager (which is possible b/c ThreadManager is a friend of 
+			 * TaskInformation).
+			 */
+			explicit TaskInformation(Priority id);
+
+		public:
+			TaskInformation();
+		};
+
+		//TaskInformation needs access to m_tasks to check whether a task is in it or not
+		friend class TaskInformation;
+
 		/**
 		\brief The amount of threads that the manager will work with 
 		*/
@@ -73,6 +103,7 @@ namespace NOU::NOU_THREAD
 			TaskErrorHandlerPair taskHandlerPair;
 			Mutex mutex;
 			ConditionVariable variable;
+			boolean taskReady;
 
 			ThreadDataBundle(ThreadWrapper &&thread);
 
@@ -80,7 +111,7 @@ namespace NOU::NOU_THREAD
 		};
 
 		static void threadLoop(ThreadManager *threadManager, ThreadDataBundle **threadData, 
-			Mutex *startupMutex, ConditionVariable *startupVariable);
+			Mutex *startupMutex, ConditionVariable *startupVariable, boolean *startupDone);
 
 		boolean m_shouldShutdown;
 
@@ -98,18 +129,29 @@ namespace NOU::NOU_THREAD
 		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>> makeTaskHeap();
 
 		Mutex m_threadPoolAccessMutex;
+		Mutex m_taskHeapAccessMutex;
 
-		void enqueueTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler);
+		/**
+		\pre pushTask() or locking m_taskHeapAccessMutex
+		*/
+		TaskInformation enqueueTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler);
 
+		/**
+		\pre pushTask() or locking m_threadPoolAccessMutex
+		*/
 		boolean addThread();
 
-		void executeTaskWithThread(TaskErrorHandlerPair task, ThreadDataBundle &thread);
+		void executeTaskWithThread(TaskErrorHandlerPair task, ThreadDataBundle &threadData);
+
+		void giveBackThread(ThreadDataBundle &thread);
+		void giveBackHandler(NOU_CORE::ErrorHandler &handler);
 	public:
 		~ThreadManager();
 
 		//if handler == nullptr, an error handler from the handler pool will be used
-		void pushTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler = nullptr); 
-		void giveBackThread(ThreadDataBundle &thread);
+		TaskInformation pushTask(AbstractTask *task, Priority priority, NOU_CORE::ErrorHandler *handler
+			= nullptr); 
+		boolean removeTask(const TaskInformation &taskInfo);
 	};
 }
 

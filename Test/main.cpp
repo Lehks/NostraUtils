@@ -5,6 +5,7 @@
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\thread\ThreadManager.hpp"
+#include "nostrautils\thread\AsyncTaskResult.hpp"
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -40,52 +41,38 @@ void func()
 	std::cout << "Func" << std::endl;
 }
 
+uint8 values[100] = {0};
+
+Mutex m;
+
 void func1(int32 i)
 {
-	std::cout << "Func #" << i << std::endl;
+	values[i]++;
+
+	{
+		Lock l(m);
+		std::cout << "Func #" << i << std::endl;
+	}
+
+	for (uint64 i = 0; i < 100'000'000; i++)
+	{
+		i++;
+		i--;
+	}
+
+	{
+		Lock l(m);
+		std::cout << "Func #" << i << " Done." << std::endl;
+	}
+
+	values[i]++;
 }
 
-struct Print
+int func2()
 {
-	std::string m_str;
-	Print(std::string str) { m_str = str; }
-
-	~Print() { std::cout << m_str.c_str() << std::endl; }
-};
-
-struct Test
-{
-	Print p1;
-	Print p2;
-	Print p3;
-
-	Test() :
-		p1("p1"),
-		p2("p2"),
-		p3("p3")
-	{
-
-	}
-};
-
-class Dummy
-{
-public:
-	static Dummy& get()
-	{
-		static Dummy i;
-		return i;
-	}
-
-	GenericAllocationCallback<NOU_DAT_ALG::internal::ObjectPoolChunk<NOU_CORE::ErrorHandler>> c;
-	UniquePtr<ObjectPool<ErrorHandler>> p;
-
-	Dummy() :
-		p(new ObjectPool<ErrorHandler>(5, c), defaultDeleter)
-	{
-
-	}
-};
+	std::cout << "Func2" << std::endl;
+	return 1;
+}
 
 int main()
 {
@@ -97,28 +84,111 @@ int main()
 	
 	ThreadManager& tm = ThreadManager::getInstance();
 
-	//for (uint32 i = 0; i < 10; i++)
-	//{
-	//	auto task = makeTask(&func1, i);
-	//
-	//	tm.pushTask(&task, 0);
-	//
-	//	for (uint64 i = 0; i < 100'000'000; i++)
-	//	{
-	//		i++;
-	//		i--;
-	//	}
-	//}
-	
-	auto task1 = makeTask(&func);
-	auto task2 = makeTask(&func);
-	auto task3 = makeTask(&func);
-	auto task4 = makeTask(&func);
+#if 0
+
+	auto task1  = makeTask(&func1, 1);
+	auto task2  = makeTask(&func1, 2);
+	auto task3  = makeTask(&func1, 3);
+	auto task4  = makeTask(&func1, 4);
+	auto task5  = makeTask(&func1, 5);
+	auto task6  = makeTask(&func1, 6);
+	auto task7  = makeTask(&func1, 7);
+	auto task8  = makeTask(&func1, 8);
+	auto task9  = makeTask(&func1, 9);
+	auto task10 = makeTask(&func1, 10);
+	auto task11 = makeTask(&func1, 11);
+	auto task12 = makeTask(&func1, 12);
+	auto task13 = makeTask(&func1, 13);
+	auto task14 = makeTask(&func1, 14);
+	auto task15 = makeTask(&func1, 15);
+	auto task16 = makeTask(&func1, 16);
+	auto task17 = makeTask(&func1, 17);
+	auto task18 = makeTask(&func1, 18);
+	auto task19 = makeTask(&func1, 19);
+	auto task20 = makeTask(&func1, 20);
+	auto task21 = makeTask(&func1, 21);
+	auto task22 = makeTask(&func1, 22);
+	auto task23 = makeTask(&func1, 23);
+	auto task24 = makeTask(&func1, 24);
+	auto task25 = makeTask(&func1, 25);
+	auto task26 = makeTask(&func1, 26);
+	auto task27 = makeTask(&func1, 27);
+	auto task28 = makeTask(&func1, 28);
+	auto task29 = makeTask(&func1, 29);
+	auto task30 = makeTask(&func1, 30);
+	auto task31 = makeTask(&func1, 31);
+	auto task32 = makeTask(&func1, 32);
+	auto task33 = makeTask(&func1, 33);
+	auto task34 = makeTask(&func1, 34);
+	auto task35 = makeTask(&func1, 35);
+	auto task36 = makeTask(&func1, 36);
+	auto task37 = makeTask(&func1, 37);
+	auto task38 = makeTask(&func1, 38);
+	auto task39 = makeTask(&func1, 39);
+	auto task40 = makeTask(&func1, 40);
 
 	tm.pushTask(&task1, 0);
 	tm.pushTask(&task2, 0);
 	tm.pushTask(&task3, 0);
 	tm.pushTask(&task4, 0);
+	tm.pushTask(&task5, 0);
+	tm.pushTask(&task6, 0);
+	tm.pushTask(&task7, 0);
+	tm.pushTask(&task8, 0);
+	tm.pushTask(&task9, 0);
+	tm.pushTask(&task10, 0);
+	tm.pushTask(&task11, 0);
+	tm.pushTask(&task12, 0);
+	tm.pushTask(&task13, 0);
+	tm.pushTask(&task14, 0);
+	tm.pushTask(&task15, 0);
+	tm.pushTask(&task16, 0);
+	tm.pushTask(&task17, 0);
+	tm.pushTask(&task18, 0);
+	tm.pushTask(&task19, 0);
+	tm.pushTask(&task20, 0);
+	tm.pushTask(&task21, 0);
+	tm.pushTask(&task22, 0);
+	tm.pushTask(&task23, 0);
+	tm.pushTask(&task24, 0);
+	tm.pushTask(&task25, 0);
+	tm.pushTask(&task26, 0);
+	tm.pushTask(&task27, 0);
+	tm.pushTask(&task28, 0);
+	tm.pushTask(&task29, 0);
+	tm.pushTask(&task30, 0);
+	tm.pushTask(&task31, 0);
+	tm.pushTask(&task32, 0);
+	tm.pushTask(&task33, 0);
+	tm.pushTask(&task34, 0);
+	tm.pushTask(&task35, 0);
+	tm.pushTask(&task36, 0);
+	tm.pushTask(&task37, 0);
+	tm.pushTask(&task38, 0);
+	tm.pushTask(&task39, 0);
+	tm.pushTask(&task40, 0);
+
+
+//	std::cout << tm.m_threads->size() << std::endl;
+
+	for (uint64 i = 0; i < 1'000'000'000; i++)
+	{
+		i--;
+		i++;
+	}
+
+	for (int i = 0; i < sizeof(values) / sizeof(decltype(values[0])); i++)
+	{
+		if (values[i] == 1)
+			std::cout << "Not finished: " << i << std::endl;
+	}
+
+	std::cout << "Done" << std::endl;
+
+#endif
+
+	AsyncTaskResult<int, decltype(&func2)> result0(&func2);
+	AsyncTaskResult<void, decltype(&func)> result1(&func);
 
 	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
 		std::cout << NOU_CORE::getErrorHandler().popError().getName() << std::endl;

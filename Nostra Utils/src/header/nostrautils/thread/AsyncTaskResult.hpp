@@ -3,77 +3,133 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\thread\Task.hpp"
+#include "nostrautils\thread\ThreadManager.hpp"
+#include "nostrautils\thread\Mutex.hpp"
 
 namespace NOU::NOU_THREAD
 {
-	template<typename T>
-	class NOU_FUNC AsyncTaskResult
+	class NOU_CLASS AbstractAsyncTaskResult
 	{
 	public:
 		enum class State
 		{
-			WATINIG,
-			EXECUTING_ASYNC,
+			NOT_STARTED,
 			EXECUTING_SYNC,
+			EXECUTING_ASYNC,
 			DONE
 		};
 
-		using ResultType = T;
-
 	private:
-		Task m_task;
-		State m_state;
-		ResultType m_result;
+		constexpr static int32 DEFAULT_PRIORITY = 0;
+
+		static void executeTask(AbstractTask *task, AbstractAsyncTaskResult *taskResult, Mutex *mutex);
+
+		using ExecutionTask = Task<void, decltype(&executeTask), AbstractTask*, AbstractAsyncTaskResult*,
+			Mutex*>;
+		using TaskInfo = typename ThreadManager::TaskInformation;
+
+		Mutex          m_executionMutex;
+		Mutex          m_stateMutex;
+		ExecutionTask  m_executionTask;
+		AbstractTask  *m_task;
+		TaskInfo       m_taskInformation;
+		State          m_state;
+		
+		void setState(State state);
+
+	protected:
+		AbstractAsyncTaskResult(AbstractTask *task);
+
+	public:
+		State getState() const;
 
 		void makeResult();
 
-	public:
-		const Task getTask() const;
-		State getState() const;
-		ResultType& getResult();
+		AbstractAsyncTaskResult(const AbstractAsyncTaskResult&) = delete;
+		AbstractAsyncTaskResult(AbstractAsyncTaskResult&&) = delete;
 	};
 
-	template<typename T>
-	void AsyncTaskResult<T>::makeResult()
+	template<typename R, typename I, typename... ARGS>
+	class NOU_CLASS AsyncTaskResult : public AbstractAsyncTaskResult
+	{	
+	public:
+		using Task = Task<R, I, ARGS...>;
+
+	private:
+		Task m_task;
+
+	public:
+		explicit AsyncTaskResult(Task &&task);
+		explicit AsyncTaskResult(I &&invocable, ARGS&&... args);
+
+		const R& getResult();
+
+		AsyncTaskResult(const AsyncTaskResult&) = delete;
+		AsyncTaskResult(AsyncTaskResult&&) = delete;
+	};
+
+
+
+	template<typename I, typename... ARGS>
+	class NOU_CLASS AsyncTaskResult<void, I, ARGS...> : public AbstractAsyncTaskResult
 	{
-		//lock here to avoid executing twice
+	public:
+		using Task = Task<void, I, ARGS...>;
 
-		switch (m_state)
-		{
-		case State::WATINIG:
-			//if true, task is being executed in sync, if false, task is executing async (rework, if sync, will not be set and state will be waiting)
-			m_state = m_task->execute() ? State::EXECUTING_SYNC : State::EXECUTING_ASYNC;
-			break;
+	private:
+		Task m_task;
 
-		case State::EXECUTING_ASYNC:
-		case State::EXECUTING_SYNC:
-			//wait for task to be done
-			break;
-		}
+	public:
+		explicit AsyncTaskResult(Task &&task);
+		explicit AsyncTaskResult(I &&invocable, ARGS&&... args);
 
-		m_state = State::DONE;
-	}
+		void getResult();
 
-	template<typename T>
-	const Task AsyncTaskResult<T>::getTask() const
-	{
-		return m_task;
-	}
+		AsyncTaskResult(const AsyncTaskResult&) = delete;
+		AsyncTaskResult(AsyncTaskResult&&) = delete;
+	};
 
-	template<typename T>
-	typename AsyncTaskResult<T>::State AsyncTaskResult<T>::getState() const
-	{
-		return m_state;
-	}
 
-	template<typename T>
-	typename AsyncTaskResult<T>::ResultType& AsyncTaskResult<T>::getResult()
+
+	template<typename R, typename I, typename... ARGS>
+	AsyncTaskResult<R, I, ARGS...>::AsyncTaskResult(Task &&task) :
+		AbstractAsyncTaskResult(&m_task),
+		m_task(NOU_CORE::move(task))
+	{}
+
+	template<typename R, typename I, typename... ARGS>
+	AsyncTaskResult<R, I, ARGS...>::AsyncTaskResult(I &&invocable, ARGS&&... args) :
+		AbstractAsyncTaskResult(&m_task),
+		m_task(makeTask(NOU_CORE::forward<I>(invocable), NOU_CORE::forward<ARGS>(args)...))
+	{}
+
+	template<typename R, typename I, typename... ARGS>
+	const R& AsyncTaskResult<R, I, ARGS...>::getResult()
 	{
 		makeResult();
 
-		return *static_cast<ResultType*>(m_task->getResult());
+		return m_task.getResult();
 	}
 
+
+
+	template<typename I, typename... ARGS>
+	AsyncTaskResult<void, I, ARGS...>::AsyncTaskResult(Task &&task) :
+		AbstractAsyncTaskResult(&m_task),
+		m_task(NOU_CORE::move(task))
+	{}
+
+	template<typename I, typename... ARGS>
+	AsyncTaskResult<void, I, ARGS...>::AsyncTaskResult(I &&invocable, ARGS&&... args) :
+		AbstractAsyncTaskResult(&m_task),
+		m_task(makeTask(NOU_CORE::forward<I>(invocable), NOU_CORE::forward<ARGS>(args)...))
+	{}
+
+	template<typename I, typename... ARGS>
+	void AsyncTaskResult<void, I, ARGS...>::getResult()
+	{
+		makeResult();
+	}
 }
 
 #endif

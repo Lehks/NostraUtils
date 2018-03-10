@@ -130,6 +130,9 @@
     <ClInclude Include="src\header\nostrautils\thread\ConditionVariable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp">
@@ -157,6 +160,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\source\nostrautils\thread\ConditionVariable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\thread\AsyncTaskResult.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
