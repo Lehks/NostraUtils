@@ -7,8 +7,6 @@
 #include "nostrautils\thread\ThreadManager.hpp"
 #include "nostrautils\thread\AsyncTaskResult.hpp"
 #include <iostream>
-#include <vector>
-#include <cstdlib>
 
 using namespace NOU;
 using namespace NOU_CORE;
