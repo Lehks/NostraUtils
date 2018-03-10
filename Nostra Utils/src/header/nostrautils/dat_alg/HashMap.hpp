@@ -39,30 +39,53 @@ namespace NOU::NOU_DAT_ALG
 		HashMap(HashMap &&other);
 
 		/**
-		\param key the key where the value will be mapped to
-		\param value
-		\return true if sucessfully mapped
+		\param			key the key where the value will be mapped to
+		\param		    value
+		\return			true if sucessfully mapped
 		\brief maps a value to a specific key;
 		*/
 		NOU::boolean map(const K &key,const V &value);//WIP
 
 		/**
-		\param key the key on where a value will be returned
-		\brief returns the corresponding value mapped to a specific key
+		\param key		the key on where a value will be returned
+		\brief Returns the corresponding value mapped to a specific key
 		*/
 		V& get(const K &key);
-
-		NOU::boolean isEmpty();
-
-		NOU::sizeType size();
-
-		NOU::NOU_DAT_ALG::Vector<K> keySet();
+		/**
+		\brief Checks wether the map is empty or not.
+		*/
+		boolean isEmpty();
+		/**
+		\return			sizeType;
+		\brief Returns the size of the map.
+		*/
+		sizeType size();
+		/**
+		\return			Vector<K>;
+		\brief Returns an Vector of the keys wich are stored in the map.
+		*/
+		Vector<K> keySet();
+		/**
+		\input			K key;
+		\brief Removes an Object wich the specific key.
+		*/
 		V& remove(K key);
-
-		NOU::NOU_DAT_ALG::Vector<V> entrySet();
-
+		/**
+		\return			Vector<V>;
+		\brief Returns an Vector of the Objects wich are stored in the map.
+		*/
+		Vector<V> entrySet();
+		/**
+		\input			K key;
+		\return			boolean;
+		\brief Checks if the key is in the map.
+		*/
 		boolean containsKey(K key);
-
+		/**
+		\input			const Key (K);
+		\return			Object V;
+		\brief Overloading [] operators. They act now like at(index).
+		*/
 		V& operator [](const K& key);
 
 	};
@@ -70,13 +93,13 @@ namespace NOU::NOU_DAT_ALG
 
 
 	template <typename K, typename V>
-	HashMap<K,V>::HashMap(sizeType size, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator) :
+	HashMap<K,V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
 		m_data(size, allocator),
 		m_size(0)
 	{
 		for (sizeType i = 0; i < size; i++)
 		{
-			m_data.emplaceBack(Vector<NOU::NOU_DAT_ALG::Pair<K, V>>(0));
+			m_data.emplaceBack(Vector<Pair<K, V>>(0));
 		}
 	}
 	 
@@ -99,7 +122,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template <typename K, typename V>
-	NOU::boolean HashMap<K, V>::map(const K &key,const V &value) 
+	boolean HashMap<K, V>::map(const K &key,const V &value) 
 	{
 		sizeType n;
 
@@ -154,7 +177,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	NOU::boolean HashMap<K, V>::isEmpty()
+	boolean HashMap<K, V>::isEmpty()
 	{
 		if (m_size == 0)
 		{
@@ -167,7 +190,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	NOU::sizeType HashMap<K, V>::size()
+	sizeType HashMap<K, V>::size()
 	{
 		return m_size;
 	}
@@ -181,7 +204,7 @@ namespace NOU::NOU_DAT_ALG
 
 		h = hashObj(&key, m_size);
 
-		for (NOU::sizeType i = 0; i < m_data[h].size(); i++)
+		for (sizeType i = 0; i < m_data[h].size(); i++)
 		{
 			if (m_data[h][i].dataOne == key)
 			{
@@ -193,15 +216,15 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	NOU::NOU_DAT_ALG::Vector<K> HashMap<K, V>::keySet()
+	Vector<K> HashMap<K, V>::keySet()
 	{
-		NOU::NOU_DAT_ALG::Vector<K> keySetVec(1);
+		Vector<K> keySetVec(1);
 
-		for (NOU::sizeType i = 0; i < m_data.size(); i++)
+		for (sizeType i = 0; i < m_data.size(); i++)
 		{
 			if (m_data[i].size() != 0)
 			{
-				for (NOU::sizeType j = 0; j < m_data[i].size(); j++)
+				for (sizeType j = 0; j < m_data[i].size(); j++)
 				{
 					keySetVec.emplaceBack(m_data[i][j].dataOne);
 				}
@@ -211,15 +234,15 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	NOU::NOU_DAT_ALG::Vector<V> HashMap<K, V>::entrySet()
+	Vector<V> HashMap<K, V>::entrySet()
 	{
-		NOU::NOU_DAT_ALG::Vector<V> entrySetVec(1);
+		Vector<V> entrySetVec(1);
 
-		for (NOU::sizeType i = 0; i < m_data.size(); i++)
+		for (sizeType i = 0; i < m_data.size(); i++)
 		{
 			if (m_data[i].size() != 0)
 			{
-				for (NOU::sizeType j = 0; j < m_data[i].size(); j++)
+				for (sizeType j = 0; j < m_data[i].size(); j++)
 				{
 					entrySetVec.emplaceBack(m_data[i][j].dataTwo);
 				}
@@ -232,7 +255,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		Vector<K> tmp = keySet();
 
-		for (NOU::sizeType i = 0; i < tmp.size(); i++)
+		for (sizeType i = 0; i < tmp.size(); i++)
 		{
 			if (tmp.at(i) == key) {
 				return true;
