@@ -103,6 +103,9 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\ObjectPool.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\HashMap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp">
@@ -112,6 +115,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -49,13 +49,13 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief A counter that provides a uniqe identifiyer for every priority.
 		*/
-		PriorityTypePart										m_nextPriorityCounter;
+		PriorityTypePart										m_nextPriorityIdCounter;
 		/**
 		\return					The actuall counter increased by 1.
 
 		\brief Returns the next counter.
 		*/
-		PriorityTypePart getNextPriorityCounter();
+		PriorityTypePart nextPriorityIdCounter();
 		/**
 		\param rawPriority		The raw priority (priority without the counter).
 		\param counter			The counter (default 0: means that the normal count will be increased).
@@ -109,14 +109,14 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Inserts a Pair of data and priority into the Vector and checks at the end if the heap law is correct or not.
 		*/
-		PriorityTypePart enqueue(const T& data, PriorityTypePart priority);
+		PriorityTypePart enqueue(PriorityTypePart priority, const T& data);
 		/**
 		\param data				The data that will be one part of the Pair wich gets inserted in the vector.
 		\param priority			Which is the other part of the Pair thats get inserted in the vector.
 
 		\brief Inserts a Pair of data and priority into the Vector and checks at the end if the heap law is correct or not.
 		*/
-		PriorityTypePart enqueue(T&& data, PriorityTypePart priority);
+		PriorityTypePart enqueue(PriorityTypePart priority, T&& data);
 		/**
 		\tparam ARGS    The types of the arguments that will be used to construct a new instance of T.
 
@@ -177,6 +177,19 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		typename BinaryHeap<T>::PriorityType priorityAt(sizeType index);
 		/**
+		\param id			An id.
+
+		\brief Checks if an pair the the given id exsists.
+		*/
+		boolean checkIfPresent(PriorityTypePart id);
+		/**
+		\param id			An id.
+
+		\brief delets an pair with the specific id.
+		*/
+		void deleteById(PriorityTypePart id);
+
+		/**
 		\param index			An index.
 
 		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T>::at)
@@ -191,9 +204,9 @@ namespace NOU::NOU_DAT_ALG
 	};
 
 	template<typename T>
-	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::getNextPriorityCounter()
+	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::nextPriorityIdCounter()
 	{
-		return ++m_nextPriorityCounter;
+		return ++m_nextPriorityIdCounter;
 	}
 
 	template<typename T>
@@ -203,11 +216,11 @@ namespace NOU::NOU_DAT_ALG
 
 		if (counter == 0)
 		{
-			if (m_nextPriorityCounter >= 10000)
+			if (m_nextPriorityIdCounter >= 10000)
 			{
-				m_nextPriorityCounter = 0;
+				m_nextPriorityIdCounter = 0;
 			}
-			ret += getNextPriorityCounter();
+			ret += nextPriorityIdCounter();
 		}
 		else 
 		{
@@ -273,31 +286,31 @@ namespace NOU::NOU_DAT_ALG
 	BinaryHeap<T>::BinaryHeap(boolean isMinHeap, sizeType size,NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator) :
 		m_isMinHeap(isMinHeap),
 		m_data(size, allocator),
-		m_nextPriorityCounter(0) //counter still starts at 0
+		m_nextPriorityIdCounter(0) //counter still starts at 0
 	{}
 
 	template<typename T>
 	BinaryHeap<T>::BinaryHeap(const BinaryHeap<T> &other) :
 		m_isMinHeap(other.m_isMinHeap),
 		m_data(other.m_data),
-		m_nextPriorityCounter(other.m_nextPriorityCounter)
+		m_nextPriorityIdCounter(other.m_nextPriorityIdCounter)
 	{}
 
 	template<typename T>
 	BinaryHeap<T>::BinaryHeap(BinaryHeap &&other) :
 		m_isMinHeap(other.m_isMinHeap),
 		m_data(other.m_data),
-		m_nextPriorityCounter(other.m_nextPriorityCounter)
+		m_nextPriorityIdCounter(other.m_nextPriorityIdCounter)
 	{}
 
 	template<typename T>
-	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::enqueue(const T& data, PriorityTypePart priority)
+	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::enqueue(PriorityTypePart priority, const T& data)
 	{
 		return emplace(priority, data);
 	}
 
 	template<typename T>
-	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::enqueue(T&& data, PriorityTypePart priority)
+	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::enqueue(PriorityTypePart priority, T&& data)
 	{
 		return emplace(priority, NOU_CORE::move(data));
 	}
@@ -417,9 +430,6 @@ namespace NOU::NOU_DAT_ALG
 				return;
 			}
 		}
-
-		NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT,
-			"No object was found with the given Id.");
 	}
 
 	template<typename T>
@@ -450,6 +460,33 @@ namespace NOU::NOU_DAT_ALG
 	typename BinaryHeap<T>::PriorityType BinaryHeap<T>::priorityAt(sizeType index)
 	{
 		return m_data.at(index).dataOne;
+	}
+
+	template<typename T>
+	boolean BinaryHeap<T>::checkIfPresent(PriorityTypePart id)
+	{
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (getPriorityId(priorityAt(i)) == id)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	template<typename T>
+	void BinaryHeap<T>::deleteById(PriorityTypePart id)
+	{
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (getPriorityId(priorityAt(i)) == id)
+			{
+				m_data.remove(i);
+				checkForLaw();
+			}
+		}
 	}
 
 	template<typename T>
