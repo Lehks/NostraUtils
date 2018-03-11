@@ -41,7 +41,7 @@ namespace NOU::NOU_THREAD
 		
 		/* 
 		 * Lock mutex to wait until the task has finished execution (since the task was already removed, it 
-		 * won't be start after this point, so executeTask() will not be blocked)
+		 * won't be started after this point, so executeTask() will not be blocked)
 		 */
 		Lock lock(m_executionMutex);
 

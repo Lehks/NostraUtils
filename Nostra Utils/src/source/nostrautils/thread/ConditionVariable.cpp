@@ -2,9 +2,6 @@
 
 namespace NOU::NOU_THREAD
 {
-	ConditionVariable::ConditionVariable()
-	{}
-
 	void ConditionVariable::notifyOne()
 	{
 		m_variable.notify_one();

@@ -26,8 +26,6 @@ private:
 public:
 	A() = default;
 	A(int i) : i(i) {}
-	A(const A&) = delete;
-	A(A&&) = default;
 
 	int get() const { return i; }
 };

@@ -7,7 +7,7 @@
 #include <thread>
 
 /**
-\file nostrautils\core\StdIncludes.hpps
+\file    core\StdIncludes.hpps
 \author  Lukas Reichmann
 \version 0.0.1
 \since   1.0.0
@@ -32,13 +32,13 @@ namespace NOU::NOU_THREAD
 		using UnderylingType = std::thread;
 
 		/**
-		\brief The type that is used to uniquly identify a thread.
+		\brief The type that is used to uniquely identify a thread.
 		*/
 		using ID = std::thread::id;
 
 	private:
 		/**
-		\brief The thread that this class wrapps around.
+		\brief The thread that this class wraps around.
 		*/
 		UnderylingType m_thread;
 
@@ -97,9 +97,9 @@ namespace NOU::NOU_THREAD
 		void detach();
 
 		/**
-		\return Wether the thread is joinable or not.
+		\return Whether the thread is joinable or not.
 
-		\brief Returns wether the thread is joinable or not.
+		\brief Returns whether the thread is joinable or not.
 		*/
 		boolean joinable() const;
 
