@@ -31,6 +31,8 @@ namespace NOU::NOU_THREAD
 		UnderlyingType m_variable;
 
 	public:
+		ConditionVariable() = default;
+
 		/**
 		\brief Notifies one variable that is waiting.
 		*/
