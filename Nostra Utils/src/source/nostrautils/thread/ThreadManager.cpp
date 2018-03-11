@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-NOU::NOU_THREAD::Mutex logMutex;
-
 namespace NOU::NOU_THREAD
 {
 	ThreadManager::TaskInformation::TaskInformation(Priority id) :
@@ -21,8 +19,6 @@ namespace NOU::NOU_THREAD
 	void ThreadManager::threadLoop(ThreadManager *threadManager, ThreadDataBundle **threadDataPtr, 
 		Mutex *startupMutex, ConditionVariable *startupVariable, boolean *startupDone)
 	{
-		static thread_local int i = 0;
-
 		ThreadDataBundle *threadData;
 
 		{
@@ -36,17 +32,23 @@ namespace NOU::NOU_THREAD
 
 		while (!(threadManager->m_shouldShutdown))
 		{
-			UniqueLock lock(threadData->mutex);
-			threadData->variable.wait(lock, [threadData]() { return threadData->taskReady; });
+			UniqueLock lock(threadData->m_mutex);
+			threadData->m_variable.wait(lock, [threadData, threadManager]() 
+			{ 
+				//wait for new task or thread manager shutdown
+				return threadData->m_taskReady || threadManager->m_shouldShutdown; 
+			});
 
-			i++;
+			//if the manager should shutdown, the method will be stopped from looping.
+			if (threadManager->m_shouldShutdown)
+				return;
 
-			AbstractTask *t = threadData->taskHandlerPair.task;
+			AbstractTask *t = threadData->m_taskHandlerPair.task;
 
-			threadData->taskHandlerPair.task->execute();
+			threadData->m_taskHandlerPair.task->execute();
 
 			//Set to false for the next iteration, must be set to true by the thread manager
-			threadData->taskReady = false;
+			threadData->m_taskReady = false;
 
 			threadManager->giveBackThread(*threadData);
 		}
@@ -55,18 +57,16 @@ namespace NOU::NOU_THREAD
 
 
 	ThreadManager::ThreadDataBundle::ThreadDataBundle(ThreadWrapper &&thread) :
-		thread(NOU_CORE::move(thread)),
-		taskHandlerPair(nullptr, nullptr), //taskHandlerPair will be initialized later
-		taskReady(false)
+		m_thread(NOU_CORE::move(thread)),
+		m_taskHandlerPair(nullptr, nullptr), //m_taskHandlerPair will be initialized later
+		m_taskReady(false)
 	{}
 
 	ThreadManager::ThreadDataBundle::ThreadDataBundle(ThreadDataBundle&& tdb) :
-		thread(NOU_CORE::move(tdb.thread)),
-		taskHandlerPair(NOU_CORE::move(tdb.taskHandlerPair)),
-		taskReady(tdb.taskReady)
+		m_thread(NOU_CORE::move(tdb.m_thread)),
+		m_taskHandlerPair(NOU_CORE::move(tdb.m_taskHandlerPair)),
+		m_taskReady(tdb.m_taskReady)
 	{}
-
-	//ThreadManager ThreadManager::s_instance;
 
 	NOU_FUNC ThreadManager& getThreadManager()
 	{
@@ -77,7 +77,6 @@ namespace NOU::NOU_THREAD
 	{
 		static ThreadManager instance;
 		return instance;
-	//	return s_instance;
 	}
 
 	typename ThreadManager::ObjectPoolPtr<typename ThreadManager::ThreadDataBundle> 
@@ -165,9 +164,9 @@ namespace NOU::NOU_THREAD
 			task.handler = &m_handlers->get();
 		}
 
-		threadData.taskHandlerPair = task;
-		threadData.taskReady = true;
-		threadData.variable.notifyAll();
+		threadData.m_taskHandlerPair = task;
+		threadData.m_taskReady = true;
+		threadData.m_variable.notifyAll();
 	}
 
 	ThreadManager::ThreadManager() : 
@@ -186,7 +185,17 @@ namespace NOU::NOU_THREAD
 
 		Lock threadLock(m_threadPoolAccessMutex);
 
-		m_threads->foreach([](ThreadDataBundle& tdb) { if (tdb.thread.joinable()) { tdb.thread.join(); } });
+		m_threads->foreach([](ThreadDataBundle& tdb) 
+		{ 
+			//if the thread method is currently waiting for a new task, this will make it stop waiting and
+			//return instead 
+			tdb.m_variable.notifyAll(); 
+
+			if (tdb.m_thread.joinable()) 
+			{ 
+				tdb.m_thread.join(); 
+			} 
+		});
 	}
 
 	void ThreadManager::giveBackThread(ThreadDataBundle &thread)
@@ -196,7 +205,7 @@ namespace NOU::NOU_THREAD
 		{
 			//give back handler b/c the task may have it's own handler & executeTaskWithThread() 
 			//will get a new one from the pool.
-			giveBackHandler(*thread.taskHandlerPair.handler);
+			giveBackHandler(*thread.m_taskHandlerPair.handler);
 
 			TaskErrorHandlerPair &task = m_tasks->get();
 			m_tasks->dequeue();
@@ -209,7 +218,7 @@ namespace NOU::NOU_THREAD
 
 			m_threads->giveBack(thread);
 
-			giveBackHandler(*thread.taskHandlerPair.handler);
+			giveBackHandler(*thread.m_taskHandlerPair.handler);
 		}
 	}
 
@@ -268,5 +277,23 @@ namespace NOU::NOU_THREAD
 		}
 
 		return false;
+	}
+
+	sizeType ThreadManager::maximumAvailableThreads() const
+	{
+		//No need to lock, since the capacity of an object pool never changes.
+		return m_threads->capacity();
+	}
+
+	sizeType ThreadManager::currentyAvailableThreads()
+	{
+		Lock lock(m_threadPoolAccessMutex);
+
+		/*
+		 * + (m_threads->capacity() - m_threads->size()) b\c remainingObjects() only returns the amount of 
+		 * remaining objects that have already been pushed, this returns the total value of remaining threads, 
+		 * even if not all threads have been pushed yet
+		 */
+		return m_threads->remainingObjects() + (m_threads->capacity() - m_threads->size());
 	}
 }
