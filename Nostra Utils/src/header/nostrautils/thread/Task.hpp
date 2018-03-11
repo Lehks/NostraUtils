@@ -10,7 +10,7 @@
 #include <type_traits>
 
 /**
-\file nostrautils/thread/Task.hpp
+\file thread/Task.hpp
 
 \author  Lukas Reichmann
 \version 0.0.1
@@ -136,6 +136,12 @@ namespace NOU::NOU_THREAD
 		\param args      The arguments that will be passed to the invocable.
 
 		\brief Constructs a new Task that will execute the passed invocable using the passed arguments.
+
+		\details
+		Constructs a new Task that will execute the passed invocable using the passed arguments.
+
+		If the invocable is a member function pointer, the object that is used to call that member function
+		needs to be the first parameter in the \p args parameter list.
 		*/
 		explicit Task(InvocableType &&invocable, ARGS&&... args);
 
@@ -202,33 +208,18 @@ namespace NOU::NOU_THREAD
 
 	\brief This convenience function constructs a task from a function (or function like types, like 
 	       functors).
+
+	\details
+	This convenience function constructs a task from a function (or function like types, like functors). If
+	used together with \p auto, it is possible to avoid large template parameter lists altogether.
+
+	This function also works with member function pointers as invocable. If such pointer is passed, the first
+	parameter must be the object that the member function is called with (the remaining parameters will follow
+	after this object).
 	*/
 	template<typename I, typename... ARGS>
 	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I,
 		NOU_CORE::remove_reference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args);
-
-	/**
-	\tparam T    The type that \p I is a member function of.
-	\tparam I    The invocable type.
-	\tparam ARGS The argument types.
-
-	\param obj       The object that \p invocable will be called on.
-	\param invocable The invocable.
-	\param args      The arguments.
-
-	\brief This convenience function constructs a task from a member function and an object that function
-	       will be called on.
-	*/
-	template<typename T, typename I, typename... ARGS>
-	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, T, NOU_CORE::remove_reference_t<ARGS>...>, I, T, 
-		NOU_CORE::remove_reference_t<ARGS>...> makeMemFuncTask(T&& obj, I&& invocable, ARGS&&...args);
-
-//	template<typename I, typename... ARGS>
-//	NOU_FUNC Task makeTaskFromInvocable(I &&invocable, ARGS&&... args);
-//
-//	template<typename T, typename I, typename... ARGS>
-//	NOU_FUNC Task makeTaskFromMemberFunction(T &&t, I invocable, ARGS&&... args);
-
 
 
 	template<typename R, typename I, typename... ARGS>
