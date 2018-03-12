@@ -18,6 +18,14 @@
 
 namespace NOU::NOU_DAT_ALG
 {
+	template<typename O, typename T>
+	struct NOU_CLASS Pair
+	{
+		O	dataOne;
+		T	dataTwo;
+		Pair(const O& dataOne, const T& dataTwo);
+		Pair(O&& dataOne, T&& dataTwo);
+	};
 	/**
 	\param dataone First Type.
 	\param datatwo Second Type.
@@ -45,9 +53,21 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void swap(T *dataone, T *datatwo) 
 	{
-		T tempdata = NOU_CORE::move(*dataone);
-		*dataone = NOU_CORE::move(*datatwo);
-		*datatwo = NOU_CORE::move(tempdata);
+		struct alignas (T)
+		{
+			byte data[sizeof(T)];
+		} tmpdata;
+
+		T *tmp = (T*)tmpdata.data;
+
+		new (tmpdata.data) T(NOU_CORE::move(*dataone));
+		dataone->~T();
+
+		new (dataone) T(NOU_CORE::move(*datatwo));
+		datatwo->~T();
+
+		new (datatwo) T(NOU_CORE::move(*tmp));
+		tmp->~T();
 	}
 
 	template<typename CHAR_TYPE>
@@ -63,6 +83,19 @@ namespace NOU::NOU_DAT_ALG
 		T abs = (diff < 0 ? -diff : diff);
 		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
 	}
+
+
+	template<typename O, typename T>
+	Pair<O, T>::Pair(const O& dataOne, const T& dataTwo) :
+		dataOne(dataOne),
+		dataTwo(dataTwo)
+	{}
+
+	template<typename O, typename T>
+	Pair<O, T>::Pair(O&& dataOne, T&& dataTwo) :
+		dataOne(NOU_CORE::move(dataOne)),
+		dataTwo(NOU_CORE::move(dataTwo))
+	{}
 }
 
 #endif
