@@ -24,84 +24,101 @@
 
 namespace NOU::NOU_THREAD
 {
-	///\todo make work w/ lambdas
-	/**
-	\brief A parent class of the Task class that does not take or need any template types. This abstract task
-	however, can only execute the stored functionality and not access the results.
-
-	\details
-	A parent class of the Task class that does not take or need any template types. This abstract task 
-	however, can only execute the stored functionality and not access the results.
-
-	By default, every task can only be executed once. If a task should be executed multiple times, it needs to
-	be reset first.
-	*/
-	class NOU_CLASS AbstractTask
+	namespace internal
 	{
-	public:
+		///\todo make work w/ lambdas
 		/**
-		\brief The different states of a task.
+		\brief A parent class of the Task class that does not take or need any template types. This abstract 
+		task however, can only execute the stored functionality and not access the results.
+
+		\details
+		A parent class of the Task class that does not take or need any template types. This abstract task
+		however, can only execute the stored functionality and not access the results.
+
+		By default, every task can only be executed once. If a task should be executed multiple times, it 
+		needs to be reset first.
 		*/
-		enum class State
+		class NOU_CLASS AbstractTask
 		{
+		public:
 			/**
-			\brief The task has not been started yet, or it has been reset.
+			\brief The different states of a task.
 			*/
-			NOT_STARTED,
+			enum class State
+			{
+				/**
+				\brief The task has not been started yet, or it has been reset.
+				*/
+				NOT_STARTED,
+
+				/**
+				\brief The task is currently being executed.
+				*/
+				RUNNING,
+
+				/**
+				\brief The task is done running.
+				*/
+				DONE
+			};
+
+		protected:
+			/**
+			\brief The current state.
+			*/
+			State m_state;
+
+		public:
+			AbstractTask();
+
+			virtual ~AbstractTask() = default;
 
 			/**
-			\brief The task is currently being executed.
+			\return True, if the functionality was actually executed, false if not.
+
+			\brief Executes the stored functionality, if it was not executed yet.
 			*/
-			RUNNING,
+			virtual boolean execute() = 0;
 
 			/**
-			\brief The task is done running.
+			\brief Resets the task from the DONE state to NOT_STARTED. If the task is currently being 
+			executed, this will do nothing.
 			*/
-			DONE
+			virtual void reset();
+
+			/**
+			\return The current state.
+
+			\brief Returns the current state.
+			*/
+			virtual State getState() const;
 		};
-
-	protected:
-		/**
-		\brief The current state.
-		*/
-		State m_state;
-
-	public:
-		AbstractTask();
-
-		virtual ~AbstractTask() = default;
-
-		/**
-		\return True, if the functionality was actually executed, false if not.
-
-		\brief Executes the stored functionality, if it was not executed yet.
-		*/
-		virtual boolean execute() = 0;
-
-		/**
-		\brief Resets the task from the DONE state to NOT_STARTED. If the task is currently being executed,
-		this will do nothing.
-		*/
-		virtual void reset();
-
-		/**
-		\return The current state.
-		
-		\brief Returns the current state.
-		*/
-		virtual State getState() const;
-	};
+	}
 
 	/**
 	\tparam R    The return type of the invocable and the task in general.
 	\tparam I    The type of the invocable.
 	\tparam ARGS The types of the arguments that will be passed to the invocable.
 
-	\brief An implementation of AbstractTask that uses type parameters. The type parameters must define an
-	       invocable as defined by nostra::utils::core::IsInvocableR.
+	\brief A task is a class that is a combination of an invocable and the data that is required to execute
+	       that invocable.
+
+	\details
+	A task is a class that is a combination of an invocable and the data that is required to execute that 
+	invocable.
+
+	This class is used by the thread manager to execute functionality in a different thread (Tasks on 
+	themselves are not solely suited for multi-threading and do not supply thread safety mechanisms on their
+	own).
+
+	Tasks do not allow to store object references and NOU does not provide reference wrappers (like 
+	std::reference_wrapper) on its own. Instead, pointers should be used instead of references.
+	
+	\note 
+	\p I must be an invocable according to nostra::utils::core::IsInvocableR<R, I, ARGS...>.
 	*/
 	template<typename R, typename I, typename... ARGS>
-	class NOU_CLASS Task final : public AbstractTask
+	class NOU_CLASS Task final : public internal::AbstractTask
 	{
 		static_assert(NOU_CORE::IsInvocableR<R, I, ARGS...>::value);
 
@@ -180,7 +197,7 @@ namespace NOU::NOU_THREAD
 	///\cond
 	//A specialization for the task when the return type is void.
 	template<typename I, typename... ARGS>
-	class NOU_CLASS Task<void, I, ARGS...> final : public AbstractTask
+	class NOU_CLASS Task<void, I, ARGS...> final : public internal::AbstractTask
 	{
 		static_assert(NOU_CORE::IsInvocableR<void, I, ARGS...>::value);
 

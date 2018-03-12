@@ -184,7 +184,8 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief A pair of an AbstractTask* and NOU_CORE::ErrorHandler*.
 		*/
-		using TaskErrorHandlerPair = TaskErrorHandlerPairTempl<AbstractTask*, NOU_CORE::ErrorHandler*>;
+		using TaskErrorHandlerPair = TaskErrorHandlerPairTempl<internal::AbstractTask*, 
+			NOU_CORE::ErrorHandler*>;
 
 		/**
 		\brief The data that is always bundled together with a thread.
@@ -327,7 +328,8 @@ namespace NOU::NOU_THREAD
 
 		\pre pushTask() or locking m_taskHeapAccessMutex
 		*/
-		TaskInformation enqueueTask(AbstractTask *task, int32 priority, NOU_CORE::ErrorHandler *handler);
+		TaskInformation enqueueTask(internal::AbstractTask *task, int32 priority, 
+			NOU_CORE::ErrorHandler *handler);
 
 		/**
 		\return True, if the adding was successful, false if not.
@@ -384,8 +386,8 @@ namespace NOU::NOU_THREAD
 		\warning 
 		This method is supposed to be used a sort of a "back end" for functionality (like AsyncTaskResult).
 		*/	
-		TaskInformation pushTask(AbstractTask *task, Priority priority, NOU_CORE::ErrorHandler *handler
-			= nullptr); 
+		TaskInformation pushTask(internal::AbstractTask *task, Priority priority, 
+			NOU_CORE::ErrorHandler *handler = nullptr); 
 
 		/**
 		\param taskInfo The task information that was returned by pushTask().

@@ -43,7 +43,7 @@ namespace NOU::NOU_THREAD
 			if (threadManager->m_shouldShutdown)
 				return;
 
-			AbstractTask *t = threadData->m_taskHandlerPair.task;
+			internal::AbstractTask *t = threadData->m_taskHandlerPair.task;
 
 			threadData->m_taskHandlerPair.task->execute();
 
@@ -111,7 +111,7 @@ namespace NOU::NOU_THREAD
 				NOU_MEM_MNGT::defaultDeleter);
 	}
 
-	ThreadManager::TaskInformation ThreadManager::enqueueTask(AbstractTask *task, int32 priority, 
+	ThreadManager::TaskInformation ThreadManager::enqueueTask(internal::AbstractTask *task, int32 priority,
 		NOU_CORE::ErrorHandler *handler)
 	{
 		/**
@@ -233,7 +233,7 @@ namespace NOU::NOU_THREAD
 		}
 	}
 
-	ThreadManager::TaskInformation ThreadManager::pushTask(AbstractTask *task, Priority priority,
+	ThreadManager::TaskInformation ThreadManager::pushTask(internal::AbstractTask *task, Priority priority,
 		NOU_CORE::ErrorHandler *handler)
 	{
 		/*

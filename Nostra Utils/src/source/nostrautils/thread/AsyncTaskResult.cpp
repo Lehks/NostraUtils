@@ -2,8 +2,8 @@
 
 namespace NOU::NOU_THREAD
 {
-	void AbstractAsyncTaskResult::executeTask(AbstractTask *task, AbstractAsyncTaskResult *taskResult, 
-		Mutex *mutex)
+	void internal::AbstractAsyncTaskResult::executeTask(AbstractTask *task, 
+		AbstractAsyncTaskResult *taskResult, Mutex *mutex)
 	{
 		Lock lock(*mutex);
 
@@ -14,30 +14,30 @@ namespace NOU::NOU_THREAD
 		taskResult->setState(State::DONE);
 	}
 
-	void AbstractAsyncTaskResult::setState(State state)
+	void internal::AbstractAsyncTaskResult::setState(State state)
 	{
 		Lock lock(m_stateMutex);
 
 		m_state = state;
 	}
 
-	AbstractAsyncTaskResult::AbstractAsyncTaskResult(AbstractTask *task) :
+	internal::AbstractAsyncTaskResult::AbstractAsyncTaskResult(AbstractTask *task) :
 		m_task(task),
 		m_state(State::NOT_STARTED),
 		m_executionTask(makeTask(&executeTask, m_task, this, &m_executionMutex))
 	{}
 
-	void AbstractAsyncTaskResult::push()
+	void internal::AbstractAsyncTaskResult::push()
 	{
 		getThreadManager().pushTask(&m_executionTask, 0);
 	}
 
-	typename AbstractAsyncTaskResult::State AbstractAsyncTaskResult::getState() const
+	typename internal::AbstractAsyncTaskResult::State internal::AbstractAsyncTaskResult::getState() const
 	{
 		return m_state;
 	}
 
-	void AbstractAsyncTaskResult::makeResult()
+	void internal::AbstractAsyncTaskResult::makeResult()
 	{
 		//Remove task here to avoid race conditions (removeTask() will lock the task heap).
 		getThreadManager().removeTask(m_taskInformation);

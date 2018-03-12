@@ -190,13 +190,7 @@ int main()
 	AsyncTaskResult<int, decltype(&func2)> result0(move(task0));
 	AsyncTaskResult<void, decltype(&func)> result1(move(task1));
 
-	std::cout << result0.getResult() << std::endl;
-
-	for (int i = 0; i < 1000000; i++)
-	{
-		i++;
-		i--;
-	}
+	typename AsyncTaskResult<int, decltype(&func2)>::State s = result0.getState();
 
 	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
 		std::cout << NOU_CORE::getErrorHandler().popError().getName() << std::endl;

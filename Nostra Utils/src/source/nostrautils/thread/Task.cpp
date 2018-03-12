@@ -2,17 +2,17 @@
 
 namespace NOU::NOU_THREAD
 {
-	AbstractTask::AbstractTask() :
+	internal::AbstractTask::AbstractTask() :
 		m_state(State::NOT_STARTED)
 	{}
 
-	void AbstractTask::reset()
+	void internal::AbstractTask::reset()
 	{
 		if (m_state == State::DONE)
 			m_state = State::NOT_STARTED;
 	}
 
-	typename AbstractTask::State AbstractTask::getState() const
+	typename internal::AbstractTask::State internal::AbstractTask::getState() const
 	{
 		return m_state;
 	}
