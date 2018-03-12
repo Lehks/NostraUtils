@@ -984,12 +984,71 @@ namespace UnitTests
 
 		TEST_METHOD(Hashfunction)
 		{
-			NOU::sizeType testInt = 42;
-			NOU::sizeType hashSize = 5;
-			NOU::sizeType test;
-			test = NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize);
-			testInt = 9234978;
-			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize));
+			NOU::int64 i1 = 243536768574;
+			NOU::int64 i2 = 243536768574;
+
+			NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
+
+			h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+
+
+
+			//MD5 TESTS
+
+			NOU::char8 str3[] = "Franz jagt im komplett verwahrlosten Taxi quer durch Bayern";
+			NOU::char8 str4[] = "Frank jagt im komplett verwahrlosten Taxi quer durch Bayern";
+			NOU::char8 str5[] = "";
+
+
+			NOU::NOU_DAT_ALG::MD5Hash hash0 = NOU::NOU_DAT_ALG::md5(str3);
+			NOU::NOU_DAT_ALG::MD5Hash hash1 = NOU::NOU_DAT_ALG::md5(str4);
+			NOU::NOU_DAT_ALG::MD5Hash hash2 = NOU::NOU_DAT_ALG::md5(str5);
+
+			NOU::int32 pair0, pair1, pair2;
+			pair0 = 0;  // hash0 == hash1
+			pair1 = 0;	// hash0 == hash2
+			pair2 = 0;	// hash1 == hash2
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				pair0 = (hash0[i] == hash1[i]) ? pair0 + 1 : pair0;
+				pair1 = (hash0[i] == hash2[i]) ? pair1 + 1 : pair1;
+				pair2 = (hash1[i] == hash2[i]) ? pair2 + 1 : pair2;
+			}
+			Assert::IsTrue(pair0 < 16);
+			Assert::IsTrue(pair1 < 16);
+			Assert::IsTrue(pair2 < 16);
+
+		}
+
+		TEST_METHOD(HashMap) 
+		{
+			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
+			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
+			NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::boolean b;
+
+			Assert::AreEqual(hm.isEmpty(), true);
+
+			for (NOU::sizeType i = 0; i < str.size(); i++) {
+				b = hm.map(str.at(i), 1);
+			}
+
+			Assert::AreEqual(hm.isEmpty(), false);
+
+			for (int i = 0; i < str.size(); i++) {
+				Assert::AreEqual(hm.get(str.at(i)), 1);
+			}
+			NOU::char8 k = 'h';
+
+			NOU::int32 count = hm.remove(k);
+			Assert::AreEqual(1, count);
+
 
 			testInt = 42;
 			test = NOU::NOU_DAT_ALG::hashObj(&testInt);
