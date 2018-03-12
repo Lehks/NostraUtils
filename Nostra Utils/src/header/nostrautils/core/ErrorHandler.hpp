@@ -330,9 +330,6 @@ namespace NOU::NOU_CORE
 
 	public:
 
-		//static instance of the error handler. will be removed as soon as the thread manager is ready
-		static ErrorHandler s_handler;
-
 		/**
 		\brief The default capacity for m_errors.
 		*/
@@ -369,6 +366,21 @@ namespace NOU::NOU_CORE
 		*/
 		template<typename T>
 		static void pushPool();
+
+		/**
+		\return The error handler of the main thread.
+
+		\brief Returns the error handler of the main thread.
+
+		\details
+		Returns the error handler of the main thread. This method also stores said handler as a local
+		static variable.
+
+		\note
+		This method is not intended to be used by a user. To get the error handler of the calling thread,
+		getErrorHandler() should be used instead.
+		*/
+		static ErrorHandler& getMainThreadHandler();
 
 		/**
 		\return Returns the error count.

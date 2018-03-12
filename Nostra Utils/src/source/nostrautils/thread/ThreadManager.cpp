@@ -3,6 +3,7 @@
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\core\Assertions.hpp"
+#include "nostrautils\dat_alg\HashMap.hpp"
 
 #include <iostream>
 
@@ -96,20 +97,33 @@ namespace NOU::NOU_THREAD
 	{
 		//capacity() b/c must store the same amounts of handlers as there are threads
 		return ObjectPoolPtr<NOU_CORE::ErrorHandler>(new NOU_DAT_ALG::ObjectPool<NOU_CORE::ErrorHandler>
-			(m_threads->capacity(), NOU_MEM_MNGT::GenericAllocationCallback<
-				NOU_DAT_ALG::internal::ObjectPoolChunk<NOU_CORE::ErrorHandler>>::getInstance()), 
-			NOU_MEM_MNGT::defaultDeleter);
+			(m_threads->capacity()), NOU_MEM_MNGT::defaultDeleter);
 	}
 
 	NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<typename ThreadManager::TaskErrorHandlerPair>> 
 		ThreadManager::makeTaskHeap()
 	{
 		return NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>>
-			(new NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair> (true, DEFAULT_TASK_CAPACITY, 
-				NOU_MEM_MNGT::GenericAllocationCallback<NOU_DAT_ALG::Pair<uint64, TaskErrorHandlerPair>>
-					::getInstance()),
+			(new NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair> (true, DEFAULT_TASK_CAPACITY),
 				NOU_MEM_MNGT::defaultDeleter);
 	}
+
+
+	NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::HashMap<typename ThreadWrapper::ID,
+		NOU_CORE::ErrorHandler*>> ThreadManager::makeHandlersMap()
+	{
+		using MapPtr = decltype(m_handlersMap);
+
+		//+ 1 b/c this map also stores the handler of the main thread
+		auto ret = NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::HashMap<typename ThreadWrapper::ID,
+			NOU_CORE::ErrorHandler*>>(new NOU_DAT_ALG::HashMap<typename ThreadWrapper::ID, 
+				NOU_CORE::ErrorHandler*>(m_threads->capacity() + 1), NOU_MEM_MNGT::defaultDeleter);
+
+		ret->map(std::this_thread::get_id(), &NOU_CORE::ErrorHandler::getMainThreadHandler());
+
+		return ret;
+	}
+
 
 	ThreadManager::TaskInformation ThreadManager::enqueueTask(internal::AbstractTask *task, int32 priority,
 		NOU_CORE::ErrorHandler *handler)
@@ -164,6 +178,9 @@ namespace NOU::NOU_THREAD
 			task.handler = &m_handlers->get();
 		}
 
+		//map handler to thread id
+		m_handlersMap->map(threadData.m_thread.getID(), task.handler);
+
 		threadData.m_taskHandlerPair = task;
 		threadData.m_taskReady = true;
 		threadData.m_variable.notifyAll();
@@ -173,7 +190,8 @@ namespace NOU::NOU_THREAD
 		m_shouldShutdown(false),
 		m_threads(makeThreadPool()),
 		m_handlers(makeHandlerPool()),
-		m_tasks(makeTaskHeap())
+		m_tasks(makeTaskHeap()),
+		m_handlersMap(makeHandlersMap())
 	{
 		static_assert(NOU_CORE::AreSame<typename 
 			NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>::PriorityTypePart, Priority>::value);
@@ -226,7 +244,7 @@ namespace NOU::NOU_THREAD
 	{
 		if (m_handlers->isPartOf(handler))
 		{
-			while (handler.getErrorCount() > 0)
+			while (handler.getErrorCount() > 0) //clear handler from all errors
 				handler.popError();
 
 			m_handlers->giveBack(handler);
@@ -295,5 +313,10 @@ namespace NOU::NOU_THREAD
 		 * even if not all threads have been pushed yet
 		 */
 		return m_threads->remainingObjects() + (m_threads->capacity() - m_threads->size());
+	}
+
+	NOU_CORE::ErrorHandler& ThreadManager::getErrorHandlerByThreadId(ThreadWrapper::ID id)
+	{
+		return *(m_handlersMap->get(id));
 	}
 }

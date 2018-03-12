@@ -1,5 +1,6 @@
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
+#include "nostrautils\thread\ThreadManager.hpp"
 
 namespace NOU::NOU_CORE
 {
@@ -130,8 +131,6 @@ namespace NOU::NOU_CORE
 
 	ErrorHandler::CallbackType ErrorHandler::s_callback = ErrorHandler::standardCallback;
 
-	ErrorHandler ErrorHandler::s_handler; //remove later
-
 	void ErrorHandler::setCallback(CallbackType callback)
 	{
 		s_callback = callback;
@@ -163,7 +162,13 @@ namespace NOU::NOU_CORE
 	{
 		return m_errors->size();
 	}
-	
+
+	ErrorHandler& ErrorHandler::getMainThreadHandler()
+	{
+		static ErrorHandler handler;
+		return handler;
+	}
+
 	ErrorHandler::ErrorHandler() :
 		m_errors(new NOU_DAT_ALG::FastQueue<ErrorLocation>(DEFAULT_CAPACITY, 
 			NOU_MEM_MNGT::GenericAllocationCallback<ErrorLocation>::getInstance()), 
@@ -190,6 +195,6 @@ namespace NOU::NOU_CORE
 
 	ErrorHandler& getErrorHandler()
 	{
-		return ErrorHandler::s_handler; //todo rework w/ thread mngr
+		return NOU_THREAD::getThreadManager().getErrorHandlerByThreadId(std::this_thread::get_id());
 	}
 }

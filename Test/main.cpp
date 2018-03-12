@@ -16,7 +16,7 @@ using namespace NOU_MEM_MNGT;
 
 void callback(const ErrorLocation& el)
 {
-	__debugbreak();
+//	__debugbreak();
 }
 
 class A
@@ -34,7 +34,14 @@ NOU_DEFINE_PAIR(P, A, a, A, b)
 
 void func()
 {
+	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::INVALID_OBJECT, "Test");
+	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::BAD_DEALLOCATION, "Test2");
+
 	std::cout << "Func" << std::endl;
+
+	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
+		std::cout << std::this_thread::get_id() << " " << NOU_CORE::getErrorHandler().popError().getName() << std::endl;
+
 }
 
 uint8 values[100] = {0};
@@ -66,7 +73,14 @@ void func1(int32 i)
 
 int func2()
 {
+	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::INVALID_OBJECT, "Test");
+	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::BAD_DEALLOCATION, "Test2");
+
 	std::cout << "Func2" << std::endl;
+
+	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
+		std::cout << std::this_thread::get_id() << " " << NOU_CORE::getErrorHandler().popError().getName() << std::endl;
+	
 	return 1;
 }
 
@@ -75,8 +89,6 @@ template boolean Task<void, void(*)()>::execute();
 int main()
 {
 #if 1
-	std::cout << "Main thread: " << std::this_thread::get_id() << std::endl;
-
 	NOU_CORE::ErrorHandler::setCallback(callback);
 	
 	ThreadManager& tm = ThreadManager::getInstance();
@@ -184,6 +196,8 @@ int main()
 
 #endif
 
+	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::INVALID_STATE, "Test3");
+
 	auto task0 = makeTask(&func2);
 	auto task1 = makeTask(&func);
 
@@ -192,8 +206,10 @@ int main()
 
 	typename AsyncTaskResult<int, decltype(&func2)>::State s = result0.getState();
 
+	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::INDEX_OUT_OF_BOUNDS, "Test4");
+
 	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
-		std::cout << NOU_CORE::getErrorHandler().popError().getName() << std::endl;
+		std::cout << std::this_thread::get_id() << " " << NOU_CORE::getErrorHandler().popError().getName() << std::endl;
 	std::cin.get();
 #endif
 }

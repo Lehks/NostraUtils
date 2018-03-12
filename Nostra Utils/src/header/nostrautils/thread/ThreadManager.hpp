@@ -37,6 +37,8 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	class BinaryHeap;
 
+	template<typename K, typename V>
+	class HashMap;
 }
 ///\endcond
 
@@ -78,6 +80,9 @@ namespace NOU::NOU_THREAD
 
 		/**
 		\brief The default constructor.
+
+		\warning
+		This constructor must always be called from the main thread.
 		*/
 		ThreadManager();
 
@@ -100,6 +105,9 @@ namespace NOU::NOU_THREAD
 		because it is shorter to write.
 
 		However, this method also stores the instance of the thread manager as a local static variable.
+
+		\warning
+		The first time that this method is called must be done from the main thread.
 		*/
 		static ThreadManager& getInstance();
 	//End of singleton parts
@@ -295,6 +303,13 @@ namespace NOU::NOU_THREAD
 		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>> m_tasks;
 
 		/**
+		\brief A map that stores the ID of the different threads with the error handler that is currently
+		associated with that thread.
+		*/
+		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::HashMap<typename ThreadWrapper::ID, 
+			NOU_CORE::ErrorHandler*>> m_handlersMap;
+
+		/**
 		\brief Creates the value for \p m_threads.
 		*/
 		ObjectPoolPtr<ThreadDataBundle> makeThreadPool();
@@ -308,6 +323,12 @@ namespace NOU::NOU_THREAD
 		\brief Creates the value for \p m_tasks.
 		*/
 		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>> makeTaskHeap();
+
+		/**
+		\brief Creates the value for \p m_handlersMap.
+		*/
+		NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::HashMap<typename ThreadWrapper::ID, 
+			NOU_CORE::ErrorHandler*>> makeHandlersMap();
 
 		/**
 		\brief The mutex that is used to control the access to \p m_threads.
@@ -417,6 +438,14 @@ namespace NOU::NOU_THREAD
 		*/
 		//no need to be const, thread manger is always obtainable as non-const reference
 		sizeType currentyAvailableThreads(); 
+
+		/**
+		\param id The id of the thread to get the handler of.
+		\return The error handler of the thread with the passed ID.
+
+		\brief Returns the error handler of the thread with the passed ID.
+		*/
+		NOU_CORE::ErrorHandler& getErrorHandlerByThreadId(ThreadWrapper::ID id);
 	};
 }
 
