@@ -4,7 +4,7 @@
 namespace NOU::NOU_DAT_ALG
 {
 
-	NOU_FUNC NOU::sizeType hashValue(NOU::sizeType value, NOU::sizeType max) 
+	NOU_FUNC NOU::sizeType hashValue(NOU::sizeType value, NOU::sizeType max)
 	{
 		NOU_COND_PUSH_ERROR((max < 1), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Value max cannot be below 1");
 
@@ -12,28 +12,13 @@ namespace NOU::NOU_DAT_ALG
 		NOU::sizeType r;
 
 		r = static_cast<NOU::sizeType>((value % PRIME) % max);
-		
+
 		return r;
 	}
 
-	NOU_FUNC MD5Hash md5(char8 *message) 
+	NOU_FUNC MD5Hash md5(const NOU::byte *input, sizeType size)
 	{
-
-		struct byte64
-		{
-			byte m_data[64];
-			byte64()
-			{
-				for (sizeType i = 0; i < 64; i++)
-				{
-					m_data[i] = 0;
-				}
-			}
-
-		};
-
 		Vector<byte> bytes(10);
-		String <char8> i(message);
 
 
 		//specifies the per - round shift amounts
@@ -60,7 +45,7 @@ namespace NOU::NOU_DAT_ALG
 			0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039,
 			0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
 			0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
-			0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391};
+			0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391 };
 
 		//predefined constants
 		uint32 a0 = 0x67452301;
@@ -68,16 +53,16 @@ namespace NOU::NOU_DAT_ALG
 		uint32 c0 = 0x98badcfe;
 		uint32 d0 = 0x10325476;
 
-		//bitlength of message
+		//bitlength of input
 		sizeType len;
-		for (len = 0; message[len] != '\0'; len++)
+		for (len = 0; len < size; len++)
 		{
-			bytes.emplaceBack(static_cast<byte>(message[len]));
+			bytes.emplaceBack(input[len]);
 		}
 
 		bytes.emplaceBack(128);
 
-		//bitlength of message appended by 0b00000000 and appended until newLength congruent 56 % 64
+		//bitlength of input appended by 0b00000000 and appended until newLength congruent 56 % 64
 		sizeType secondLen;
 		for (secondLen = len + 1; ((secondLen - 56) % 64) != 0; secondLen++)
 		{
@@ -110,11 +95,11 @@ namespace NOU::NOU_DAT_ALG
 		uint32 d;
 
 		uint32 tmp, tmp1;
-		
+
 		uint32 f, g;
 
 		for (sizeType z = 0; z < bytes.size() / 64; z++)
-		{			
+		{
 			bnp = z * 64;
 			for (sizeType i = 0; i < 16; i++)
 			{
@@ -140,7 +125,7 @@ namespace NOU::NOU_DAT_ALG
 					g = (5 * i + 1) % 16;
 				} else if (32 <= i && i < 48)
 				{
-					f = NOU_XOR(NOU_XOR(b,c), d);
+					f = NOU_XOR(NOU_XOR(b, c), d);
 					g = (3 * i + 5) % 16;
 				} else if (48 <= i && i < 64)
 				{
@@ -155,8 +140,8 @@ namespace NOU::NOU_DAT_ALG
 				tmp1 += a;
 				tmp1 += f;
 				tmp1 += sin[i];
-				
-				b =+ leftRotation(tmp1, s[i]);
+
+				b = +leftRotation(tmp1, s[i]);
 				a = tmp;
 			}
 
@@ -167,14 +152,14 @@ namespace NOU::NOU_DAT_ALG
 
 
 
-			
+
 		}
 
 		MD5Hash ret;
 
-		*reinterpret_cast<uint32*>(ret.data() + 0 ) = a0;
-		*reinterpret_cast<uint32*>(ret.data() + 4 ) = b0;
-		*reinterpret_cast<uint32*>(ret.data() + 8 ) = c0;
+		*reinterpret_cast<uint32*>(ret.data() + 0) = a0;
+		*reinterpret_cast<uint32*>(ret.data() + 4) = b0;
+		*reinterpret_cast<uint32*>(ret.data() + 8) = c0;
 		*reinterpret_cast<uint32*>(ret.data() + 12) = d0;
 		return ret;
 	}
