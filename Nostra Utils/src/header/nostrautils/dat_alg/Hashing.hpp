@@ -1,6 +1,5 @@
 #ifndef NOU_DAT_ALG_HASHFUNCTION_HPP
-#define    NOU_DAT_ALG_HASHFUNCTION_HPP
-
+#define	NOU_DAT_ALG_HASHFUNCTION_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
@@ -34,7 +33,7 @@ namespace NOU::NOU_DAT_ALG
 
 	/**
 	\param inputObject the input that will be hashed.
-	\param max 0 < output < max. defaults to the biggest number available for ease of use
+	\param max 0 <= output < max.
 
 	\brief A Function to hash an Object for a HashTable
 	*/
@@ -42,13 +41,17 @@ namespace NOU::NOU_DAT_ALG
 	template <typename T>
 	NOU_FUNC constexpr sizeType hashObj(T* inputObject, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max())) {
 		NOU_COND_PUSH_ERROR((max < 1), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Value max cannot be below 1");
-		sizeType h;
-		T** address;
+		//T* p = &static_cast<T>(inputObject);
+		
+		const NOU::byte *bytes = reinterpret_cast<const byte*>(inputObject);
+		NOU::sizeType h = 0;
 
-		address = &inputObject;
-		h = reinterpret_cast<sizeType>(*address);
+		for (NOU::sizeType i = 0; i < sizeof(T); i++)
+		{
+			h += bytes[i];
+		}
 
-		return h % max;
+		return hashValue(h, max);
 	};
 
 
