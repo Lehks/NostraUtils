@@ -22,12 +22,15 @@ namespace NOU::NOU_THREAD
 	}
 
 	AbstractAsyncTaskResult::AbstractAsyncTaskResult(AbstractTask *task) :
-		m_executionTask(makeTask(&executeTask, reinterpret_cast<AbstractTask*>(&m_task), this, 
-			&m_executionMutex)),
 		m_task(task),
 		m_state(State::NOT_STARTED),
-		m_taskInformation(getThreadManager().pushTask(&m_executionTask, 0))
+		m_executionTask(makeTask(&executeTask, m_task, this, &m_executionMutex))
 	{}
+
+	void AbstractAsyncTaskResult::push()
+	{
+		getThreadManager().pushTask(&m_executionTask, 0);
+	}
 
 	typename AbstractAsyncTaskResult::State AbstractAsyncTaskResult::getState() const
 	{

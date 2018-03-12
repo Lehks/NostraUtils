@@ -30,15 +30,17 @@ namespace NOU::NOU_THREAD
 
 		Mutex          m_executionMutex;
 		Mutex          m_stateMutex;
-		ExecutionTask  m_executionTask;
 		AbstractTask  *m_task;
-		TaskInfo       m_taskInformation;
 		State          m_state;
+		ExecutionTask  m_executionTask;
+		TaskInfo       m_taskInformation;
 		
 		void setState(State state);
 
 	protected:
 		AbstractAsyncTaskResult(AbstractTask *task);
+
+		void push();
 
 	public:
 		State getState() const;
@@ -95,12 +97,13 @@ namespace NOU::NOU_THREAD
 	AsyncTaskResult<R, I, ARGS...>::AsyncTaskResult(Task &&task) :
 		AbstractAsyncTaskResult(&m_task),
 		m_task(NOU_CORE::move(task))
-	{}
+	{
+		push();
+	}
 
 	template<typename R, typename I, typename... ARGS>
 	AsyncTaskResult<R, I, ARGS...>::AsyncTaskResult(I &&invocable, ARGS&&... args) :
-		AbstractAsyncTaskResult(&m_task),
-		m_task(makeTask(NOU_CORE::forward<I>(invocable), NOU_CORE::forward<ARGS>(args)...))
+		AsyncTaskResult(makeTask(NOU_CORE::forward<I>(invocable), NOU_CORE::forward<ARGS>(args)...))
 	{}
 
 	template<typename R, typename I, typename... ARGS>
@@ -117,12 +120,13 @@ namespace NOU::NOU_THREAD
 	AsyncTaskResult<void, I, ARGS...>::AsyncTaskResult(Task &&task) :
 		AbstractAsyncTaskResult(&m_task),
 		m_task(NOU_CORE::move(task))
-	{}
+	{
+		push();
+	}
 
 	template<typename I, typename... ARGS>
 	AsyncTaskResult<void, I, ARGS...>::AsyncTaskResult(I &&invocable, ARGS&&... args) :
-		AbstractAsyncTaskResult(&m_task),
-		m_task(makeTask(NOU_CORE::forward<I>(invocable), NOU_CORE::forward<ARGS>(args)...))
+		AsyncTaskResult(makeTask(NOU_CORE::forward<I>(invocable), NOU_CORE::forward<ARGS>(args)...))
 	{}
 
 	template<typename I, typename... ARGS>

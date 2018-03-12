@@ -70,9 +70,10 @@ int func2()
 	return 1;
 }
 
+template boolean Task<void, void(*)()>::execute();
+
 int main()
 {
-
 #if 1
 	std::cout << "Main thread: " << std::this_thread::get_id() << std::endl;
 
@@ -183,8 +184,19 @@ int main()
 
 #endif
 
-	AsyncTaskResult<int, decltype(&func2)> result0(&func2);
-	AsyncTaskResult<void, decltype(&func)> result1(&func);
+	auto task0 = makeTask(&func2);
+	auto task1 = makeTask(&func);
+
+	AsyncTaskResult<int, decltype(&func2)> result0(move(task0));
+	AsyncTaskResult<void, decltype(&func)> result1(move(task1));
+
+	std::cout << result0.getResult() << std::endl;
+
+	for (int i = 0; i < 1000000; i++)
+	{
+		i++;
+		i--;
+	}
 
 	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
 		std::cout << NOU_CORE::getErrorHandler().popError().getName() << std::endl;

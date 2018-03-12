@@ -67,6 +67,8 @@ namespace NOU::NOU_THREAD
 		State m_state;
 
 	public:
+		AbstractTask();
+
 		virtual ~AbstractTask() = default;
 
 		/**

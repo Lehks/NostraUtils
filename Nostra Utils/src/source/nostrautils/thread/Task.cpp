@@ -2,6 +2,10 @@
 
 namespace NOU::NOU_THREAD
 {
+	AbstractTask::AbstractTask() :
+		m_state(State::NOT_STARTED)
+	{}
+
 	void AbstractTask::reset()
 	{
 		if (m_state == State::DONE)
