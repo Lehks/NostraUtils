@@ -3,7 +3,7 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\dat_alg\ContainerInterfaces.hpp"
-#include "nostrautils\dat_alg\Bubblesort.hpp"
+#include "nostrautils\dat_alg\Quicksort.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
 
@@ -822,14 +822,14 @@ namespace NOU::NOU_DAT_ALG
 	void Vector<T>::sort()
 	{
 		///\todo implementing a "real" sorting alg.
-		bubbleSort(m_data, m_size);
+		qsort(m_data, m_size);
 	}
 
 	template<typename T>
 	void Vector<T>::sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
 		///\todo implementing a "real" sorting alg.
-		bubbleSortComp(m_data, m_size, comp);
+		qsort(m_data, m_size, comp);
 	}
 
 	template<typename T>

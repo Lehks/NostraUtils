@@ -108,5 +108,8 @@
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\source\nostrautils\dat_alg\Random.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

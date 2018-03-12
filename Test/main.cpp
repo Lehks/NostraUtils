@@ -4,14 +4,33 @@
 #include "nostrautils\dat_alg\Random.hpp"   
 #include <iostream>
 
+#include <stdlib.h>
+#include <time.h>
+#include <ctime>
 
+NOU::uint64 values[11] = {0};
 
 int main()
-{ 
-	double a; 
-	a = NOU::NOU_DAT_ALG::randTwo(50,100,66); 
-	std::cout << a << std::endl; 
+{
+	NOU::NOU_DAT_ALG::Random r;
+
+#if 1
+	for (int i = 0; i < 10000; i++)
+		values[r.rand(0, 10)]++;
+
+	for (int i = 0; i < 11; i++)
+		std::cout << (i) << " " << values[i] << std::endl;
+#endif
+
+#if 0
+	for (int i = 0; i < 1000; i++)
+		if (NOU::uint64 ra = r.rand(1, 10); ra % 2 == 1)
+			std::cout << "Ungerade: " << ra << std::endl;
+#endif
+
+
 	
 
+	
 	system("Pause"); 
 }

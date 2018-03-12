@@ -17,6 +17,7 @@
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
 #include "nostrautils\dat_alg\Quicksort.hpp"
+#include "nostrautils\dat_alg\Random.hpp"
 
 
 #include "DebugClass.hpp"
@@ -930,6 +931,17 @@ namespace UnitTests
 
 
 			
+		}
+
+		TEST_METHOD(Random)
+		{
+			NOU::NOU_DAT_ALG::Random random;
+
+			for (NOU::uint32 i = 0; i < 100; i++)
+			{
+				typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(0, 10);
+				Assert::IsTrue(rand >= 0 && rand <= 10);
+			}
 		}
 	};
 }

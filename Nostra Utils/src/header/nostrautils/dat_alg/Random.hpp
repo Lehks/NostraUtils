@@ -5,7 +5,9 @@
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include <iostream>
+#include <ctime>
 
+#include <cstdlib>
 
 /** \file Random.hpp
 \author  Mahan Karimi
@@ -15,53 +17,41 @@
 */
 namespace NOU::NOU_DAT_ALG
 {
-	/*
-	\ Const for the random function
-	*/
-	static const double A = 0.001342;
-	static const double C = 0.00025194;
-	static const double m = 1.0;
-
-	/**
-	\This function generates you a random number
-	\return a random number
-	*/
-
-	template <typename T >
-	T rand();
-
-	/**
-	\ This function gives you a random number beetween an interval from a to b
-	\ tparam a , a is the start number from your interval
-	\ tparam b , b is the end number from your interval
-	\ tparam n , n must be choiced so that n is in your interval for example  a = 5 , b = 10 and for n must valid {a <= n && n >= b }
-	\ return a random number from your interval
-	*/
-	
-	sizeType randTwo(sizeType a, sizeType b, sizeType n);
-
-
-	
-	sizeType rand()
+	class NOU_CLASS Random
 	{
-		sizeType prev = 0;
-		prev = A * prev + fmod(C, m);
-		return prev;
-	}
+	public:
+		using Seed = uint64;
+		using Value = uint64;
 
-	
-	sizeType randTwo(sizeType a, sizeType b, sizeType n)
-	{
+		constexpr static Seed USE_TIME_AS_SEED = -1;
 
-		if (a <= n && n >= b)
-			n = rand();
+	private:
+		Seed m_seed;
 
-		return n;
-	}
+	public:
+		Random(Seed seed = USE_TIME_AS_SEED);
 
+		/**
+		\brief A function that sets a seed for the random function
+		\param s {s for seed }
+		*/
+		void setSeed(Seed seed);
 
+		/**
+		\brief A function that generates you a random function
+		\return A random number in the interval \f$\left[0, MAX_INT\right[\f$ with MAX_INT being the maximum 
+		        value of a 64 bit unsigned integer.
+		*/
+		Value rand();
 
-
+		/**
+		\brief A function that generates you a random number in an interval.
+		\param a Where you interval begins (this value is included in the interval)
+		\param b Where you interval ends (this value is included in the interval)
+		\return A random number in the interval \f$\left[a, b\right[\f$.
+		*/
+		Value rand(Value a, Value b);
+	};
 
 }
 #endif
