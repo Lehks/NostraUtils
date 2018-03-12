@@ -11,7 +11,7 @@ int main()
 {
 	const char *msg = "Text";
 
-	NOU::NOU_DAT_ALG::md5(reinterpret_cast<const NOU::byte*>(msg));
+	NOU::NOU_DAT_ALG::md5(reinterpret_cast<const NOU::byte*>(msg), NOU::NOU_DAT_ALG::stringlen<char>(msg));
 
 	system("pause");
 }

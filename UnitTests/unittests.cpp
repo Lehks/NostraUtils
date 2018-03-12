@@ -1469,9 +1469,9 @@ namespace UnitTests
 			NOU::char8 str5[] = "";
 
 
-			NOU::NOU_DAT_ALG::MD5Hash hash0 = NOU::NOU_DAT_ALG::md5(reinterpret_cast<NOU::byte*>(str3));
-			NOU::NOU_DAT_ALG::MD5Hash hash1 = NOU::NOU_DAT_ALG::md5(reinterpret_cast<NOU::byte*>(str4));
-			NOU::NOU_DAT_ALG::MD5Hash hash2 = NOU::NOU_DAT_ALG::md5(reinterpret_cast<NOU::byte*>(str5));
+			NOU::NOU_DAT_ALG::MD5Hash hash0 = NOU::NOU_DAT_ALG::md5(reinterpret_cast<NOU::byte*>(str3), NOU::NOU_DAT_ALG::stringlen<NOU::char8>(str3));
+			NOU::NOU_DAT_ALG::MD5Hash hash1 = NOU::NOU_DAT_ALG::md5(reinterpret_cast<NOU::byte*>(str4), NOU::NOU_DAT_ALG::stringlen<NOU::char8>(str4));
+			NOU::NOU_DAT_ALG::MD5Hash hash2 = NOU::NOU_DAT_ALG::md5(reinterpret_cast<NOU::byte*>(str5), NOU::NOU_DAT_ALG::stringlen<NOU::char8>(str5));
 
 			NOU::int32 pair0, pair1, pair2;
 			pair0 = 0;  // hash0 == hash1
