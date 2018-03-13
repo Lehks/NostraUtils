@@ -1489,37 +1489,5 @@ namespace UnitTests
 			Assert::IsTrue(pair2 < 16);
 
 		}
-
-		TEST_METHOD(HashMap) 
-		{
-			/*
-			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
-			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
-			NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
-			NOU::boolean b;
-
-			Assert::AreEqual(hm.isEmpty(), true);
-
-			for (NOU::sizeType i = 0; i < str.size(); i++) {
-				b = hm.map(str.at(i), 1);
-			}
-
-			Assert::AreEqual(hm.isEmpty(), false);
-
-			for (int i = 0; i < str.size(); i++) {
-				Assert::AreEqual(hm.get(str.at(i)), 1);
-			}
-			NOU::char8 k = 'h';
-
-			NOU::int32 count = hm.remove(k);
-			Assert::AreEqual(1, count);
-
-
-			testInt = 42;
-			test = NOU::NOU_DAT_ALG::hashObj(&testInt);
-			testInt = 9234978;
-			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt));
-			*/
-		}
 	};
 }

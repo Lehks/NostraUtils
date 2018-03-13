@@ -14,7 +14,7 @@
 \author  Leslie Marxen
 \since   0.0.1
 \version 0.0.1
-\brief   This file provides a Hashfunction implementation.
+\brief   This file provides some Hashfunction implementations.
 */
 
 namespace NOU::NOU_DAT_ALG
@@ -86,13 +86,40 @@ namespace NOU::NOU_DAT_ALG
 	using MD5Hash = Hash<16>;
 
 	/**
-	\param input Data that will be hased
+	\param input beginning of a byte Array
+	\param size length of the given Byte Array
 
 	\return Hashed input as a 128bit byte Array
 	\brief Hashes a given unput according to the md5 hash
 	*/
 
 	NOU_FUNC MD5Hash md5(const NOU::byte *input, sizeType size);
+
+	/**
+	\param input a StringView
+
+	\return Hashed input as a 128bit byte Array
+	\brief Hashes a given unput according to the md5 hash
+	*/
+
+	template<typename T>
+	NOU_FUNC MD5Hash md5(NOU_DAT_ALG::StringView<T> *str)
+	{
+		return md5(str->rawStr(), NOU::NOU_DAT_ALG::stringlen(str->rawStr()));
+	}
+
+	/**
+	\param input a String
+
+	\return Hashed input as a 128bit byte Array
+	\brief Hashes a given unput according to the md5 hash
+	*/
+
+	template<typename T>
+	NOU_FUNC MD5Hash md5(NOU_DAT_ALG::String<T> *str)
+	{
+		return md5(str->rawStr(), NOU::NOU_DAT_ALG::stringlen(str->rawStr()));
+	}
 
 	/**
 	\param input an input byte
