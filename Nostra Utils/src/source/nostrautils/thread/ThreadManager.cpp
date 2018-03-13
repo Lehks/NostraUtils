@@ -303,7 +303,7 @@ namespace NOU::NOU_THREAD
 		return m_threads->capacity();
 	}
 
-	sizeType ThreadManager::currentyAvailableThreads()
+	sizeType ThreadManager::currentlyAvailableThreads()
 	{
 		Lock lock(m_threadPoolAccessMutex);
 
@@ -318,5 +318,28 @@ namespace NOU::NOU_THREAD
 	NOU_CORE::ErrorHandler& ThreadManager::getErrorHandlerByThreadId(ThreadWrapper::ID id)
 	{
 		return *(m_handlersMap->get(id));
+	}
+
+	sizeType ThreadManager::currentlyPreparedThreads()
+	{
+		Lock lock(m_threadPoolAccessMutex);
+
+		return m_threads->remainingObjects();
+	}
+
+	sizeType ThreadManager::prepareThread(sizeType count)
+	{
+		Lock lock(m_threadPoolAccessMutex);
+
+		sizeType ret = 0; //use ret as a counter of how many threads have been created
+
+		for (; ret < count; ret++)
+		{
+			//try to create a thread. if it fails, break the loop and return the amount of created threads
+			if (!addThread()) 
+				break;
+		}
+
+		return ret;
 	}
 }

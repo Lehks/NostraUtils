@@ -406,6 +406,13 @@ namespace NOU::NOU_THREAD
 
 		\warning 
 		This method is supposed to be used a sort of a "back end" for functionality (like AsyncTaskResult).
+
+		\note
+		If there is no thread available at the point of calling this method and it is possible for the thread
+		manager to create another thread, then the thread manager will do so. However, creating a thread is
+		not light-weight (there have several dynamic allocations to be done) and it should not be done in a 
+		time critical context. To manually create more threads than the thread manager would on its own, 
+		prepareThread() can be used.
 		*/	
 		TaskInformation pushTask(internal::AbstractTask *task, Priority priority, 
 			NOU_CORE::ErrorHandler *handler = nullptr); 
@@ -428,16 +435,29 @@ namespace NOU::NOU_THREAD
 		sizeType maximumAvailableThreads() const;
 
 		/**
-		\return The amount of threads that are currently idling.
+		\return The amount of threads that are currently idling (this includes threads that were not created 
+		        yet, but that could be created if needed).
 
-		\brief Returns the amount of threads that are currently idling.
+		\brief Returns the amount of threads that are currently idling (this includes threads that were not 
+		       created yet, but that could be created if needed).
 
 		\note
 		The returned value can be viewed as more of a hint, since after the method has returned, another 
 		thread might e.g. finish execution and change the value that is returned by the method.
 		*/
 		//no need to be const, thread manger is always obtainable as non-const reference
-		sizeType currentyAvailableThreads(); 
+		sizeType currentlyAvailableThreads(); 
+
+		/**
+		\return The amount of threads that are prepared and idling.
+
+		\brief Returns the amount of threads that are prepared and idling.
+
+		\note 
+		The returned value can be viewed as more of a hint, since after the method has returned, another 
+		thread might prepare an additional thread.
+		*/
+		sizeType currentlyPreparedThreads();
 
 		/**
 		\param id The id of the thread to get the handler of.
@@ -446,6 +466,20 @@ namespace NOU::NOU_THREAD
 		\brief Returns the error handler of the thread with the passed ID.
 		*/
 		NOU_CORE::ErrorHandler& getErrorHandlerByThreadId(ThreadWrapper::ID id);
+
+		/**
+		\param count The amount of threads to prepare.
+
+		\return The amount of threads that were actually prepared.
+
+		\brief Forces the thread manager to try and create new threads that will wait for tasks to execute.
+
+		\details
+		Forces the thread manager to try and create new threads that will wait for tasks to execute. This is
+		useful if, e.g. multiple tasks should be executed as fast as possible. In that case, it would be 
+		possible to prepare the required threads before the time critical execution starts.
+		*/
+		sizeType prepareThread(sizeType count = 1);
 	};
 }
 

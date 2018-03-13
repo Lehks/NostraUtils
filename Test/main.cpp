@@ -6,6 +6,7 @@
 #include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\thread\ThreadManager.hpp"
 #include "nostrautils\thread\AsyncTaskResult.hpp"
+#include "nostrautils\dat_alg\String.hpp"
 #include <iostream>
 
 using namespace NOU;
@@ -34,14 +35,7 @@ NOU_DEFINE_PAIR(P, A, a, A, b)
 
 void func()
 {
-	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::INVALID_OBJECT, "Test");
-	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::BAD_DEALLOCATION, "Test2");
-
 	std::cout << "Func" << std::endl;
-
-	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
-		std::cout << std::this_thread::get_id() << " " << NOU_CORE::getErrorHandler().popError().getName() << std::endl;
-
 }
 
 uint8 values[100] = {0};
@@ -73,14 +67,8 @@ void func1(int32 i)
 
 int func2()
 {
-	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::INVALID_OBJECT, "Test");
-	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::BAD_DEALLOCATION, "Test2");
-
 	std::cout << "Func2" << std::endl;
 
-	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
-		std::cout << std::this_thread::get_id() << " " << NOU_CORE::getErrorHandler().popError().getName() << std::endl;
-	
 	return 1;
 }
 
@@ -196,7 +184,14 @@ int main()
 
 #endif
 
-	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::INVALID_STATE, "Test3");
+#define PRINT(var) NOU_STRINGIFY(var) << ": " << var
+
+	std::cout << PRINT(tm.currentlyPreparedThreads()) << std::endl;
+
+	sizeType createdThreads = tm.prepareThread(4);
+
+	std::cout << PRINT(createdThreads) << std::endl;
+	std::cout << PRINT(tm.currentlyPreparedThreads()) << std::endl;
 
 	auto task0 = makeTask(&func2);
 	auto task1 = makeTask(&func);
@@ -205,8 +200,6 @@ int main()
 	AsyncTaskResult<void, decltype(&func)> result1(move(task1));
 
 	typename AsyncTaskResult<int, decltype(&func2)>::State s = result0.getState();
-
-	NOU_PUSH_ERROR(getErrorHandler(), ErrorCodes::INDEX_OUT_OF_BOUNDS, "Test4");
 
 	while (NOU_CORE::getErrorHandler().getErrorCount() != 0)
 		std::cout << std::this_thread::get_id() << " " << NOU_CORE::getErrorHandler().popError().getName() << std::endl;
