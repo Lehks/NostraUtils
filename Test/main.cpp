@@ -7,6 +7,7 @@
 #include "nostrautils\thread\ThreadManager.hpp"
 #include "nostrautils\thread\AsyncTaskResult.hpp"
 #include "nostrautils\dat_alg\String.hpp"
+#include "nostrautils\thread\TaskQueue.hpp"
 #include <iostream>
 
 using namespace NOU;
@@ -29,6 +30,16 @@ public:
 	A(int i) : i(i) {}
 
 	int get() const { return i; }
+
+	A add(A&& a)
+	{
+		return A(i + a.i);
+	}
+
+	A operator + (const A& a)
+	{
+		return A(i + a.i);
+	}
 };
 
 NOU_DEFINE_PAIR(P, A, a, A, b)
@@ -76,12 +87,10 @@ template boolean Task<void, void(*)()>::execute();
 
 int main()
 {
-#if 1
+#if 0
 	NOU_CORE::ErrorHandler::setCallback(callback);
 	
 	ThreadManager& tm = ThreadManager::getInstance();
-
-#if 0
 
 	auto task1  = makeTask(&func1, 1);
 	auto task2  = makeTask(&func1, 2);
@@ -182,7 +191,6 @@ int main()
 
 	std::cout << "Done" << std::endl;
 
-#endif
 
 #define PRINT(var) NOU_STRINGIFY(var) << ": " << var
 
@@ -205,6 +213,20 @@ int main()
 		std::cout << std::this_thread::get_id() << " " << NOU_CORE::getErrorHandler().popError().getName() << std::endl;
 	std::cin.get();
 #endif
+
+	A a1(1);
+	A a2(2);
+
+	A a3 = addAccum(move(a1), move(a2));
+
+	std::cout << a3.i << std::endl;
+
+	auto task1 = makeTask(&func1, 1);
+
+	TaskQueue<int, decltype(&func2), AccumFunc<int>> tq;
+	tq.pushTask(makeTask(&func2));
+
+	std::cin.get();
 }
 
 //&(this->m_handlers.m_ptr->m_data.m_data->m_data.m_errors.m_ptr->m_allocator)
