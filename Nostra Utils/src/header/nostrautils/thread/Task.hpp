@@ -34,43 +34,10 @@ namespace NOU::NOU_THREAD
 		\details
 		A parent class of the Task class that does not take or need any template types. This abstract task
 		however, can only execute the stored functionality and not access the results.
-
-		By default, every task can only be executed once. If a task should be executed multiple times, it 
-		needs to be reset first.
 		*/
 		class NOU_CLASS AbstractTask
 		{
 		public:
-			/**
-			\brief The different states of a task.
-			*/
-			enum class State
-			{
-				/**
-				\brief The task has not been started yet, or it has been reset.
-				*/
-				NOT_STARTED,
-
-				/**
-				\brief The task is currently being executed.
-				*/
-				RUNNING,
-
-				/**
-				\brief The task is done running.
-				*/
-				DONE
-			};
-
-		protected:
-			/**
-			\brief The current state.
-			*/
-			State m_state;
-
-		public:
-			AbstractTask();
-
 			virtual ~AbstractTask() = default;
 
 			/**
@@ -78,20 +45,7 @@ namespace NOU::NOU_THREAD
 
 			\brief Executes the stored functionality, if it was not executed yet.
 			*/
-			virtual boolean execute() = 0;
-
-			/**
-			\brief Resets the task from the DONE state to NOT_STARTED. If the task is currently being 
-			executed, this will do nothing.
-			*/
-			virtual void reset();
-
-			/**
-			\return The current state.
-
-			\brief Returns the current state.
-			*/
-			virtual State getState() const;
+			virtual void execute() = 0;
 		};
 	}
 
@@ -167,12 +121,12 @@ namespace NOU::NOU_THREAD
 		/**
 		\return True, if the invocable was actually executed, false if not.
 
-		\brief Executes the passed invocable, but only if the state is AbstractTask::State::NOT_STARTED.
+		\brief Executes the passed invocable.
 		*/
-		virtual boolean execute() override;
+		virtual void execute() override;
 
 		/**
-		\return The result of the invocable.
+		\return The result of the execution of the invocable .
 
 		\brief Returns the result of the invocable. 
 
@@ -183,7 +137,7 @@ namespace NOU::NOU_THREAD
 		ReturnType& getResult();
 
 		/**
-		\return The result of the invocable.
+		\return The result of the execution of the invocable .
 
 		\brief Returns the result of the invocable.
 
@@ -192,6 +146,19 @@ namespace NOU::NOU_THREAD
 		once. If the result is not valid, ErrorCodes::INVALID_OBJECT will be pushed to the error handler.
 		*/
 		const ReturnType& getResult() const;
+
+		/**
+		\returns The result of the execution of the invocable as an r-value.
+
+		\brief Returns the result of the execution of the invocable as an r-value.
+
+		\details
+		Returns the result of the execution of the invocable as an r-value. This result is only valid if 
+		execute() has at least been called once. If the result is not valid, ErrorCodes::INVALID_OBJECT will 
+		be pushed to the error handler.
+
+		*/
+		ReturnType&& moveResult();
 	};
 
 	///\cond
@@ -212,9 +179,11 @@ namespace NOU::NOU_THREAD
 	public:
 		explicit Task(InvocableType&& invocable, ARGS&&... args);
 
-		virtual boolean execute() override;
+		virtual void execute() override;
 
 		ReturnType getResult() const;
+
+		ReturnType moveResult();
 	};
 	///\endcond
 
@@ -248,17 +217,9 @@ namespace NOU::NOU_THREAD
 	{}
 
 	template<typename R, typename I, typename... ARGS>
-	boolean Task<R, I, ARGS...>::execute()
+	void Task<R, I, ARGS...>::execute()
 	{
-		if (m_state == State::NOT_STARTED)
-		{
-			m_state = State::RUNNING;
-			m_result = std::apply(m_invocable, m_args);
-			m_state = State::DONE;
-			return true;
-		}
-
-		return false;
+		m_result = std::apply(m_invocable, m_args);
 	}
 
 	template<typename R, typename I, typename... ARGS>
@@ -273,6 +234,12 @@ namespace NOU::NOU_THREAD
 		return *m_result;
 	}
 
+	template<typename R, typename I, typename... ARGS>
+	typename Task<R, I, ARGS...>::ReturnType&& Task<R, I, ARGS...>::moveResult()
+	{
+		return NOU_CORE::move(*m_result);
+	}
+
 
 
 	template<typename I, typename... ARGS>
@@ -282,21 +249,17 @@ namespace NOU::NOU_THREAD
 	{}
 
 	template<typename I, typename... ARGS>
-	boolean Task<void, I, ARGS...>::execute()
+	void Task<void, I, ARGS...>::execute()
 	{
-		if (m_state == State::NOT_STARTED)
-		{
-			m_state = State::RUNNING;
-			std::apply(m_invocable, m_args);
-			m_state = State::DONE;
-			return true;
-		}
-
-		return false;
+		std::apply(m_invocable, m_args);
 	}
 
 	template<typename I, typename... ARGS>
 	typename Task<void, I, ARGS...>::ReturnType Task<void, I, ARGS...>::getResult() const
+	{}
+
+	template<typename I, typename... ARGS>
+	typename Task<void, I, ARGS...>::ReturnType Task<void, I, ARGS...>::moveResult()
 	{}
 
 

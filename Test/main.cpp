@@ -18,7 +18,7 @@ using namespace NOU_MEM_MNGT;
 
 void callback(const ErrorLocation& el)
 {
-//	__debugbreak();
+	__debugbreak();
 }
 
 class A
@@ -76,14 +76,18 @@ void func1(int32 i)
 	values[i]++;
 }
 
-int func2()
+int func2(int i)
 {
-	std::cout << "Func2" << std::endl;
+	std::cout << "Func2 " << i << " " << std::this_thread::get_id() << std::endl;
 
-	return 1;
+	//for (int i = 0; i < 1'000'000'0; i++)
+	//{
+	//	i++;
+	//	i--;
+	//}
+
+	return i;
 }
-
-template boolean Task<void, void(*)()>::execute();
 
 int main()
 {
@@ -214,17 +218,51 @@ int main()
 	std::cin.get();
 #endif
 
-	A a1(1);
-	A a2(2);
-
-	A a3 = addAccum(move(a1), move(a2));
-
-	std::cout << a3.i << std::endl;
+	ErrorHandler::setCallback(callback);
 
 	auto task1 = makeTask(&func1, 1);
+	
+	TaskQueue<int, decltype(&func2), TaskQueueAccumulators::FunctionPtr<int>, int> tq(&TaskQueueAccumulators::addition<int>);
+	
+	tq.pushTask(makeTask(&func2, 1));
+	tq.pushTask(makeTask(&func2, 2));
+	tq.pushTask(makeTask(&func2, 3));
+	tq.pushTask(makeTask(&func2, 4));
+	tq.pushTask(makeTask(&func2, 5));
+	tq.pushTask(makeTask(&func2, 6));
+	tq.pushTask(makeTask(&func2, 7));
+	tq.pushTask(makeTask(&func2, 8));
+	tq.pushTask(makeTask(&func2, 9));
+	tq.pushTask(makeTask(&func2, 10));
+	tq.pushTask(makeTask(&func2, 11));
+	tq.pushTask(makeTask(&func2, 12));
+	tq.pushTask(makeTask(&func2, 13));
+	tq.pushTask(makeTask(&func2, 14));
+	tq.pushTask(makeTask(&func2, 15));
+	tq.pushTask(makeTask(&func2, 16));
+	tq.pushTask(makeTask(&func2, 17));
+	tq.pushTask(makeTask(&func2, 18));
+	tq.pushTask(makeTask(&func2, 19));
+	tq.pushTask(makeTask(&func2, 20));
+	tq.pushTask(makeTask(&func2, 21));
+	tq.pushTask(makeTask(&func2, 22));
+	tq.pushTask(makeTask(&func2, 23));
+	tq.pushTask(makeTask(&func2, 24));
+	tq.pushTask(makeTask(&func2, 25));
+	tq.pushTask(makeTask(&func2, 26));
+	tq.pushTask(makeTask(&func2, 27));
+	tq.pushTask(makeTask(&func2, 28));
+	tq.pushTask(makeTask(&func2, 29));
 
-	TaskQueue<int, decltype(&func2), AccumFunc<int>> tq;
-	tq.pushTask(makeTask(&func2));
+	for (int i = 0; i < 1'000'000'0; i++)
+	{
+		i++;
+		i--;
+	}
+
+	int res = tq.getResult();
+
+	std::cout << "Result " << res << std::endl;
 
 	std::cin.get();
 }

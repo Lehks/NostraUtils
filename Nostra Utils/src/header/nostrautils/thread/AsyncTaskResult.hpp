@@ -275,7 +275,7 @@ namespace NOU::NOU_THREAD
 	};
 
 
-
+	///\cond
 	template<typename I, typename... ARGS>
 	class NOU_CLASS AsyncTaskResult<void, I, ARGS...> : public internal::AbstractAsyncTaskResult
 	{
@@ -295,7 +295,7 @@ namespace NOU::NOU_THREAD
 		AsyncTaskResult(const AsyncTaskResult&) = delete;
 		AsyncTaskResult(AsyncTaskResult&&) = delete;
 	};
-
+	///\endcond
 
 
 	template<typename R, typename I, typename... ARGS>

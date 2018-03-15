@@ -346,7 +346,6 @@
     <ClCompile Include="src\source\nostrautils\thread\ConditionVariable.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\Lock.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\Mutex.cpp" />
-    <ClCompile Include="src\source\nostrautils\thread\Task.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\ThreadManager.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\ThreadWrapper.cpp" />
   </ItemGroup>

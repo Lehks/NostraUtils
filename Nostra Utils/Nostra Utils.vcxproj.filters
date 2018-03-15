@@ -159,9 +159,6 @@
     <ClCompile Include="src\source\nostrautils\thread\Lock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\source\nostrautils\thread\Task.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\source\nostrautils\thread\ConditionVariable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
