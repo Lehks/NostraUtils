@@ -257,9 +257,9 @@ namespace NOU::NOU_THREAD
 
 		Implementation detail:
 		It is not actually this method that will change the return type, in fact there is an entire 
-		specialization for invocables that return \p void. This invocable is not documented in this Doxygen
-		documentation but it behaves exactly like this class does (with the only difference being the return
-		type of this function).
+		specialization for invocables that return \p void. This specialization is not documented in this 
+		Doxygen documentation but it behaves exactly like this class does (with the only difference being the 
+		return type of this function).
 		*/
 		const R& getResult();
 

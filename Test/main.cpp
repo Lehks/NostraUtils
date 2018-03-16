@@ -89,6 +89,28 @@ int func2(int i)
 	return i;
 }
 
+void func3(int i)
+{
+	std::cout << "Func3 " << i << " " << std::this_thread::get_id() << std::endl;
+
+	//for (int i = 0; i < 1'000'000'0; i++)
+	//{
+	//	i++;
+	//	i--;
+	//}
+}
+
+void func4(int i)
+{
+	std::cout << "Func4 " << i << " " << std::this_thread::get_id() << std::endl;
+
+	//for (int i = 0; i < 1'000'000'0; i++)
+	//{
+	//	i++;
+	//	i--;
+	//}
+}
+
 int main()
 {
 #if 0
@@ -222,37 +244,37 @@ int main()
 
 	auto task1 = makeTask(&func1, 1);
 	
-	TaskQueue<int, decltype(&func2), TaskQueueAccumulators::FunctionPtr<int>, int> tq(&TaskQueueAccumulators::addition<int>);
+	TaskQueue<void, decltype(&func3), TaskQueueAccumulators::FunctionPtr<int>, int> tq(3);
 	
-	tq.pushTask(makeTask(&func2, 1));
-	tq.pushTask(makeTask(&func2, 2));
-	tq.pushTask(makeTask(&func2, 3));
-	tq.pushTask(makeTask(&func2, 4));
-	tq.pushTask(makeTask(&func2, 5));
-	tq.pushTask(makeTask(&func2, 6));
-	tq.pushTask(makeTask(&func2, 7));
-	tq.pushTask(makeTask(&func2, 8));
-	tq.pushTask(makeTask(&func2, 9));
-	tq.pushTask(makeTask(&func2, 10));
-	tq.pushTask(makeTask(&func2, 11));
-	tq.pushTask(makeTask(&func2, 12));
-	tq.pushTask(makeTask(&func2, 13));
-	tq.pushTask(makeTask(&func2, 14));
-	tq.pushTask(makeTask(&func2, 15));
-	tq.pushTask(makeTask(&func2, 16));
-	tq.pushTask(makeTask(&func2, 17));
-	tq.pushTask(makeTask(&func2, 18));
-	tq.pushTask(makeTask(&func2, 19));
-	tq.pushTask(makeTask(&func2, 20));
-	tq.pushTask(makeTask(&func2, 21));
-	tq.pushTask(makeTask(&func2, 22));
-	tq.pushTask(makeTask(&func2, 23));
-	tq.pushTask(makeTask(&func2, 24));
-	tq.pushTask(makeTask(&func2, 25));
-	tq.pushTask(makeTask(&func2, 26));
-	tq.pushTask(makeTask(&func2, 27));
-	tq.pushTask(makeTask(&func2, 28));
-	tq.pushTask(makeTask(&func2, 29));
+	tq.pushTask(makeTask(&func3, 1));
+	tq.pushTask(makeTask(&func3, 2));
+	tq.pushTask(makeTask(&func3, 3));
+	tq.pushTask(makeTask(&func3, 4));
+	tq.pushTask(makeTask(&func3, 5));
+	tq.pushTask(makeTask(&func3, 6));
+	tq.pushTask(makeTask(&func3, 7));
+	tq.pushTask(makeTask(&func3, 8));
+	tq.pushTask(makeTask(&func3, 9));
+	tq.pushTask(makeTask(&func3, 10));
+	tq.pushTask(makeTask(&func3, 11));
+	tq.pushTask(makeTask(&func3, 12));
+	tq.pushTask(makeTask(&func3, 13));
+	tq.pushTask(makeTask(&func3, 14));
+	tq.pushTask(makeTask(&func3, 15));
+	tq.pushTask(makeTask(&func3, 16));
+	tq.pushTask(makeTask(&func3, 17));
+	tq.pushTask(makeTask(&func3, 18));
+	tq.pushTask(makeTask(&func3, 19));
+	tq.pushTask(makeTask(&func3, 20));
+	tq.pushTask(makeTask(&func3, 21));
+	tq.pushTask(makeTask(&func3, 22));
+	tq.pushTask(makeTask(&func3, 23));
+	tq.pushTask(makeTask(&func4, 24));
+	tq.pushTask(makeTask(&func4, 25));
+	tq.pushTask(makeTask(&func4, 26));
+	tq.pushTask(makeTask(&func4, 27));
+	tq.pushTask(makeTask(&func4, 28));
+	tq.pushTask(makeTask(&func4, 29));
 
 	for (int i = 0; i < 1'000'000'0; i++)
 	{
@@ -260,9 +282,7 @@ int main()
 		i--;
 	}
 
-	int res = tq.getResult();
-
-	std::cout << "Result " << res << std::endl;
+	tq.getResult();
 
 	std::cin.get();
 }
