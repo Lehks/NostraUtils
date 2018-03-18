@@ -19,6 +19,7 @@ namespace NOU::NOU_MATH
 			Matrix();
 			Type getValue(uint32 x, uint32 y) const;
 			void setValue(uint32 x, uint32 y, T value) const;
+			Matrix add(const Matrix<R, C, T> &matrix) const;
 	};
 
 	template<uint32 R, uint32 C, typename T>
@@ -73,6 +74,26 @@ namespace NOU::NOU_MATH
 		);
 
 		m_data[y].setCom(x, value);
+	}
+
+
+	template<uint32 R, uint32 C, typename T>
+	Matrix<R, C, T> Matrix<R, C, T>::add(const Matrix<R, C, T> & matrix) const
+	{
+		Matrix<R, C, T> result = Matrix<R, C, T>;
+
+		sizeType i;
+		sizeType j;
+
+		for (i = 0; i < C; i++)
+		{
+			for (j = 0; j < R; j++)
+			{
+				result.setValue(j, i, this->getValue(j, i) + matrix.getValue(j, i));
+			}
+		}
+
+		return result;
 	}
 }
 
