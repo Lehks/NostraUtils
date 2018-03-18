@@ -10,7 +10,7 @@ namespace NOU::NOU_MATH
 	{
 		public:
 			int32 m_cols;
-			Vec3 m_data[];
+			Vector<float32, 3> m_data[];
 
 		public:
 			Matrix3(int32 cols);
