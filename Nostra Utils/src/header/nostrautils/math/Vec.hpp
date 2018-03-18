@@ -140,6 +140,24 @@ namespace NOU::NOU_MATH
 	}
 
 
+	template<uint32 N, typename T>
+	Vec<N, T> Vec<N, T>::cross(const Vec<N, T> & vec) const
+	{
+		Type l[N];
+
+		if (N != 3) {
+			// Todo: Throw Fatal error instead!
+			return Vec<N, T>(l);
+		}
+
+		l[0] = this->getCom(1) * vec->getCom(2) - this->getCom(2) * this->getCom(1);
+		l[1] = this->getCom(2) * vec->getCom(0) - this->getCom(0) * this->getCom(2);
+		l[1] = this->getCom(0) * vec->getCom(1) - this->getCom(1) * this->getCom(0);
+
+		return Vec<N, T>(l);
+	}
+
+
 	/**
 	\param The Vector component to get. 
 
