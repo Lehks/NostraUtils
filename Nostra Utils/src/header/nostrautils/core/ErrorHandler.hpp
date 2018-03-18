@@ -476,6 +476,11 @@ namespace NOU::NOU_CORE
 			INVALID_OBJECT,
 
 			/**
+			\brief The size of two objects did not match.
+			*/
+			SIZE_MISMATCH,
+
+			/**
 			\brief Not an actual error, but always the last element in the enum. The error codes 0 - 
 			LAST_ELEMENT are always reserved for the default error pool.
 			*/
