@@ -17,8 +17,8 @@ namespace NOU::NOU_MATH
 
 		public:
 			Matrix();
-			T getValue(uint32 x, uint32, y);
-			void setValue(uint32 x, uint32 y, T value);
+			Type getValue(uint32 x, uint32 y) const;
+			void setValue(uint32 x, uint32 y, T value) const;
 	};
 
 	template<uint32 R, uint32 C, typename T>
@@ -33,7 +33,7 @@ namespace NOU::NOU_MATH
 
 
 	template<uint32 R, uint32 C, typename T>
-	typename Matrix<R, C, T>::Type Matrix<R, C, T>::getValue(uint32 x, uint32 y)
+	typename Matrix<R, C, T>::Type Matrix<R, C, T>::getValue(uint32 x, uint32 y) const
 	{
 		// Check bounds
 		NOU_COND_PUSH_DBG_ERROR(
@@ -55,7 +55,7 @@ namespace NOU::NOU_MATH
 
 
 	template<uint32 R, uint32 C, typename T>
-	void Matrix<R, C, T>::setValue(uint32 x, uint32 y, T value)
+	void Matrix<R, C, T>::setValue(uint32 x, uint32 y, T value) const
 	{
 		// Check bounds
 		NOU_COND_PUSH_DBG_ERROR(
