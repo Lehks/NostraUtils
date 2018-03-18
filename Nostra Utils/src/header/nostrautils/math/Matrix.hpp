@@ -21,6 +21,7 @@ namespace NOU::NOU_MATH
 			void setValue(uint32 x, uint32 y, T value) const;
 			Matrix add(const Matrix<R, C, T> & matrix) const;
 			Matrix sub(const Matrix<R, C, T> & matrix) const;
+			Matrix transpose() const;
 			uint32 getNumRows() const;
 			uint32 getNumColumns() const;
 	};
@@ -113,6 +114,26 @@ namespace NOU::NOU_MATH
 			for (j = 0; j < R; j++)
 			{
 				result.setValue(j, i, this->getValue(j, i) - matrix.getValue(j, i));
+			}
+		}
+
+		return result;
+	}
+
+
+	template<uint32 R, uint32 C, typename T>
+	Matrix<C, R, T> Matrix<R, C, T>::transpose() const
+	{
+		Matrix<C, R, T> result = Matrix<C, R, T>;
+
+		sizeType i;
+		sizeType j;
+
+		for (i = 0; i < C; i++)
+		{
+			for (j = 0; j < R; j++)
+			{
+				result.setValue(i, j, this->getValue(j, i));
 			}
 		}
 
