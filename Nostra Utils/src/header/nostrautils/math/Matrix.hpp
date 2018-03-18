@@ -11,14 +11,14 @@ namespace NOU::NOU_MATH
 	{
 		public:
 			using Type = T;
-			using Rows = N;
-			using Columns = M;
 
 		private:
-			Vec<Rows, Type> m_data[Columns];
+			Vec<N, Type> m_data[M];
 
 		public:
 			Matrix();
+			void setValue(uint32 x, uint32 y, T value);
+			Matrix add(const Matrix &matrix);
 	};
 
 	template<uint32 N, uint32 M, typename T>
@@ -26,6 +26,17 @@ namespace NOU::NOU_MATH
 	{
 		
 	}
+
+	template<uint32 N, uint32 M, typename T>
+	Matrix<N, M, T> Matrix<N, M, T>::add(const Matrix<N, M, T> &matrix)
+	{
+		Matrix<N, M, T> m Matrix<N, M, T>();
+
+		
+		return m;
+	}
+
+
 }
 
 #endif
