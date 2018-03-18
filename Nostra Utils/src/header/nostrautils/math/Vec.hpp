@@ -28,6 +28,7 @@ namespace NOU::NOU_MATH
 			Vec cross(const Vec & vec) const;
 			Vec mult(const Type) const;
 			Type getCom(uint32 index) const;
+			void setCom(uint32 index, T value);
 
 			Vec operator + (const Vec & vec);
 			Vec operator - (const Vec & vec) const;
@@ -172,6 +173,23 @@ namespace NOU::NOU_MATH
 		
 		return m_data[index];
 	}
+
+
+	/**
+	\param The Vector component to get.
+
+	\brief Returns the component at the requested index.
+	*/
+	template<uint32 N, typename T>
+	void Vec<N, T>::setCom(uint32 index, T value)
+	{
+		if (index >= N || index < 0) {
+			// TODO: Throw out of bounds exception
+		}
+
+		m_data[index] = value;
+	}
+
 
 
 	template<uint32 N, typename T>
