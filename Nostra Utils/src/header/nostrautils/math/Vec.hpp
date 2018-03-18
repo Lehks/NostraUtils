@@ -176,9 +176,10 @@ namespace NOU::NOU_MATH
 
 
 	/**
-	\param The Vector component to get.
+	\param The Vector index to change.
+	\param The new value
 
-	\brief Returns the component at the requested index.
+	\brief Sets the value of a vector.
 	*/
 	template<uint32 N, typename T>
 	void Vec<N, T>::setCom(uint32 index, T value)
@@ -189,7 +190,6 @@ namespace NOU::NOU_MATH
 
 		m_data[index] = value;
 	}
-
 
 
 	template<uint32 N, typename T>
