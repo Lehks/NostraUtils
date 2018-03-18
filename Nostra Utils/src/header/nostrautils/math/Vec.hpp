@@ -71,6 +71,19 @@ namespace NOU::NOU_MATH
 	}
 
 
+	template<uint32 N, typename T>
+	Vec<N, T>::Vec()
+	{
+		sizeType i;
+		T zero = static_cast<T>(0);
+
+		for (i = 0; i < N; i++)
+		{
+			m_data[i] = zero;
+		}
+	}
+
+
 	/**
 	\param A vector of the same size and type.
 
