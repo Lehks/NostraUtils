@@ -162,7 +162,7 @@ namespace NOU::NOU_FILE_MNGT
 		NouString section;
 
 		// Open file stream
-		inifile.open(this->m_filename);
+		inifile.open(this->m_filename.rawStr());
 
 		if (!inifile) {
 			return false;
@@ -206,7 +206,7 @@ namespace NOU::NOU_FILE_MNGT
 			inifile.open(filename);
 		}
 		else {
-			inifile.open(this->m_filename);
+			inifile.open(this->m_filename.rawStr());
 		}
 		
 		if (!inifile) {
@@ -218,7 +218,7 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			// Write section
 			if (isec->first != INI_DEFAULT_SECTION && isec->second > 0) {
-				inifile << "[" << isec->first << "]" << std::endl;
+				inifile << "[" << isec->first.rawStr() << "]" << std::endl;
 			}
 
 			// Save string size for later
@@ -233,8 +233,8 @@ namespace NOU::NOU_FILE_MNGT
 				key_section.clear().append(istr->first.substring(0, pos_dot));
 				if (key_section != isec->first) continue;
 
-				inifile << istr->first.substring(pos_sec + 1) << " = ";
-				inifile << "\"" << istr->second << "\"" << std::endl;
+				inifile << istr->first.substring(pos_sec + 1).rawStr() << " = ";
+				inifile << "\"" << istr->second.rawStr() << "\"" << std::endl;
 			}
 
 			// Write int data
@@ -246,7 +246,7 @@ namespace NOU::NOU_FILE_MNGT
 				key_section.clear().append(iint->first.substring(0, pos_dot));
 				if (key_section != isec->first) continue;
 
-				inifile << iint->first.substring(pos_sec + 1) << " = ";
+				inifile << iint->first.substring(pos_sec + 1).rawStr() << " = ";
 				inifile << iint->second << std::endl;
 			}
 
@@ -259,7 +259,7 @@ namespace NOU::NOU_FILE_MNGT
 				key_section.clear().append(ifloat->first.substring(0, pos_dot));
 				if (key_section != isec->first) continue;
 
-				inifile << ifloat->first.substring(pos_sec + 1) << " = ";
+				inifile << ifloat->first.substring(pos_sec + 1).rawStr() << " = ";
 				inifile << ifloat->second << std::endl;
 			}
 		}
