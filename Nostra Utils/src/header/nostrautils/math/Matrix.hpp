@@ -6,6 +6,10 @@
 
 namespace NOU::NOU_MATH
 {
+	/**
+	 * R = y
+	 * C = x
+	 */
 	template<uint32 R, uint32 C, typename T = float32>
 	class NOU_CLASS Matrix
 	{
@@ -23,8 +27,10 @@ namespace NOU::NOU_MATH
 			Matrix sub(const Matrix<R, C, T> & matrix) const;
 			Matrix mult(const Type) const;
 			Matrix transpose() const;
+			Vec getRow(uint32 index) const;
 			uint32 getNumRows() const;
 			uint32 getNumColumns() const;
+
 	};
 
 	template<uint32 R, uint32 C, typename T>
@@ -56,7 +62,7 @@ namespace NOU::NOU_MATH
 			"Y Index out of bounds!"
 		);
 
-		return m_data[y].getCom(x);
+		return m_data[x].getCom(y);
 	}
 
 
@@ -78,7 +84,7 @@ namespace NOU::NOU_MATH
 			"Y Index out of bounds!"
 		);
 
-		m_data[y].setCom(x, value);
+		m_data[x].setCom(y, value);
 	}
 
 
@@ -159,6 +165,21 @@ namespace NOU::NOU_MATH
 		}
 
 		return result;
+	}
+
+
+	template<uint32 R, uint32 C, typename T>
+	Vec<C, T> Matrix<R, C, T>::getRow(uint32 index) const
+	{
+		T values[C];
+		sizeType i;
+
+		for (i = 0; i < C; i++)
+		{
+			values[i] = this->getValue(i, index);
+		}
+
+		return Vec<C, T>(values);
 	}
 
 
