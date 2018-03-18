@@ -17,6 +17,8 @@ namespace NOU::NOU_MATH
 
 		public:
 			Matrix();
+			T getValue(uint32 x, uint32, y);
+			void setValue(uint32 x, uint32 y, T value);
 	};
 
 	template<uint32 R, uint32 C, typename T>
@@ -27,6 +29,50 @@ namespace NOU::NOU_MATH
 		{
 			m_data[i] = Vec<R, T>();
 		}
+	}
+
+
+	template<uint32 R, uint32 C, typename T>
+	typename Matrix<R, C, T>::Type Matrix<R, C, T>::getValue(uint32 x, uint32 y)
+	{
+		// Check bounds
+		NOU_COND_PUSH_DBG_ERROR(
+			(x >= R || x < 0),
+			NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+			"X Index out of bounds!"
+		);
+
+		NOU_COND_PUSH_DBG_ERROR(
+			(y >= C || y < 0),
+			NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+			"Y Index out of bounds!"
+		);
+
+		return m_data[y].getCom(x);
+	}
+
+
+	template<uint32 R, uint32 C, typename T>
+	void Matrix<R, C, T>::setValue(uint32 x, uint32 y, T value)
+	{
+		// Check bounds
+		NOU_COND_PUSH_DBG_ERROR(
+			(x >= R || x < 0),
+			NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+			"X Index out of bounds!"
+		);
+
+		NOU_COND_PUSH_DBG_ERROR(
+			(y >= C || y < 0),
+			NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+			"Y Index out of bounds!"
+		);
+
+		m_data[y].setCom(x, value);
 	}
 }
 
