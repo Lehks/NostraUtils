@@ -1,6 +1,8 @@
 #ifndef NOU_MEM_MNGT_GENERAL_PURPOSE_ALLOCATOR_HPP
 #define NOU_MEM_MNGT_GENERAL_PURPOSE_ALLOCATOR_HPP
 
+//USELESS SHIT ON THE WAY
+
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
