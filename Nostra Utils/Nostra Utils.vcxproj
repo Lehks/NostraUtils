@@ -290,6 +290,7 @@
   <ItemGroup>
     <None Include="Doc\resources\Documentation.dox" />
     <None Include="Doc\resources\Doxyfile" />
+    <None Include="Doc\resources\ThreadManager.dox" />
     <None Include="src\header\nostrautils\core\.gitignore" />
     <None Include="src\header\nostrautils\dat_alg\.gitignore" />
     <None Include="src\header\nostrautils\file_mngt\.gitignore" />

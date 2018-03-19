@@ -29,6 +29,7 @@
     <None Include="src\source\nostrautils\thread\.gitignore" />
     <None Include="Doc\resources\Documentation.dox" />
     <None Include="Doc\resources\Doxyfile" />
+    <None Include="Doc\resources\ThreadManager.dox" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp">

@@ -1,0 +1,136 @@
+/**
+\page ThrdMngr_tut Thread Management
+
+\brief On this page, the use and further details of the thread management system of Nostra will be explained.
+
+\tableofcontents
+
+\section Tasks
+
+To execute functionality in a different thread, Nostra uses the class \link nostra::utils::thread::Task Task \endlink, which in the most basic sense is the combination of a function pointer (or any other sort of invocable, like a lambda) and the parameters that are required to call that invocable. To create such a task, the function \link nostra::utils::thread::makeTask() makeTask() \endlink can be used. The instantiation of a task may look like this:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    /*
+     * Create a new task that executes the function addFive() and passes "1" as the parameter.
+     */
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+
+    return 0;
+}
+\endcode
+
+There are a few interesting things about this example:
+<ul>
+    <li>
+        It uses the <tt>auto</tt> keyword, which is because Tasks rely heavily on templates and may have a very long list of template parameters (especially if the invocable that is called has a lot of parameters itself). This is also the primary reason for the existence of \link nostra::utils::thread::makeTask() makeTask() \endlink - the function uses template parameter deduction to avoid having to write down long template parameter lists.
+    </li>
+    <li>
+        The function is explicitly passed as <tt>&addFive</tt> and not as just <tt>addFive</tt>. This is required and not optional - passing the function as <tt>addFive</tt> will result in a compile error.
+    </li>
+</ul>
+
+It is also possible to use Tasks to execute member functions:
+
+\code{.cpp}
+class A
+{
+public:
+    NOU::int32 addFive(NOU::int32 i) const
+    {
+        return i + 5;
+    }
+}
+
+int main()
+{
+    /*
+     * In the case of member functions, the first parameter needs to be the object that the function will be
+     * executed with. The remaining parameters of the function will follow after that object.
+     */
+    auto task = NOU::NOU_THREAD::makeTask(&A::get, A(), 1);
+
+    return 0;
+}
+\endcode
+
+Passing objects to a task leads to another important subject: The proper way to pass objects and avoiding unnecessary copies of that object. If the object is only needed within the task and not outside it, it is possible to move the object into the task - just like it was done in the previous example with <tt>A()</tt>. If it is required to store the object outside the task and a reference to that object is required in task, it is the best option to pass pointer to that object:
+
+\code{.cpp}
+class A
+{
+public:
+    void doStuff()
+    {
+        //...
+    }
+}
+
+void function(A *a)
+{
+    a->doStuff();
+}
+
+int main()
+{
+    A a;
+
+    auto task = NOU::NOU_THREAD::makeTask(&function, &a);
+
+    return 0;
+}
+\endcode
+
+It is <b>not</b> possible to pass references to a task and trying to do so will either result in a copy of the object (in the case that an object is passed to \link nostra::utils::thread::makeTask() makeTask() \endlink as-is and not as a pointer):
+
+\code{.cpp}
+int main()
+{
+    /*
+     * A and function are the same class and function respectively from the previous example.
+     */
+
+    A a;
+
+    //Pass "a" as plain object.
+    auto task = NOU::NOU_THREAD::makeTask(&function, a);
+
+    return 0;
+}
+\endcode
+
+or an a compile error, as it is also not possible to explicitly define the template parameter of \link nostra::utils::thread::makeTask()
+makeTask() \endlink as a reference.
+
+\code{.cpp}
+int main()
+{
+    /*
+     * A and function are the same class and function respectively from the previous example.
+     */
+
+    A a;
+
+    auto task = NOU::NOU_THREAD::makeTask<decltype(&function), A&>(&function, a);
+
+    return 0;
+}
+\endcode
+
+#The Thread Manager
+
+The \link nostra::utils::thread::ThreadManager ThreadManager \endlink is the central class of the thread
+management system of Nostra. It is a singleton that acts as a thread pool and also schedules the tasks that
+will be executed by the threads that are managed by it.
+
+Nostra always provides a predefined instance of the thread manager. It can be acquired using \link
+nostra::utils::thread::getThreadManager() \endlink.
+
+The thread manager also provides the basic functionality to create
+*/

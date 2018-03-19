@@ -111,8 +111,17 @@ void func4(int i)
 	//}
 }
 
+void f(A &a)
+{
+
+}
+
 int main()
 {
+	A a;
+
+	auto t = makeTask<decltype(&f), A&>(&f, a);
+
 #if 0
 	NOU_CORE::ErrorHandler::setCallback(callback);
 	
