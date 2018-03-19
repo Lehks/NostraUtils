@@ -28,6 +28,7 @@ namespace NOU::NOU_MATH
 			Matrix mult(const Type) const;
 			Matrix transpose() const;
 			Vec getRow(uint32 index) const;
+			Vec getColumn(uint32 index) const;
 			uint32 getNumRows() const;
 			uint32 getNumColumns() const;
 
@@ -180,6 +181,21 @@ namespace NOU::NOU_MATH
 		}
 
 		return Vec<C, T>(values);
+	}
+
+
+	template<uint32 R, uint32 C, typename T>
+	Vec<R, T> Matrix<R, C, T>::getColumn(uint32 index) const
+	{
+		T values[R];
+		sizeType i;
+
+		for (i = 0; i < R; i++)
+		{
+			values[i] = this->getValue(index, i);
+		}
+
+		return Vec<R, T>(values);
 	}
 
 
