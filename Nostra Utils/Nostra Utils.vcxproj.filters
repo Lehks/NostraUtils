@@ -170,6 +170,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Doc\resources\Warnings.txt" />
+    <Text Include="Doc\output\Warnings.txt" />
   </ItemGroup>
 </Project>

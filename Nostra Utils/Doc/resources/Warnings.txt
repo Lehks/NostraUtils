@@ -1,4 +1,0 @@
-dd/da0/todo:3: warning: explicit link request to 'Comparator< T >' could not be resolved
-dd/da0/todo:5: warning: explicit link request to 'Comparator< T >' could not be resolved
-C:/Users/lukas/Documents/Visual Studio 2017/Projects/NostraUtils/Nostra Utils/src/header/nostrautils/dat_alg/BinaryHeap.hpp:93: warning: The following parameters of nostra::utils::dat_alg::BinaryHeap::BinaryHeap(boolean isMinHeap=true, sizeType size=0, nostra::utils::mem_mngt ::AllocationCallback< nostra::utils::dat_alg ::Pair< PriorityType, T >> &allocator=mem_mngt ::GenericAllocationCallback< nostra::utils::dat_alg ::Pair< PriorityType, T >>::getInstance()) are not documented:
-  parameter 'size'
