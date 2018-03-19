@@ -42,8 +42,6 @@ namespace NOU::NOU_DAT_ALG
 }
 ///\endcond
 
-#define private public
-
 namespace NOU::NOU_THREAD
 {
 	///\cond
