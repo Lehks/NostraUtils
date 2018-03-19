@@ -66,7 +66,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		Vector<K> keySet();
 		/**
-		\input			K key;
+		\param key;
 		\brief Removes an Object wich the specific key.
 		*/
 		V& remove(K key);
@@ -76,13 +76,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		Vector<V> entrySet();
 		/**
-		\input			K key;
+		\param			key;
 		\return			boolean;
 		\brief Checks if the key is in the map.
 		*/
 		boolean containsKey(K key);
 		/**
-		\input			const Key (K);
+		\param			key;
 		\return			Object V;
 		\brief Overloading [] operators. They act now like at(index).
 		*/
@@ -90,7 +90,7 @@ namespace NOU::NOU_DAT_ALG
 
 	};
 
-
+	///\cond
 
 	template <typename K, typename V>
 	HashMap<K,V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
@@ -268,5 +268,7 @@ namespace NOU::NOU_DAT_ALG
 	V& HashMap<K,V>::operator [](const K &key) {
 		return get(key);
 	}
+
+	///\endcond
 }
 #endif

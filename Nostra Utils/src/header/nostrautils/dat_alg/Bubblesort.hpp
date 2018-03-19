@@ -16,15 +16,18 @@ namespace NOU::NOU_DAT_ALG
 {
 	/**
 	\tparam		The type of the container to sort.
+	\param container 
 	\param size The size of the container.
 
-	\brief Sorts the Conatiner .
+	\brief Sorts the container.
 	*/
 	template<typename T>
 	void NOU_FUNC bubbleSort(T& container, sizeType size);
 	/**
 	\tparam		The type of the container to sort.
+	\param container 
 	\param size The size of the container.
+	\param comp 
 
 	\brief Sorts the Conatiner using comperators.
 	*/

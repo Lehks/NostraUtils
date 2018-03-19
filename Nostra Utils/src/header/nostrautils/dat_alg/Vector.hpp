@@ -193,7 +193,7 @@ namespace NOU::NOU_DAT_ALG
 		const T& at(sizeType index) const;
 
 		/**
-		\param additionalCapactiy Additional capacity amount.
+		\param additionalCapacity Additional capacity amount.
 
 		\brief Expends the capacity of the vector.
 		*/

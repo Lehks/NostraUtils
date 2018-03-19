@@ -148,13 +148,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		String(CharType c);
 		/**
-		\param c Another String.
+		\param other Another String.
 
 		\brief Copy Constructor.
 		*/
 		String(const String &other);
 		/**
-		\param c Another String.
+		\param other Another String.
 
 		\brief Move Constructor.
 		*/

@@ -102,7 +102,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief "Standard" move constructor.
 		*/
-		BinaryHeap(BinaryHeap<T> && otehr);
+		BinaryHeap(BinaryHeap<T> && other);
 		/**
 		\param data				The data that will be one part of the Pair wich gets inserted in the vector.
 		\param priority			Which is the other part of the Pair thats get inserted in the vector.
@@ -148,7 +148,7 @@ namespace NOU::NOU_DAT_ALG
 		T& get();
 
 		/**
-		\param is				The id that is searched.
+		\param id				The id that is searched.
 		\param newpriority		The new priority that will be replace the old one.
 
 		\brief This Function searchs the heap for the given id and replace its old id of the element with the new one.

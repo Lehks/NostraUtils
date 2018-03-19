@@ -10,7 +10,7 @@
 #include <new>
 
 /**
-\file core/FastQueue.hpp
+\file dat_alg/FastQueue.hpp
 
 \author  Lukas Gross
 \author  Lukas Reichmann
@@ -198,7 +198,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param additionalCapacity The capacity that will be added to the currently existing capacity.
 
-		\brief Ensures that after a call to this method, the capacity will be <u>at least</u> the current 
+		\brief Ensures that after a call to this method, the capacity will be <b>at least</b> the current 
 		       capacity plus \p additionalCapacity.
 		*/
 		void resize(sizeType additionalCapacity);

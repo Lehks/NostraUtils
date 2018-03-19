@@ -11,7 +11,7 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A deleter that calls <tt>delete<tt>.
+	\brief A deleter that calls <tt>delete</tt>.
 	*/
 	template<typename T>
 	NOU_FUNC void defaultDeleter(T *t);
@@ -19,7 +19,7 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A deleter that calls <tt>delete[]<tt>.
+	\brief A deleter that calls <tt>delete[]</tt>.
 	*/
 	template<typename T>
 	NOU_FUNC void defaultArrayDeleter(T *t);
@@ -386,6 +386,8 @@ namespace NOU::NOU_MEM_MNGT
 		UniquePtr& operator = (Type *ptr);
 	};
 
+	///\cond
+
 	template<typename T>
 	void defaultDeleter(T *t)
 	{
@@ -613,6 +615,8 @@ namespace NOU::NOU_MEM_MNGT
 
 		return *this;
 	}
+
+	///\endcond
 }
 
 #endif

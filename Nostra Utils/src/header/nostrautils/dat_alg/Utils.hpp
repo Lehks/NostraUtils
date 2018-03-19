@@ -5,7 +5,9 @@
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Meta.hpp"
 
-/** \file Utils.hpp
+#include <crtdefs.h>
+
+/** \file dat_alg/Utils.hpp
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \author	 Lukas Gross

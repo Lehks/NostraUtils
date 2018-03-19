@@ -199,7 +199,7 @@ namespace NOU::NOU_CORE
 	struct IsInvocable : typeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
 
 	/**
-	\tparma R    The return type.
+	\tparam R    The return type.
 	\tparam T    The type to check if it is invocable.
 	\tparam ARGS The types that \p T needs to be invoked with.
 
