@@ -41,7 +41,7 @@ namespace NOU::NOU_MEM_MNGT
 
 		\details
 		Allocates enough memory to hold \p amount instances of the type \p T. This function may or may not 
-		call constructors. Alltough the behaviour of calling constructors may change from allocation callback 
+		call constructors. All tough the behavior of calling constructors may change from allocation callback 
 		to allocation callback, it must be consistent along the usage of the same allocator class.
 		The memory allocated with this function must be deallocatable using the deallocate() function of the 
 		same allocation callback.
@@ -55,14 +55,14 @@ namespace NOU::NOU_MEM_MNGT
 
 		\details
 		Deallocates memory that was previously allocated by the same allocation callback. This function
-		may or may not call destructors. Alltough the behaviour of calling destructors may change from 
+		may or may not call destructors. All tough the behavior of calling destructors may change from 
 		allocation callback to allocation callback, it must be consistent along the usage of the same 
 		allocator class.
 
 		\note 
-		It is only requiered that the same allocation callback that allocated memory can also deallocate the
+		It is only required that the same allocation callback that allocated memory can also deallocate the
 		same memory, however it is allowed for an allocation callback to also deallocate the memory of another
-		callback. This behavior is never defined and may or may not result in a propper deallocation.
+		callback. This behavior is never defined and may or may not result in a proper deallocation.
 		*/
 		virtual void deallocate(T *data) = 0;
 	};

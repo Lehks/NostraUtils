@@ -7,7 +7,7 @@
 /**
 \param b The expression to check.
 
-\brief Checks wether \p b evaluates to <tt>true</tt>. If not, an ASSERT_ERROR will be set in the error
+\brief Checks whether \p b evaluates to <tt>true</tt>. If not, an ASSERT_ERROR will be set in the error
        handler.
 */
 #ifndef NOU_ASSERT

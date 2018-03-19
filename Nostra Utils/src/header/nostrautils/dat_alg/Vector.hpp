@@ -54,7 +54,7 @@ namespace NOU::NOU_DAT_ALG
 		static constexpr sizeType	                MIN_CAPACITY = 1;
 
 		/**
-		\brief The actuall capacity of the Vector (memory allocation).
+		\brief The actual capacity of the Vector (memory allocation).
 
 		\details 
 		The amount of memory 
@@ -62,7 +62,7 @@ namespace NOU::NOU_DAT_ALG
 		sizeType								    m_capacity;
 
 		/**
-		\brief The actuall size of the Vector (elements stored).
+		\brief The actual size of the Vector (elements stored).
 		*/
 		sizeType								    m_size;
 
@@ -111,7 +111,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Standard constructor with the size.
 		\details 
-		The size is inizilized by default with 1 (if no size is given or size < 1). The allocator is initialized by default 
+		The size is initialized by default with 1 (if no size is given or size < 1). The allocator is initialized by default 
 		with a GenericAllocation (nostra::utils::mem_mngt::GenericAllocationCallback).
 		If there is need for a custom allocator you can creat one from the interface nostra::utils::mem_mngt::AllocationCallback.
 
@@ -139,7 +139,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Standard destructor.
 
 		\details 
-		Note that the Vectors memory isnt alloced with the new keyword therefore the memory gets not dealocated with the delete keyword. 
+		Note that the Vectors memory is not allocated with the new keyword therefore the memory gets not dealocated with the delete keyword. 
 		For more deatils look at the implication.
 		*/
 		~Vector<T>();

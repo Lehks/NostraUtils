@@ -11,7 +11,8 @@
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include <type_traits>
 
-/** \file thread\AsyncTaskResult.hpp
+
+/** \file thread\TaskQueue.hpp
 \author	 Lukas Reichmann
 \since   0.0.1
 \version 0.0.1
@@ -242,7 +243,6 @@ namespace NOU::NOU_THREAD
 	\note 
 	This documentation is only those tasks that have a return type other than void. For a documentation of the
 	specialization that is used when the result type is void, see TaskQueue<void, I, ACCUM, ARGS>. 
-	///\todo check if this link works
 	*/
 	template<typename R, typename I, typename ACCUM = typename TaskQueueAccumulators::FunctionPtr<R>, 
 		typename... ARGS>
@@ -484,8 +484,7 @@ namespace NOU::NOU_THREAD
 
 	\note
 	This documentation is only those tasks that have the return type void. For a documentation of the class 
-	that is used when the result type is not void, see TaskQueue<R, I, ACCUM, ARGS>.
-	///\todo check if this link works
+	that is used when the result type is not void, see TaskQueue.
 	*/
 	template<typename I, typename ACCUM, typename... ARGS>
 	class NOU_CLASS TaskQueue<void, I, ACCUM, ARGS...>
@@ -652,6 +651,8 @@ namespace NOU::NOU_THREAD
 		*/
 		void close();
 	};
+
+	///\cond
 
 	namespace TaskQueueAccumulators
 	{
@@ -972,6 +973,8 @@ namespace NOU::NOU_THREAD
 	{
 		m_closed = true;
 	}
+
+///\endcond
 }
 
 #endif

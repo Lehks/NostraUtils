@@ -13,7 +13,7 @@
 \author	 Lukas Gross
 \since   0.0.1
 \version 0.0.1
-\brief   This file provides usefull utility funcitions for dat_alg.
+\brief   This file provides useful utility functions for dat_alg.
 */
 
 namespace NOU::NOU_DAT_ALG

@@ -479,7 +479,7 @@ namespace NOU::NOU_CORE
 			INVALID_STATE,
 
 			/**
-			\brief An error has occrued in a mutex.
+			\brief An error has occurred in a mutex.
 			*/
 			MUTEX_ERROR,
 
