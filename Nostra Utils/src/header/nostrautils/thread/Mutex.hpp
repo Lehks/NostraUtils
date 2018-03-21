@@ -10,7 +10,7 @@ namespace NOU::NOU_THREAD
 {
 	/**
 	\brief A mutex with very little overhead, but also limited capabilities. This mutex can only be locked and
-	       unlocked. As of now, this class is merly a wrapper for std::mutex.
+	       unlocked. As of now, this class is merely a wrapper for std::mutex.
 	*/
 	class NOU_CLASS Mutex
 	{

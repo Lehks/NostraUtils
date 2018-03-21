@@ -420,8 +420,8 @@ namespace NOU::NOU_THREAD
 
 		\details
 		Returns the currently stored, temporary result. Unlike getResult(), this method does not force the
-		the execution of all tasks that are currently in the queue, but returns the result that was produced
-		by the last accumulation.
+		execution of all tasks that are currently in the queue, but returns the result that was produced by 
+		the last accumulation.
 
 		\note
 		This function may be expensive, as the result will be copied instead of moved or returned by
