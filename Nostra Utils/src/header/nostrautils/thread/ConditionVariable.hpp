@@ -16,7 +16,7 @@ namespace NOU::NOU_THREAD
 	make one or more threads wait until a certain variable has a certain value (and the condition variable is
 	notified of a change).
 	*/
-	class ConditionVariable
+	class NOU_CLASS ConditionVariable
 	{
 	public:
 		/**

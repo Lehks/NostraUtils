@@ -4,10 +4,9 @@
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\ObjectPool.hpp"
-#include "nostrautils\thread\ThreadManager.hpp"
 #include "nostrautils\thread\AsyncTaskResult.hpp"
 #include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\thread\TaskQueue.hpp"
+#include "nostrautils\thread\Threads.hpp"
 #include <iostream>
 
 using namespace NOU;
