@@ -5,9 +5,18 @@
 
 \tableofcontents
 
-\section Tasks
+\section sec_tasks Tasks
 
-To execute functionality in a different thread, Nostra uses the class \link nostra::utils::thread::Task Task \endlink, which in the most basic sense is the combination of a function pointer (or any other sort of invocable, like a lambda) and the parameters that are required to call that invocable. To create such a task, the function \link nostra::utils::thread::makeTask() makeTask() \endlink can be used. The instantiation of a task may look like this:
+To execute functionality in a different thread, Nostra uses the class \link nostra::utils::thread::Task Task 
+\endlink, which in the most basic sense is the combination of a function pointer (or any other sort of 
+invocable, like a lambda) and the parameters that are required to call that invocable. It is also important 
+that the Task on its own does not do any multi-threading yet, nor does it enforce any thread safety (e.g. like
+ locking its resources).
+
+\subsection subsec_TaskConstruct Constructing a Task
+
+To create a Task, the function \link nostra::utils::thread::makeTask() makeTask() \endlink can be used. The 
+instantiation of a Task may look like this:
 
 \code{.cpp}
 NOU::int32 addFive(NOU::int32 i)
@@ -29,10 +38,15 @@ int main()
 There are a few interesting things about this example:
 <ul>
     <li>
-        It uses the <tt>auto</tt> keyword, which is because Tasks rely heavily on templates and may have a very long list of template parameters (especially if the invocable that is called has a lot of parameters itself). This is also the primary reason for the existence of \link nostra::utils::thread::makeTask() makeTask() \endlink - the function uses template parameter deduction to avoid having to write down long template parameter lists.
+        It uses the <tt>auto</tt> keyword, which is because Tasks rely heavily on templates and may have a 
+        very long list of template parameters (especially if the invocable that is called has a lot of 
+        parameters itself). This is also the primary reason for the existence of \link 
+        nostra::utils::thread::makeTask() makeTask() \endlink - the function uses template parameter deduction
+        to avoid having to write down long template parameter lists.
     </li>
     <li>
-        The function is explicitly passed as <tt>&addFive</tt> and not as just <tt>addFive</tt>. This is required and not optional - passing the function as <tt>addFive</tt> will result in a compile error.
+        The function is explicitly passed as <tt>&addFive</tt> and not as just <tt>addFive</tt>. This is 
+        required and not optional - passing the function as <tt>addFive</tt> will result in a compile error.
     </li>
 </ul>
 
@@ -60,7 +74,11 @@ int main()
 }
 \endcode
 
-Passing objects to a task leads to another important subject: The proper way to pass objects and avoiding unnecessary copies of that object. If the object is only needed within the task and not outside it, it is possible to move the object into the task - just like it was done in the previous example with <tt>A()</tt>. If it is required to store the object outside the task and a reference to that object is required in task, it is the best option to pass pointer to that object:
+Passing objects to a task leads to another important subject: The proper way to pass objects and avoiding 
+unnecessary copies of that object. If the object is only needed within the task and not outside it, it is 
+possible to move the object into the task - just as it was done in the previous example with <tt>A()</tt>. If 
+it is required to store the object outside the task and a reference to that object is required in task, it is 
+the best option to pass pointer to that object:
 
 \code{.cpp}
 class A
@@ -87,7 +105,9 @@ int main()
 }
 \endcode
 
-It is <b>not</b> possible to pass references to a task and trying to do so will either result in a copy of the object (in the case that an object is passed to \link nostra::utils::thread::makeTask() makeTask() \endlink as-is and not as a pointer):
+It is <b>not</b> possible to pass references to a task and trying to do so will either result in a copy of the
+ object (in the case that an object is passed to \link nostra::utils::thread::makeTask() makeTask() \endlink 
+as-is and not as a pointer):
 
 \code{.cpp}
 int main()
@@ -105,8 +125,8 @@ int main()
 }
 \endcode
 
-or an a compile error, as it is also not possible to explicitly define the template parameter of \link nostra::utils::thread::makeTask()
-makeTask() \endlink as a reference.
+or in a compile error, as it is also not possible to explicitly define the template parameter of \link 
+nostra::utils::thread::makeTask() makeTask() \endlink as a reference:
 
 \code{.cpp}
 int main()
@@ -114,7 +134,7 @@ int main()
     /*
      * A and function are the same class and function respectively from the previous example.
      */
-
+    
     A a;
 
     auto task = NOU::NOU_THREAD::makeTask<decltype(&function), A&>(&function, a);
@@ -123,14 +143,184 @@ int main()
 }
 \endcode
 
-#The Thread Manager
+Also, Nostra does not provide any functionality like the STL's std::reference_wrapper, mainly because that 
+would cause unnecessary overhead.
 
-The \link nostra::utils::thread::ThreadManager ThreadManager \endlink is the central class of the thread
-management system of Nostra. It is a singleton that acts as a thread pool and also schedules the tasks that
-will be executed by the threads that are managed by it.
+\subsection subsec_TaskExec Executing a Task
 
-Nostra always provides a predefined instance of the thread manager. It can be acquired using \link
-nostra::utils::thread::getThreadManager() \endlink.
+Executing a Task is simply done by calling \link nostra::utils::thread::Task::execute execute() \endlink. 
+Since the Task itself does not any multi-threading on its own, the execution is entirely done by the thread 
+that called \link nostra::utils::thread::Task::execute execute() \endlink.
 
-The thread manager also provides the basic functionality to create
+\subsection subsec_TaskResultAccess Accessing the results of a Task
+
+Because the invocable that is executed by a Task can return a value, the task also has mechanics to access 
+that result. For reasons that are described in the chapter \ref subsec_Task_AbstractTask, \link 
+nostra::utils::thread::Task::execute execute() \endlink does not return the result that was produced by the 
+invocable. Instead, the result can be accessed using \link nostra::utils::thread::Task::getResult getResult() 
+\endlink and \link nostra::utils::thread::Task::moveResult moveResult() \endlink.
+
+\attention
+Calling \link nostra::utils::thread::Task::getResult getResult() \endlink or \link 
+nostra::utils::thread::Task::moveResult moveResult() \endlink is only valid if \link 
+nostra::utils::thread::Task::execute execute() \endlink has been called before. Otherwise \link 
+nostra::utils::core::ErrorCodes::INVALID_OBJECT ErrorCodes::INVALID_OBJECT \endlink will be pushed to the 
+\link nostra::utils::core::ErrorHandler error handler \endlink.
+
+\par getResult()
+
+\link nostra::utils::thread::Task::getResult getResult() \endlink returns a reference (or a const-reference) 
+to the result. This reference is only valid as long as the Task instance that is was obtained from is valid. 
+Accessing the result would look like this:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    /*
+    * Create a new task that executes the function addFive() and passes "1" as the parameter.
+    */
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+    task.execute();
+    
+    NOU::int32 &iRef = task.getResult();
+    
+    return 0;
+}
+\endcode
+
+\par moveResult()
+
+\link nostra::utils::thread::Task::moveResult moveResult() \endlink returns a R-Value reference to the result. 
+This can be useful if the result still needs to exist, even if the task that produced it has left scope (a 
+user can simply move the result from the Task to a variable in another scope).
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    /*
+    * Create a new task that executes the function addFive() and passes "1" as the parameter.
+    */
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+    task.execute();
+    
+    NOU::int32 iRef = task.moveResult();
+    
+    return 0;
+}
+\endcode
+
+\attention
+If the return type of the invocable is <tt>void</tt>, the return type of \link 
+nostra::utils::thread::Task::getResult getResult() \endlink and \link nostra::utils::thread::Task::moveResult 
+moveResult() \endlink will also be <tt>void</tt>. Since there is nothing to return, both member functions will
+not do anything. The return type can however be a problem with code like this:
+
+\code{.cpp}
+/*
+* R: The return type
+* I: The invocable type
+* ARGS: The argument types
+*/
+template<typename R, typename I, typename... ARGS>
+void executeAndPrintResult(NOU::NOU_THREAD::Task<R, I, ARGS...> &task)
+{
+    //execute task and store the result
+    task.execute();
+    auto &result = task.getResult();
+    
+    //print the result using the STL
+    std::cout << result << std::endl;
+}
+
+void function()
+{
+    //...
+}
+
+int main()
+{
+    auto task = NOU::NOU_THREAD::makeTask(&function);
+    
+    //compile error in executeAndPrintResult(), since a variable of type void is not allowed
+    executeAndPrintResult(task);
+}
+\endcode
+
+\subsection subsec_Task_AbstractTask The class AbstractTask
+
+\subsubsection subsubsec_AbstractConcreteClassModel The Abstract-Concrete-Model
+
+To ease understanding the necessity of AbstractTask, this section will explain the Abstract-Concrete-Model,
+which is a model not only used by the Task class, but also by a bunch of other thread management related
+classes.
+
+The model is used when a class with template parameter(s) is required (as it is the case with the Task class),
+but references to different instantiations of that template (aka. instances with different template
+parameters) should be stored in a single container.
+
+The model itself is simple:
+
+\dot
+digraph example
+{
+node [shape=record, fontname=Helvetica, fontsize=10];
+a [ label="AbstractClass"];
+c [ label="ConcreteClass"];
+c -> a [ arrowhead="empty" ];
+}
+\enddot
+
+With <tt>AbstractClass</tt> being a class that has no template parameters and <tt>ConcreteClass</tt> being a
+class that has all the required template parameters. <tt>AbstractClass</tt> would then already declare the
+functions (as pure virtual) for all the required functionality (those functions have to work without any
+template parameters as well) and <tt>ConcreteClass</tt> would implement those functions.
+
+\subsubsection AbstractTask
+
+As already pointed out, the Task class uses the Abstract-Concrete-Model (with \link
+nostra::utils::thread::internal::AbstractTask AbstractTask \endlink being the abstract class). The model is
+required, because the \link sec_threadManager Thread Manager \endlink needs to execute tasks that take
+different parameters or have different invocables (and therefore, the template parameters of Task are
+different). To solve this problem, instead of storing the Tasks themselves, the thread manager will store
+references to AbstractTask.
+
+The class AbstractTask only provides a single pure virtual function: <tt>execute()</tt> (which is the only
+function that is required by the thread manager). This is also the reason why \link
+nostra::utils::thread::Task::execute execute() \endlink does not return the result of the invocable that it
+calls - it simply has no knowledge of any parameter types (which of course also includes the return type).
+
+\section sec_threadManager The Thread Manager
+
+The class \link nostra::utils::thread::ThreadManager ThreadManager \endlink is the central system of the thread management system of Nostra. It is a singleton that acts as a thread pool but also schedules the Tasks that will be executed by the threads.
+
+\subsection subsec_threadManager_Obtain Obtaining the Thread Manager
+Nostra always provides an already constructed instance of the thread manager. It can be acquired using \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink.
+
+\attention
+The first time that \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink is getting called must be from the main thread. Otherwise the error handling will misbehave.
+
+As already stated in the \link sec_tasks chapter about tasks \endlink, does the Thread Manager use the \link nostra::utils::thread::Task Task \endlink class (or to be more precise the class \link nostra::utils::thread::internal::AbstractTask AbstractTask \endlink).
+
+Despite being the central component of the thread management system, a user usually interacts rather little with it (there are other interfaces, like \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink and \link nostra::utils::thread::TaskQueue TaskQueueu \endlink, that provide functionality on a higher level).
+
+Conceptually, the thread manager is internally little more than a priority queue for the Tasks and a pool that store the threads. For an explanation on how to push and remove tasks from the thread manager, see \link subsec_threadManager_Functions here \endlink.
+
+The maximum amount of threads that can be managed by the thread manager at the same time is (\link nostra::utils::thread::ThreadWrapper::maxThreads ThreadWrapper::maxThreads() \endlink - 1) (-1, because the main thread is not managed by the thread manager).
+
+\subsection subsec_threadManager_Functions Thread Manager functions
+
+This chapter provides an in-depth look at all the functions that are provided by the thread manager.
+
+\subsubsection subsubsec_threadManager_PushingTasks Pushing tasks
+A new Task can be pushed to the thread manager using \link nostra::utils::thread::ThreadManager::pushTask pushTask() \endlink (again, this is not a function that is usually used by a user). The parameters of \link nostra::utils::thread::ThreadManager::pushTask pushTask() \endlink are a pointer to the task itself, the priority of the task and a pointer to an error handler. If the error handler is <tt>nullptr</tt>, the thread manager will provide one.
 */
