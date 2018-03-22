@@ -4,6 +4,11 @@
 namespace NOU::NOU_FILE_MNGT
 {
 
+	FileManager::FileManager()
+	{
+
+	}
+
 	FileManager FileManager::getInstance()
 	{
 		static FileManager instance;
@@ -13,7 +18,9 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean FileManager::createFile(const char *name, const char *mode)
 	{
-		File *file = fopen(name, mode);
+		#pragma warning(suppress : 4996)
+		File tmp(fopen(name, mode));
+
 		return boolean();
 	}
 
