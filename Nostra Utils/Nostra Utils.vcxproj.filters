@@ -126,5 +126,8 @@
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\source\nostrautils\file_mngt\FileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
