@@ -39,6 +39,7 @@ public:
 
 int main()
 {
+	std::cout << "Multiple: " << NOU::NOU_MEM_MNGT::internal::nextMultiple(10, 32) << std::endl;
 	using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<Person>;
 
 	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
