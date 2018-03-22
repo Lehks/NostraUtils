@@ -103,9 +103,9 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template<typename T>
-	NOU_FUNC MD5Hash md5(NOU_DAT_ALG::StringView<T> *str)
+	NOU_FUNC MD5Hash md5(const NOU_DAT_ALG::StringView<T> *str)
 	{
-		return md5(str->rawStr(), NOU::NOU_DAT_ALG::stringlen(str->rawStr()));
+		return md5(reinterpret_cast<const byte*>(str->rawStr()), NOU::NOU_DAT_ALG::stringlen<char>(str->rawStr()));
 	}
 
 	/**
@@ -116,9 +116,9 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template<typename T>
-	NOU_FUNC MD5Hash md5(NOU_DAT_ALG::String<T> *str)
+	NOU_FUNC MD5Hash md5(const NOU_DAT_ALG::String<T> *str)
 	{
-		return md5(str->rawStr(), NOU::NOU_DAT_ALG::stringlen(str->rawStr()));
+		return md5(reinterpret_cast<const byte*>(str->rawStr()), NOU::NOU_DAT_ALG::stringlen<char>(str->rawStr()));
 	}
 
 	/**
@@ -129,6 +129,6 @@ namespace NOU::NOU_DAT_ALG
 
 	\brief Performs a leftRotation to a given input
 	*/
-	NOU_FUNC byte leftRotation(byte input, int32 rotations);
+	NOU_FUNC byte leftRotation(const byte input, int32 rotations);
 }
 #endif

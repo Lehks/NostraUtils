@@ -164,7 +164,7 @@ namespace NOU::NOU_DAT_ALG
 		return ret;
 	}
 
-	NOU_FUNC byte leftRotation(byte input, int32 rotations)
+	NOU_FUNC byte leftRotation(const byte input, int32 rotations)
 	{
 		byte r = input;
 		const byte b = 0b10000000;

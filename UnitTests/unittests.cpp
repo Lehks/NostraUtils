@@ -1161,8 +1161,92 @@ namespace UnitTests
 			h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
 			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
 
+			//MD5 TESTS
+
+			i1 = 0;
+			i2 = 0;
+
+
+			//Same output, different input objects with same value(byte Hash)
+			NOU::byte b0[] = { 54, 245, 987, 14, 7634 };
+			NOU::byte b1[] = { 54, 245, 987, 14, 7634 };
+
+			NOU::NOU_DAT_ALG::MD5Hash m0 = NOU::NOU_DAT_ALG::md5(b0, sizeof(b0) / sizeof(b0[0]));
+			NOU::NOU_DAT_ALG::MD5Hash m1 = NOU::NOU_DAT_ALG::md5(b1, sizeof(b1) / sizeof(b1[0]));
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				Assert::AreEqual(m0[i], m1[i]);
+			}
+				
+			//different output with only one little difference(byte Hash)
+
+			NOU::byte b2[] = { 54, 245, 988, 14, 7634 };
+
+			m1 = NOU::NOU_DAT_ALG::md5(b1, sizeof(b2) / sizeof(b2[0]));
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				i1 = (m0[i] == m1[i]) ? i1 + 1 : i1;
+			}
+
+			Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+
+			//Same output, different input objects with same value(String Hash)
+
+			m0 = NOU::NOU_DAT_ALG::md5(&str1);
+			m1 = NOU::NOU_DAT_ALG::md5(&str2);
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				Assert::AreEqual(m0[i], m1[i]);
+			}
+
+			//different output with only one little difference(byte Hash)
+
+			i1 = 0;
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> str3 = "The quick onyx goblan jumps over the lazy dwarf";
+
+			m1 = NOU::NOU_DAT_ALG::md5(&str3);
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				i1 = (m0[i] == m1[i]) ? i1 + 1 : i1;
+			}
+
+			Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+
+			//Same output, different input objects with same value(StringView Hash)
+
+			NOU::NOU_DAT_ALG::StringView<NOU::char8> sv0 = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::NOU_DAT_ALG::StringView<NOU::char8> sv1 = "The quick onyx goblin jumps over the lazy dwarf";
+
+			m0 = NOU::NOU_DAT_ALG::md5(&sv0);
+			m1 = NOU::NOU_DAT_ALG::md5(&sv1);
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				Assert::AreEqual(m0[i], m1[i]);
+			}
+
+			//different output with only one little difference(StringView Hash)
+
+			i1 = 0;
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> sv2 = "The quick onyx goblan jumps over the lazy dwarf";
+
+			m1 = NOU::NOU_DAT_ALG::md5(&sv2);
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				i1 = (m0[i] == m1[i]) ? i1 + 1 : i1;
+			}
+
+			Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+
+
 			NOU_CHECK_ERROR_HANDLER;
-		
 		}
 
 		TEST_METHOD(HashMap) 
