@@ -21,7 +21,14 @@ namespace NOU::NOU_FILE_MNGT
 		#pragma warning(suppress : 4996)
 		File tmp(fopen(name, mode));
 
-		return boolean();
+		if (!tmp.open)
+		{
+			return false;
+		}
+
+		fclose(tmp);
+
+		return true;
 	}
 
 	boolean FileManager::openFile(const char *name, const char *mode)
