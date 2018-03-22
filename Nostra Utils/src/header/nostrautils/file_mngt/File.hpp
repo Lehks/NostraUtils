@@ -27,7 +27,7 @@ namespace NOU::NOU_FILE_MNGT
 	private:
 		NOU::NOU_DAT_ALG::String<char8> m_data;
 	public:
-		File(NOU::NOU_DAT_ALG::String<char8> path);
+		File(const char8 *path, const char8 *name);
 
 		void read();
 		void replace();
@@ -36,7 +36,7 @@ namespace NOU::NOU_FILE_MNGT
 		void getName();
 		void getPath();
 		void setPath();
-		void changeRights();
+		void changePermissions();
 		void changeGroups();
 
 
