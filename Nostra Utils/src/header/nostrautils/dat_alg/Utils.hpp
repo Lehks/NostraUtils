@@ -9,7 +9,7 @@
 \author  Dennis Franz
 \since   0.0.1
 \version 0.0.1
-\brief   This file provides usefull utility funcitions for dat_alg.
+\brief   This file provides useful utility functions for dat_alg.
 */
 
 namespace NOU::NOU_DAT_ALG
@@ -34,11 +34,11 @@ namespace NOU::NOU_DAT_ALG
 	/**
 	\tparam CHAR_TYPE The type of the character.
 
-	\param str The string to determine the lenght of.
+	\param str The string to determine the length of.
 
-	\return The lenght of \p str.
+	\return The length of \p str.
 
-	\brief Determines the lenght of a string.
+	\brief Determines the length of a string.
 	*/
 	template<typename CHAR_TYPE>
 	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
