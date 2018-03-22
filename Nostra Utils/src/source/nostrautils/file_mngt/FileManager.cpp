@@ -26,19 +26,36 @@ namespace NOU::NOU_FILE_MNGT
 			return false;
 		}
 
-		fclose(tmp);
+		tmp.close;
 
 		return true;
 	}
 
 	boolean FileManager::openFile(const char *name, const char *mode)
 	{
-		return boolean();
+		#pragma warning(suppress : 4996)
+		File tmp(fopen(name, mode));
+
+		if (!tmp.open)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
-	boolean FileManager::deleteFile(NOU::NOU_DAT_ALG::String<char8> fullpath)
+	boolean FileManager::deleteFile(const char *filename)
 	{
-		return boolean();
+		int ret;
+
+		ret = remove(filename);
+
+		if (ret == 0) 
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	boolean FileManager::createFolder(NOU::NOU_DAT_ALG::String<char8> path, NOU::NOU_DAT_ALG::String<char8> name)

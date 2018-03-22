@@ -19,7 +19,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		boolean openFile(const char *name, const char *mode);
 
-		boolean deleteFile(NOU::NOU_DAT_ALG::String<char8> fullpath);
+		boolean deleteFile(const char *filename);
 
 		boolean createFolder(NOU::NOU_DAT_ALG::String<char8> path, NOU::NOU_DAT_ALG::String<char8> name);
 
