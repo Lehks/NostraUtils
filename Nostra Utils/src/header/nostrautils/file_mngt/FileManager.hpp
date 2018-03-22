@@ -15,9 +15,9 @@ namespace NOU::NOU_FILE_MNGT
 	public:
 		static FileManager getInstance();
 
-		boolean createFile(NOU::NOU_DAT_ALG::String<char8> path, NOU::NOU_DAT_ALG::String<char8> name);
+		boolean createFile(const char *name, const char *mode);
 
-		boolean openFile(NOU::NOU_DAT_ALG::String<char8> fullpath);
+		boolean openFile(const char *name, const char *mode);
 
 		boolean deleteFile(NOU::NOU_DAT_ALG::String<char8> fullpath);
 

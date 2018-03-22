@@ -1,4 +1,5 @@
 #include "nostrautils\file_mngt\FileManager.hpp"
+#include "nostrautils\file_mngt\File.hpp"
 
 namespace NOU::NOU_FILE_MNGT
 {
@@ -10,13 +11,13 @@ namespace NOU::NOU_FILE_MNGT
 		return instance;
 	}
 
-	boolean FileManager::createFile(NOU::NOU_DAT_ALG::String<char8> path, NOU::NOU_DAT_ALG::String<char8> name)
+	boolean FileManager::createFile(const char *name, const char *mode)
 	{
-		fopen();
+		File *file = fopen(name, mode);
 		return boolean();
 	}
 
-	boolean FileManager::openFile(NOU::NOU_DAT_ALG::String<char8> fullpath)
+	boolean FileManager::openFile(const char *name, const char *mode)
 	{
 		return boolean();
 	}
