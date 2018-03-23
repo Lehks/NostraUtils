@@ -4,7 +4,6 @@
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\ObjectPool.hpp"
-#include "nostrautils\thread\AsyncTaskResult.hpp"
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\thread\Threads.hpp"
 #include <iostream>
@@ -132,9 +131,23 @@ void testFunc()
 
 int main()
 {
-	AsyncTaskResult<void, decltype(&doStuff)> asyncTaskResult(&testFunc);
+	std::cout << "mt: " << std::this_thread::get_id() << std::endl;
 
-	std::cout << "main " << std::this_thread::get_id() << std::endl;
+	TaskQueue<void, decltype(&testFunc)> tq(&TaskQueueAccumulators::forward<TaskQueueAccumulators::Void>);
+
+	tq.pushTask(makeTask(&testFunc));
+	tq.pushTask(makeTask(&testFunc));
+	tq.pushTask(makeTask(&testFunc));
+	tq.pushTask(makeTask(&testFunc));
+	tq.pushTask(makeTask(&testFunc));
+
+	for (int i = 0; i < 1000000; i++)
+	{
+		i++;
+		i--;
+	}
+
+	tq.getResult();
 
 	std::cin.get();
 }

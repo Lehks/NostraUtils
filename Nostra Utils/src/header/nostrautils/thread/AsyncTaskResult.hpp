@@ -17,6 +17,33 @@
 
 namespace NOU::NOU_THREAD
 {
+	/**
+	\brief An enumeration that stores that states that a AsyncTaskResult can have.
+	*/
+	enum class AsyncTaskResultState
+	{
+		/**
+		\brief The task has not been started yet.
+		*/
+		NOT_STARTED,
+
+		/**
+		\brief makeResult() has directly or indirectly been called and the task is currently being
+		executed by the thread that called that method.
+		*/
+		EXECUTING_SYNC,
+
+		/**
+		\brief The task is currently being executed by another thread.
+		*/
+		EXECUTING_ASYNC,
+
+		/**
+		\brief The task has finished execution.
+		*/
+		DONE
+	};
+
 	namespace internal
 	{
 		/**
@@ -39,32 +66,7 @@ namespace NOU::NOU_THREAD
 		class NOU_CLASS AbstractAsyncTaskResult
 		{
 		public:
-			/**
-			\brief An enumeration that stores that states that a AsyncTaskResult can have.
-			*/
-			enum class State
-			{
-				/**
-				\brief The task has not been started yet.
-				*/
-				NOT_STARTED,
-				
-				/**
-				\brief makeResult() has directly or indirectly been called and the task is currently being 
-				       executed by the thread that called that method.
-				*/
-				EXECUTING_SYNC,
-				
-				/**
-				\brief The task is currently being executed by another thread.
-				*/
-				EXECUTING_ASYNC,
-
-				/**
-				\brief The task has finished execution.
-				*/
-				DONE
-			};
+			using State = AsyncTaskResultState;
 
 		private:
 			/**

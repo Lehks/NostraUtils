@@ -30,6 +30,21 @@ namespace NOU::NOU_THREAD
 	namespace TaskQueueAccumulators
 	{
 		/**
+		\brief A dummy type that is used by the specialization of TaskQueue that works with tasks that return
+		\p void. 
+
+		\details
+		A dummy type that is used by the specialization of TaskQueue that works with tasks that return \p 
+		void. See the detailed section of that specialization for further details (unfortunately, it is not 
+		possible to have a link to that class here, sorry for the inconvenience).
+
+		\note
+		It does not matter as which type \p Void is defined as it only serves as a dummy. However, it must be 
+		any type other than \p void.
+		*/
+		using Void = int;
+
+		/**
 		\tparam R The type of the results that will be accumulated.
 
 		\brief The type of a function that can be used as an accumulator.
@@ -245,7 +260,11 @@ namespace NOU::NOU_THREAD
 	specialization that is used when the result type is void, see TaskQueue<void, I, ACCUM, ARGS>. 
 	///\todo check if this link works
 	*/
-	template<typename R, typename I, typename ACCUM = typename TaskQueueAccumulators::FunctionPtr<R>, 
+	template<typename R, typename I, typename ACCUM = 
+		TaskQueueAccumulators::FunctionPtr<
+			NOU_CORE::typeIf_t<
+				NOU_CORE::AreSame<R, void>::value, 
+					TaskQueueAccumulators::Void, R>>,
 		typename... ARGS>
 	class NOU_CLASS TaskQueue
 	{
@@ -502,6 +521,12 @@ namespace NOU::NOU_THREAD
 	\note
 	This documentation is only those tasks that have the return type void. For a documentation of the class 
 	that is used when the result type is not void, see TaskQueue<R, I, ACCUM, ARGS>.
+
+	\note
+	Since the main class has a default parameter for \p ACCUM, so does this specialization. However, it is not
+	possible to use <tt>TaskQueueAccumulators::FunctionPtr<void></tt> (for technical reasons that are not 
+	important at this point). Instead, the class uses 
+	TaskQueueAccumulators::FunctionPtr<TaskQueueAccumulators::Void> as its default accumulator type.
 	///\todo check if this link works
 	*/
 	template<typename I, typename ACCUM, typename... ARGS>

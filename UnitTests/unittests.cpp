@@ -24,6 +24,7 @@
 #include "nostrautils\dat_alg\BinarySearch.hpp"
 #include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\dat_alg\HashMap.hpp"
+#include "nostrautils\thread\Threads.hpp"
 
 #include "DebugClass.hpp"
 
@@ -1470,6 +1471,57 @@ namespace UnitTests
 
 			NOU::DebugClass dbgCls(5);
 			Assert::IsFalse(objPool.isPartOf(dbgCls));
+		}
+
+		static void taskTestFunction1(NOU::int32 i, NOU::int32 *out)
+		{
+			*out = i;
+		}
+
+		static NOU::int32 taskTestFunction2(NOU::int32 i)
+		{
+			return i;
+		}
+
+		TEST_METHOD(Task)
+		{
+			NOU::int32 i1 = 5;
+			NOU::int32 out;
+
+			auto task1 = NOU::NOU_THREAD::makeTask(&taskTestFunction1, i1, &out);
+
+			task1.execute();
+
+			Assert::IsTrue(out == i1);
+
+
+			//just to make sure that INVALID_OBJECT is the first error in the handler later
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			NOU::int32 i2 = 5;
+
+			auto task2 = NOU::NOU_THREAD::makeTask(&taskTestFunction2, i2);
+
+			task2.getResult();
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().popError().getID() == 
+				NOU::NOU_CORE::ErrorCodes::INVALID_OBJECT);
+
+			task2.execute();
+
+			Assert::IsTrue(task2.getResult() == i2);
+		}
+
+		//no more tests are possible, since the remaining methods of thread manager are either not reliable 
+		//(like currentlyAvailableThreads(), which may change any moment) or there are no observable values 
+		//produced (like pushTask())
+		TEST_METHOD(ThreadManager)
+		{
+			NOU::NOU_THREAD::ThreadManager &manager = NOU::NOU_THREAD::getThreadManager();
+
+			Assert::IsTrue(manager.maximumAvailableThreads() == 
+				NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
 		}
 	};
 }
