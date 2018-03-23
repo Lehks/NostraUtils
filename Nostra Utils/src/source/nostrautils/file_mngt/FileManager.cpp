@@ -16,7 +16,7 @@ namespace NOU::NOU_FILE_MNGT
 		return instance;
 	}
 
-	boolean FileManager::createFile(const char *name, const char *mode)
+	boolean FileManager::createFile(const NOU::char8 *name, const NOU::char8 *mode)
 	{
 		#pragma warning(suppress : 4996)
 		File tmp(fopen(name, mode));
@@ -31,7 +31,7 @@ namespace NOU::NOU_FILE_MNGT
 		return true;
 	}
 
-	boolean FileManager::openFile(const char *name, const char *mode)
+	boolean FileManager::openFile(const NOU::char8 *name, const NOU::char8 *mode)
 	{
 		#pragma warning(suppress : 4996)
 		File tmp(fopen(name, mode));
@@ -44,7 +44,7 @@ namespace NOU::NOU_FILE_MNGT
 		return true;
 	}
 
-	boolean FileManager::deleteFile(const char *filename)
+	boolean FileManager::deleteFile(const NOU::char8 *filename)
 	{
 		int ret;
 
