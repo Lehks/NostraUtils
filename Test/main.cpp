@@ -12,18 +12,9 @@ using namespace NOU_FILE_MNGT;
 
 int main()
 {
-	FILE * pFile;
-	char mystring[100];
-
-	#pragma warning(suppress : 4996)
-	pFile = fopen("TestFile", "r");
-	if (pFile == NULL) perror("Error opening file");
-	else
-	{
-		if (fgets(mystring, 100, pFile) != NULL)
-			puts(mystring);
-		fclose(pFile);
-	}
+	File f("", "D:/C++/NostraUtilsTest/TestFile.txt", "r");
+	f.open();
+	cout << f.read();
 	system("pause");
 	return 0;
 }

@@ -19,27 +19,27 @@ namespace NOU::NOU_FILE_MNGT
 	boolean FileManager::createFile(const char *name, const char *mode)
 	{
 		#pragma warning(suppress : 4996)
-		File tmp(fopen(name, mode));
+		File tmp(fopen(name, mode), mode);
 
-		if (!tmp.open)
+		/*if (!tmp.open())
 		{
 			return false;
-		}
+		}*/
 
-		tmp.close;
+		tmp.close();
 
 		return true;
 	}
 
 	boolean FileManager::openFile(const char *name, const char *mode)
 	{
-		#pragma warning(suppress : 4996)
-		File tmp(fopen(name, mode));
+		//#pragma warning(suppress : 4996)
+		//File tmp(fopen(name, mode));
 
-		if (!tmp.open)
+		/*if (!tmp.open)
 		{
 			return false;
-		}
+		}*/
 
 		return true;
 	}

@@ -27,29 +27,41 @@ namespace NOU::NOU_FILE_MNGT
 	{
 	private:
 		FILE							*m_data;
-		byte							*m_head;
+		const char8						*m_mode;
 
-		NOU::NOU_DAT_ALG::String<char8>	m_path;
-		NOU::NOU_DAT_ALG::String<char8> m_name;
+		const char8						*m_path;
+		NOU::NOU_DAT_ALG::String<char8>	m_absolutePath;
+		const char8						*m_name;
+		bool							m_appendMode;
 
 	public:
-		File(const char8 *path, const char8 *name, const char8 *mode);
-		File(FILE* f);
+		File(const char8 *name, const char8 *mode, const char8 *path = "");
 		//copy
 		File(const File &other);
 		//mv
 		File(File &&other);
 
 		byte read();
-		void open();
-		void close();
-		//void write();
-		//void getName();
-		//void getPath();
-		//void setPath();
+		void write();
+
+		bool open();
+
+		//returns true if sucessfully closed
+		bool close();
+
+
+		const char8* getName();
+		void setName(const char8 *name);
+		const char8* getMode();
+		void setMode(const char8 *mode);
+		const char8* getPath();
+		void setPath(const char8 *path);
+		void setData(FILE *data);
+		FILE* getData();
+		void setAppendMode(bool mode);
+		bool getAppendMode();
 		//void changePermissions();
 		//void changeGroups();
-
 
 	};
 }
