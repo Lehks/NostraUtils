@@ -7,13 +7,12 @@
 #include <iostream>
 #include <ctime>
 
-#include <cstdlib>
 
 /** \file Random.hpp
 \author  Mahan Karimi
 \since   0.0.1
 \version 0.0.1
-\brief   This file generates you a Random number between a interval.
+\brief   This file generates you a Random number between an interval.
 */
 namespace NOU::NOU_DAT_ALG
 {
@@ -38,16 +37,15 @@ namespace NOU::NOU_DAT_ALG
 		void setSeed(Seed seed);
 
 		/**
-		\brief A function that generates you a random function
-		\return A random number in the interval \f$\left[0, MAX_INT\right[\f$ with MAX_INT being the maximum 
-		        value of a 64 bit unsigned integer.
+		\brief A function that generates you a random number
+		\return A random number in the interval \f$\left[0, MAX_INT\right[\f$ with MAX_INT being the maximum value of a 64 bit unsigned integer.
 		*/
 		Value rand();
 
 		/**
 		\brief A function that generates you a random number in an interval.
-		\param a Where you interval begins (this value is included in the interval)
-		\param b Where you interval ends (this value is included in the interval)
+		\param a where you interval starts (this value is included in the interval)
+		\param b where you interval ends (this value is included in the interval)
 		\return A random number in the interval \f$\left[a, b\right[\f$.
 		*/
 		Value rand(Value a, Value b);
