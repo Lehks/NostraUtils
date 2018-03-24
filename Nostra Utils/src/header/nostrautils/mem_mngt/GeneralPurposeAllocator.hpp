@@ -1,8 +1,6 @@
 #ifndef NOU_MEM_MNGT_GENERAL_PURPOSE_ALLOCATOR_HPP
 #define NOU_MEM_MNGT_GENERAL_PURPOSE_ALLOCATOR_HPP
 
-//USELESS SHIT ON THE WAY
-
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
@@ -62,7 +60,7 @@ namespace NOU::NOU_MEM_MNGT
 			sizeType m_size;
 
 			/**
-			\param addr A byte pointer to the address of the free chunks
+			\param addr A byte pointer to the address of the free chunks.
 
 			\param size The size of the free chunks.
 
@@ -270,7 +268,7 @@ namespace NOU::NOU_MEM_MNGT
 		static const sizeType GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE = 10 * 1024;
 
 		/**
-		\brief A byte pointer to the elements
+		\brief A byte pointer to the elements.
 		*/
 		byte* m_data;
 
@@ -329,7 +327,7 @@ namespace NOU::NOU_MEM_MNGT
 
 		\param arguments The data of the object which will be allocated.
 
-		\return A pointer to the allocated object-
+		\return A pointer to the allocated object.
 
 		\brief Allocates memory in the gpa for the passed object. Allows to allocate the passed object
 		only ones. For multiple allocations of the same object use the allocateObjects().
