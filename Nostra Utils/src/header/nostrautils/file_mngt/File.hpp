@@ -81,21 +81,54 @@ namespace NOU::NOU_FILE_MNGT
 		\param other other constructer from which this will copy
 		*/
 		File(const File &other);
-		//mv
+		/**
+		\brief move construcor of the File class
+
+		\param other other constructer from where everything will be moved
+		*/
 		File(File &&other);
-
+		/**
+		\brief destructor of the File Class
+		*/
 		~File();
+		/**
+		\brief reads a single byte from the File
 
+		\return read byte
+		*/
 		byte read();
+
+		/**
+		\brief writes a single byte into a file according to the i/o mode that is set
+
+		\return true if successfully written, false if otherwise
+		*/
 		bool write(byte b);
 
+		/**
+		\brief opens the internal filestream
+
+		\return true if successfully opened, false if otherwise
+		*/
 		bool open();
 
-		//returns true if sucessfully closed
+		/**
+		\brief closes the internal filestream
+
+		\return true if successfully closed, false if otherwise
+		*/
 		bool close();
+
+		/**
+		\brief creates the file if not allready existing
+		*/
 		void createFile();
 
-
+		
+		/**
+		\brief corresponding getter/setter for the given attributes
+		*/
+		///BEGIN COMMENT
 		NOU::NOU_DAT_ALG::StringView<char8> getName();
 		void setName(const NOU::NOU_DAT_ALG::StringView<char8> &name);
 
@@ -106,10 +139,9 @@ namespace NOU::NOU_FILE_MNGT
 		void setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path);
 
 		void setData(FILE *data);
-		FILE* getData();
+		FILE* getData(); 
 
-		//void changePermissions();
-		//void changeGroups();
+		///END COMMENT
 
 	};
 }
