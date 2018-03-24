@@ -17,7 +17,15 @@
 
 */
 
-
+enum AccessMode
+{
+	READ,
+	WRITE,
+	APPEND,
+	READ_WRITE,
+	READ_WRITE_RESET,
+	READ_APPEND
+};
 
 
 namespace NOU::NOU_FILE_MNGT
@@ -28,15 +36,14 @@ namespace NOU::NOU_FILE_MNGT
 	{
 	private:
 		FILE															*m_data;
-		const NOU::NOU_DAT_ALG::StringView<char8>						*m_mode;
+		AccessMode														m_mode;
 
 		const NOU::NOU_DAT_ALG::StringView<char8>						*m_path;
 		NOU::NOU_DAT_ALG::String<char8>									m_absolutePath;
 		const NOU::NOU_DAT_ALG::StringView<char8>						*m_name;
-		bool															m_appendMode;
 
 	public:
-		File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &mode, const NOU::NOU_DAT_ALG::StringView<char8> &path = "");
+		File(const NOU::NOU_DAT_ALG::StringView<char8> &name, AccessMode mode, const NOU::NOU_DAT_ALG::StringView<char8> &path = "");
 		//copy
 		File(const File &other);
 		//mv
@@ -53,14 +60,16 @@ namespace NOU::NOU_FILE_MNGT
 
 		NOU::NOU_DAT_ALG::StringView<char8> getName();
 		void setName(const NOU::NOU_DAT_ALG::StringView<char8> &name);
-		NOU::NOU_DAT_ALG::StringView<char8> getMode();
-		void setMode(const NOU::NOU_DAT_ALG::StringView<char8> &mode);
+
+		AccessMode getMode();
+		void setMode(AccessMode mode);
+
 		NOU::NOU_DAT_ALG::StringView<char8> getPath();
 		void setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path);
+
 		void setData(FILE *data);
 		FILE* getData();
-		void setAppendMode(bool mode);
-		bool getAppendMode();
+
 		//void changePermissions();
 		//void changeGroups();
 

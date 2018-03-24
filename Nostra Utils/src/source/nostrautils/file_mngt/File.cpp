@@ -2,7 +2,7 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &mode, const NOU::NOU_DAT_ALG::StringView<char8> &path = "")
+	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, AccessMode mode, const NOU::NOU_DAT_ALG::StringView<char8> &path = "")
 	{
 		//#pragma warning(suppress : 4996)
 		//m_data = fopen(name, mode);
@@ -63,14 +63,16 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		m_name = &name;
 	}
-	NOU::NOU_DAT_ALG::StringView<char8> File::getMode()
+
+	AccessMode File::getMode()
 	{
-		return *m_mode;
+		return m_mode;
 	}
-	void File::setMode(const NOU::NOU_DAT_ALG::StringView<char8> &mode)
+	void File::setMode(AccessMode mode)
 	{
-		m_mode = &mode;
+		m_mode = mode;
 	}
+
 	NOU::NOU_DAT_ALG::StringView<char8> File::getPath()
 	{
 		return *m_path;
@@ -79,6 +81,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		m_path = &path;
 	}
+
 	void File::setData(FILE *data)
 	{
 		m_data = data;
@@ -86,13 +89,5 @@ namespace NOU::NOU_FILE_MNGT
 	FILE* File::getData()
 	{
 		return m_data;
-	}
-	void File::setAppendMode(bool mode)
-	{
-		m_appendMode = mode;
-	}
-	bool File::getAppendMode()
-	{
-		return m_appendMode;
 	}
 }
