@@ -97,6 +97,11 @@ namespace NOU::NOU_FILE_MNGT
 		close();
 	}
 
+	bool File::isCurrentlyOpen()
+	{
+		return m_data != NULL;
+	}
+
 	void File::calcAbsolutePath()
 	{
 		m_absolutePath;

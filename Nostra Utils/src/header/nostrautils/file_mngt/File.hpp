@@ -124,6 +124,14 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		void createFile();
 
+		/** 
+		\brief checks if the Filestream is opened
+
+		\return true if currently opened, false if not
+		*/
+
+		bool isCurrentlyOpen();
+
 		
 		/**
 		\brief corresponding getter/setter for the given attributes
