@@ -15,11 +15,11 @@ namespace NOU::NOU_FILE_MNGT
 	public:
 		static FileManager getInstance();
 
-		boolean createFile(const NOU::char8 *name, const NOU::char8 *mode);
+		boolean createFile(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &mode);
 
-		boolean openFile(const NOU::char8 *name, const NOU::char8 *mode);
+		boolean openFile(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &mode);
 
-		boolean deleteFile(const NOU::char8 *filename);
+		boolean deleteFile(const NOU::NOU_DAT_ALG::StringView<char8> &name);
 
 		boolean createFolder(NOU::NOU_DAT_ALG::String<char8> path, NOU::NOU_DAT_ALG::String<char8> name);
 

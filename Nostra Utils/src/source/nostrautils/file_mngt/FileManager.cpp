@@ -16,35 +16,34 @@ namespace NOU::NOU_FILE_MNGT
 		return instance;
 	}
 
-	boolean FileManager::createFile(const NOU::char8 *name, const NOU::char8 *mode)
+	boolean FileManager::createFile(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &mode)
 	{
-		#pragma warning(suppress : 4996)
-		File tmp(fopen(name, mode), mode);
+		File tmp(name, mode);
+		boolean hasError = tmp().open(name, mode);
 
-		/*if (!tmp.open())
+		if (!tmp.open())
 		{
 			return false;
-		}*/
+		}
 
 		tmp.close();
 
 		return true;
 	}
 
-	boolean FileManager::openFile(const NOU::char8 *name, const NOU::char8 *mode)
+	boolean FileManager::openFile(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &mode)
 	{
-		//#pragma warning(suppress : 4996)
-		//File tmp(fopen(name, mode));
+		File tmp(fopen(name, mode));
 
-		/*if (!tmp.open)
+		if (!tmp.open)
 		{
 			return false;
-		}*/
+		}
 
 		return true;
 	}
 
-	boolean FileManager::deleteFile(const NOU::char8 *filename)
+	boolean FileManager::deleteFile(const NOU::NOU_DAT_ALG::StringView<char8> &name)
 	{
 		int ret;
 
