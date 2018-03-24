@@ -2,7 +2,7 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	File::File(const char8 *name, const char8 *mode, const char8 *path = "")
+	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &mode, const NOU::NOU_DAT_ALG::StringView<char8> &path = "")
 	{
 		//#pragma warning(suppress : 4996)
 		//m_data = fopen(name, mode);
@@ -46,7 +46,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 
 		#pragma warning(suppress : 4996)
-		setData(fopen(m_name, m_mode));
+		setData(fopen(m_name->rawStr, m_mode->rawStr));
 		return getData() != NULL;
 	}
 	bool File::close()
@@ -54,29 +54,30 @@ namespace NOU::NOU_FILE_MNGT
 		return (fclose(m_data) == NULL);
 	}
 	
-	const char8* File::getName()
+	NOU::NOU_DAT_ALG::StringView<char8> File::getName()
 	{
-		return m_name;
+		//return static_cast<const NOU::NOU_DAT_ALG::StringView<char8>>(m_name);
+		return *m_name;
 	}
-	void File::setName(const char8 *name)
+	void File::setName(const NOU::NOU_DAT_ALG::StringView<char8> &name)
 	{
-		m_name = name;
+		m_name = &name;
 	}
-	const char8* File::getMode()
+	NOU::NOU_DAT_ALG::StringView<char8> File::getMode()
 	{
-		return m_mode;
+		return *m_mode;
 	}
-	void File::setMode(const char8 *mode)
+	void File::setMode(const NOU::NOU_DAT_ALG::StringView<char8> &mode)
 	{
-		m_mode = mode;
+		m_mode = &mode;
 	}
-	const char8* File::getPath()
+	NOU::NOU_DAT_ALG::StringView<char8> File::getPath()
 	{
-		return m_path;
+		return *m_path;
 	}
-	void File::setPath(const char8 *path)
+	void File::setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path)
 	{
-		m_path = path;
+		m_path = &path;
 	}
 	void File::setData(FILE *data)
 	{
