@@ -2,7 +2,7 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, AccessMode mode, const NOU::NOU_DAT_ALG::StringView<char8> &path = "")
+	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, AccessMode mode, const NOU::NOU_DAT_ALG::StringView<char8> &path)
 	{
 		//#pragma warning(suppress : 4996)
 		//m_data = fopen(name, mode);
@@ -59,27 +59,27 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			case 0:
 				#pragma warning(suppress : 4996)
-				setData(fopen(m_name->rawStr, "r"));
+				setData(fopen(m_absolutePath.rawStr(), "r"));
 				break;
 			case 1:
 				#pragma warning(suppress : 4996)
-				setData(fopen(m_name->rawStr, "w"));
+				setData(fopen(m_absolutePath.rawStr(), "w"));
 				break;
 			case 2:
 				#pragma warning(suppress : 4996)
-				setData(fopen(m_name->rawStr, "a"));
+				setData(fopen(m_absolutePath.rawStr(), "a"));
 				break;
 			case 3:
 				#pragma warning(suppress : 4996)
-				setData(fopen(m_name->rawStr, "r+"));
+				setData(fopen(m_absolutePath.rawStr(), "r+"));
 				break;
 			case 4:
 				#pragma warning(suppress : 4996)
-				setData(fopen(m_name->rawStr, "w+"));
+				setData(fopen(m_absolutePath.rawStr(), "w+"));
 				break;
 			case 5:
 				#pragma warning(suppress : 4996)
-				setData(fopen(m_name->rawStr, "a+"));
+				setData(fopen(m_absolutePath.rawStr(), "a+"));
 				break;
 		}
 		

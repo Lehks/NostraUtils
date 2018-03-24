@@ -26,7 +26,7 @@ namespace NOU::NOU_FILE_MNGT
 			return false;
 		}
 
-		tmp.close();
+		//tmp.close();
 
 		return true;
 	}
