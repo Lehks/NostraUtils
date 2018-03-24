@@ -1,12 +1,12 @@
 #include "nostrautils\file_mngt\FileManager.hpp"
-#include "nostrautils\file_mngt\File.hpp"
 
 namespace NOU::NOU_FILE_MNGT
 {
 
 	FileManager::FileManager()
 	{
-
+		m_storedFiles = 0;
+		m_storedFolders = 0;
 	}
 
 	FileManager FileManager::getInstance()
@@ -16,60 +16,52 @@ namespace NOU::NOU_FILE_MNGT
 		return instance;
 	}
 
-	boolean FileManager::createFile(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &mode)
+	boolean FileManager::addFile(const NOU::NOU_DAT_ALG::StringView<char8>& name, const NOU::NOU_DAT_ALG::StringView<char8>& path)
 	{
-		File tmp(name, mode);
-		boolean hasError = tmp().open(name, mode);
 
-		if (!tmp.open())
-		{
-			return false;
-		}
 
-		//tmp.close();
-
-		return true;
+		return boolean();
 	}
 
-	boolean FileManager::openFile(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &mode)
+	boolean FileManager::openFile(File file)
 	{
-		File tmp(fopen(name, mode));
-
-		if (!tmp.open)
-		{
-			return false;
-		}
-
-		return true;
+		return ;
 	}
 
-	boolean FileManager::deleteFile(const NOU::NOU_DAT_ALG::StringView<char8> &name)
-	{
-		int ret;
-
-		ret = remove(filename);
-
-		if (ret == 0) 
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	boolean FileManager::createFolder(NOU::NOU_DAT_ALG::String<char8> path, NOU::NOU_DAT_ALG::String<char8> name)
+	boolean FileManager::closeFile(File file)
 	{
 		return boolean();
 	}
 
-	boolean FileManager::openFolder(NOU::NOU_DAT_ALG::String<char8> fullpath)
+	void FileManager::writeFile(byte b)
+	{
+	}
+
+	byte FileManager::readFile(File file)
+	{
+		return byte();
+	}
+
+	boolean FileManager::removeFile(File file)
 	{
 		return boolean();
 	}
 
-	boolean FileManager::deleteFolder(NOU::NOU_DAT_ALG::String<char8> fullpath)
+	NOU::NOU_DAT_ALG::StringView<char8> FileManager::getFileName(File file)
 	{
-		return boolean();
+		return NOU::NOU_DAT_ALG::StringView<char8>();
 	}
+
+	NOU::NOU_DAT_ALG::StringView<char8> FileManager::getFilePath(File file)
+	{
+		return NOU::NOU_DAT_ALG::StringView<char8>();
+	}
+
+	NOU::NOU_DAT_ALG::StringView<char8> FileManager::getAbsoluteFilePath(File file)
+	{
+		return NOU::NOU_DAT_ALG::StringView<char8>();
+	}
+
+
 
 }
