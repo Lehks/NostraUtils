@@ -108,6 +108,7 @@ namespace NOU::NOU_FILE_MNGT
 	void File::setName(const NOU::NOU_DAT_ALG::StringView<char8> &name)
 	{
 		m_name = &name;
+		calcAbsolutePath();
 	}
 
 	AccessMode File::getMode()
@@ -126,6 +127,12 @@ namespace NOU::NOU_FILE_MNGT
 	void File::setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path)
 	{
 		m_path = &path;
+		calcAbsolutePath();
+	}
+
+	NOU::NOU_DAT_ALG::StringView<char8> File::getAbsolutePath()
+	{
+		return m_absolutePath;
 	}
 
 	void File::setData(FILE *data)

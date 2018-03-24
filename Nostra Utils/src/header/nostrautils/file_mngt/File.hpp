@@ -138,10 +138,15 @@ namespace NOU::NOU_FILE_MNGT
 		NOU::NOU_DAT_ALG::StringView<char8> getPath();
 		void setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path);
 
+		NOU::NOU_DAT_ALG::StringView<char8> getAbsolutePath();
+
 		void setData(FILE *data);
 		FILE* getData(); 
 
 		///END COMMENT
+
+	private:
+		void calcAbsolutePath();
 
 	};
 }
