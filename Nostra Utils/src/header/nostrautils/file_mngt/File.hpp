@@ -50,7 +50,7 @@ namespace NOU::NOU_FILE_MNGT
 		File(File &&other);
 
 		byte read();
-		void write();
+		bool write(byte b);
 
 		bool open();
 

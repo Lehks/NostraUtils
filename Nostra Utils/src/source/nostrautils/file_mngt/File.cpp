@@ -31,14 +31,25 @@ namespace NOU::NOU_FILE_MNGT
 
 	byte File::read()
 	{
+		NOU_COND_PUSH_ERROR((m_mode == WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
+		NOU_COND_PUSH_ERROR((m_mode == APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
+
+		if (m_mode == WRITE || m_mode == APPEND)
+		{
+			return 0;
+		} 
+
 		return fgetc(m_data);
 	}
-	void File::write()
+	bool File::write(byte b)
 	{
-		if (getAppendMode())	//true
+		NOU_COND_PUSH_ERROR((m_mode == READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
+		if (m_mode != READ)
 		{
-
+			fputc(b, getData());
+			return true;
 		}
+		return false;
 	}
 
 
