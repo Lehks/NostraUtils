@@ -12,9 +12,11 @@ using namespace NOU_FILE_MNGT;
 
 int main()
 {
-	File f("", "D:/C++/NostraUtilsTest/TestFile.txt", "r");
+	File f("TestFile.txt", WRITE, "D:\\C++\\NostraUtils\\Test");
 	f.open();
-	cout << f.read();
-	system("pause");
-	return 0;
+	for (int i = 0; i < 10; i++)
+	{
+		cout << f.write('b') << endl;
+	}
+	f.close();
 }

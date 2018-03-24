@@ -18,15 +18,15 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean FileManager::createFile(const NOU::char8 *name, const NOU::char8 *mode)
 	{
-		#pragma warning(suppress : 4996)
-		File tmp(fopen(name, mode), mode);
+		//#pragma warning(suppress : 4996)
+		//File tmp(fopen(name, mode), mode);
 
 		/*if (!tmp.open())
 		{
 			return false;
 		}*/
 
-		tmp.close();
+		//tmp.close();
 
 		return true;
 	}
