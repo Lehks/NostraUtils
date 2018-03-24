@@ -44,9 +44,34 @@ namespace NOU::NOU_FILE_MNGT
 
 	bool File::open()
 	{
-
-		#pragma warning(suppress : 4996)
-		setData(fopen(m_name->rawStr, m_mode->rawStr));
+		switch (m_mode)
+		{
+			case 0:
+				#pragma warning(suppress : 4996)
+				setData(fopen(m_name->rawStr, "r"));
+				break;
+			case 1:
+				#pragma warning(suppress : 4996)
+				setData(fopen(m_name->rawStr, "w"));
+				break;
+			case 2:
+				#pragma warning(suppress : 4996)
+				setData(fopen(m_name->rawStr, "a"));
+				break;
+			case 3:
+				#pragma warning(suppress : 4996)
+				setData(fopen(m_name->rawStr, "r+"));
+				break;
+			case 4:
+				#pragma warning(suppress : 4996)
+				setData(fopen(m_name->rawStr, "w+"));
+				break;
+			case 5:
+				#pragma warning(suppress : 4996)
+				setData(fopen(m_name->rawStr, "a+"));
+				break;
+		}
+		
 		return getData() != NULL;
 	}
 	bool File::close()
