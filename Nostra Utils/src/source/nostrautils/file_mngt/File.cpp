@@ -29,6 +29,11 @@ namespace NOU::NOU_FILE_MNGT
 
 	}
 
+	File::~File()
+	{
+		close();
+	}
+
 	byte File::read()
 	{
 		NOU_COND_PUSH_ERROR((m_mode == WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
@@ -88,6 +93,11 @@ namespace NOU::NOU_FILE_MNGT
 	bool File::close()
 	{
 		return (fclose(m_data) == NULL);
+	}
+	void File::createFile()
+	{
+		open();
+		close();
 	}
 	
 	NOU::NOU_DAT_ALG::StringView<char8> File::getName()

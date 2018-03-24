@@ -4,6 +4,7 @@
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\file_mngt\FileManager.hpp"
 #include <stdlib.h>
 
 
@@ -70,13 +71,20 @@ namespace NOU::NOU_FILE_MNGT
 
 		\param name name of the File
 		\param mode how the File will be interpreted(Read/Write)
-		\param
+		\param path absolute path to the file
 		*/
 		File(const NOU::NOU_DAT_ALG::StringView<char8> &name, AccessMode mode, const NOU::NOU_DAT_ALG::StringView<char8> &path);
-		//copy
+		
+		/**
+		\brief copy construcor of the File class
+
+		\param other other constructer from which this will copy
+		*/
 		File(const File &other);
 		//mv
 		File(File &&other);
+
+		~File();
 
 		byte read();
 		bool write(byte b);
@@ -85,6 +93,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		//returns true if sucessfully closed
 		bool close();
+		void createFile();
 
 
 		NOU::NOU_DAT_ALG::StringView<char8> getName();
