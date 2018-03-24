@@ -2,32 +2,44 @@
 #define NOU_FILE_MNGT_FILEMANAGER_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\file_mngt\File.hpp"
 #include "nostrautils\dat_alg\String.hpp"
+#include "nostrautils\dat_alg\Vector.hpp"
 #include <stdlib.h>
 
 namespace NOU::NOU_FILE_MNGT
 {
-
 	class NOU_CLASS FileManager
 	{
 	private	:
+
+		NOU::NOU_DAT_ALG::Vector<File> m_fileStorage;
+		NOU::NOU_DAT_ALG::Vector<File> m_folderStorage;
+
+		sizeType m_storedFiles;
+		sizeType m_storedFolders;
+
 		FileManager();
 	public:
 		static FileManager getInstance();
 
-		boolean createFile(const NOU::char8 *name, const NOU::char8 *mode);
+		boolean addFile(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path);
 
-		boolean openFile(const NOU::char8 *name, const NOU::char8 *mode);
+		boolean openFile(File file);
 
-		boolean deleteFile(const NOU::char8 *filename);
+		boolean closeFile(File file);
 
-		boolean createFolder(NOU::NOU_DAT_ALG::String<char8> path, NOU::NOU_DAT_ALG::String<char8> name);
+		void writeFile(byte b);
 
-		boolean openFolder(NOU::NOU_DAT_ALG::String<char8> fullpath);
+		byte readFile(File file);
 
-		boolean deleteFolder(NOU::NOU_DAT_ALG::String<char8> fullpath);
+		boolean removeFile(File file);
 
+		NOU::NOU_DAT_ALG::StringView<char8> getFileName(File file);
 
+		NOU::NOU_DAT_ALG::StringView<char8> getFilePath(File file);
+
+		NOU::NOU_DAT_ALG::StringView<char8> getAbsoluteFilePath(File file);
 	};
 
 }
