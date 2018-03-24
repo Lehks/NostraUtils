@@ -11,10 +11,7 @@ namespace NOU::NOU_FILE_MNGT
 		setPath(path);
 		setMode(mode);
 		setName(name);
-		m_absolutePath;
-		m_absolutePath.append(path);
-		m_absolutePath.append("/");
-		m_absolutePath.append(name);
+		
 	}
 
 	
@@ -98,6 +95,14 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		open();
 		close();
+	}
+
+	void File::calcAbsolutePath()
+	{
+		m_absolutePath;
+		m_absolutePath.append(m_path->rawStr);
+		m_absolutePath.append("/");
+		m_absolutePath.append(m_name->rawStr);
 	}
 	
 	NOU::NOU_DAT_ALG::StringView<char8> File::getName()

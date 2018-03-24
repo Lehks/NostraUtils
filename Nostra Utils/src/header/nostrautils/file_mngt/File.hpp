@@ -146,6 +146,10 @@ namespace NOU::NOU_FILE_MNGT
 		///END COMMENT
 
 	private:
+
+		/**
+		\brief calculates the internal stored absulute path from the name and path
+		*/
 		void calcAbsolutePath();
 
 	};
