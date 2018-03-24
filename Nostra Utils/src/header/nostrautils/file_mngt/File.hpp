@@ -73,7 +73,7 @@ namespace NOU::NOU_FILE_MNGT
 		\param mode how the File will be interpreted(Read/Write)
 		\param path absolute path to the file
 		*/
-		File(const NOU::NOU_DAT_ALG::StringView<char8> &name, AccessMode mode, const NOU::NOU_DAT_ALG::StringView<char8> &path);
+		File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode = READ_WRITE);
 		
 		/**
 		\brief copy construcor of the File class
