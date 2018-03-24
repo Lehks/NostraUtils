@@ -15,11 +15,15 @@ namespace NOU::NOU_FILE_MNGT
 
 		NOU::NOU_DAT_ALG::Vector<File> m_fileStorage;
 		NOU::NOU_DAT_ALG::Vector<File> m_folderStorage;
+		NOU::NOU_DAT_ALG::Vector<File> m_openedFiles;
 
 		sizeType m_storedFiles;
+		sizeType m_openedFileCount;
 		sizeType m_storedFolders;
 
 		FileManager();
+
+		boolean removeFromOpenedFiles(File file);
 	public:
 		static FileManager getInstance();
 
@@ -29,9 +33,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		boolean closeFile(File file);
 
-		void writeFile(byte b);
-
-		byte readFile(File file);
+		File getFile(const NOU::NOU_DAT_ALG::StringView<char8> &name);
 
 		boolean removeFile(File file);
 
