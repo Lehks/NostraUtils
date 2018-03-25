@@ -140,12 +140,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Constructs a new instance that is filled with the characters from the passed string view.
 		*/
 		String(const StringView<CHAR_TYPE> &str = "");
-		/**
-		\param str The initial value of the string.
 
-		\brief Constructs a new instance that is filled with the characters from the passed string view.
-		*/
-		String(ConstCharType *str);
 		/**
 		\param c The initial value of the string.
 
@@ -1117,11 +1112,6 @@ namespace NOU::NOU_DAT_ALG
 
 		setSize(str.size() - 1);
 	}
-
-	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(ConstCharType *str) :
-		String(StringView<CHAR_TYPE>(str))
-	{}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(CharType c) :
