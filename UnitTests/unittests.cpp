@@ -18,12 +18,15 @@
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
+#include "nostrautils\mem_mngt\PoolAllocator.hpp"
+#include "nostrautils\mem_mngt\GeneralPurposeAllocator.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\Hashing.hpp"
 #include "nostrautils\dat_alg\BinarySearch.hpp"
 #include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\dat_alg\HashMap.hpp"
+#include "nostrautils\thread\Threads.hpp"
 
 #include "DebugClass.hpp"
 
@@ -1024,7 +1027,99 @@ namespace UnitTests
 			}
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(PoolAllocator)
+		{
+			NOU::NOU_MEM_MNGT::PoolAllocator<NOU::DebugClass> pa;
+
+			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass*> dbgCls;
+
+			NOU::sizeType testValue = 1234;
+
+			const NOU::sizeType ALLOC_SIZE = 4321;
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				dbgCls.push(pa.allocate(testValue));
+			}
+
+			for (NOU::DebugClass* value : dbgCls)
+			{
+				Assert::IsTrue(value->get() == testValue);
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == ALLOC_SIZE);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				pa.deallocate(dbgCls.pop());
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 		
+			{
+				NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> uninit;
+
+				Assert::IsTrue(!uninit.isValid());
+
+				uninit = NOU::DebugClass(1);
+
+				Assert::IsTrue(uninit.isValid());
+
+				uninit.destroy();
+
+				Assert::IsTrue(!uninit.isValid());
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+			}
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(GeneralPurposeAllocator)
+		{
+			using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::
+				GeneralPurposeAllocatorPointer<NOU::DebugClass>;
+
+			NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
+			NOU::NOU_DAT_ALG::Vector<HandleType> dbgVec;
+			NOU::sizeType testValue = 12345;
+			const NOU::sizeType ALLOC_SIZE = 40;
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			dbgVec.push(gpa.allocateObjects<NOU::DebugClass>(1, testValue));
+			gpa.deallocateObjects(dbgVec.at(0));
+			dbgVec.pop();
+			gpa.deallocateObjects(dbgVec.at(0));
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+			NOU::NOU_CORE::getErrorHandler().popError();
+			
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				dbgVec.push(gpa.allocateObject<NOU::DebugClass>(testValue));
+			}
+
+			for (HandleType &value : dbgVec)
+			{
+				Assert::IsTrue(value->get() == testValue);
+			}
+
+			for (int i = 0; i < dbgVec.size(); i++)
+			{
+				gpa.deallocateObjects(dbgVec.at(i));
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
@@ -1454,6 +1549,57 @@ namespace UnitTests
 
 			NOU::DebugClass dbgCls(5);
 			Assert::IsFalse(objPool.isPartOf(dbgCls));
+		}
+
+		static void taskTestFunction1(NOU::int32 i, NOU::int32 *out)
+		{
+			*out = i;
+		}
+
+		static NOU::int32 taskTestFunction2(NOU::int32 i)
+		{
+			return i;
+		}
+
+		TEST_METHOD(Task)
+		{
+			NOU::int32 i1 = 5;
+			NOU::int32 out;
+
+			auto task1 = NOU::NOU_THREAD::makeTask(&taskTestFunction1, i1, &out);
+
+			task1.execute();
+
+			Assert::IsTrue(out == i1);
+
+
+			//just to make sure that INVALID_OBJECT is the first error in the handler later
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			NOU::int32 i2 = 5;
+
+			auto task2 = NOU::NOU_THREAD::makeTask(&taskTestFunction2, i2);
+
+			task2.getResult();
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().popError().getID() == 
+				NOU::NOU_CORE::ErrorCodes::INVALID_OBJECT);
+
+			task2.execute();
+
+			Assert::IsTrue(task2.getResult() == i2);
+		}
+
+		//no more tests are possible, since the remaining methods of thread manager are either not reliable 
+		//(like currentlyAvailableThreads(), which may change any moment) or there are no observable values 
+		//produced (like pushTask())
+		TEST_METHOD(ThreadManager)
+		{
+			NOU::NOU_THREAD::ThreadManager &manager = NOU::NOU_THREAD::getThreadManager();
+
+			Assert::IsTrue(manager.maximumAvailableThreads() == 
+				NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
 		}
 	};
 }
