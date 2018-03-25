@@ -1061,6 +1061,22 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 		
+			{
+				NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> uninit;
+
+				Assert::IsTrue(!uninit.isValid());
+
+				uninit = NOU::DebugClass(1);
+
+				Assert::IsTrue(uninit.isValid());
+
+				uninit.destroy();
+
+				Assert::IsTrue(!uninit.isValid());
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+			}
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
