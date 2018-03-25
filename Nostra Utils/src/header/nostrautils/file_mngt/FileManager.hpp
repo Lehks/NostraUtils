@@ -1,4 +1,4 @@
-#ifndef NOU_FILE_MNGT_FILEMANAGER_HPP
+#ifdef NOU_FILE_MNGT_FILEMANAGER_HPP
 #define NOU_FILE_MNGT_FILEMANAGER_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"

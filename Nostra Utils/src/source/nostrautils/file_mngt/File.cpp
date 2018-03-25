@@ -2,6 +2,7 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
+	/*
 	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode)
 	{
 		//#pragma warning(suppress : 4996)
@@ -167,5 +168,5 @@ namespace NOU::NOU_FILE_MNGT
 	FILE* File::getData()
 	{
 		return m_data;
-	}
+	}*/
 }

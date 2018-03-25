@@ -14,6 +14,14 @@ namespace NOU::NOU_FILE_MNGT
 {
 	class NOU_CLASS Path
 	{
+	public:
+		constexpr static char8 FILE_NAME_EXTENSION_SEPARATOR = '.';
+#if NOU_OS == NOU_OS_WINDOWS
+		constexpr static char8 PATH_SEPARATOR = '\\';
+#elif NOU_OS == NOU_OS_UNIX ||  NOU_OS == NOU_OS_LINUX ||  NOU_OS == NOU_OS_MAC
+		constexpr static char8 PATH_SEPARATOR = '/';
+#endif
+
 	private:
 		static NOU_DAT_ALG::String8 makeAbsolutePath(const NOU_DAT_ALG::StringView8 &path);
 
@@ -21,7 +29,6 @@ namespace NOU::NOU_FILE_MNGT
 		static NOU_DAT_ALG::String8 evaluateExtension(const NOU_DAT_ALG::StringView8 &path);
 		static NOU_DAT_ALG::String8 evaluateNameAndExtension(const NOU_DAT_ALG::StringView8 &path);
 		static NOU_DAT_ALG::String8 evaluateRelativePath(const NOU_DAT_ALG::StringView8 &path);
-		static NOU_DAT_ALG::String8 evaluateAbsolutePath(const NOU_DAT_ALG::StringView8 &path);
 		static NOU_DAT_ALG::String8 evaluateParentPath(const NOU_DAT_ALG::StringView8 &path);
 
 
@@ -35,10 +42,10 @@ namespace NOU::NOU_FILE_MNGT
 		mutable LazyEvalProp<decltype(&evaluateName)>				m_name;
 		mutable LazyEvalProp<decltype(&evaluateExtension)>			m_extension;
 		mutable LazyEvalProp<decltype(&evaluateNameAndExtension)>	m_nameAndExtension;
-		mutable LazyEvalProp<decltype(&evaluateRelativePath)>		m_relativPath;
-		mutable LazyEvalProp<decltype(&evaluateAbsolutePath)>		m_absolutePath;
+		mutable LazyEvalProp<decltype(&evaluateRelativePath)>		m_relativePath;
 		mutable LazyEvalProp<decltype(&evaluateParentPath)>			m_parentPath;
 	public:
+		Path(NOU::NOU_DAT_ALG::StringView8::ConstCharType *path);
 		Path(const NOU::NOU_DAT_ALG::StringView8 & path);
 
 		const NOU::NOU_DAT_ALG::StringView8 & getName() const;

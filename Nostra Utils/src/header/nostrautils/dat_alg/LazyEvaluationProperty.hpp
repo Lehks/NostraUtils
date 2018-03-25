@@ -30,7 +30,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T, typename EVAL_FUNC, typename... EVAL_FUNC_ARGS>
 	class NOU_CLASS LazyEvaluationProperty final
 	{
-		static_assert(NOU_CORE::IsInvocableR<T, EVAL_FUNC, EVAL_FUNC_ARGS>::value);
+//		static_assert(NOU_CORE::IsInvocableR<T, EVAL_FUNC, EVAL_FUNC_ARGS>::value);
 
 	private:
 		/**
