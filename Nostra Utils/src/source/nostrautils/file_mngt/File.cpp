@@ -71,9 +71,17 @@ namespace NOU::NOU_FILE_MNGT
 		return false;
 	}
 
-	bool write(NOU::NOU_DAT_ALG::StringView8 s)
+	bool File::write(const NOU::NOU_DAT_ALG::StringView8 &s)
 	{
-
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
+		if (m_mode != AccessMode::READ)
+		{
+			char8 *p;
+			p = s.rawStr;
+			fread(p, s.size(), 1, m_data);
+			return true;
+		}
+		return false;
 	}
 
 

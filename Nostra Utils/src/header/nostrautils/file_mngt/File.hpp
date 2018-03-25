@@ -120,8 +120,9 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief writes a string into a file
 		\param s the given string
+		\return true if successfully written, false if otherwise
 		*/
-		bool write(NOU::NOU_DAT_ALG::StringView8 s);
+		bool write(const NOU::NOU_DAT_ALG::StringView8 &s);
 
 		/**
 		\brief opens the internal filestream
