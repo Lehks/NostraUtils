@@ -104,11 +104,24 @@ namespace NOU::NOU_FILE_MNGT
 		byte read();
 
 		/**
+		\brief reads a string from given size
+		\param size StringSize in byte 
+		*/
+		void read(sizeType size, char8 &buffer);
+
+		/**
 		\brief writes a single byte into a file according to the i/o mode that is set
 
 		\return true if successfully written, false if otherwise
 		*/
 		bool write(byte b);
+
+
+		/**
+		\brief writes a string into a file
+		\param s the given string
+		*/
+		bool write(NOU::NOU_DAT_ALG::StringView8 s);
 
 		/**
 		\brief opens the internal filestream
