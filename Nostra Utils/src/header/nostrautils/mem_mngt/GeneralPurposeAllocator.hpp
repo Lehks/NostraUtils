@@ -568,6 +568,30 @@ namespace NOU::NOU_MEM_MNGT
 	template <typename T>
 	void GeneralPurposeAllocator::deallocateObjects(GeneralPurposeAllocatorPointer<T> pointer)
 	{
+#ifdef NOU_DEBUG
+		//data chunk boundary checks
+		if (reinterpret_cast<byte*>(pointer.m_pdata) < m_data ||
+			reinterpret_cast<byte*>(pointer.m_pdata) + pointer.m_size >= m_data + m_size)
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_DEALLOCATION,
+					"Tried to deallocated an object that does not exist.");
+			return;
+		}
+
+		//Checks if the pointer is a free chunks->object already deallocated.
+		for (internal::GeneralPurposeAllocatorFreeChunk &chunk : m_freeChunks)
+		{
+			if (!(reinterpret_cast<byte*>(pointer.m_pdata) < chunk.m_addr ||
+				reinterpret_cast<byte*>(pointer.m_pdata + pointer.m_size) >= chunk.m_addr + chunk.m_size))
+			{
+				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_DEALLOCATION,
+					"Tried to deallocated an object that does not exist.");
+				return;
+			}
+		}
+
+#endif
+
 		for (sizeType i = 0; i < pointer.m_size; i++)
 		{
 			addressof(pointer.m_pdata[i])->~T();
@@ -590,7 +614,7 @@ namespace NOU::NOU_MEM_MNGT
 
 		boolean didMerge = false;
 
-		if (left->m_addr != m_freeChunks.at(-1).m_addr)
+		if (left->m_addr != reinterpret_cast<byte*>(m_freeChunks.data() - 1))
 		{
 			if (left->touches(*p_gpafc))
 			{
@@ -599,14 +623,8 @@ namespace NOU::NOU_MEM_MNGT
 				didMerge = true;
 			}
 		}
-		else
-		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_DEALLOCATION,
-				"Tried to deallocated an object that does not exist.");
-			return;
-		}
 
-		if(right->m_addr != m_freeChunks.at(m_freeChunks.size()).m_addr)
+		if(right->m_addr != reinterpret_cast<byte*>(m_freeChunks.data() + m_freeChunks.size()))
 		{ 
 			if (right->touches(*p_gpafc))
 			{

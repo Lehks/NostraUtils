@@ -11,6 +11,11 @@
 #include <string>
 #include <type_traits>
 
+void callback(const NOU::NOU_CORE::ErrorLocation &loc)
+{
+	__debugbreak();
+}
+
 class Person
 {
 public:
@@ -39,6 +44,8 @@ public:
 
 int main()
 {
+	//NOU::NOU_CORE::ErrorHandler::setCallback(callback);
+
 	using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<Person>;
 
 	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
@@ -46,14 +53,15 @@ int main()
 
 	test.push(gpa.allocateObjects<Person>(1, 40, "Mike", "Braun"));
 	test.at(0).getRaw()->print();
+
 	gpa.deallocateObjects(test.at(0));
 	test.pop();
 	gpa.deallocateObjects(test.at(0));
+
 	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
 	test.push(gpa.allocateObjects<Person>(1, 40, "Petra", "Braun"));
 	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
 	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
-
 	for (int i = 0; i < test.size(); i++)
 	{
 		test.at(i).getRaw()->print();
@@ -62,5 +70,6 @@ int main()
 	{
 		gpa.deallocateObjects(test.at(i));
 	}
+
 	system("pause");
 }
