@@ -105,19 +105,20 @@ namespace NOU::NOU_FILE_MNGT
 	void File::calcAbsolutePath()
 	{
 		m_absolutePath;
-		m_absolutePath.append(m_path->rawStr);
+		m_absolutePath.append(m_path);
 		m_absolutePath.append("/");
-		m_absolutePath.append(m_name->rawStr);
+		m_absolutePath.append(m_name);
+		close();
 	}
 	
 	NOU::NOU_DAT_ALG::StringView<char8> File::getName()
 	{
 		//return static_cast<const NOU::NOU_DAT_ALG::StringView<char8>>(m_name);
-		return *m_name;
+		return m_name;
 	}
 	void File::setName(const NOU::NOU_DAT_ALG::StringView<char8> &name)
 	{
-		m_name = &name;
+		m_name = name;
 		calcAbsolutePath();
 	}
 
@@ -132,11 +133,11 @@ namespace NOU::NOU_FILE_MNGT
 
 	NOU::NOU_DAT_ALG::StringView<char8> File::getPath()
 	{
-		return *m_path;
+		return m_path;
 	}
 	void File::setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path)
 	{
-		m_path = &path;
+		m_path = path;
 		calcAbsolutePath();
 	}
 
