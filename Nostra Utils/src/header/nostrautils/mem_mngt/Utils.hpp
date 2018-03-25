@@ -3,6 +3,8 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 
+#include <memory>
+
 /**
 \file mem_mngt/Utils.hpp
 
@@ -62,6 +64,19 @@ namespace NOU::NOU_MEM_MNGT
 	NOU_FUNC T* allocateUninitialized(sizeType amount);
 
 	/**
+	\tparam The type of the object.
+
+	\param data The data where we want the address from.
+
+	\return Returns the address of the passed object.
+
+	\brief Calls the std::addressof() in memory.h and returns the address of the passed object. 
+		   Wrapper for std::addressof.
+	*/
+	template<typename T>
+	constexpr NOU_FUNC T* addressof(T& data);
+
+	/**
 	\param data The data to deallocate.
 
 	\brief Deallocates a block of memory that was allocated using allocateUninitialized().
@@ -80,6 +95,12 @@ namespace NOU::NOU_MEM_MNGT
 	NOU_FUNC T* allocateUninitialized(sizeType amount)
 	{
 		return reinterpret_cast<T*>(alignedAlloc(sizeof(T) * amount, alignof(T)));
+	}
+
+	template<typename T>
+	constexpr NOU_FUNC T* addressof(T& data)
+	{
+		return std::addressof(data);
 	}
 }
 
