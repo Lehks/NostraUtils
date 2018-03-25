@@ -323,6 +323,8 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
+    <ClInclude Include="src\header\nostrautils\mem_mngt\GeneralPurposeAllocator.hpp" />
+    <ClInclude Include="src\header\nostrautils\mem_mngt\PoolAllocator.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp" />

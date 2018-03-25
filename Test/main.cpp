@@ -1,155 +1,75 @@
+#define NOU_DEBUG
+
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\dat_alg\BinaryHeap.hpp"
-#include "nostrautils\dat_alg\ObjectPool.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\thread\Threads.hpp"
+#include "nostrautils\mem_mngt\PoolAllocator.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils\mem_mngt\GeneralPurposeAllocator.hpp"
+
 #include <iostream>
+#include <string>
+#include <type_traits>
 
-using namespace NOU;
-using namespace NOU_CORE;
-using namespace NOU_DAT_ALG;
-using namespace NOU_THREAD;
-using namespace NOU_MEM_MNGT;
-
-void callback(const ErrorLocation& el)
+void callback(const NOU::NOU_CORE::ErrorLocation &loc)
 {
 	__debugbreak();
 }
 
-class A
+class Person
 {
-private:
-	int i;
 public:
-	A() = default;
-	A(int i) : i(i) {}
+	size_t m_age;
+	std::string m_name;
+	std::string m_haircolor;
 
-	int get() const { return i; }
-
-	A add(A&& a)
+	Person(size_t age, std::string name, std::string haircolor) :
+		m_age(age),
+		m_name(name),
+		m_haircolor(haircolor)
 	{
-		return A(i + a.i);
+		std::cout << "Konstruktor" << std::endl;
 	}
 
-	A operator + (const A& a)
+	~Person()
 	{
-		return A(i + a.i);
+		std::cout << "Destruktor" << std::endl;
+	}
+
+	void print()
+	{
+		std::cout << m_name << " " << m_age << " " << m_haircolor << std::endl;
 	}
 };
 
-NOU_DEFINE_PAIR(P, A, a, A, b)
-
-void func()
-{
-	std::cout << "Func" << std::endl;
-}
-
-uint8 values[100] = {0};
-
-Mutex m;
-
-void func1(int32 i)
-{
-	values[i]++;
-
-	{
-		Lock l(m);
-		std::cout << "Func #" << i << std::endl;
-	}
-
-	for (uint64 i = 0; i < 100'000'000; i++)
-	{
-		i++;
-		i--;
-	}
-
-	{
-		Lock l(m);
-		std::cout << "Func #" << i << " Done." << std::endl;
-	}
-
-	values[i]++;
-}
-
-int func2(int i)
-{
-	std::cout << "Func2 " << i << " " << std::this_thread::get_id() << std::endl;
-
-	//for (int i = 0; i < 1'000'000'0; i++)
-	//{
-	//	i++;
-	//	i--;
-	//}
-
-	return i;
-}
-
-void func3(int i)
-{
-	std::cout << "Func3 " << i << " " << std::this_thread::get_id() << std::endl;
-
-	//for (int i = 0; i < 1'000'000'0; i++)
-	//{
-	//	i++;
-	//	i--;
-	//}
-}
-
-void func4(int i)
-{
-	std::cout << "Func4 " << i << " " << std::this_thread::get_id() << std::endl;
-
-	//for (int i = 0; i < 1'000'000'0; i++)
-	//{
-	//	i++;
-	//	i--;
-	//}
-}
-
-void doStuff()
-{
-	std::cout << "Do stuff. " << std::this_thread::get_id() << std::endl;
-}
-
-void testFunc()
-{
-	AsyncTaskResult<void, decltype(&doStuff)> asyncTaskResult(&doStuff);
-
-	std::cout << "testFunc " << std::this_thread::get_id() << std::endl;
-
-	for (int i = 0; i < 10000; i++)
-	{
-		i++;
-		i--;
-	}
-
-	asyncTaskResult.getResult();
-}
-
 int main()
 {
-	std::cout << "mt: " << std::this_thread::get_id() << std::endl;
+	//NOU::NOU_CORE::ErrorHandler::setCallback(callback);
 
-	TaskQueue<void, decltype(&testFunc)> tq(&TaskQueueAccumulators::forward<TaskQueueAccumulators::Void>);
+	using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<Person>;
 
-	tq.pushTask(makeTask(&testFunc));
-	tq.pushTask(makeTask(&testFunc));
-	tq.pushTask(makeTask(&testFunc));
-	tq.pushTask(makeTask(&testFunc));
-	tq.pushTask(makeTask(&testFunc));
+	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
+	NOU::NOU_DAT_ALG::Vector<HandleType> test;
 
-	for (int i = 0; i < 1000000; i++)
+	test.push(gpa.allocateObjects<Person>(1, 40, "Mike", "Braun"));
+	test.at(0).getRaw()->print();
+
+	gpa.deallocateObjects(test.at(0));
+	test.pop();
+	gpa.deallocateObjects(test.at(0));
+
+	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
+	test.push(gpa.allocateObjects<Person>(1, 40, "Petra", "Braun"));
+	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
+	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
+	for (int i = 0; i < test.size(); i++)
 	{
-		i++;
-		i--;
+		test.at(i).getRaw()->print();
+	}
+	for (int i = 0; i < test.size(); i++)
+	{
+		gpa.deallocateObjects(test.at(i));
 	}
 
-	tq.getResult();
-
-	std::cin.get();
+	system("pause");
 }
-
-//&(this->m_handlers.m_ptr->m_data.m_data->m_data.m_errors.m_ptr->m_allocator)

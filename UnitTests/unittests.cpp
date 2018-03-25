@@ -18,6 +18,8 @@
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
+#include "nostrautils\mem_mngt\PoolAllocator.hpp"
+#include "nostrautils\mem_mngt\GeneralPurposeAllocator.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\Hashing.hpp"
@@ -1025,6 +1027,40 @@ namespace UnitTests
 			}
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(PoolAllocator)
+		{
+			NOU::NOU_MEM_MNGT::PoolAllocator<NOU::DebugClass> pa;
+
+			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass*> dbgCls;
+
+			NOU::sizeType testValue = 1234;
+
+			const NOU::sizeType ALLOC_SIZE = 4321;
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				dbgCls.push(pa.allocate(testValue));
+			}
+
+			for (NOU::DebugClass* value : dbgCls)
+			{
+				Assert::IsTrue(value->get() == testValue);
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == ALLOC_SIZE);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				pa.deallocate(dbgCls.pop());
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 		
 			{
 				NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> uninit;
@@ -1041,6 +1077,48 @@ namespace UnitTests
 
 				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 			}
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(GeneralPurposeAllocator)
+		{
+			using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::
+				GeneralPurposeAllocatorPointer<NOU::DebugClass>;
+
+			NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
+			NOU::NOU_DAT_ALG::Vector<HandleType> dbgVec;
+			NOU::sizeType testValue = 12345;
+			const NOU::sizeType ALLOC_SIZE = 40;
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			dbgVec.push(gpa.allocateObjects<NOU::DebugClass>(1, testValue));
+			gpa.deallocateObjects(dbgVec.at(0));
+			dbgVec.pop();
+			gpa.deallocateObjects(dbgVec.at(0));
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+			NOU::NOU_CORE::getErrorHandler().popError();
+			
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				dbgVec.push(gpa.allocateObject<NOU::DebugClass>(testValue));
+			}
+
+			for (HandleType &value : dbgVec)
+			{
+				Assert::IsTrue(value->get() == testValue);
+			}
+
+			for (int i = 0; i < dbgVec.size(); i++)
+			{
+				gpa.deallocateObjects(dbgVec.at(i));
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
 
 			NOU_CHECK_ERROR_HANDLER;
 		}
