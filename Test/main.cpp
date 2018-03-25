@@ -21,6 +21,27 @@ int main()
 	Path p5 = "testfile";
 	Path p6 = "test.tar.gz";
 
+	"C:\\Users\\Dennis\\TestDir"; //<- current directory (TestDir)
+
+	"C:\\Users\\Dennis\\TestDir\\MyFile.exe"; //-> "MyFile.exe" 
+	"C:\\Users\\Dennis\\TestDir\\MyFolder\\MyFile.txt"; //-> "MyFolder\\MyFile.txt"
+	"C:\\Users\\Dennis\\TestDir"; //-> "."
+	"C:\\Users\\"; //-> "..\\..\\"
+	"C:\\Users\\SomeOtherDir"; //-> "..\\..\\SomeOtherDir\\"
+
+	Path p7 = "C:\\Test\\Test";
+	Path p8 = "\\Test";
+	Path p9 = "Ichhassemeinleben.exe";
+
+	std::cout << p7.getAbsolutePath().rawStr() << std::endl;
+	std::cout << p8.getAbsolutePath().rawStr() << std::endl;
+	std::cout << p9.getAbsolutePath().rawStr() << std::endl;
+
+	/*
+	std::cout << Path::currentWorkingDirectory().getAbsolutePath().rawStr() << std::endl;
+
+	std::cout << std::endl;
+
 	std::cout << p.getName().rawStr()  << "\t"	<< (p.getName()  == "testfile") << " " << p.getName().size()  << std::endl;
 	std::cout << p1.getName().rawStr() << "\t"	<< (p1.getName() == "testfile") << " " << p1.getName().size() << std::endl;
 	std::cout << p2.getName().rawStr() << "\t"	<< (p2.getName() == "testfile") << " " << p2.getName().size() << std::endl;
@@ -48,6 +69,6 @@ int main()
 	std::cout << p4.getNameAndExtension().rawStr() << "\t" << (p4.getNameAndExtension() == "") << " " << p4.getNameAndExtension().size() << std::endl;
 	std::cout << p5.getNameAndExtension().rawStr() << "\t" << (p5.getNameAndExtension() == "testfile") << " " << p5.getNameAndExtension().size() << std::endl;
 	std::cout << p6.getNameAndExtension().rawStr() << "\t" << (p6.getNameAndExtension() == "test.tar.gz") << " " << p6.getNameAndExtension().size() << std::endl;
-
+	*/
 	std::cin.get();
 }							

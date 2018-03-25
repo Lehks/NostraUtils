@@ -445,7 +445,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Finds all \p target characters and replaces them with \p replacement in the interval \f$\left[target,
 		replacement\right[\f$.
 		*/
-		String& replace(CharType target, CharType replacement, sizeType start = 0, sizeType end = NULL_INDEX);
+		String& replace(CharType target, CharType replacement, sizeType start = 0, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX);
 
 		/**
 		\param target      The substrings that will be replaced with \p replacement.
@@ -461,7 +461,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Finds all \p target substrings and replaces them with \p replacement in the interval \f$\left[target,
 		replacement\right[\f$.
 		*/
-		String& replace(const StringView<CHAR_TYPE> &target, const StringView<CHAR_TYPE> &replacement, sizeType start = 0, sizeType end = NULL_INDEX);
+		String& replace(const StringView<CHAR_TYPE> &target, const StringView<CHAR_TYPE> &replacement, sizeType start = 0, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX);
 
 		/**
 		\param start       The start of the interval of the substring that will be replaced. The character at this
@@ -487,7 +487,7 @@ namespace NOU::NOU_DAT_ALG
 		at the index \p insertIndex. This method is the opposite of copySubstringHere() in terms of from where
 		the source substring is pulled and where it is inserted.
 		*/
-		void copySubstringTo(String &target, sizeType start, sizeType end = NULL_INDEX,
+		void copySubstringTo(String &target, sizeType start, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX,
 			sizeType insertIndex = 0) const;
 
 		/**
@@ -504,7 +504,7 @@ namespace NOU::NOU_DAT_ALG
 		where the source substring is pulled and where it is inserted.
 		*/
 		String& copySubstringHere(const StringView<CHAR_TYPE> &src, sizeType start,
-			sizeType end = NULL_INDEX, sizeType insertIndex = 0);
+			sizeType end = StringView<CHAR_TYPE>::NULL_INDEX, sizeType insertIndex = 0);
 
 		/**
 		\param c     The character that will be used to fill the range.
@@ -527,7 +527,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Removes the characters in the interval \f$\left[start, end\right[\f$. This operation is the exact opposite
 		to preserve().
 		*/
-		String& remove(sizeType start, sizeType end = NULL_INDEX);
+		String& remove(sizeType start, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX);
 
 		/**
 		\param start The start of the interval that will be preserved. The character at this index will be included.
@@ -538,7 +538,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Removes all characters, except those in the interval \f$\left[start, end\right[\f$. This operation is the
 		exact opposite to remove(sizeType, sizeType).
 		*/
-		String& preserve(sizeType start, sizeType end = NULL_INDEX);
+		String& preserve(sizeType start, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX);
 
 		/**
 		\param start The start of the interval of the characters that will be in the substring. The character at this
@@ -551,7 +551,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns a string that contains the characters in the interval \f$\left[start, end\right[\f$.
 		*/
-		String substring(sizeType start, sizeType end = NULL_INDEX) const;
+		String substring(sizeType start, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX) const;
 
 		/**
 		\return A copy of this string.
@@ -1324,7 +1324,10 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(CharType target, CharType replacement, sizeType start, sizeType end)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1), 
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()), 
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
@@ -1341,7 +1344,10 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(const StringView<CHAR_TYPE>& target, const StringView<CHAR_TYPE>& replacement, sizeType start, sizeType end)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1),
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
@@ -1358,7 +1364,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(sizeType start, sizeType end, const StringView<CHAR_TYPE>& replacement)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1),
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i <end; i++)
@@ -1444,6 +1450,9 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const
 	{
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
 		target.insert(insertIndex, substring(start, end));
 		return *this;
 	}
@@ -1451,6 +1460,9 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::copySubstringHere(const StringView<CHAR_TYPE>& src, sizeType start, sizeType end, sizeType insertIndex)
 	{
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
 		m_data.insert(insertIndex, src.logicalSubstring(start, end))
 	}
 
@@ -1476,6 +1488,9 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::remove(sizeType start, sizeType end)
 	{
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
 		for (sizeType i = start; i < end; i++)
 		{
 			m_data.remove(i);
@@ -1488,7 +1503,10 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::preserve(sizeType start, sizeType end)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1),
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = 0; i < m_data.size() - 1; i++)

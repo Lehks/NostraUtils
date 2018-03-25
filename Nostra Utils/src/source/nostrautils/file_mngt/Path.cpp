@@ -1,11 +1,50 @@
 #include "nostrautils\file_mngt\Path.hpp"
 #include <iostream>
 
+
+#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+#include <Windows.h>
+#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+#include <unistd.h>
+#endif
+
 namespace NOU::NOU_FILE_MNGT
 {
 	NOU_DAT_ALG::String8 Path::makeAbsolutePath(const NOU_DAT_ALG::StringView8 &path)
 	{
-		return path;
+		NOU_DAT_ALG::String8 ret = path;
+
+#if NOU_OS == NOU_OS_WINDOWS
+
+		//replace all / with \ 
+		ret.replace(PATH_SEPARATOR_UNIX_LINUX, PATH_SEPARATOR_WINDOWS);
+
+		//if path starts not with *:\, it is a relative path (* is any character, like C)
+		if (!(path.at(1) == ':' && path.at(2) == PATH_SEPARATOR_WINDOWS)) 
+		{
+			Path cwd = currentWorkingDirectory();
+
+			ret.insert(0, cwd.getAbsolutePath());
+
+			if(!path.startsWith(PATH_SEPARATOR))
+				ret.insert(cwd.getAbsolutePath().size(), PATH_SEPARATOR);
+		}
+
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+
+		//replace all \ with /
+		ret.replace(PATH_SEPARATOR_WINDOWS, PATH_SEPARATOR_UNIX_LINUX);
+
+		if (!path.startsWith(PATH_SEPARATOR_UNIX_LINUX)) //if path starts not with /, it is a relative path
+		{
+			Path cwd = currentWorkingDirectory();
+
+			ret.insert(0, cwd.getAbsolutePath());
+			ret.insert(cwd.getAbsolutePath().size(), PATH_SEPARATOR);
+		}
+#endif
+
+		return ret;
 	}
 
 	NOU_DAT_ALG::String8 Path::evaluateName(const NOU_DAT_ALG::StringView8 &path)
@@ -68,14 +107,29 @@ namespace NOU::NOU_FILE_MNGT
 		// "testfile.test\\";
 		// "testfile";
 		// "test.tar.gz";
-
-
-		return path;
+		return NOU_DAT_ALG::String8();
 	}
 
 	NOU_DAT_ALG::String8 Path::evaluateParentPath(const NOU_DAT_ALG::StringView8 &path)
 	{
 		return path;
+	}
+
+	Path Path::currentWorkingDirectory()
+	{
+#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+		TCHAR path[MAX_PATH];
+
+		GetCurrentDirectory(MAX_PATH, path);
+
+		return Path(path);
+#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+		char cwd[1024];
+
+		char *getcwd(char *cwd, sizeof(cwd));
+
+		return Path(cwd);
+#endif
 	}
 
 	Path::Path(NOU::NOU_DAT_ALG::StringView8::ConstCharType *path) :
