@@ -180,12 +180,6 @@ namespace NOU::NOU_FILE_MNGT
 		const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath();
 
 		/**
-		\brief setter for the datastream
-		\param data pointer to the datastream
-		*/
-		void setData(FILE *data);
-
-		/**
 		\brief getter for datastream
 		\return datastream
 		*/
