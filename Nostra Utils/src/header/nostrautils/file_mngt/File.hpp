@@ -4,7 +4,6 @@
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\file_mngt\FileManager.hpp"
 #include <stdlib.h>
 
 
