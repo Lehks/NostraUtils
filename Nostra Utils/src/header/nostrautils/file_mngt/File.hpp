@@ -4,7 +4,7 @@
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
-#include <stdlib.h>
+#include <stdio.h>
 
 
 /** \file File.hpp
@@ -21,7 +21,13 @@
 namespace NOU::NOU_FILE_MNGT
 {
 	/*
-	insert Enum doc here
+	\brief Enum that stores all different AccessModes of a file
+	\details	READ				= opens file for Reading purposes
+				WRITE				= opens file for Writing purposes (overwriting)
+				APPEND				= opens file for Appending purposes (not overwriting)
+				READ_WRITE			= opens file for both reading and writing (overwriting)
+				READ_WRITE_RESETS	= opens the file for both reading and writing purposes after clearing the file(overwriting)
+				READ_APPEND			= opens the file for both reading and writing purposes (not overwriting)
 	*/
 	enum class AccessMode
 	{
@@ -53,15 +59,15 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief path to the Folder containing the File
 		*/
-		NOU::NOU_DAT_ALG::StringView<char8>								m_path;
+		NOU::NOU_DAT_ALG::StringView8							m_path;
 		/**
 		\brief absolute path to the corresponding File
 		*/
-		NOU::NOU_DAT_ALG::String<char8>									m_absolutePath;
+		NOU::NOU_DAT_ALG::String8								m_absolutePath;
 		/**
 		\brief name of the File
 		*/
-		NOU::NOU_DAT_ALG::StringView<char8>								m_name;
+		NOU::NOU_DAT_ALG::StringView8							m_name;
 
 	public:
 
@@ -72,14 +78,14 @@ namespace NOU::NOU_FILE_MNGT
 		\param mode how the File will be interpreted(Read/Write)
 		\param path absolute path to the file
 		*/
-		File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode = AccessMode::READ_WRITE);
+		File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode = AccessMode::READ_WRITE);
 		
 		/**
 		\brief copy construcor of the File class
 
 		\param other other constructer from which this will copy
 		*/
-		File(const File &other);
+		File(const File &other) = delete;
 		/**
 		\brief move construcor of the File class
 
@@ -133,24 +139,51 @@ namespace NOU::NOU_FILE_MNGT
 
 		
 		/**
-		\brief corresponding getter/setter for the given attributes
+		\brief getter for name
+		\return name
 		*/
-		///BEGIN COMMENT
-		NOU::NOU_DAT_ALG::StringView<char8> getName();
-		void setName(const NOU::NOU_DAT_ALG::StringView<char8> &name);
+		const NOU::NOU_DAT_ALG::StringView8& getName();
 
-		AccessMode getMode();
+		/**
+		\brief setter for name
+		\param name name of the File
+		*/
+		void setName(const NOU::NOU_DAT_ALG::StringView8 &name);
+
+		/**
+		\brief getter for AccessMode
+		\return AccessMode
+		*/
+		const AccessMode& getMode();
+
+		/**
+		\brief setter for AccessMode
+		\param mode AccessMode of the File
+		*/
 		void setMode(AccessMode mode);
 
-		NOU::NOU_DAT_ALG::StringView<char8> getPath();
-		void setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path);
+		/**
+		\brief getter for Path
+		\return Path
+		*/
+		const NOU::NOU_DAT_ALG::StringView8& getPath();
+		/**
+		\brief setter for Path
+		\param path Path of the file
+		*/
+		void setPath(const NOU::NOU_DAT_ALG::StringView8 &path);
 
-		NOU::NOU_DAT_ALG::StringView<char8> getAbsolutePath();
+		/**
+		\brief getter for absolutepath
+		\return absolutepath
+		*/
+		const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath();
 
-		void setData(FILE *data);
+		/**
+		\brief getter for datastream
+		\return datastream
+		*/
 		FILE* getData(); 
-
-		///END COMMENT
 
 	private:
 

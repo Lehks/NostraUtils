@@ -2,8 +2,7 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	/*
-	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode)
+	File::File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode)
 	{
 		//#pragma warning(suppress : 4996)
 		//m_data = fopen(name, mode);
@@ -12,27 +11,18 @@ namespace NOU::NOU_FILE_MNGT
 		setPath(path);
 		setMode(mode);
 		setName(name);
+		m_data = nullptr;
 		
-	}
-
-	
-	//copy
-	File::File(const File &other)
-	{
-		setName(other.m_name);
-		setData(other.m_data);
-		setPath(other.m_path);
-		setMode(other.m_mode);
 	}
 	//mv
 	File::File(File &&other)
 	{
 		setName(other.m_name);
-		setData(other.m_data);
+		m_data = other.m_data;
 		setPath(other.m_path);
 		setMode(other.m_mode);
 		other.close();
-		other.setMode(READ_WRITE);
+		other.setMode(AccessMode::READ_WRITE);
 		other.setName("");
 		other.setPath("");
 	}
@@ -44,10 +34,10 @@ namespace NOU::NOU_FILE_MNGT
 
 	byte File::read()
 	{
-		NOU_COND_PUSH_ERROR((m_mode == WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
-		NOU_COND_PUSH_ERROR((m_mode == APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
 
-		if (m_mode == WRITE || m_mode == APPEND)
+		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
 			return 0;
 		} 
@@ -56,8 +46,8 @@ namespace NOU::NOU_FILE_MNGT
 	}
 	bool File::write(byte b)
 	{
-		NOU_COND_PUSH_ERROR((m_mode == READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
-		if (m_mode != READ)
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
+		if (m_mode != AccessMode::READ)
 		{
 			fputc(b, getData());
 			return true;
@@ -71,28 +61,22 @@ namespace NOU::NOU_FILE_MNGT
 		switch (m_mode)
 		{
 		case AccessMode::READ:
-				#pragma warning(suppress : 4996)
-				setData(fopen(m_absolutePath.rawStr(), "r"));
+				fopen_s(&m_data ,m_absolutePath.rawStr(), "r");
 				break;
 		case AccessMode::WRITE:
-				#pragma warning(suppress : 4996)
-				setData(fopen(m_absolutePath.rawStr(), "w"));
+				fopen_s(&m_data, m_absolutePath.rawStr(), "w");
 				break;
-			case 2:
-				#pragma warning(suppress : 4996)
-				setData(fopen(m_absolutePath.rawStr(), "a"));
+		case AccessMode::APPEND:
+				fopen_s(&m_data, m_absolutePath.rawStr(), "a");
 				break;
-			case 3:
-				#pragma warning(suppress : 4996)
-				setData(fopen(m_absolutePath.rawStr(), "r+"));
+		case AccessMode::READ_WRITE:
+				fopen_s(&m_data, m_absolutePath.rawStr(), "r+");
 				break;
-			case 4:
-				#pragma warning(suppress : 4996)
-				setData(fopen(m_absolutePath.rawStr(), "w+"));
+		case AccessMode::READ_WRITE_RESET:
+				fopen_s(&m_data, m_absolutePath.rawStr(), "w+");
 				break;
-			case 5:
-				#pragma warning(suppress : 4996)
-				setData(fopen(m_absolutePath.rawStr(), "a+"));
+		case AccessMode::READ_APPEND:
+				fopen_s(&m_data, m_absolutePath.rawStr(), "a+");
 				break;
 		}
 		
@@ -114,7 +98,7 @@ namespace NOU::NOU_FILE_MNGT
 
 	bool File::isCurrentlyOpen()
 	{
-		return m_data != NULL;
+		return m_data != nullptr;
 	}
 
 	void File::calcAbsolutePath()
@@ -126,18 +110,17 @@ namespace NOU::NOU_FILE_MNGT
 		close();
 	}
 	
-	NOU::NOU_DAT_ALG::StringView<char8> File::getName()
+	const NOU::NOU_DAT_ALG::StringView8& File::getName()
 	{
-		//return static_cast<const NOU::NOU_DAT_ALG::StringView<char8>>(m_name);
 		return m_name;
 	}
-	void File::setName(const NOU::NOU_DAT_ALG::StringView<char8> &name)
+	void File::setName(const NOU::NOU_DAT_ALG::StringView8 &name)
 	{
 		m_name = name;
 		calcAbsolutePath();
 	}
 
-	AccessMode File::getMode()
+	const AccessMode& File::getMode()
 	{
 		return m_mode;
 	}
@@ -146,27 +129,22 @@ namespace NOU::NOU_FILE_MNGT
 		m_mode = mode;
 	}
 
-	NOU::NOU_DAT_ALG::StringView<char8> File::getPath()
+	const NOU::NOU_DAT_ALG::StringView8& File::getPath()
 	{
 		return m_path;
 	}
-	void File::setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path)
+	void File::setPath(const NOU::NOU_DAT_ALG::StringView8 &path)
 	{
 		m_path = path;
 		calcAbsolutePath();
 	}
 
-	NOU::NOU_DAT_ALG::StringView<char8> File::getAbsolutePath()
+	const NOU::NOU_DAT_ALG::StringView8& File::getAbsolutePath()
 	{
 		return m_absolutePath;
-	}
-
-	void File::setData(FILE *data)
-	{
-		m_data = data;
 	}
 	FILE* File::getData()
 	{
 		return m_data;
-	}*/
+	}
 }
