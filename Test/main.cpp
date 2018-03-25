@@ -2,6 +2,7 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\file_mngt\File.hpp"
+#include "nostrautils\file_mngt\FileManager.hpp"
 #include <iostream>
 
 using namespace std;
@@ -12,7 +13,5 @@ using namespace NOU_FILE_MNGT;
 
 int main()
 {
-	File f("TestFile2.txt", "D:\\C++\\NostraUtils\\Test", WRITE);
-	f.open();
-	f.close();
-}
+
+}							

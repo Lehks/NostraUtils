@@ -55,14 +55,14 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief A Function that closes the selected open file and removes it from the m_openedFiles Vector.
 		*/
-		boolean removeFromOpenedFiles(NOU::NOU_FILE_MNGT::File file);
+		boolean removeFromOpenedFiles(const File &file);
 	public:
 		/**
 		\return FileManager		The instance of the FileManager.
 
 		\brief A static Function according to the singleton pattern.
 		*/
-		static FileManager getInstance();
+		static FileManager& getInstance();
 		/**
 		\param const &name				The name of the file.
 		\param const &path				The path where the file is saved or should be saved.
@@ -79,7 +79,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief This Function opens a Files (for reading or writing purposes).
 		*/
-		boolean openFile(NOU::NOU_FILE_MNGT::File file);
+		boolean openFile(const File &file);
 		/**
 		\param file				A File object from nostra::file_mngt::file.
 
@@ -87,7 +87,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief This function closes the file.
 		*/
-		boolean closeFile(NOU::NOU_FILE_MNGT::File file);
+		boolean closeFile(const File &file);
 		/**
 		\param const &name		The name of the file which should be returned.
 
@@ -103,7 +103,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief A Function that closes the selected open file and removes it from the m_openedFiles Vector.
 		*/
-		boolean removeFile(NOU::NOU_FILE_MNGT::File file);
+		boolean removeFile(const File &file);
 		/**
 		\param file				A File object from nostra::file_mngt::file.
 
@@ -111,7 +111,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief A Function that returns the name from the given file.
 		*/
-		NOU::NOU_DAT_ALG::StringView<char8> getFileName(NOU::NOU_FILE_MNGT::File file);
+		const NOU::NOU_DAT_ALG::StringView<char8>& getFileName(const File &file) const;
 		/**
 		\param file				A File object from nostra::file_mngt::file.
 
@@ -119,7 +119,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief A Function that returns the path from the given file without the name.
 		*/
-		NOU::NOU_DAT_ALG::StringView<char8> getFilePath(NOU::NOU_FILE_MNGT::File file);
+		const NOU::NOU_DAT_ALG::StringView<char8>& getFilePath(const File &file) const;
 		/**
 		\param file				A File object from nostra::file_mngt::file.
 
@@ -127,7 +127,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief A Function that returns full path of the file (including the name).
 		*/
-		NOU::NOU_DAT_ALG::StringView<char8> getAbsoluteFilePath(NOU::NOU_FILE_MNGT::File file);
+		const NOU::NOU_DAT_ALG::StringView<char8>& getAbsoluteFilePath(const File &file) const;
 	};
 
 }

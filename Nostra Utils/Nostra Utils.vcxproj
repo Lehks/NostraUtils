@@ -313,6 +313,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\BinarySearch.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\LazyEvaluationProperty.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ObjectPool.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\HashMap.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp" />
@@ -324,6 +325,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\FileManager.hpp" />
+    <ClInclude Include="src\header\nostrautils\file_mngt\Path.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />
@@ -336,6 +338,7 @@
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\FileManager.cpp" />
+    <ClCompile Include="src\source\nostrautils\file_mngt\Path.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

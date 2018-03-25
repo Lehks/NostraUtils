@@ -69,11 +69,11 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		switch (m_mode)
 		{
-			case 0:
+		case AccessMode::READ:
 				#pragma warning(suppress : 4996)
 				setData(fopen(m_absolutePath.rawStr(), "r"));
 				break;
-			case 1:
+		case AccessMode::WRITE:
 				#pragma warning(suppress : 4996)
 				setData(fopen(m_absolutePath.rawStr(), "w"));
 				break;
@@ -95,14 +95,14 @@ namespace NOU::NOU_FILE_MNGT
 				break;
 		}
 		
-		return getData() != NULL;
+		return getData() != nullptr;
 	}
 	bool File::close()
 	{
 
 		int tmp;
 		tmp = fclose(m_data);
-		m_data = NULL;
+		m_data = nullptr;
 		return (tmp == 0);
 	}
 	void File::createFile()

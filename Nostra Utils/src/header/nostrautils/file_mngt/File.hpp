@@ -23,7 +23,7 @@ namespace NOU::NOU_FILE_MNGT
 	/*
 	insert Enum doc here
 	*/
-	enum AccessMode
+	enum class AccessMode
 	{
 		READ,
 		WRITE,
@@ -72,7 +72,7 @@ namespace NOU::NOU_FILE_MNGT
 		\param mode how the File will be interpreted(Read/Write)
 		\param path absolute path to the file
 		*/
-		File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode = READ_WRITE);
+		File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode = AccessMode::READ_WRITE);
 		
 		/**
 		\brief copy construcor of the File class
