@@ -2,7 +2,7 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode = READ_WRITE)
+	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode)
 	{
 		//#pragma warning(suppress : 4996)
 		//m_data = fopen(name, mode);

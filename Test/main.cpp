@@ -12,7 +12,7 @@ using namespace NOU_FILE_MNGT;
 
 int main()
 {
-	File f("TestFile2.txt", WRITE, "D:\\C++\\NostraUtils\\Test");
+	File f("TestFile2.txt", "D:\\C++\\NostraUtils\\Test", WRITE);
 	f.open();
 	f.close();
 }

@@ -12,11 +12,11 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean FileManager::removeFromOpenedFiles(File file)
 	{
-		NOU::NOU_DAT_ALG::StringView<char8> name = file.getName;
+		NOU::NOU_DAT_ALG::StringView<char8> name = file.getName();
 
 		for (sizeType i = 0; i < m_openedFileCount; i++)
 		{
-			if (m_openedFiles[i].getName == name)
+			if (m_openedFiles[i].getName() == name)
 			{
 				m_openedFiles.remove(i);
 				m_openedFileCount--;
@@ -43,11 +43,11 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean FileManager::openFile(File file)
 	{
-		NOU::NOU_DAT_ALG::StringView<char8> name = file.getName;
+		NOU::NOU_DAT_ALG::StringView<char8> name = file.getName();
 
 		for (sizeType i = 0; i < m_storedFiles; i++)
 		{
-			if (m_fileStorage[i].getName == name)
+			if (m_fileStorage[i].getName() == name)
 			{
 				m_fileStorage[i].open();
 				m_openedFiles.pushBack(m_fileStorage[i]);
@@ -61,11 +61,11 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean FileManager::closeFile(File file)
 	{
-		NOU::NOU_DAT_ALG::StringView<char8> name = file.getName;
+		NOU::NOU_DAT_ALG::StringView<char8> name = file.getName();
 
 		for (sizeType i = 0; i < m_storedFiles; i++)
 		{
-			if (m_fileStorage[i].getName == name)
+			if (m_fileStorage[i].getName() == name)
 			{
 				m_fileStorage[i].close();
 				removeFromOpenedFiles(m_fileStorage[i]);
@@ -80,7 +80,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		for (sizeType i = 0; i < m_storedFiles; i++)
 		{
-			if (m_fileStorage[i].getName == name)
+			if (m_fileStorage[i].getName() == name)
 			{
 				return m_fileStorage[i];
 			}
@@ -91,15 +91,15 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean FileManager::removeFile(File file)
 	{
-		NOU::NOU_DAT_ALG::StringView<char8> name = file.getName;
+		NOU::NOU_DAT_ALG::StringView<char8> name = file.getName();
 
 		for (sizeType i = 0; i < m_storedFiles; i++)
 		{
-			if (m_fileStorage[i].getName == name)
+			if (m_fileStorage[i].getName() == name)
 			{
-				if (file.isCurrentlyOpen)
+				if (file.isCurrentlyOpen())
 				{
-					file.close;
+					file.close();
 					removeFromOpenedFiles(m_fileStorage[i]);
 				}
 
@@ -111,17 +111,17 @@ namespace NOU::NOU_FILE_MNGT
 
 	NOU::NOU_DAT_ALG::StringView<char8> FileManager::getFileName(File file)
 	{
-		return file.getName;
+		return file.getName();
 	}
 
 	NOU::NOU_DAT_ALG::StringView<char8> FileManager::getFilePath(File file)
 	{
-		return file.getPath;
+		return file.getPath();
 	}
 
 	NOU::NOU_DAT_ALG::StringView<char8> FileManager::getAbsoluteFilePath(File file)
 	{
-		return file.getAbsolutePath;
+		return file.getAbsolutePath();
 	}
 
 
