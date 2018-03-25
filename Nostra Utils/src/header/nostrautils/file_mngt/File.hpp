@@ -4,7 +4,7 @@
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
-#include <stdlib.h>
+#include <stdio.h>
 
 
 /** \file File.hpp
@@ -79,7 +79,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\param other other constructer from which this will copy
 		*/
-		File(const File &other);
+		File(const File &other) = delete;
 		/**
 		\brief move construcor of the File class
 
@@ -135,17 +135,16 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief corresponding getter/setter for the given attributes
 		*/
-		///BEGIN COMMENT
-		NOU::NOU_DAT_ALG::StringView<char8> getName();
+		const NOU::NOU_DAT_ALG::StringView<char8>& getName();
 		void setName(const NOU::NOU_DAT_ALG::StringView<char8> &name);
 
-		AccessMode getMode();
+		const AccessMode& getMode();
 		void setMode(AccessMode mode);
 
-		NOU::NOU_DAT_ALG::StringView<char8> getPath();
+		const NOU::NOU_DAT_ALG::StringView<char8>& getPath();
 		void setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path);
 
-		NOU::NOU_DAT_ALG::StringView<char8> getAbsolutePath();
+		const NOU::NOU_DAT_ALG::StringView<char8>& getAbsolutePath();
 
 		void setData(FILE *data);
 		FILE* getData(); 
