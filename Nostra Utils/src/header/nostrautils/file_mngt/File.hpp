@@ -53,15 +53,15 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief path to the Folder containing the File
 		*/
-		NOU::NOU_DAT_ALG::StringView<char8>								m_path;
+		NOU::NOU_DAT_ALG::StringView8							m_path;
 		/**
 		\brief absolute path to the corresponding File
 		*/
-		NOU::NOU_DAT_ALG::String<char8>									m_absolutePath;
+		NOU::NOU_DAT_ALG::String8								m_absolutePath;
 		/**
 		\brief name of the File
 		*/
-		NOU::NOU_DAT_ALG::StringView<char8>								m_name;
+		NOU::NOU_DAT_ALG::StringView8							m_name;
 
 	public:
 
@@ -72,7 +72,7 @@ namespace NOU::NOU_FILE_MNGT
 		\param mode how the File will be interpreted(Read/Write)
 		\param path absolute path to the file
 		*/
-		File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode = AccessMode::READ_WRITE);
+		File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode = AccessMode::READ_WRITE);
 		
 		/**
 		\brief copy construcor of the File class
@@ -135,16 +135,16 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief corresponding getter/setter for the given attributes
 		*/
-		const NOU::NOU_DAT_ALG::StringView<char8>& getName();
-		void setName(const NOU::NOU_DAT_ALG::StringView<char8> &name);
+		const NOU::NOU_DAT_ALG::StringView8& getName();
+		void setName(const NOU::NOU_DAT_ALG::StringView8 &name);
 
 		const AccessMode& getMode();
 		void setMode(AccessMode mode);
 
-		const NOU::NOU_DAT_ALG::StringView<char8>& getPath();
-		void setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path);
+		const NOU::NOU_DAT_ALG::StringView8& getPath();
+		void setPath(const NOU::NOU_DAT_ALG::StringView8 &path);
 
-		const NOU::NOU_DAT_ALG::StringView<char8>& getAbsolutePath();
+		const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath();
 
 		void setData(FILE *data);
 		FILE* getData(); 

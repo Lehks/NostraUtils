@@ -2,7 +2,7 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	File::File(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path, AccessMode mode)
+	File::File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode)
 	{
 		//#pragma warning(suppress : 4996)
 		//m_data = fopen(name, mode);
@@ -110,11 +110,11 @@ namespace NOU::NOU_FILE_MNGT
 		close();
 	}
 	
-	const NOU::NOU_DAT_ALG::StringView<char8>& File::getName()
+	const NOU::NOU_DAT_ALG::StringView8& File::getName()
 	{
 		return m_name;
 	}
-	void File::setName(const NOU::NOU_DAT_ALG::StringView<char8> &name)
+	void File::setName(const NOU::NOU_DAT_ALG::StringView8 &name)
 	{
 		m_name = name;
 		calcAbsolutePath();
@@ -129,17 +129,17 @@ namespace NOU::NOU_FILE_MNGT
 		m_mode = mode;
 	}
 
-	const NOU::NOU_DAT_ALG::StringView<char8>& File::getPath()
+	const NOU::NOU_DAT_ALG::StringView8& File::getPath()
 	{
 		return m_path;
 	}
-	void File::setPath(const NOU::NOU_DAT_ALG::StringView<char8> &path)
+	void File::setPath(const NOU::NOU_DAT_ALG::StringView8 &path)
 	{
 		m_path = path;
 		calcAbsolutePath();
 	}
 
-	const NOU::NOU_DAT_ALG::StringView<char8>& File::getAbsolutePath()
+	const NOU::NOU_DAT_ALG::StringView8& File::getAbsolutePath()
 	{
 		return m_absolutePath;
 	}
