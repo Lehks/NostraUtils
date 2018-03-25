@@ -1119,9 +1119,6 @@ namespace NOU::NOU_DAT_ALG
 		}
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
-
-
-		setSize(str.size() - 1);
 	}
 
 	template<typename CHAR_TYPE>
@@ -1133,9 +1130,6 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(c);
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
-
-
-		setSize(m_data.size() - 1);
 	}
 
 	template<typename CHAR_TYPE>
@@ -1476,9 +1470,7 @@ namespace NOU::NOU_DAT_ALG
 			m_data.replace(c, i);
 		}
 
-		setSize(m_data.size() - 1);
 		return *this;
-
 	}
 
 	template<typename CHAR_TYPE>
@@ -1542,128 +1534,128 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(CharType c) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(c);
-		return copy();
+		strnew.append(c);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(const StringView<CHAR_TYPE>& str) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(str);
-		return copy();
+		strnew.append(str);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float32 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(f);
-		return copy();
+		strnew.append(f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float64 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(f);
-		return copy();
+		strnew.append(f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, CharType c) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, c);
-		return copy();
+		strnew.appendIf(b, c);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, const StringView<CHAR_TYPE>& str) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, str);
-		return copy();
+		strnew.appendIf(b, str);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float32 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, f);
-		return copy();
+		strnew.appendIf(b, f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float64 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, f);
-		return copy();
+		strnew.appendIf(b, f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
