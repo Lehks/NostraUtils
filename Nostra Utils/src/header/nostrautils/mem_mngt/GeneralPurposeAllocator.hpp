@@ -265,7 +265,11 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\brief The default size of the allocator.
 		*/
-		static const sizeType GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE = 10 * 1024;
+		static const sizeType GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE = 257; //10 * 1024;
+
+		NOU_DAT_ALG::Vector<byte*> m_gpas;
+
+		sizeType m_usedSize = 0;
 
 		/**
 		\brief A byte pointer to the elements.
@@ -291,6 +295,8 @@ namespace NOU::NOU_MEM_MNGT
 		\brief Creates a new gpa with a passed size or the default size.
 		*/
 		explicit GeneralPurposeAllocator(sizeType size = GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
+
+		void newAllocator(sizeType size);
 
 		GeneralPurposeAllocator(const GeneralPurposeAllocator& other) = delete;
 		GeneralPurposeAllocator(GeneralPurposeAllocator&& other) = delete;
@@ -516,6 +522,14 @@ namespace NOU::NOU_MEM_MNGT
 		m_size(size)
 	{
 		m_data = new byte[m_size];
+		m_gpas.pushBack(m_data);
+		m_freeChunks.pushBack(internal::GeneralPurposeAllocatorFreeChunk(m_data, m_size));
+	}
+
+	void GeneralPurposeAllocator::newAllocator(sizeType size)
+	{
+		m_data = new byte[m_size];
+		m_gpas.pushBack(m_data);
 		m_freeChunks.pushBack(internal::GeneralPurposeAllocatorFreeChunk(m_data, m_size));
 	}
 
@@ -533,20 +547,28 @@ namespace NOU::NOU_MEM_MNGT
 		GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects, arguments&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
-		for (sizeType i = 0; i < m_freeChunks.size(); i++)
+		
+		if (m_usedSize >= GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE / (sizeof(T) + alignof(T)))
 		{
-			T* data = m_freeChunks[i].allocateObject<T>(amountOfObjects, 
-				NOU_CORE::forward<arguments>(args)...);
-			if (data != nullptr)
+			newAllocator(GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
+		}
+		else
+		{
+			for (sizeType i = 0; i < m_freeChunks.size(); i++)
 			{
-				if (m_freeChunks[i].m_size == 0)
+				T* data = m_freeChunks[i].allocateObject<T>(amountOfObjects,
+					NOU_CORE::forward<arguments>(args)...);
+				if (data != nullptr)
 				{
-					m_freeChunks.remove(i);
+					if (m_freeChunks[i].m_size == 0)
+					{
+						m_freeChunks.remove(i);
+					}
+					m_usedSize++;
+					return GeneralPurposeAllocatorPointer<T>(data, amountOfObjects);
 				}
-				return GeneralPurposeAllocatorPointer<T>(data, amountOfObjects);
 			}
 		}
-
 		return GeneralPurposeAllocatorPointer<T>(nullptr, 0);///\todo better error handling???
 	}
 
@@ -615,6 +637,7 @@ namespace NOU::NOU_MEM_MNGT
 		{
 			m_freeChunks.pushBack(gpafc);
 		}
+		m_usedSize--;
 	}
 
 	template<typename T>

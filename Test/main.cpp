@@ -39,36 +39,31 @@ public:
 
 int main()
 {
-	std::cout << "Multiple: " << NOU::NOU_MEM_MNGT::internal::nextMultiple(10, 32) << std::endl;
 	using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<Person>;
 
 	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
 	NOU::NOU_DAT_ALG::Vector<HandleType> test;
-	
 
 	test.push(gpa.allocateObjects<Person>(1, 40, "Petra", "Braun"));
 
-	
+	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
 
-	for (HandleType &pers : test)
+	test.push(gpa.allocateObjects<Person>(1, 40, "Petra", "Braun"));
+
+	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
+
+	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
+
+	for (int i = 0; i < test.size(); i++)
 	{
-		pers[0].print();
-		//pers[1].print();
-		//pers[2].print();
-		//pers[3].print();
-		//pers[4].print();
-		//pers[5].print();
-		//pers[6].print();
-		//pers[7].print();
-		//pers[8].print();
-		//pers[9].print();
-		//pers[10].print();
-		//pers[11].print();
-		//pers[12].print();
-		//gpa.deallocateObjects(pers);
+		test.at(i).getRaw()->print();
+		std::cout << "sizeof(Person::m_age) + sizeof(Person::m_haircolor) + sizeof(Person::m_name): " 
+			<< sizeof(Person::m_age) + sizeof(Person::m_haircolor) + sizeof(Person::m_name) << std::endl;
+		std::cout << "alignof(Person): " << alignof(Person) << std::endl;
 	}
-	
-	
-
+	for (int i = 0; i < test.size(); i++)
+	{
+		gpa.deallocateObjects(test.at(i));
+	}
 	system("pause");
 }
