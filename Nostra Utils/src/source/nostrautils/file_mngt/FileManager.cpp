@@ -14,7 +14,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		NOU::NOU_DAT_ALG::StringView<char8> name = file.getName;
 
-		for (sizeType i = 0; i <m_openedFileCount; i++)
+		for (sizeType i = 0; i < m_openedFileCount; i++)
 		{
 			if (m_openedFiles[i].getName == name)
 			{

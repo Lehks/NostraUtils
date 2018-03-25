@@ -13,9 +13,9 @@ namespace NOU::NOU_FILE_MNGT
 	{
 	private	:
 
-		NOU::NOU_DAT_ALG::Vector<File> m_fileStorage;
-		NOU::NOU_DAT_ALG::Vector<File> m_folderStorage;
-		NOU::NOU_DAT_ALG::Vector<File> m_openedFiles;
+		NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::File> m_fileStorage;
+		NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::File> m_folderStorage;
+		NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::File> m_openedFiles;
 
 		sizeType m_storedFiles;
 		sizeType m_openedFileCount;
@@ -23,25 +23,25 @@ namespace NOU::NOU_FILE_MNGT
 
 		FileManager();
 
-		boolean removeFromOpenedFiles(File file);
+		boolean removeFromOpenedFiles(NOU::NOU_FILE_MNGT::File file);
 	public:
 		static FileManager getInstance();
 
 		boolean addFile(const NOU::NOU_DAT_ALG::StringView<char8> &name, const NOU::NOU_DAT_ALG::StringView<char8> &path);
 
-		boolean openFile(File file);
+		boolean openFile(NOU::NOU_FILE_MNGT::File file);
 
-		boolean closeFile(File file);
+		boolean closeFile(NOU::NOU_FILE_MNGT::File file);
 
-		File getFile(const NOU::NOU_DAT_ALG::StringView<char8> &name);
+		NOU::NOU_FILE_MNGT::File getFile(const NOU::NOU_DAT_ALG::StringView<char8> &name);
 
-		boolean removeFile(File file);
+		boolean removeFile(NOU::NOU_FILE_MNGT::File file);
 
-		NOU::NOU_DAT_ALG::StringView<char8> getFileName(File file);
+		NOU::NOU_DAT_ALG::StringView<char8> getFileName(NOU::NOU_FILE_MNGT::File file);
 
-		NOU::NOU_DAT_ALG::StringView<char8> getFilePath(File file);
+		NOU::NOU_DAT_ALG::StringView<char8> getFilePath(NOU::NOU_FILE_MNGT::File file);
 
-		NOU::NOU_DAT_ALG::StringView<char8> getAbsoluteFilePath(File file);
+		NOU::NOU_DAT_ALG::StringView<char8> getAbsoluteFilePath(NOU::NOU_FILE_MNGT::File file);
 	};
 
 }
