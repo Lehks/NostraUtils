@@ -12,7 +12,7 @@
 \author  Leslie Marxen
 \since   0.0.1
 \version 0.0.1
-\brief   This file provides a Hashfunction implementation.
+\brief   This file provides a Hash function implementation.
 */
 
 namespace NOU::NOU_DAT_ALG
@@ -23,7 +23,7 @@ namespace NOU::NOU_DAT_ALG
 	\param value input value
 	\param max 0 <= output < max
 
-	\return hased value
+	\return hashed value
 	\brief a function that hashes a value between a specific interval
 	*/
 

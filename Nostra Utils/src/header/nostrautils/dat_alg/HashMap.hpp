@@ -41,7 +41,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param			key the key where the value will be mapped to
 		\param		    value
-		\return			true if sucessfully mapped
+		\return			true if successfully mapped
 		\brief maps a value to a specific key;
 		*/
 		NOU::boolean map(const K &key,const V &value);//WIP
@@ -62,17 +62,17 @@ namespace NOU::NOU_DAT_ALG
 		sizeType size();
 		/**
 		\return			Vector<K>;
-		\brief Returns an Vector of the keys wich are stored in the map.
+		\brief Returns an Vector of the keys which are stored in the map.
 		*/
 		Vector<K> keySet();
 		/**
 		\input			K key;
-		\brief Removes an Object wich the specific key.
+		\brief Removes an Object which the specific key.
 		*/
 		V& remove(K key);
 		/**
 		\return			Vector<V>;
-		\brief Returns an Vector of the Objects wich are stored in the map.
+		\brief Returns an Vector of the Objects which are stored in the map.
 		*/
 		Vector<V> entrySet();
 		/**
