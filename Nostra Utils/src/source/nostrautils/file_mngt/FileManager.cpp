@@ -2,7 +2,7 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-
+	/*
 	FileManager::FileManager()
 	{
 		m_storedFiles = 0;
@@ -125,5 +125,5 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-
+	*/
 }
