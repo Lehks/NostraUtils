@@ -103,7 +103,7 @@ namespace NOU::NOU_FILE_MNGT
 					removeFromOpenedFiles(m_fileStorage[i]);
 				}
 
-				m_fileStorage[i].~File;
+				m_fileStorage[i].~File();
 				return true;
 			}
 		}
