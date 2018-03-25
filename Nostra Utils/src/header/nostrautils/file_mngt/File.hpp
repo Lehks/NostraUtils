@@ -21,7 +21,13 @@
 namespace NOU::NOU_FILE_MNGT
 {
 	/*
-	insert Enum doc here
+	\brief Enum that stores all different AccessModes of a file
+	\details	READ				= opens file for Reading purposes
+				WRITE				= opens file for Writing purposes (overwriting)
+				APPEND				= opens file for Appending purposes (not overwriting)
+				READ_WRITE			= opens file for both reading and writing (overwriting)
+				READ_WRITE_RESETS	= opens the file for both reading and writing purposes after clearing the file(overwriting)
+				READ_APPEND			= opens the file for both reading and writing purposes (not overwriting)
 	*/
 	enum class AccessMode
 	{
@@ -133,23 +139,57 @@ namespace NOU::NOU_FILE_MNGT
 
 		
 		/**
-		\brief corresponding getter/setter for the given attributes
+		\brief getter for name
+		\return name
 		*/
 		const NOU::NOU_DAT_ALG::StringView8& getName();
+
+		/**
+		\brief setter for name
+		\param name name of the File
+		*/
 		void setName(const NOU::NOU_DAT_ALG::StringView8 &name);
 
+		/**
+		\brief getter for AccessMode
+		\return AccessMode
+		*/
 		const AccessMode& getMode();
+
+		/**
+		\brief setter for AccessMode
+		\param mode AccessMode of the File
+		*/
 		void setMode(AccessMode mode);
 
+		/**
+		\brief getter for Path
+		\return Path
+		*/
 		const NOU::NOU_DAT_ALG::StringView8& getPath();
+		/**
+		\brief setter for Path
+		\param path Path of the file
+		*/
 		void setPath(const NOU::NOU_DAT_ALG::StringView8 &path);
 
+		/**
+		\brief getter for absolutepath
+		\return absolutepath
+		*/
 		const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath();
 
+		/**
+		\brief setter for the datastream
+		\param data pointer to the datastream
+		*/
 		void setData(FILE *data);
-		FILE* getData(); 
 
-		///END COMMENT
+		/**
+		\brief getter for datastream
+		\return datastream
+		*/
+		FILE* getData(); 
 
 	private:
 
