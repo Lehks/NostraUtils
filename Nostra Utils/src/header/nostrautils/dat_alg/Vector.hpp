@@ -6,6 +6,7 @@
 #include "nostrautils\dat_alg\Bubblesort.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
 
 #include <new>
 
