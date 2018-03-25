@@ -4,6 +4,8 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\Utils.hpp"
 
+#include <iostream>
+
 /**
 \file mem_mngt/AllocationCallback.hpp
 
@@ -88,17 +90,15 @@ namespace NOU::NOU_MEM_MNGT
 	template<typename T>
 	class NOU_CLASS GenericAllocationCallback final : public AllocationCallback<T>
 	{
-	private:
-		/**
-		\brief A static instance of this class.
-		*/
-		static GenericAllocationCallback s_instance;
-
 	public:
 		/**
-		\return s_instance
+		\return An instance of GenericAllocationCallback<T>.
 
-		\brief Returns the static instance of this class.
+		\brief Returns a static instance of this class.
+
+		\details 
+		Returns a static instance of this class. Instead of storing the instance in the class, it will be 
+		stored in this method.       
 		*/
 		static GenericAllocationCallback<T>& getInstance();
 
@@ -169,13 +169,15 @@ namespace NOU::NOU_MEM_MNGT
 		int64 getCounter() const;
 	};
 
-	template<typename T>
-	GenericAllocationCallback<T> GenericAllocationCallback<T>::s_instance;
+//	template<typename T>
+//	GenericAllocationCallback<T> GenericAllocationCallback<T>::s_instance;
 
 	template<typename T>
 	GenericAllocationCallback<T>& GenericAllocationCallback<T>::getInstance()
 	{
-		return s_instance;
+		static GenericAllocationCallback instance;
+		return instance;
+//		return s_instance;
 	}
 
 	template<typename T>
