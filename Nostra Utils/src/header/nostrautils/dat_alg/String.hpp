@@ -420,10 +420,10 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		String& appendIf(boolean b, float64 nr);
 		/**
-		\param replacement the charrachter wich will be used to replace.
+		\param replacement the character which will be used to replace.
 		\param index The index.
 
-		\brief Replaces a single charrachter.
+		\brief Replaces a single character.
 		*/
 		void replace(sizeType index, CharType replacement);
 
@@ -463,7 +463,7 @@ namespace NOU::NOU_DAT_ALG
 		index is part of the substring.
 		\param end         The end of the interval of the substring that will be replaced. The character at this index
 		is not part of the substring.
-		\param replacement The strint that will be used to replace the substring that is marked by \p start and \p end.
+		\param replacement The string that will be used to replace the substring that is marked by \p start and \p end.
 		\return            A reference to the instance itself.
 
 		\brief Replaces the substring that is marked by \p start and \p end and replaces it with \p replacement.
@@ -509,7 +509,7 @@ namespace NOU::NOU_DAT_ALG
 		excluded.
 		\return      A reference to the instance itself.
 
-		\brief Overrides all the characters in the interval \f$\left[start, end\right[\f$ with the chracter \p c.
+		\brief Overrides all the characters in the interval \f$\left[start, end\right[\f$ with the character \p c.
 		*/
 		String& fillRange(CharType c, sizeType start, sizeType end);
 
@@ -519,7 +519,7 @@ namespace NOU::NOU_DAT_ALG
 		this is equal to InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, the size of the string will be used.
 		\return      A reference to the instance itself.
 
-		\brief Removes the characters in the interval \f$\left[start, end\right[\f$. This operation is the exact oposite
+		\brief Removes the characters in the interval \f$\left[start, end\right[\f$. This operation is the exact opposite
 		to preserve().
 		*/
 		String& remove(sizeType start, sizeType end = NULL_INDEX);
@@ -531,7 +531,7 @@ namespace NOU::NOU_DAT_ALG
 		\return      A reference to the instance itself.
 
 		\brief Removes all characters, except those in the interval \f$\left[start, end\right[\f$. This operation is the
-		exact oposite to remove(sizeType, sizeType).
+		exact opposite to remove(sizeType, sizeType).
 		*/
 		String& preserve(sizeType start, sizeType end = NULL_INDEX);
 
@@ -699,26 +699,26 @@ namespace NOU::NOU_DAT_ALG
 		const Vector<CharType>& data() const;
 
 		/**
-		\return A reference to the instance itselft.
+		\return A reference to the instance itself.
 
 		\brief Converts all characters in the string to their lower case equivalent.
 		*/
 		String& toLowerCase();
 
 		/**
-		\return A reference to the instance itselft.
+		\return A reference to the instance itself.
 
 		\brief Converts all characters in the string to their upper case equivalent.
 		*/
 		String& toUpperCase();
 
 		/**
-		\return A reference to the instance itselft.
+		\return A reference to the instance itself.
 
-		\brief Removes all whitespaces (characters with numeric values 0x9 and 0x29) at the end and front of the string.
+		\brief Removes all white spaces (characters with numeric values 0x9 and 0x29) at the end and front of the string.
 
 		\details
-		Removes all whitespaces (characters with numeric values 0x9 and 0x29) at the end and front of the string.
+		Removes all white spaces (characters with numeric values 0x9 and 0x29) at the end and front of the string.
 
 		Example:
 		The string
@@ -733,7 +733,7 @@ namespace NOU::NOU_DAT_ALG
 		String& trim();
 
 		/**
-		\return A reference to the instance itselft.
+		\return A reference to the instance itself.
 
 		\brief Clears the string from all characters and sets the size to 0.
 		*/
