@@ -54,7 +54,7 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief path to the Folder containing the File
 		*/
-		const NOU::NOU_DAT_ALG::StringView<char8>						*m_path;
+		NOU::NOU_DAT_ALG::StringView<char8>								m_path;
 		/**
 		\brief absolute path to the corresponding File
 		*/
@@ -62,7 +62,7 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief name of the File
 		*/
-		const NOU::NOU_DAT_ALG::StringView<char8>						*m_name;
+		NOU::NOU_DAT_ALG::StringView<char8>								m_name;
 
 	public:
 
