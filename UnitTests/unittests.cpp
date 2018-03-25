@@ -25,6 +25,7 @@
 #include "nostrautils\dat_alg\Hashing.hpp"
 #include "nostrautils\dat_alg\BinarySearch.hpp"
 #include "nostrautils\dat_alg\ObjectPool.hpp"
+#include "nostrautils\dat_alg\HashMap.hpp"
 
 #include "DebugClass.hpp"
 
@@ -33,6 +34,13 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+#define NOU_CHECK_ERROR_HANDLER 																		 \
+				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
+				while(NOU::NOU_CORE::getErrorHandler().getErrorCount() > 0)								 \
+				{																						 \
+					NOU::NOU_CORE::getErrorHandler().popError();										 \
+				}																						 \
+				Assert::IsTrue(errorCount == 0);					 
 
 void printErrors()
 {
@@ -1101,36 +1109,36 @@ namespace UnitTests
 		TEST_METHOD(String)
 		{
 			NOU::NOU_DAT_ALG::String<NOU::char8> str;
-
+		
 			str.append('a');
 			Assert::AreEqual(str[0], 'a');
-
+		
 			str.append("Hallo");
 			Assert::AreEqual(str[1], 'H');
-
+		
 			str.insert(0, 'A');
 			Assert::AreEqual(str[0], 'A');
-
+		
 			str.appendIf(1, 'T');
 			Assert::AreEqual(str[str.size() - 1], 'T');
-
+		
 			str.append(1);
 			Assert::AreEqual(str[str.size() - 1], '1');
-
+		
 			str.append(-1);
 			Assert::AreEqual(str[str.size() - 2], '-');
 			Assert::AreEqual(str[str.size() - 1], '1');
-
+		
 			NOU::sizeType i = 0; // becasue of NULLTERMINATOR
 			str.clear();
 			Assert::AreEqual(str.size(), i);
-
+		
 			str.append("Hallo Welt");
 			str.replace('l', 'V', 0, str.size() - 1);
 			Assert::AreEqual(str[2], 'V');
 			Assert::AreEqual(str[3], 'V');
 			Assert::AreEqual(str[8], 'V');
-
+		
 			str.clear();
 			str.append(17.025);
 			Assert::AreEqual(str[0], '1');
@@ -1139,17 +1147,17 @@ namespace UnitTests
 			Assert::AreEqual(str[3], '0');
 			Assert::AreEqual(str[4], '2');
 			Assert::AreEqual(str[5], '5');
-
+		
 			str.remove(2, str.size());
 			Assert::AreEqual(str[0], '1');
 			Assert::AreEqual(str[1], '7');
 			Assert::AreNotEqual(str[0], '.');
-
+		
 			NOU::NOU_DAT_ALG::String<NOU::char8> substr;
-
+		
 			substr.append(str.substring(0, 1));
 			Assert::AreEqual(str[0], '1');
-
+		
 			substr.clear();
 			substr.append(str.copy());
 			Assert::AreEqual(str[0], '1');
@@ -1173,47 +1181,132 @@ namespace UnitTests
 			b.enqueue(14, 1);
 			b.enqueue(15, 4);
 
-			Assert::IsTrue(b.at(0) == 10);
-			Assert::IsTrue(b.at(1) == 14);
-			Assert::IsTrue(b.at(2) == 12);
-			Assert::IsTrue(b.at(3) == 13);
-			Assert::IsTrue(b.at(4) == 11);
-			Assert::IsTrue(b.at(5) == 15);
-
+			Assert::IsTrue(b.at(0) == 1);
+			Assert::IsTrue(b.at(1) == 2);
+			Assert::IsTrue(b.at(2) == 3);
+			Assert::IsTrue(b.at(3) == 4);
+			Assert::IsTrue(b.at(4) == 1);
+			Assert::IsTrue(b.at(5) == 4);
 
 			b.dequeue();
-
-			Assert::IsTrue(b.at(0) == 14);
-			Assert::IsTrue(b.at(1) == 12);
-			Assert::IsTrue(b.at(2) == 13);
-			Assert::IsTrue(b.at(3) == 11);
-			Assert::IsTrue(b.at(4) == 15);
+			
+			Assert::IsTrue(b.at(0) == 2);
+			Assert::IsTrue(b.at(1) == 3);
+			Assert::IsTrue(b.at(2) == 4);
+			Assert::IsTrue(b.at(3) == 1);
+			Assert::IsTrue(b.at(4) == 4);
 			
 			b.decreaseKey(2, 2);
 			
-			Assert::IsTrue(b.at(0) == 14);
-			Assert::IsTrue(b.at(1) == 12);
-			Assert::IsTrue(b.at(2) == 13);
-			Assert::IsTrue(b.at(3) == 11);
-			Assert::IsTrue(b.at(4) == 15);
-		
+			Assert::IsTrue(b.at(0) == 2);
+			Assert::IsTrue(b.at(1) == 3);
+			Assert::IsTrue(b.at(2) == 4);
+			Assert::IsTrue(b.at(3) == 1);
+			Assert::IsTrue(b.at(4) == 4);
+
+			NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> c(5);
+			
+			c.enqueue(1, 11);
+			c.enqueue(2, 5);
+			c.enqueue(3, 17);
+			c.enqueue(3, 176);
+			c.enqueue(5, 188);
+			
+			Assert::IsTrue(c.checkIfPresent(3) == true);
+			
+			c.deleteById(4);
+			
+			Assert::IsTrue(c.at(0) == 11);
+			Assert::IsTrue(c.at(1) == 5);
+			Assert::IsTrue(c.at(2) == 17);
+			Assert::IsTrue(c.at(3) == 188);
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
 
 		TEST_METHOD(Hashfunction)
 		{
-			NOU::sizeType testInt = 42;
-			NOU::sizeType hashSize = 5;
-			NOU::sizeType test;
-			test = NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize);
-			testInt = 9234978;
-			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize));
+			NOU::int64 i1 = 243536768574;
+			NOU::int64 i2 = 243536768574;
+		
+			NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+		
+			NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
+		
+			h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
 
-			testInt = 42;
-			test = NOU::NOU_DAT_ALG::hashObj(&testInt);
-			testInt = 9234978;
-			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt));
+			NOU_CHECK_ERROR_HANDLER;
+		
+		}
+
+		TEST_METHOD(HashMap) 
+		{
+			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
+			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
+			NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::boolean b;
+		
+			Assert::AreEqual(hm.isEmpty(), true);
+		
+			for (NOU::sizeType i = 0; i < str.size(); i++) {
+				b = hm.map(str.at(i), 1);
+			}
+		
+			Assert::AreEqual(hm.isEmpty(), false);
+		
+			for (int i = 0; i < str.size(); i++) {
+				Assert::AreEqual(hm.get(str.at(i)), 1);
+			}
+			NOU::char8 k = 'h';
+		
+			NOU::int32 count = hm.remove(k);
+			Assert::AreEqual(1, count);
+
+
+			for (NOU::sizeType i = 0; i < str.size(); i++)
+			{
+				k = str.at(i);
+				if (!hm1.containsKey(str.at(i)))
+				{
+					hm1.map(k, 1);
+				}
+				else
+				{
+					hm1.map(k, hm1.get(k) + 1);
+				}
+			}
+			
+			Assert::AreEqual(hm1.get('h'), 2);
+			Assert::AreEqual(hm1.get(' '), 8);
+
+			NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
+
+			cm.map(5, 1);
+			cm.map(41, 2);
+			cm.map(10, 3);
+			cm.map(49875, 4);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
+
+			c = cm.entrySet();
+
+			Assert::AreEqual(c[0], 1);
+			Assert::AreEqual(c[1], 4);
+			Assert::AreEqual(c[2], 3);
+			Assert::AreEqual(c[3], 2);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
+
+			a = cm.keySet();
+
+			Assert::AreEqual(a[0], 5);
+			Assert::AreEqual(a[1], 49875);
+			Assert::AreEqual(a[2], 10);
+			Assert::AreEqual(a[3], 41);
 
 		}
 

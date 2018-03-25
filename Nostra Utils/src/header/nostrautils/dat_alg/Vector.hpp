@@ -54,7 +54,7 @@ namespace NOU::NOU_DAT_ALG
 		static constexpr sizeType	                MIN_CAPACITY = 1;
 
 		/**
-		\brief The actuall capacity of the Vector (memory allocation).
+		\brief The actual capacity of the Vector (memory allocation).
 
 		\details 
 		The amount of memory 
@@ -62,7 +62,7 @@ namespace NOU::NOU_DAT_ALG
 		sizeType								    m_capacity;
 
 		/**
-		\brief The actuall size of the Vector (elements stored).
+		\brief The actual size of the Vector (elements stored).
 		*/
 		sizeType								    m_size;
 
@@ -111,9 +111,9 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Standard constructor with the size.
 		\details 
-		The size is inizilized by default with 1 (if no size is given or size < 1). The allocator is initialized by default 
+		The size is initialized by default with 1 (if no size is given or size < 1). The allocator is initialized by default 
 		with a GenericAllocation (nostra::utils::mem_mngt::GenericAllocationCallback).
-		If there is need for a custom allocator you can creat one from the interface nostra::utils::mem_mngt::AllocationCallback.
+		If there is need for a custom allocator you can create one from the interface nostra::utils::mem_mngt::AllocationCallback.
 
 		\see   nostra::utils::mem_mngt::AllocationCallback
 		\see   nostra::utils::mem_mngt::GenericAllocationCallback
@@ -139,8 +139,8 @@ namespace NOU::NOU_DAT_ALG
 		\brief Standard destructor.
 
 		\details 
-		Note that the Vectors memory isnt alloced with the new keyword therefore the memory gets not dealocated with the delete keyword. 
-		For more deatils look at the implication.
+		Note that the Vectors memory isn't allocated with the new keyword therefore the memory gets not deallocated with the delete keyword. 
+		For more details look at the implication.
 		*/
 		~Vector<T>();
 
@@ -158,7 +158,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\return      Returns a boolean.
 
-		\brief Checks wehter the Vector is empty or not.
+		\brief Checks wether the Vector is empty or not.
 		*/
 		boolean empty() const ;
 
@@ -239,7 +239,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Inserts an element at the last position.
 		\details 
-		This methode calls pushBack() .
+		This method calls pushBack() .
 		*/
 		void push(T &&data);
 
@@ -248,23 +248,23 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Inserts an element at the last position.
 		\details
-		This methode calls pushBack() .
+		This method calls pushBack() .
 		*/
 		void push(const T &data);
 
 		/**
 		\return      The element at the first position.
 
-		\brief Returns the element at the first position and delets it.
+		\brief Returns the element at the first position and deletes it.
 		*/
 		T popFront();
 
 		/**
 		\return      The element at the first position.
 
-		\brief Returns the element at the first position and delets it.
+		\brief Returns the element at the first position and deletes it.
 		\details 
-		This methode calls popFront() .
+		This method calls popFront() .
 		*/
 		T pop();
 
@@ -287,7 +287,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the element at the first position.
 		\details
-		This methode calls peakFront() .
+		This method calls peakFront() .
 		*/
 		T& peek();
 
@@ -296,7 +296,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the element at the first position.
 		\details
-		This methode calls peakFront() .
+		This method calls peakFront() .
 		*/
 		const T& peek() const;
 
@@ -306,7 +306,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Swaps the elements at the corresponding index.
 		\details 
-		This methode calls the swap function in nostra::utils::dat_alg::utils.
+		This method calls the swap function in nostra::utils::dat_alg::utils.
 
 		\see nostra::utils::dat_alg::utils
 		*/
@@ -333,7 +333,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param data The data to insert.
-		\param index The index at wich the data gets inserted.
+		\param index The index at which the data gets inserted.
 
 		\brief Inserts an element at a given index while keeping the order of the other elements in tact.
 		*/
@@ -341,7 +341,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param data The data to insert.
-		\param index The index at wich the data gets inserted.
+		\param index The index at which the data gets inserted.
 
 		\brief Inserts an element at a given index while keeping the order of the other elements in tact.
 		*/
@@ -353,7 +353,7 @@ namespace NOU::NOU_DAT_ALG
 		void sort();
 
 		/**
-		\brief Sorts the Vector using comperators.
+		\brief Sorts the Vector using comparators.
 		*/
 		void sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp);
 
@@ -379,7 +379,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param replacement The data to insert.
-		\param index The index at wich the data gets replaced.
+		\param index The index at which the data gets replaced.
 
 		\brief replaces the data at the index with the passed data.
 		*/
@@ -387,7 +387,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param replacement The data to insert.
-		\param index The index at wich the data gets replaced.
+		\param index The index at which the data gets replaced.
 
 		\brief replaces the data at the index with the passed data.
 		*/
@@ -467,7 +467,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified index.
 
-		\brief Returns anostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified
+		\brief Returns nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified
 		index.
 		*/
 		VectorReverseIterator<T> rindexIterator(sizeType index);
@@ -514,8 +514,8 @@ namespace NOU::NOU_DAT_ALG
 
 		\details 
 		Moves the data from the passed vector to this one. The vector that the data was
-		moved from will afterwards have a size and capacity of 0. This allows it to reassingning another
-		vector to the one that the data was moved from using the copy or move assingment operators.
+		moved from will afterwards have a size and capacity of 0. This allows it to reassigning another
+		vector to the one that the data was moved from using the copy or move assignment operators.
 		*/
 		Vector& operator = (Vector &&other);
 		/**
@@ -525,7 +525,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the element at the specified index. Same as at().
 
 		\details
-		Returns the element at the specified index. Same as at(), seet the doc of that method for further
+		Returns the element at the specified index. Same as at(), see the doc of that method for further
 		information.
 
 		\see at()
@@ -538,7 +538,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the element at the specified index. Same as at().
 
 		\details
-		Returns the element at the specified index. Same as at(), seet the doc of that method for further
+		Returns the element at the specified index. Same as at(), see the doc of that method for further
 		information.
 
 		\see at()
@@ -870,9 +870,9 @@ namespace NOU::NOU_DAT_ALG
 		m_size(other.m_size),
 		m_allocator(other.m_allocator)
 	{
-		other.m_capacity = 0; //set capacity to 0, to allow for cpy-reassingment to the other-vector.
+		other.m_capacity = 0; //set capacity to 0, to allow for copy-reassignment to the other-vector.
 		other.m_data = nullptr;
-		other.m_size = 0; //set size to 0, to avoid any destructors for stored objects from being called.
+		other.m_size = 0; //set size to 0, to avoid any destructor's for stored objects from being called.
 	}
 
 	template<typename T>
@@ -1071,9 +1071,6 @@ namespace NOU::NOU_DAT_ALG
 	template<typename... ARGS>
 	void Vector<T>::emplace(sizeType index, ARGS&&... args)
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
-			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index is bigger then the size of the vector.");
-
 		expandIfNeeded(1);
 		for (sizeType i = m_size; i > index; i--)
 		{
@@ -1183,14 +1180,14 @@ namespace NOU::NOU_DAT_ALG
 		sizeType i;
 
 		/*
-		First:  existing elements with the values from the other vector using cpy-assign
-		Second: Set uninitialized elements with the values from the other vector using cpy-constr
+		First:  existing elements with the values from the other vector using copy-assign
+		Second: Set uninitialized elements with the values from the other vector using copy-constr
 		*/
 		//####
-		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //cpy-assign part
+		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //copy-assign part
 			at(i) = other.at(i);
 
-		for (; i < other.m_size; i++) //cpy-constr part
+		for (; i < other.m_size; i++) //copy-constr part
 			new (m_data + i) T(other.at(i));
 		//####
 

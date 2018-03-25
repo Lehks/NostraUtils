@@ -314,6 +314,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\BinarySearch.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ObjectPool.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\HashMap.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Uninitialized.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Utils.hpp" />
@@ -332,6 +333,7 @@
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
+    <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
