@@ -18,12 +18,22 @@ namespace NOU::NOU_FILE_MNGT
 	//copy
 	File::File(const File &other)
 	{
-
+		setName(other.m_name);
+		setData(other.m_data);
+		setPath(other.m_path);
+		setMode(other.m_mode);
 	}
 	//mv
 	File::File(File &&other)
 	{
-
+		setName(other.m_name);
+		setData(other.m_data);
+		setPath(other.m_path);
+		setMode(other.m_mode);
+		other.close();
+		other.setMode(READ_WRITE);
+		other.setName("");
+		other.setPath("");
 	}
 
 	File::~File()
@@ -89,7 +99,11 @@ namespace NOU::NOU_FILE_MNGT
 	}
 	bool File::close()
 	{
-		return (fclose(m_data) == NULL);
+
+		int tmp;
+		tmp = fclose(m_data);
+		m_data = NULL;
+		return (tmp == 0);
 	}
 	void File::createFile()
 	{
