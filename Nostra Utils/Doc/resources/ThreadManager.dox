@@ -5,6 +5,17 @@
 
 \tableofcontents
 
+\section sec_include Including the Thread Management
+
+The easiest way to include the thread management is to include the file "nostrautils/thread/Threads.hpp". It
+includes all the other files of the thread management and therefore has all the features that the thread 
+management system has to offer.
+
+It would also be possible to include each file individually, but this poses no benefit to using 
+"nostrautils/thread/Threads.hpp".
+
+In the following examples, it is always assumed that "nostrautils/thread/Threads.hpp" is included.
+
 \section sec_tasks Tasks
 
 To execute functionality in a different thread, Nostra uses the class \link nostra::utils::thread::Task Task 
@@ -302,6 +313,14 @@ calls - it simply has no knowledge of any parameter types (which of course also 
 \section sec_threadManager The Thread Manager
 
 The class \link nostra::utils::thread::ThreadManager ThreadManager \endlink is the central system of the thread management system of Nostra. It is a singleton that acts as a thread pool but also schedules the Tasks that will be executed by the threads.
+    
+As already stated in the \link sec_tasks chapter about tasks \endlink, does the Thread Manager use the \link nostra::utils::thread::Task Task \endlink class (or to be more precise the class \link nostra::utils::thread::internal::AbstractTask AbstractTask \endlink).
+
+Despite being the central component of the thread management system, a user usually interacts rather little with it (there are other interfaces, like \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink and \link nostra::utils::thread::TaskQueue TaskQueueu \endlink, that provide functionality on a higher level).
+
+Conceptually, the thread manager is internally little more than a priority queue for the Tasks and a pool that store the threads.
+
+The maximum amount of threads that can be managed by the thread manager at the same time is (\link nostra::utils::thread::ThreadWrapper::maxThreads ThreadWrapper::maxThreads() \endlink - 1) (-1, because the main thread is not managed by the thread manager).
 
 \subsection subsec_threadManager_Obtain Obtaining the Thread Manager
 Nostra always provides an already constructed instance of the thread manager. It can be acquired using \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink.
@@ -309,18 +328,87 @@ Nostra always provides an already constructed instance of the thread manager. It
 \attention
 The first time that \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink is getting called must be from the main thread. Otherwise the error handling will misbehave.
 
-As already stated in the \link sec_tasks chapter about tasks \endlink, does the Thread Manager use the \link nostra::utils::thread::Task Task \endlink class (or to be more precise the class \link nostra::utils::thread::internal::AbstractTask AbstractTask \endlink).
+\section sec_lockingResources Locking Resources
 
-Despite being the central component of the thread management system, a user usually interacts rather little with it (there are other interfaces, like \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink and \link nostra::utils::thread::TaskQueue TaskQueueu \endlink, that provide functionality on a higher level).
+This chapter will show how to lock resources in order to avoid race conditions and synchronize multiple threads.
 
-Conceptually, the thread manager is internally little more than a priority queue for the Tasks and a pool that store the threads. For an explanation on how to push and remove tasks from the thread manager, see \link subsec_threadManager_Functions here \endlink.
+\subsection subsec_mutex Mutexes
 
-The maximum amount of threads that can be managed by the thread manager at the same time is (\link nostra::utils::thread::ThreadWrapper::maxThreads ThreadWrapper::maxThreads() \endlink - 1) (-1, because the main thread is not managed by the thread manager).
+Mutexes are the most basic way to lock resources. They can be locked and unlocked.
 
-\subsection subsec_threadManager_Functions Thread Manager functions
+\par Example:
 
-This chapter provides an in-depth look at all the functions that are provided by the thread manager.
+This example shows how to do some calculations and synchronize the std::cout output stream after the 
+calculations are done using <tt>calculate()</tt>. These calculations can be done simultaneously.
 
-\subsubsection subsubsec_threadManager_PushingTasks Pushing tasks
-A new Task can be pushed to the thread manager using \link nostra::utils::thread::ThreadManager::pushTask pushTask() \endlink (again, this is not a function that is usually used by a user). The parameters of \link nostra::utils::thread::ThreadManager::pushTask pushTask() \endlink are a pointer to the task itself, the priority of the task and a pointer to an error handler. If the error handler is <tt>nullptr</tt>, the thread manager will provide one.
+\code{.cpp}
+
+NOU::THREAD::Mutex mutex;
+
+void doStuff()
+{
+    NOU::int32 calc = calculate();
+
+    mutex.lock();
+    std::cout << "doStuff(): " << calc << std::endl;
+    mutex.unlock()
+}
+
+void doOtherStuff()
+{
+    NOU::int32 calc = calculate();
+
+    mutex.lock();
+    std::cout << "doMoreStuff(): " << calc << std::endl;
+    mutex.unlock()
+}
+
+\endcode
+
+Assuming that the functions are called simultaneously from two different threads, this would be the order in
+which the functions would be executed. For easier understanding, the <tt>calculate()</tt> function of
+<tt>doOtherStuff()</tt> will take longer than that of <tt>doStuff()</tt>.
+
+<table>
+    <tr>
+        <th>Thread 1 (executes doStuff())</th>
+        <th>Thread 2 (executes doOtherStuff())</th>
+        <th>Notes</th>
+    </tr>
+    <tr>
+        <td>NOU::int32 calc = calculate();</td>
+        <td rowspan="2">NOU::int32 calc = calculate();</td>
+        <td rowspan="2">
+            Both threads call <tt>calculate()</tt>. Thread 1 finishes first with calculating and 
+            already locks the mutex.
+        </td>
+    </tr>
+    <tr>
+        <td>mutex.lock();</td>
+    </tr>
+    <tr>
+        <td>std::cout << "doStuff(): " << calc << std::endl;</td>
+        <td rowspan="2">mutex.lock()</td>
+        <td rowspan="2">
+            Thread 1 already prints to the stream and unlocks the mutex afterwards. Since the mutex was 
+            already locked when Thread 2 tried to lock it, the <tt>mutex.lock()</tt> in Thread 2 will not 
+            return until the mutex is unlocked again.
+        </td>
+    </tr>
+    <tr>
+        <td>mutex.unlock();</td>
+    </tr>
+    <tr>
+        <td rowspan="2"></td>
+        <td>std::cout << "doMoreStuff(): " << calc << std::endl;</td>
+        <td rowspan="2">
+            Now that the mutex is unlocked again, <tt>mutex.lock()</tt> in Thread 2 is able to lock it again 
+            for itself. It can now print to the stream and unlock the mutex afterwards. Thread 1 is done 
+            executing its function.
+        </td>
+    </tr>
+    <tr>
+        <td>mutex.unlock()</td>
+    </tr>
+</table>
 */
