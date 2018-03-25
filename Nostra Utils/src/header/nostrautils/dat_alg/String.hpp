@@ -918,11 +918,17 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		CharType& operator [] (sizeType index);
 	};
-
+	/**
+	\brief An alias name for a String that uses a nostra::utils::char8;
+	*/
 	using String8 = String<char8>;
-
+	/**
+	\brief An alias name for a String that uses a nostra::utils::char16;
+	*/
 	using String16 = String<char16>;
-
+	/**
+	\brief An alias name for a String that uses a nostra::utils::char32;
+	*/
 	using String32 = String<char32>;
 
 	template<typename CHAR_TYPE>
