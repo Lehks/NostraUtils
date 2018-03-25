@@ -42,8 +42,24 @@ namespace NOU::NOU_FILE_MNGT
 			return 0;
 		} 
 
+		open();
 		return fgetc(m_data);
 	}
+
+	void File::read(sizeType size, char8 &buffer)
+	{
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
+
+		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
+		{
+			return;
+		}
+		open();
+		fread(&buffer, size, 1, m_data);
+	}
+
+
 	bool File::write(byte b)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
@@ -55,40 +71,61 @@ namespace NOU::NOU_FILE_MNGT
 		return false;
 	}
 
+	bool File::write(const NOU::NOU_DAT_ALG::StringView8 &s)
+	{
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
+		if (m_mode != AccessMode::READ)
+		{
+			char8 *p;
+			p = s.rawStr;
+			fread(p, s.size(), 1, m_data);
+			return true;
+		}
+		return false;
+	}
+
 
 	bool File::open()
 	{
-		switch (m_mode)
+		if (!isCurrentlyOpen())
 		{
-		case AccessMode::READ:
-				fopen_s(&m_data ,m_absolutePath.rawStr(), "r");
-				break;
-		case AccessMode::WRITE:
-				fopen_s(&m_data, m_absolutePath.rawStr(), "w");
-				break;
-		case AccessMode::APPEND:
-				fopen_s(&m_data, m_absolutePath.rawStr(), "a");
-				break;
-		case AccessMode::READ_WRITE:
-				fopen_s(&m_data, m_absolutePath.rawStr(), "r+");
-				break;
-		case AccessMode::READ_WRITE_RESET:
-				fopen_s(&m_data, m_absolutePath.rawStr(), "w+");
-				break;
-		case AccessMode::READ_APPEND:
-				fopen_s(&m_data, m_absolutePath.rawStr(), "a+");
-				break;
+			switch (m_mode)
+			{
+				case AccessMode::READ:
+					fopen_s(&m_data, m_absolutePath.rawStr(), "r");
+					break;
+				case AccessMode::WRITE:
+					fopen_s(&m_data, m_absolutePath.rawStr(), "w");
+					break;
+				case AccessMode::APPEND:
+					fopen_s(&m_data, m_absolutePath.rawStr(), "a");
+					break;
+				case AccessMode::READ_WRITE:
+					fopen_s(&m_data, m_absolutePath.rawStr(), "r+");
+					break;
+				case AccessMode::READ_WRITE_RESET:
+					fopen_s(&m_data, m_absolutePath.rawStr(), "w+");
+					break;
+				case AccessMode::READ_APPEND:
+					fopen_s(&m_data, m_absolutePath.rawStr(), "a+");
+					break;
+			}
 		}
-		
 		return getData() != nullptr;
 	}
 	bool File::close()
 	{
+		if (isCurrentlyOpen())
+		{
+			int tmp;
+			tmp = fclose(m_data);
+			m_data = nullptr;
+			return (tmp == 0);
+		} else
+		{
+			return 1;
+		}
 
-		int tmp;
-		tmp = fclose(m_data);
-		m_data = nullptr;
-		return (tmp == 0);
 	}
 	void File::createFile()
 	{
