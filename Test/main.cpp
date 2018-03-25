@@ -44,22 +44,19 @@ int main()
 	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
 	NOU::NOU_DAT_ALG::Vector<HandleType> test;
 
-	test.push(gpa.allocateObjects<Person>(1, 40, "Petra", "Braun"));
-
+	test.push(gpa.allocateObjects<Person>(1, 40, "Mike", "Braun"));
+	test.at(0).getRaw()->print();
+	gpa.deallocateObjects(test.at(0));
+	test.pop();
+	gpa.deallocateObjects(test.at(0));
 	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
-
 	test.push(gpa.allocateObjects<Person>(1, 40, "Petra", "Braun"));
-
 	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
-
 	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
 
 	for (int i = 0; i < test.size(); i++)
 	{
 		test.at(i).getRaw()->print();
-		std::cout << "sizeof(Person::m_age) + sizeof(Person::m_haircolor) + sizeof(Person::m_name): " 
-			<< sizeof(Person::m_age) + sizeof(Person::m_haircolor) + sizeof(Person::m_name) << std::endl;
-		std::cout << "alignof(Person): " << alignof(Person) << std::endl;
 	}
 	for (int i = 0; i < test.size(); i++)
 	{

@@ -6,6 +6,7 @@
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\dat_alg\BinarySearch.hpp"
 #include "nostrautils\mem_mngt\Utils.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
 
 /**
 \file dat_alg/GeneralPurposeAllocator.hpp
@@ -44,11 +45,12 @@ namespace NOU::NOU_MEM_MNGT
 		}
 
 		/**
-		\brief This class defines the chunks of the allocator.
+		\brief This class defines the free chunks of the allocator.
 		*/
 		class GeneralPurposeAllocatorFreeChunk
 		{
 		public:
+
 			/**
 			\brief A byte pointer to the address of the chunk.
 			*/
@@ -144,6 +146,9 @@ namespace NOU::NOU_MEM_MNGT
 
 	/**
 	\brief Defines the GeneralPurposeAllocator class, which is used to allocate and deallocate objects.
+
+	\details The GeneralPurposeAllocator (GPA) cannot increase its size. If the GPA is constructed with the 
+			 default size or a passed size it can only be increased by creating a new GPA with a bigger size.
 	*/
 	class GeneralPurposeAllocator
 	{
@@ -265,11 +270,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\brief The default size of the allocator.
 		*/
-		static const sizeType GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE = 257; //10 * 1024;
-
-		NOU_DAT_ALG::Vector<byte*> m_gpas;
-
-		sizeType m_usedSize = 0;
+		static const sizeType GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE = 10 * 1024;
 
 		/**
 		\brief A byte pointer to the elements.
@@ -290,13 +291,11 @@ namespace NOU::NOU_MEM_MNGT
 	public:
 
 		/**
-		\param size The size of the gpa. Can be set manually or the default size.
+		\param size The size of the GPA. Can be set manually or the default size.
 
-		\brief Creates a new gpa with a passed size or the default size.
+		\brief Creates a new GPA with a passed size or the default size.
 		*/
 		explicit GeneralPurposeAllocator(sizeType size = GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
-
-		void newAllocator(sizeType size);
 
 		GeneralPurposeAllocator(const GeneralPurposeAllocator& other) = delete;
 		GeneralPurposeAllocator(GeneralPurposeAllocator&& other) = delete;
@@ -304,7 +303,7 @@ namespace NOU::NOU_MEM_MNGT
 		GeneralPurposeAllocator& operator=(GeneralPurposeAllocator&& other) = delete;
 
 		/**
-		\brief Destructor of the gpa.
+		\brief Destructor of the GPA.
 		*/
 		~GeneralPurposeAllocator();
 
@@ -318,9 +317,10 @@ namespace NOU::NOU_MEM_MNGT
 
 		\param arguments The data of the object which will be allocated.
 
-		\return A pointer to the allocated Objects.
+		\return A pointer to the allocated Objects. If the GPA exceeded its maximum capacity it will return
+				a null-pointer to indicate that the next object cannot be stored.
 
-		\brief Allocates memory in the gpa for the passed object. Allows to allocate the passed object
+		\brief Allocates memory in the GPA for the passed object. Allows to allocate the passed object
 			   multiple times.
 		*/
 		template <typename T, typename... arguments>
@@ -333,9 +333,10 @@ namespace NOU::NOU_MEM_MNGT
 
 		\param arguments The data of the object which will be allocated.
 
-		\return A pointer to the allocated object.
+		\return A pointer to the allocated Objects. If the GPA exceeded its maximum capacity it will return
+				a null-pointer to indicate that the next object cannot be stored.
 
-		\brief Allocates memory in the gpa for the passed object. Allows to allocate the passed object
+		\brief Allocates memory in the GPA for the passed object. Allows to allocate the passed object
 		only ones. For multiple allocations of the same object use the allocateObjects().
 
 		\details Calls the allocateObjects() with the parameter amountOfObjects = 1.
@@ -354,11 +355,11 @@ namespace NOU::NOU_MEM_MNGT
 		void deallocateObjects(GeneralPurposeAllocatorPointer<T> pointer);
 
 		/**
-		\tparam T The type of the object in the gpa.
+		\tparam T The type of the object in the GPA.
 
-		\param left A pointer reference to the left element in the gpa.
+		\param left A pointer reference to the left element in the GPA.
 
-		\param right A pointer reference to the right element in the gpa.
+		\param right A pointer reference to the right element in the GPA.
 
 		\param insertionIndex The index where the new element will be inserted.
 
@@ -428,7 +429,7 @@ namespace NOU::NOU_MEM_MNGT
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 
-		byte* allocationLocation = (byte*)nextMultiple(alignof(T), ((sizeType)m_addr) + 1);
+		byte* allocationLocation = reinterpret_cast<byte*>(nextMultiple(alignof(T), ((sizeType)m_addr) + 1));
 		sizeType amountOfBytes = amountofObjects * sizeof(T);
 		byte* newAddr = allocationLocation + amountOfBytes;
 
@@ -522,14 +523,6 @@ namespace NOU::NOU_MEM_MNGT
 		m_size(size)
 	{
 		m_data = new byte[m_size];
-		m_gpas.pushBack(m_data);
-		m_freeChunks.pushBack(internal::GeneralPurposeAllocatorFreeChunk(m_data, m_size));
-	}
-
-	void GeneralPurposeAllocator::newAllocator(sizeType size)
-	{
-		m_data = new byte[m_size];
-		m_gpas.pushBack(m_data);
 		m_freeChunks.pushBack(internal::GeneralPurposeAllocatorFreeChunk(m_data, m_size));
 	}
 
@@ -547,28 +540,21 @@ namespace NOU::NOU_MEM_MNGT
 		GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects, arguments&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
-		
-		if (m_usedSize >= GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE / (sizeof(T) + alignof(T)))
+	
+		for (sizeType i = 0; i < m_freeChunks.size(); i++)
 		{
-			newAllocator(GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
-		}
-		else
-		{
-			for (sizeType i = 0; i < m_freeChunks.size(); i++)
+			T* data = m_freeChunks[i].allocateObject<T>(amountOfObjects,
+				NOU_CORE::forward<arguments>(args)...);
+			if (data != nullptr)
 			{
-				T* data = m_freeChunks[i].allocateObject<T>(amountOfObjects,
-					NOU_CORE::forward<arguments>(args)...);
-				if (data != nullptr)
+				if (m_freeChunks[i].m_size == 0)
 				{
-					if (m_freeChunks[i].m_size == 0)
-					{
-						m_freeChunks.remove(i);
-					}
-					m_usedSize++;
-					return GeneralPurposeAllocatorPointer<T>(data, amountOfObjects);
+					m_freeChunks.remove(i);
 				}
+				return GeneralPurposeAllocatorPointer<T>(data, amountOfObjects);
 			}
 		}
+
 		return GeneralPurposeAllocatorPointer<T>(nullptr, 0);///\todo better error handling???
 	}
 
@@ -613,6 +599,12 @@ namespace NOU::NOU_MEM_MNGT
 				didMerge = true;
 			}
 		}
+		else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_DEALLOCATION,
+				"Tried to deallocated an object that does not exist.");
+			return;
+		}
 
 		if(right->m_addr != m_freeChunks.at(m_freeChunks.size()).m_addr)
 		{ 
@@ -637,7 +629,6 @@ namespace NOU::NOU_MEM_MNGT
 		{
 			m_freeChunks.pushBack(gpafc);
 		}
-		m_usedSize--;
 	}
 
 	template<typename T>
