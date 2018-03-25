@@ -914,6 +914,12 @@ namespace NOU::NOU_DAT_ALG
 		CharType& operator [] (sizeType index);
 	};
 
+	using String8 = String<char8>;
+
+	using String16 = String<char16>;
+
+	using String32 = String<char32>;
+
 	template<typename CHAR_TYPE>
 	template<typename IT>
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)			
