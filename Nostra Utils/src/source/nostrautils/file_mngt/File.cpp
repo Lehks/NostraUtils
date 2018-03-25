@@ -18,7 +18,7 @@ namespace NOU::NOU_FILE_MNGT
 	File::File(File &&other)
 	{
 		setName(other.m_name);
-		setData(other.m_data);
+		m_data = other.m_data;
 		setPath(other.m_path);
 		setMode(other.m_mode);
 		other.close();
@@ -142,11 +142,6 @@ namespace NOU::NOU_FILE_MNGT
 	const NOU::NOU_DAT_ALG::StringView8& File::getAbsolutePath()
 	{
 		return m_absolutePath;
-	}
-
-	void File::setData(FILE *data)
-	{
-		m_data = data;
 	}
 	FILE* File::getData()
 	{
