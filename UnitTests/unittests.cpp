@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
+#define NOU_DEBUG
+
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
@@ -16,10 +18,15 @@
 #include "nostrautils\dat_alg\FastQueue.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
+#include "nostrautils\mem_mngt\PoolAllocator.hpp"
+#include "nostrautils\mem_mngt\GeneralPurposeAllocator.hpp"
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\Hashing.hpp"
 #include "nostrautils\dat_alg\BinarySearch.hpp"
+#include "nostrautils\dat_alg\ObjectPool.hpp"
+#include "nostrautils\dat_alg\HashMap.hpp"
+#include "nostrautils\thread\Threads.hpp"
 
 #include "DebugClass.hpp"
 
@@ -27,6 +34,14 @@
 #include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+#define NOU_CHECK_ERROR_HANDLER 																		 \
+				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
+				while(NOU::NOU_CORE::getErrorHandler().getErrorCount() > 0)								 \
+				{																						 \
+					NOU::NOU_CORE::getErrorHandler().popError();										 \
+				}																						 \
+				Assert::IsTrue(errorCount == 0);					 
 
 void printErrors()
 {
@@ -1012,43 +1027,135 @@ namespace UnitTests
 			}
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(PoolAllocator)
+		{
+			NOU::NOU_MEM_MNGT::PoolAllocator<NOU::DebugClass> pa;
+
+			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass*> dbgCls;
+
+			NOU::sizeType testValue = 1234;
+
+			const NOU::sizeType ALLOC_SIZE = 4321;
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				dbgCls.push(pa.allocate(testValue));
+			}
+
+			for (NOU::DebugClass* value : dbgCls)
+			{
+				Assert::IsTrue(value->get() == testValue);
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == ALLOC_SIZE);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				pa.deallocate(dbgCls.pop());
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 		
+			{
+				NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> uninit;
+
+				Assert::IsTrue(!uninit.isValid());
+
+				uninit = NOU::DebugClass(1);
+
+				Assert::IsTrue(uninit.isValid());
+
+				uninit.destroy();
+
+				Assert::IsTrue(!uninit.isValid());
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+			}
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(GeneralPurposeAllocator)
+		{
+			using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::
+				GeneralPurposeAllocatorPointer<NOU::DebugClass>;
+
+			NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
+			NOU::NOU_DAT_ALG::Vector<HandleType> dbgVec;
+			NOU::sizeType testValue = 12345;
+			const NOU::sizeType ALLOC_SIZE = 40;
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			dbgVec.push(gpa.allocateObjects<NOU::DebugClass>(1, testValue));
+			gpa.deallocateObjects(dbgVec.at(0));
+			dbgVec.pop();
+			gpa.deallocateObjects(dbgVec.at(0));
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+			NOU::NOU_CORE::getErrorHandler().popError();
+			
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				dbgVec.push(gpa.allocateObject<NOU::DebugClass>(testValue));
+			}
+
+			for (HandleType &value : dbgVec)
+			{
+				Assert::IsTrue(value->get() == testValue);
+			}
+
+			for (int i = 0; i < dbgVec.size(); i++)
+			{
+				gpa.deallocateObjects(dbgVec.at(i));
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(String)
 		{
 			NOU::NOU_DAT_ALG::String<NOU::char8> str;
-
+		
 			str.append('a');
 			Assert::AreEqual(str[0], 'a');
-
+		
 			str.append("Hallo");
 			Assert::AreEqual(str[1], 'H');
-
+		
 			str.insert(0, 'A');
 			Assert::AreEqual(str[0], 'A');
-
+		
 			str.appendIf(1, 'T');
 			Assert::AreEqual(str[str.size() - 1], 'T');
-
+		
 			str.append(1);
 			Assert::AreEqual(str[str.size() - 1], '1');
-
+		
 			str.append(-1);
 			Assert::AreEqual(str[str.size() - 2], '-');
 			Assert::AreEqual(str[str.size() - 1], '1');
-
+		
 			NOU::sizeType i = 0; // becasue of NULLTERMINATOR
 			str.clear();
 			Assert::AreEqual(str.size(), i);
-
+		
 			str.append("Hallo Welt");
 			str.replace('l', 'V', 0, str.size() - 1);
 			Assert::AreEqual(str[2], 'V');
 			Assert::AreEqual(str[3], 'V');
 			Assert::AreEqual(str[8], 'V');
-
+		
 			str.clear();
 			str.append(17.025);
 			Assert::AreEqual(str[0], '1');
@@ -1057,17 +1164,17 @@ namespace UnitTests
 			Assert::AreEqual(str[3], '0');
 			Assert::AreEqual(str[4], '2');
 			Assert::AreEqual(str[5], '5');
-
+		
 			str.remove(2, str.size());
 			Assert::AreEqual(str[0], '1');
 			Assert::AreEqual(str[1], '7');
 			Assert::AreNotEqual(str[0], '.');
-
+		
 			NOU::NOU_DAT_ALG::String<NOU::char8> substr;
-
+		
 			substr.append(str.substring(0, 1));
 			Assert::AreEqual(str[0], '1');
-
+		
 			substr.clear();
 			substr.append(str.copy());
 			Assert::AreEqual(str[0], '1');
@@ -1091,47 +1198,132 @@ namespace UnitTests
 			b.enqueue(14, 1);
 			b.enqueue(15, 4);
 
-			Assert::IsTrue(b.at(0) == 10);
-			Assert::IsTrue(b.at(1) == 14);
-			Assert::IsTrue(b.at(2) == 12);
-			Assert::IsTrue(b.at(3) == 13);
-			Assert::IsTrue(b.at(4) == 11);
-			Assert::IsTrue(b.at(5) == 15);
-
+			Assert::IsTrue(b.at(0) == 1);
+			Assert::IsTrue(b.at(1) == 2);
+			Assert::IsTrue(b.at(2) == 3);
+			Assert::IsTrue(b.at(3) == 4);
+			Assert::IsTrue(b.at(4) == 1);
+			Assert::IsTrue(b.at(5) == 4);
 
 			b.dequeue();
-
-			Assert::IsTrue(b.at(0) == 14);
-			Assert::IsTrue(b.at(1) == 12);
-			Assert::IsTrue(b.at(2) == 13);
-			Assert::IsTrue(b.at(3) == 11);
-			Assert::IsTrue(b.at(4) == 15);
+			
+			Assert::IsTrue(b.at(0) == 2);
+			Assert::IsTrue(b.at(1) == 3);
+			Assert::IsTrue(b.at(2) == 4);
+			Assert::IsTrue(b.at(3) == 1);
+			Assert::IsTrue(b.at(4) == 4);
 			
 			b.decreaseKey(2, 2);
 			
-			Assert::IsTrue(b.at(0) == 14);
-			Assert::IsTrue(b.at(1) == 12);
-			Assert::IsTrue(b.at(2) == 13);
-			Assert::IsTrue(b.at(3) == 11);
-			Assert::IsTrue(b.at(4) == 15);
-		
+			Assert::IsTrue(b.at(0) == 2);
+			Assert::IsTrue(b.at(1) == 3);
+			Assert::IsTrue(b.at(2) == 4);
+			Assert::IsTrue(b.at(3) == 1);
+			Assert::IsTrue(b.at(4) == 4);
+
+			NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> c(5);
+			
+			c.enqueue(1, 11);
+			c.enqueue(2, 5);
+			c.enqueue(3, 17);
+			c.enqueue(3, 176);
+			c.enqueue(5, 188);
+			
+			Assert::IsTrue(c.checkIfPresent(3) == true);
+			
+			c.deleteById(4);
+			
+			Assert::IsTrue(c.at(0) == 11);
+			Assert::IsTrue(c.at(1) == 5);
+			Assert::IsTrue(c.at(2) == 17);
+			Assert::IsTrue(c.at(3) == 188);
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
 
 		TEST_METHOD(Hashfunction)
 		{
-			NOU::sizeType testInt = 42;
-			NOU::sizeType hashSize = 5;
-			NOU::sizeType test;
-			test = NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize);
-			testInt = 9234978;
-			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt, hashSize));
+			NOU::int64 i1 = 243536768574;
+			NOU::int64 i2 = 243536768574;
+		
+			NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+		
+			NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
+		
+			h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
 
-			testInt = 42;
-			test = NOU::NOU_DAT_ALG::hashObj(&testInt);
-			testInt = 9234978;
-			Assert::AreEqual(test, NOU::NOU_DAT_ALG::hashObj(&testInt));
+			NOU_CHECK_ERROR_HANDLER;
+		
+		}
+
+		TEST_METHOD(HashMap) 
+		{
+			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
+			NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
+			NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::boolean b;
+		
+			Assert::AreEqual(hm.isEmpty(), true);
+		
+			for (NOU::sizeType i = 0; i < str.size(); i++) {
+				b = hm.map(str.at(i), 1);
+			}
+		
+			Assert::AreEqual(hm.isEmpty(), false);
+		
+			for (int i = 0; i < str.size(); i++) {
+				Assert::AreEqual(hm.get(str.at(i)), 1);
+			}
+			NOU::char8 k = 'h';
+		
+			NOU::int32 count = hm.remove(k);
+			Assert::AreEqual(1, count);
+
+
+			for (NOU::sizeType i = 0; i < str.size(); i++)
+			{
+				k = str.at(i);
+				if (!hm1.containsKey(str.at(i)))
+				{
+					hm1.map(k, 1);
+				}
+				else
+				{
+					hm1.map(k, hm1.get(k) + 1);
+				}
+			}
+			
+			Assert::AreEqual(hm1.get('h'), 2);
+			Assert::AreEqual(hm1.get(' '), 8);
+
+			NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
+
+			cm.map(5, 1);
+			cm.map(41, 2);
+			cm.map(10, 3);
+			cm.map(49875, 4);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
+
+			c = cm.entrySet();
+
+			Assert::AreEqual(c[0], 1);
+			Assert::AreEqual(c[1], 4);
+			Assert::AreEqual(c[2], 3);
+			Assert::AreEqual(c[3], 2);
+
+			NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
+
+			a = cm.keySet();
+
+			Assert::AreEqual(a[0], 5);
+			Assert::AreEqual(a[1], 49875);
+			Assert::AreEqual(a[2], 10);
+			Assert::AreEqual(a[3], 41);
 
 		}
 
@@ -1173,6 +1365,8 @@ namespace UnitTests
 			Assert::IsTrue(insertionIndex == 7);
 			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[7], 0, vec.size() - 1, &insertionIndex);
 			Assert::IsTrue(insertionIndex == 0);
+
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(VectorIterator)
@@ -1309,6 +1503,103 @@ namespace UnitTests
 			Assert::IsTrue(rit->get() == 5);
 
 			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(ObjectPool)
+		{
+			NOU::NOU_DAT_ALG::ObjectPool<NOU::DebugClass> objPool(5);
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 0);
+			Assert::IsTrue(objPool.remainingObjects() == 0);
+
+			objPool.pushObject(NOU::DebugClass(0));
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 1);
+			Assert::IsTrue(objPool.remainingObjects() == 1);
+
+			objPool.pushObject(NOU::DebugClass(1));
+			objPool.pushObject(NOU::DebugClass(2));
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 3);
+
+			NOU::DebugClass &obj0 = objPool.get();
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 2);
+
+			NOU::DebugClass &obj1 = objPool.get();
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 1);
+
+			objPool.giveBack(obj0);
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 2);
+
+			Assert::IsTrue(objPool.isPartOf(obj0));
+			Assert::IsTrue(objPool.isPartOf(obj1));
+
+			NOU::DebugClass dbgCls(5);
+			Assert::IsFalse(objPool.isPartOf(dbgCls));
+		}
+
+		static void taskTestFunction1(NOU::int32 i, NOU::int32 *out)
+		{
+			*out = i;
+		}
+
+		static NOU::int32 taskTestFunction2(NOU::int32 i)
+		{
+			return i;
+		}
+
+		TEST_METHOD(Task)
+		{
+			NOU::int32 i1 = 5;
+			NOU::int32 out;
+
+			auto task1 = NOU::NOU_THREAD::makeTask(&taskTestFunction1, i1, &out);
+
+			task1.execute();
+
+			Assert::IsTrue(out == i1);
+
+
+			//just to make sure that INVALID_OBJECT is the first error in the handler later
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			NOU::int32 i2 = 5;
+
+			auto task2 = NOU::NOU_THREAD::makeTask(&taskTestFunction2, i2);
+
+			task2.getResult();
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().popError().getID() == 
+				NOU::NOU_CORE::ErrorCodes::INVALID_OBJECT);
+
+			task2.execute();
+
+			Assert::IsTrue(task2.getResult() == i2);
+		}
+
+		//no more tests are possible, since the remaining methods of thread manager are either not reliable 
+		//(like currentlyAvailableThreads(), which may change any moment) or there are no observable values 
+		//produced (like pushTask())
+		TEST_METHOD(ThreadManager)
+		{
+			NOU::NOU_THREAD::ThreadManager &manager = NOU::NOU_THREAD::getThreadManager();
+
+			Assert::IsTrue(manager.maximumAvailableThreads() == 
+				NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
 		}
 	};
 }

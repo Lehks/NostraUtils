@@ -2,10 +2,13 @@
 #define	NOU_DAT_ALG_VECTOR_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\dat_alg\ContainerInterfaces.hpp"
 #include "nostrautils\dat_alg\Bubblesort.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
+
+#include <new>
 
 /** \file Vector.hpp
 \author  Dennis Franz
@@ -1071,9 +1074,6 @@ namespace NOU::NOU_DAT_ALG
 	template<typename... ARGS>
 	void Vector<T>::emplace(sizeType index, ARGS&&... args)
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
-			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index is bigger then the size of the vector.");
-
 		expandIfNeeded(1);
 		for (sizeType i = m_size; i > index; i--)
 		{
