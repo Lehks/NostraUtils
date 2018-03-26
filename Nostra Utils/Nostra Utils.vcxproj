@@ -324,6 +324,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\FileManager.hpp" />
+    <ClInclude Include="src\header\nostrautils\file_mngt\Folder.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />

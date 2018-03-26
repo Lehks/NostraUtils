@@ -115,6 +115,9 @@
     <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\file_mngt\Folder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp">
