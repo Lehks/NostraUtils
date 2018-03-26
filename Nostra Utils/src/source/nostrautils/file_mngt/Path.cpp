@@ -113,6 +113,13 @@ namespace NOU::NOU_FILE_MNGT
 
 		Path cwd = currentWorkingDirectory();
 
+#if NOU_OS == NOU_OS_WINDOWS
+		if (!cwd.getAbsolutePath().startsWith(path.at(0)))
+		{
+			return path;
+		}
+#endif
+
 		if (path == cwd.getAbsolutePath())
 			return ".";
 
@@ -162,7 +169,27 @@ namespace NOU::NOU_FILE_MNGT
 			return "";
 		}
 
-		return NOU_DAT_ALG::String8(path.logicalSubstring(0, lastPathSeparator));;
+		if (path.endsWith(PATH_SEPARATOR))
+		{
+			NOU_DAT_ALG::String8 str;
+
+			sizeType prevIndex = 0;
+			sizeType nextIndex = path.find(PATH_SEPARATOR, prevIndex);
+
+			std::cout << path.logicalSubstring(prevIndex, nextIndex).rawStr() << std::endl;
+
+			while (nextIndex != NOU_DAT_ALG::String8::NULL_INDEX)
+			{
+				str.append(path.logicalSubstring(prevIndex, nextIndex));
+
+				prevIndex = nextIndex;
+				nextIndex = path.find(PATH_SEPARATOR, prevIndex);
+			}
+
+			return str;
+		}
+
+		return NOU_DAT_ALG::String8(path.logicalSubstring(0, lastPathSeparator));
 	}
 
 	Path Path::currentWorkingDirectory()

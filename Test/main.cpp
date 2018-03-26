@@ -30,10 +30,10 @@ int main()
 	Path p10 = "C:\\Users\\Dennis\\TestDir\\MyFile.exe"; 
 	Path p11 = "C:\\Users\\Dennis\\TestDir\\MyFolder\\MyFile.txt"; 
 	Path p12 = "C:\\Users\\Dennis\\TestDir"; 
-	Path p13 = "C:\\Users\\"; 
-	Path p14 = "C:\\Users\\SomeOtherDir"; 
+	Path p13 = "D:\\Users\\"; 
+	Path p14 = "D:\\Users\\SomeOtherDir"; 
 
-	Path cwd = p10.currentWorkingDirectory();
+	Path cwd = Path::currentWorkingDirectory();
 
 	std::cout << p10.getParentPath().rawStr() << std::endl;
 	std::cout << p11.getParentPath().rawStr() << std::endl;
