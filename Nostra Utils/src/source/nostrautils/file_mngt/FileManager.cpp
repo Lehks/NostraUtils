@@ -1,76 +1,129 @@
 #include "nostrautils\file_mngt\FileManager.hpp"
-#include "nostrautils\file_mngt\File.hpp"
 
 namespace NOU::NOU_FILE_MNGT
 {
-
+	/*
 	FileManager::FileManager()
 	{
-
+		m_storedFiles = 0;
+		m_storedFolders = 0;
+		m_openedFileCount = 0;
 	}
 
-	FileManager FileManager::getInstance()
+	boolean FileManager::removeFromOpenedFiles(const File &file)
+	{
+		NOU::NOU_DAT_ALG::StringView<char8> path = file.getPath();
+
+		for (sizeType i = 0; i < m_openedFileCount; i++)
+		{
+			if (m_openedFiles[i].getPath() == path)
+			{
+				m_openedFiles.remove(i);
+				m_openedFileCount--;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	FileManager& FileManager::getInstance()
 	{
 		static FileManager instance;
 
 		return instance;
 	}
 
-	boolean FileManager::createFile(const char *name, const char *mode)
+	boolean FileManager::addFile(const NOU::NOU_DAT_ALG::StringView<char8>& name, const NOU::NOU_DAT_ALG::StringView<char8>& path)
 	{
-		#pragma warning(suppress : 4996)
-		File tmp(fopen(name, mode));
-
-		if (!tmp.open)
-		{
-			return false;
-		}
-
-		tmp.close;
-
+		m_fileStorage.emplaceBack(name, path);
+		m_storedFiles++;
 		return true;
 	}
 
-	boolean FileManager::openFile(const char *name, const char *mode)
+	boolean FileManager::openFile(const File &file)
 	{
-		#pragma warning(suppress : 4996)
-		File tmp(fopen(name, mode));
+		NOU::NOU_DAT_ALG::StringView<char8> path = file.getPath();
 
-		if (!tmp.open)
+		for (sizeType i = 0; i < m_storedFiles; i++)
 		{
-			return false;
-		}
-
-		return true;
-	}
-
-	boolean FileManager::deleteFile(const char *filename)
-	{
-		int ret;
-
-		ret = remove(filename);
-
-		if (ret == 0) 
-		{
-			return true;
+			if (m_fileStorage[i].getPath() == path)
+			{
+				m_fileStorage[i].open();
+				m_openedFiles.pushBack(m_fileStorage[i]);
+				m_openedFileCount++;
+				return true;
+			}
 		}
 
 		return false;
 	}
 
-	boolean FileManager::createFolder(NOU::NOU_DAT_ALG::String<char8> path, NOU::NOU_DAT_ALG::String<char8> name)
+	boolean FileManager::closeFile(const File &file)
 	{
-		return boolean();
+		NOU::NOU_DAT_ALG::StringView<char8> path = file.getPath();
+
+		for (sizeType i = 0; i < m_storedFiles; i++)
+		{
+			if (m_fileStorage[i].getPath() == path)
+			{
+				m_fileStorage[i].close();
+				removeFromOpenedFiles(m_fileStorage[i]);
+				return true;
+			}
+		}
+
+		return false;
 	}
 
-	boolean FileManager::openFolder(NOU::NOU_DAT_ALG::String<char8> fullpath)
+	File FileManager::getFile(const NOU::NOU_DAT_ALG::StringView<char8>& path)
 	{
-		return boolean();
+		for (sizeType i = 0; i < m_storedFiles; i++)
+		{
+			if (m_fileStorage[i].getPath() == path)
+			{
+				return m_fileStorage[i];
+			}
+		}
+
+		//ERROR;
 	}
 
-	boolean FileManager::deleteFolder(NOU::NOU_DAT_ALG::String<char8> fullpath)
+	boolean FileManager::removeFile(const File &file)
 	{
-		return boolean();
+		NOU::NOU_DAT_ALG::StringView<char8> path = file.getPath();
+
+		for (sizeType i = 0; i < m_storedFiles; i++)
+		{
+			if (m_fileStorage[i].getPath() == path)
+			{
+				if (file.isCurrentlyOpen())
+				{
+					file.close();
+					removeFromOpenedFiles(m_fileStorage[i]);
+				}
+
+				m_fileStorage[i].~File();
+				return true;
+			}
+		}
 	}
 
+	const NOU::NOU_DAT_ALG::StringView<char8>& FileManager::getFileName(const File &file)  const
+	{
+		return file.getName();
+	}
+
+	const NOU::NOU_DAT_ALG::StringView<char8>& FileManager::getFilePath(const File &file) const
+	{
+		return file.getPath();
+	}
+
+	const NOU::NOU_DAT_ALG::StringView<char8>& FileManager::getAbsoluteFilePath(const File &file)  const
+	{
+		return file.getAbsolutePath();
+	}
+
+
+	*/
 }
