@@ -323,6 +323,7 @@
     <ClInclude Include="src\header\nostrautils\file_mngt\INIFile.hpp">
       <DeploymentContent>false</DeploymentContent>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\lang\Lang.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />
@@ -333,6 +334,7 @@
     <ClCompile Include="src\source\nostrautils\file_mngt\INIFile.cpp" />
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
+    <ClCompile Include="src\source\nostrautils\lang\Lang.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
