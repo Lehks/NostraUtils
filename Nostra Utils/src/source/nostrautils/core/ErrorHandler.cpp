@@ -1,5 +1,6 @@
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
+#include "nostrautils\thread\ThreadManager.hpp"
 
 namespace NOU::NOU_CORE
 {
@@ -62,11 +63,11 @@ namespace NOU::NOU_CORE
 		return m_id;
 	}
 
-	NOU_MEM_MNGT::GenericAllocationCallback<Error> DefaultErrorPool::s_poolAllocator;
+//	NOU_MEM_MNGT::GenericAllocationCallback<Error> DefaultErrorPool::s_poolAllocator;
 
 	NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<Error>> DefaultErrorPool::s_defaultErrorPool(
-		new NOU_DAT_ALG::FastQueue<Error>(ErrorCodes::LAST_ELEMENT, s_poolAllocator), 
-		NOU_MEM_MNGT::defaultDeleter);
+		new NOU_DAT_ALG::FastQueue<Error>(ErrorCodes::LAST_ELEMENT, 
+		NOU_MEM_MNGT::GenericAllocationCallback<Error>::getInstance()), NOU_MEM_MNGT::defaultDeleter);
 
 #ifndef NOU_ADD_ERROR
 #define NOU_ADD_ERROR(pool, code) pool##->at(ErrorCodes::##code) = Error(#code, ErrorCodes::##code)
@@ -87,6 +88,8 @@ namespace NOU::NOU_CORE
 		NOU_ADD_ERROR(s_defaultErrorPool, BAD_ALLOCATION);
 		NOU_ADD_ERROR(s_defaultErrorPool, BAD_DEALLOCATION);
 		NOU_ADD_ERROR(s_defaultErrorPool, INVALID_OBJECT);
+		NOU_ADD_ERROR(s_defaultErrorPool, INVALID_STATE);
+		NOU_ADD_ERROR(s_defaultErrorPool, MUTEX_ERROR);
 	}
 
 	const Error* DefaultErrorPool::queryError(ErrorPool::ErrorType id) const
@@ -98,7 +101,8 @@ namespace NOU::NOU_CORE
 	}
 
 	ErrorHandler::ErrorPoolContainerWrapper::ErrorPoolContainerWrapper(sizeType initialCapacity) :
-		m_errorPools(new NOU_DAT_ALG::FastQueue<const ErrorPool*>(initialCapacity, m_allocator), 
+		m_errorPools(new NOU_DAT_ALG::FastQueue<const ErrorPool*>(initialCapacity, 
+			NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*>::getInstance()),
 			NOU_MEM_MNGT::defaultDeleter)
 	{
 		pushPool<DefaultErrorPool>();
@@ -126,8 +130,6 @@ namespace NOU::NOU_CORE
 	ErrorHandler::ErrorPoolContainerWrapper ErrorHandler::s_errorPools(1);
 
 	ErrorHandler::CallbackType ErrorHandler::s_callback = ErrorHandler::standardCallback;
-
-	ErrorHandler ErrorHandler::s_handler; //remove later
 
 	void ErrorHandler::setCallback(CallbackType callback)
 	{
@@ -160,10 +162,17 @@ namespace NOU::NOU_CORE
 	{
 		return m_errors->size();
 	}
-	
+
+	ErrorHandler& ErrorHandler::getMainThreadHandler()
+	{
+		static ErrorHandler handler;
+		return handler;
+	}
+
 	ErrorHandler::ErrorHandler() :
-		m_errors(new NOU_DAT_ALG::FastQueue<ErrorLocation>(DEFAULT_CAPACITY, m_allocator), 
-			NOU_MEM_MNGT::defaultDeleter) //remove later the m_allocator
+		m_errors(new NOU_DAT_ALG::FastQueue<ErrorLocation>(DEFAULT_CAPACITY, 
+			NOU_MEM_MNGT::GenericAllocationCallback<ErrorLocation>::getInstance()), 
+			NOU_MEM_MNGT::defaultDeleter)
 	{}
 
 	const ErrorLocation& ErrorHandler::peekError() const
@@ -186,6 +195,6 @@ namespace NOU::NOU_CORE
 
 	ErrorHandler& getErrorHandler()
 	{
-		return ErrorHandler::s_handler; //todo rework w/ thread mngr
+		return NOU_THREAD::getThreadManager().getErrorHandlerByThreadId(std::this_thread::get_id());
 	}
 }

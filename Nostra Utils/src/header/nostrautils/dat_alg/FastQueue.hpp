@@ -35,7 +35,7 @@ namespace NOU::NOU_DAT_ALG
 		using Type = T;
 
 		/**
-		\brief The minium capacity of a FastQueue.
+		\brief The minimum capacity of a FastQueue.
 		*/
 		static constexpr sizeType MIN_CAPACITY = 1;
 
@@ -46,7 +46,6 @@ namespace NOU::NOU_DAT_ALG
 		NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
 
 		/** 
-		\Mahan is dumm!
 		\brief The max size of the queue.
 		*/
 		sizeType m_capacity;

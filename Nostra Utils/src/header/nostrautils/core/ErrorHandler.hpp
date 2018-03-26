@@ -217,11 +217,6 @@ namespace NOU::NOU_CORE
 	private:
 
 		/**
-		\brief The AllocationCallback that is used by the ErrorPool
-		*/
-		static NOU_MEM_MNGT::GenericAllocationCallback<Error> s_poolAllocator;
-
-		/**
 		\brief The vector that stores the single errors of the defaultErrorPool.
 		*/
 		static NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<Error>> s_defaultErrorPool;
@@ -258,13 +253,6 @@ namespace NOU::NOU_CORE
 		class NOU_CLASS ErrorPoolContainerWrapper
 		{
 		private:
-			/**
-			\brief The allocation callback that is used by m_errorPools. 
-			GenericAllocationCallback::getInstance() can not be used, since it may not be constructed yet 
-			(this class is only used as a static member).
-			*/
-			NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> m_allocator;
-
 			/**
 			\brief The vector that this class wraps around.
 			*/
@@ -328,8 +316,6 @@ namespace NOU::NOU_CORE
 		*/
 		static ErrorPoolContainerWrapper s_errorPools;
 
-		NOU_MEM_MNGT::GenericAllocationCallback<ErrorLocation> m_allocator; //remove later
-
 		/**
 		\brief Creates a new FastQueue from ErrorLocation.
 		*/
@@ -343,9 +329,6 @@ namespace NOU::NOU_CORE
 		static ErrorPoolContainerWrapper& getPools();
 
 	public:
-
-		//static instance of the error handler. will be removed as soon as the thread manager is ready
-		static ErrorHandler s_handler;
 
 		/**
 		\brief The default capacity for m_errors.
@@ -383,6 +366,21 @@ namespace NOU::NOU_CORE
 		*/
 		template<typename T>
 		static void pushPool();
+
+		/**
+		\return The error handler of the main thread.
+
+		\brief Returns the error handler of the main thread.
+
+		\details
+		Returns the error handler of the main thread. This method also stores said handler as a local
+		static variable.
+
+		\note
+		This method is not intended to be used by a user. To get the error handler of the calling thread,
+		getErrorHandler() should be used instead.
+		*/
+		static ErrorHandler& getMainThreadHandler();
 
 		/**
 		\return Returns the error count.
@@ -440,8 +438,8 @@ namespace NOU::NOU_CORE
 		enum Codes : typename ErrorLocation::ErrorType
 		{
 			/**
-			\brief An unknown error has occurred or an invalid error code has been passed to 
-			       ErrorHandler::pushError().
+			\brief An unknown error has occurred or an invalid error code has been passed to
+				   ErrorHandler::pushError().
 			*/
 			UNKNOWN_ERROR = 0,			//Must start at 0!
 
@@ -474,6 +472,16 @@ namespace NOU::NOU_CORE
 			\brief An object of some kind is invalid.
 			*/
 			INVALID_OBJECT,
+
+			/**
+			\brief An object was in an invalid state.
+			*/
+			INVALID_STATE,
+
+			/**
+			\brief An error has occrued in a mutex.
+			*/
+			MUTEX_ERROR,
 
 			/**
 			\brief Not an actual error, but always the last element in the enum. The error codes 0 - 
