@@ -39,7 +39,7 @@ namespace NOU::NOU_DAT_ALG
 
 	private:
 		/**
-		\brief A boolean that indicates wehter this heap function as a MIN or a MAX heap.
+		\brief A boolean that indicates whether this heap function as a MIN or a MAX heap.
 		*/
 		boolean													m_isMinHeap;
 		/**
@@ -85,10 +85,12 @@ namespace NOU::NOU_DAT_ALG
 
 	public:
 		/**
-		\param isMinHeap		A boolean that indicates wether this heap will be a min or a max heap.
+		\param isMinHeap		A boolean that indicates whether this heap will be a min or a max heap.
 		\param allocator		An allocator reference for the internal Vector.
 
 		\brief "Standard" constructor.
+		Default = true (min heap),
+		false = max heap.
 		*/
 		BinaryHeap(boolean isMinHeap = true, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>::getInstance());
 		/**
@@ -149,7 +151,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param is				The id that is searched.
-		\param newpriority		The new priority that will be replace the old one.
+		\param new priority		The new priority that will be replace the old one.
 
 		\brief This Function searches the heap for the given id and replace its old id of the element with the new one.
 		*/
@@ -173,19 +175,21 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param index			An index.
 
-		\brief Returns the FULL priority at the given index.
+		\brief Returns the FULL priority at the given index (Counter and ID).
 		*/
 		typename BinaryHeap<T>::PriorityType priorityAt(sizeType index);
 		/**
 		\param index			An index.
 
 		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T>::at)
+		\see	 BinaryHeap<T>::at()
 		*/
 		T& operator [] (sizeType index);
 		/**
 		\param index			An index.
 
 		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T>::at)
+		\see	 BinaryHeap<T>::at()
 		*/
 		const T& operator [] (sizeType index) const;
 	};
