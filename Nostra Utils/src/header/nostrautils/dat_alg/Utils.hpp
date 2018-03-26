@@ -5,12 +5,15 @@
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Meta.hpp"
 
-/** \file Utils.hpp
+/** 
+\file dat_alg/Utils.hpp
+
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \author	 Lukas Gross
 \since   0.0.1
 \version 0.0.1
+
 \brief   This file provides useful utility functions for dat_alg.
 */
 
