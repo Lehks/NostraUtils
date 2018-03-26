@@ -8,7 +8,7 @@
 /**
 \file core/ErrorHandler.hpp
 
-\author	 Lukas Groﬂ
+\author	 Lukas Gross
 \version 0.0.1
 \since	 1.0.0
 
@@ -42,17 +42,17 @@ namespace NOU::NOU_CORE
 
 	private:
 		/**
-		\brief The function name in which the error occured.
+		\brief The function name in which the error occurred.
 		*/
 		StringType m_fnName;
 		
 		/**
-		\brief The line in which the error occured.
+		\brief The line in which the error occurred.
 		*/
 		sizeType m_line;
 
 		/**
-		\brief The file in which the error occured.
+		\brief The file in which the error occurred.
 		*/
 		StringType m_file;
 
@@ -68,11 +68,11 @@ namespace NOU::NOU_CORE
 
 	public:
 		/**
-		\param fnName A reference to the function name in which the error occured.
+		\param fnName A reference to the function name in which the error occurred.
 
-		\param line The line in which the error occured.
+		\param line The line in which the error occurred.
 
-		\param file A reference to the file in which the error occured.
+		\param file A reference to the file in which the error occurred.
 
 		\param id The ID of the error.
 
@@ -86,21 +86,21 @@ namespace NOU::NOU_CORE
 		/**
 		\return Returns the function name.
 
-		\brief Returns the name of the function in which the error occured.
+		\brief Returns the name of the function in which the error occurred.
 		*/
 		const StringType& getFnName() const;
 
 		/**
 		\return Returns the line.
 		
-		\brief Returns the line in which the error occured.
+		\brief Returns the line in which the error occurred.
 		*/
 		sizeType getLine() const;
 
 		/**
 		\return Returns the file.
 		
-		\brief Returns the file in which the error occured.
+		\brief Returns the file in which the error occurred.
 		*/
 		const StringType& getFile() const;
 
@@ -217,11 +217,6 @@ namespace NOU::NOU_CORE
 	private:
 
 		/**
-		\brief The AllocationCallback that is used by the ErrorPool
-		*/
-		static NOU_MEM_MNGT::GenericAllocationCallback<Error> s_poolAllocator;
-
-		/**
 		\brief The vector that stores the single errors of the defaultErrorPool.
 		*/
 		static NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<Error>> s_defaultErrorPool;
@@ -259,14 +254,7 @@ namespace NOU::NOU_CORE
 		{
 		private:
 			/**
-			\brief The allocation callback that is used by m_errorPools. 
-			GenericAllocationCallback::getInstance() can not be used, since it may not be constructed yet (
-			this class is only used as a static member).
-			*/
-			NOU_MEM_MNGT::GenericAllocationCallback<const ErrorPool*> m_allocator;
-
-			/**
-			\brief The vector that this class wrapps around.
+			\brief The vector that this class wraps around.
 			*/
 			NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<const ErrorPool*>> m_errorPools;
 
@@ -300,7 +288,7 @@ namespace NOU::NOU_CORE
 			/**
 			\return m_errorPools
 
-			\brief Returns the vector that this class wrapps around.
+			\brief Returns the vector that this class wraps around.
 			*/
 			const NOU_DAT_ALG::FastQueue<const ErrorPool*>& getContainer() const;
 		};
@@ -328,8 +316,6 @@ namespace NOU::NOU_CORE
 		*/
 		static ErrorPoolContainerWrapper s_errorPools;
 
-		NOU_MEM_MNGT::GenericAllocationCallback<ErrorLocation> m_allocator; //remove later
-
 		/**
 		\brief Creates a new FastQueue from ErrorLocation.
 		*/
@@ -343,9 +329,6 @@ namespace NOU::NOU_CORE
 		static ErrorPoolContainerWrapper& getPools();
 
 	public:
-
-		//static instance of the error handler. will be removed as soon as the thread manager is ready
-		static ErrorHandler s_handler;
 
 		/**
 		\brief The default capacity for m_errors.
@@ -385,6 +368,21 @@ namespace NOU::NOU_CORE
 		static void pushPool();
 
 		/**
+		\return The error handler of the main thread.
+
+		\brief Returns the error handler of the main thread.
+
+		\details
+		Returns the error handler of the main thread. This method also stores said handler as a local
+		static variable.
+
+		\note
+		This method is not intended to be used by a user. To get the error handler of the calling thread,
+		getErrorHandler() should be used instead.
+		*/
+		static ErrorHandler& getMainThreadHandler();
+
+		/**
 		\return Returns the error count.
 
 		\brief Returns the count of errors in the queue.
@@ -411,11 +409,11 @@ namespace NOU::NOU_CORE
 		ErrorLocation popError();
 
 		/**
-		\param fnName A reference to the function name in which the error occured.
+		\param fnName A reference to the function name in which the error occurred.
 
-		\param line The line in which the error occured.
+		\param line The line in which the error occurred.
 		
-		\param file A reference to the file in which the error occured.
+		\param file A reference to the file in which the error occurred.
 
 		\param id The ID of the error.
 
@@ -440,8 +438,8 @@ namespace NOU::NOU_CORE
 		enum Codes : typename ErrorLocation::ErrorType
 		{
 			/**
-			\brief An unknown error has occured or an invalid error code has been passed to 
-			       ErrorHandler::pushError().
+			\brief An unknown error has occurred or an invalid error code has been passed to
+				   ErrorHandler::pushError().
 			*/
 			UNKNOWN_ERROR = 0,			//Must start at 0!
 
@@ -476,6 +474,16 @@ namespace NOU::NOU_CORE
 			INVALID_OBJECT,
 
 			/**
+			\brief An object was in an invalid state.
+			*/
+			INVALID_STATE,
+
+			/**
+			\brief An error has occrued in a mutex.
+			*/
+			MUTEX_ERROR,
+
+			/**
 			\brief Not an actual error, but always the last element in the enum. The error codes 0 - 
 			LAST_ELEMENT are always reserved for the default error pool.
 			*/
@@ -492,8 +500,8 @@ namespace NOU::NOU_CORE
 	NOU_FUNC ErrorHandler& getErrorHandler();
 
 /**
-\brief This macro is a convenience macro for pushing errors to the specified handler. This macro automatically
-       passes the functionname, line number and filename.
+\brief This macro is a convenience macro for pushing errors to the specified handler. This macro 
+	   automatically passes the function name, line number and filename.
 */
 #ifndef NOU_PUSH_ERROR
 #define NOU_PUSH_ERROR(handler, error, msg) handler.pushError(NOU_FUNC_NAME, __LINE__, __FILE__, error, msg)
@@ -512,9 +520,9 @@ namespace NOU::NOU_CORE
 #endif
 
 /**
-\brief This macro is a convenience macro for pushing errors to the specified handler. This macro automatically
-       passes the functionname, line number and filename. This macro will only bush the error, if \p b 
-	   evaluates to <tt>true.</tt>
+\brief This macro is a convenience macro for pushing errors to the specified handler. This macro 
+	   automatically passes the function name, line number and filename. This macro will only bush the error,
+	   if \p b evaluates to <tt>true.</tt>
 */
 #ifndef NOU_COND_PUSH_ERROR
 #define NOU_COND_PUSH_ERROR(b, handler, error, msg) \

@@ -4,6 +4,8 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\mem_mngt\Utils.hpp"
 
+#include <iostream>
+
 /**
 \file mem_mngt/AllocationCallback.hpp
 
@@ -21,25 +23,29 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of objects to allocate.
 
-	\brief A class that defines a unified interface that is used to allocate and deallocate memory.
+	\brief A class that defines a unified interface that is used to allocate and deallocate uninitialized
+	       memory.
 	*/
 	template<typename T>
 	class NOU_CLASS AllocationCallback
 	{
 	public:
+
+		virtual ~AllocationCallback() = default;
+
 		/**
 		\param amount The amount of objects to allocate.
 
-		\return A pointer to the allocated memory.
+		\return A pointer to the allocated memory, or \p nullptr (see details section).
 
 		\brief Allocates enough memory to hold \p amount instances of the type \p T.
 
 		\details
-		Allocates enough memory to hold \p amount instances of the type \p T. This function may or may not 
-		call constructors. Alltough the behaviour of calling constructors may change from allocation callback 
-		to allocation callback, it must be consistent along the usage of the same allocator class.
-		The memory allocated with this function must be deallocatable using the deallocate() function of the 
-		same allocation callback.
+		Allocates enough uninitialized memory to hold \p amount instances of the type \p T. The memory 
+		allocated with this function must be deallocatable using the deallocate() function of the same 
+		allocation callback.
+
+		If no more memory can be allocated, this method shall return \p nullptr.
 		*/
 		virtual T* allocate(sizeType amount = 1) = 0;
 
@@ -49,15 +55,19 @@ namespace NOU::NOU_MEM_MNGT
 		\brief Deallocates memory that was previously allocated by the same allocation callback. 
 
 		\details
-		Deallocates memory that was previously allocated by the same allocation callback. This function
-		may or may not call destructors. Alltough the behaviour of calling destructors may change from 
-		allocation callback to allocation callback, it must be consistent along the usage of the same 
-		allocator class.
+		Deallocates memory that was previously allocated by the same allocation callback. 
+
+		The deallocation of \p nullptr shall always be successful.
+
+		If a deallocation fails, it is advised (but not required) to implement error handing (pushing \link 
+		nostra::utils::core::ErrorCodes::BAD_DEALLOCATION ErrorCodes::BAD_DEALLOCATION \endlink would be a
+		good starting point).
 
 		\note 
-		It is only requiered that the same allocation callback that allocated memory can also deallocate the
-		same memory, however it is allowed for an allocation callback to also deallocate the memory of another
-		callback. This behavior is never defined and may or may not result in a propper deallocation.
+		This method must only be able to deallocate the memory that was allocated by the very same instance of
+		the callback. It \b may be able to deallocate the memory of other instances of the callback (or even
+		instances of other callbacks), but this behavior is not generally defined and must be defined by each
+		allocated individually.
 		*/
 		virtual void deallocate(T *data) = 0;
 	};
@@ -66,28 +76,29 @@ namespace NOU::NOU_MEM_MNGT
 	\tparam T The type of objects to allocate.
 
 	\brief An allocation callback that calls the functions allocateUninitialized() and 
-	       deallocateUninitialized(). This callback does not call any constructors or destructors.
+	       deallocateUninitialized().
 
 	\details
 	An allocation callback that calls the functions allocateUninitialized() and deallocateUninitialized(). 
-	This callback does not call any constructors or destructors. 
+
 	Since this callback always calls the same functions, it is not necessary to create new instances. 
-	Therefore, the class a static member that can be used. This can be accessed using getInstance().
+	Therefore, getInstance() provides a pre-constructed instance of the callback.
+
+	Every instance of this allocation callback can deallocate memory from any other instance of this class and
+	any memory that was allocated by deallocateUninitialized().
 	*/
 	template<typename T>
 	class NOU_CLASS GenericAllocationCallback final : public AllocationCallback<T>
 	{
-	private:
-		/**
-		\brief A static instance of this class.
-		*/
-		static GenericAllocationCallback s_instance;
-
 	public:
 		/**
-		\return s_instance
+		\return An instance of GenericAllocationCallback<T>.
 
-		\brief Returns the static instance of this class.
+		\brief Returns a static instance of this class.
+
+		\details 
+		Returns a static instance of this class. Instead of storing the instance in the class, it will be 
+		stored in this method.       
 		*/
 		static GenericAllocationCallback<T>& getInstance();
 
@@ -158,13 +169,15 @@ namespace NOU::NOU_MEM_MNGT
 		int64 getCounter() const;
 	};
 
-	template<typename T>
-	GenericAllocationCallback<T> GenericAllocationCallback<T>::s_instance;
+//	template<typename T>
+//	GenericAllocationCallback<T> GenericAllocationCallback<T>::s_instance;
 
 	template<typename T>
 	GenericAllocationCallback<T>& GenericAllocationCallback<T>::getInstance()
 	{
-		return s_instance;
+		static GenericAllocationCallback instance;
+		return instance;
+//		return s_instance;
 	}
 
 	template<typename T>
