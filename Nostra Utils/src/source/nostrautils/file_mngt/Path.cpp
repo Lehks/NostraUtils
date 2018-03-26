@@ -100,19 +100,96 @@ namespace NOU::NOU_FILE_MNGT
 
 	NOU_DAT_ALG::String8 Path::evaluateRelativePath(const NOU_DAT_ALG::StringView8 &path)
 	{		
-		// "\\testfile.exe";
-		// "testdir\\testfile.test";
-		// "\\test.dir\\testfile.test";
-		// "test.dir\\testfile";
-		// "testfile.test\\";
-		// "testfile";
-		// "test.tar.gz";
-		return NOU_DAT_ALG::String8();
+	//  "C:\\Users\\Dennis";										current directory (TestDir)
+
+	//  "C:\\Users\\Dennis\\TestDir\\MyFile.exe";					\\TestDir\\MyFile.exe
+	//  "C:\\Users\\Dennis\\TestDir\\MyFolder\\MyFile.txt";			\\TestDir\\MyFolder\\MyFile.txt
+	//  "C:\\Users\\Dennis\\TestDir";								\\TestDir
+	//  "C:\\Users\\";												..\\
+	//  "C:\\Users\\SomeOtherDir";									..\\SomeOtherDir
+
+	//  Relativer Pfad = Weg von pwd zu path.
+
+
+		Path cwd = currentWorkingDirectory();
+
+#if NOU_OS == NOU_OS_WINDOWS
+		if (!cwd.getAbsolutePath().startsWith(path.at(0)))
+		{
+			return path;
+		}
+#endif
+
+		if (path == cwd.getAbsolutePath())
+			return ".";
+
+		sizeType prevIndex = - 1;
+		sizeType nextIndex = path.find(PATH_SEPARATOR, prevIndex);
+
+		while (nextIndex != NOU_DAT_ALG::StringView8::NULL_INDEX)
+		{
+			if (cwd.getAbsolutePath().logicalSubstring(prevIndex + 1, nextIndex) != path.logicalSubstring(prevIndex + 1, nextIndex))
+			{
+				NOU_DAT_ALG::String8 str;
+				sizeType separatorCounter = 1;
+				sizeType firstIndexOfDifference = prevIndex;
+
+				while (nextIndex != NOU_DAT_ALG::StringView8::NULL_INDEX)
+				{
+					prevIndex = nextIndex;
+					nextIndex = cwd.getAbsolutePath().find(PATH_SEPARATOR, prevIndex);
+
+					separatorCounter++;
+				}
+
+				for (sizeType i = 0; i < separatorCounter; i++)
+				{
+					str.append("..").append(PATH_SEPARATOR);
+				}
+
+				str.append(path.logicalSubstring(firstIndexOfDifference, path.size()));
+
+				return str;
+			}
+
+			prevIndex = nextIndex;
+			nextIndex = path.find(PATH_SEPARATOR, prevIndex);
+		}		
+
+		return NOU_DAT_ALG::String8(path.logicalSubstring(prevIndex +1 , path.size()));
 	}
 
 	NOU_DAT_ALG::String8 Path::evaluateParentPath(const NOU_DAT_ALG::StringView8 &path)
 	{
-		return path;
+		sizeType nameExtensionSeparator = path.lastIndexOf(FILE_NAME_EXTENSION_SEPARATOR);
+		sizeType lastPathSeparator = path.lastIndexOf(PATH_SEPARATOR);
+
+		if (lastPathSeparator < 2)
+		{
+			return "";
+		}
+
+		if (path.endsWith(PATH_SEPARATOR))
+		{
+			NOU_DAT_ALG::String8 str;
+
+			sizeType prevIndex = 0;
+			sizeType nextIndex = path.find(PATH_SEPARATOR, prevIndex);
+
+			std::cout << path.logicalSubstring(prevIndex, nextIndex).rawStr() << std::endl;
+
+			while (nextIndex != NOU_DAT_ALG::String8::NULL_INDEX)
+			{
+				str.append(path.logicalSubstring(prevIndex, nextIndex));
+
+				prevIndex = nextIndex;
+				nextIndex = path.find(PATH_SEPARATOR, prevIndex);
+			}
+
+			return str;
+		}
+
+		return NOU_DAT_ALG::String8(path.logicalSubstring(0, lastPathSeparator));
 	}
 
 	Path Path::currentWorkingDirectory()
