@@ -181,13 +181,13 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param id			An id.
 
-		\brief Checks if an pair the the given id exsists.
+		\brief Checks if an pair the the given id exists.
 		*/
 		boolean checkIfPresent(PriorityTypePart id);
 		/**
 		\param id			An id.
 
-		\brief delets an pair with the specific id.
+		\brief deletes an pair with the specific id.
 		*/
 		void deleteById(PriorityTypePart id);
 
