@@ -313,6 +313,8 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\BinarySearch.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Quicksort.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Random.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ObjectPool.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\HashMap.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp" />
@@ -342,6 +344,7 @@
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
+    <ClCompile Include="src\source\nostrautils\dat_alg\Random.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\AsyncTaskResult.cpp" />

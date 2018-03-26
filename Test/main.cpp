@@ -42,6 +42,8 @@ public:
 	}
 };
 
+NOU::uint64 values[11] = {0};
+
 int main()
 {
 	//NOU::NOU_CORE::ErrorHandler::setCallback(callback);
