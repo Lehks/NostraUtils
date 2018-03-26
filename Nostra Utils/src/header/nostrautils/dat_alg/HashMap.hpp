@@ -8,7 +8,8 @@
 #include "nostrautils\dat_alg\Vector.hpp"
 
 /** \file Vector.hpp
-\author  Leslie Marxen	
+\author  Leslie Marxen
+\author  Dennis Franz
 \since   0.0.1
 \version 0.0.1
 \brief   This file provides a HashMap implementation.
@@ -16,16 +17,27 @@
 
 namespace NOU::NOU_DAT_ALG 
 {
+	/**
+	\brief   This class provides a HashMap implementation using the bucket method.
+	*/
 
 	template<typename K, typename V>
 	class NOU_CLASS HashMap 
 	{
 	private:
-
+		/**
+		\brief The default count of the internal used buckets.
+		*/
 		const static NOU::sizeType							LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more ofthen O(1) occurs
 
+		/**
+		\brief count of current objects stored inside the map.
+		*/
 		sizeType											m_size;
 
+		/**
+		\brief Buckets containing dynamically growing arrays inside.
+		*/
 		Vector<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>		m_data;
 
 
@@ -33,58 +45,68 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\brief "Standard" constructor.
+		\param size the count of buckets used inside the map (the more the better but also more mem space is used)
+		\param allocator the internally used mem allocator, defaults to NOU generic alloc
 		*/
-		HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>::getInstance());//WIP
+		HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>::getInstance());
+		/**
+		\brief Copy-constructor
+		\param other the HasMap from where this one will copy
+		*/
 		HashMap(const HashMap &other);
+		/**
+		\brief Move-comstructor
+		\param other the HashMap from where this one will move
+		*/
 		HashMap(HashMap &&other);
 
 		/**
 		\param			key the key where the value will be mapped to
-		\param		    value
-		\return			true if sucessfully mapped
-		\brief maps a value to a specific key;
+		\param		    value the vaule that will be mapped
+		\return			true if sucessfully mapped, false if otherwise
+		\brief maps a value to a specific key
 		*/
 		NOU::boolean map(const K &key,const V &value);//WIP
 
 		/**
-		\param key		the key on where a value will be returned
+		\param key		the key where a value will be returned
+		\return value
 		\brief Returns the corresponding value mapped to a specific key
 		*/
 		V& get(const K &key);
 		/**
 		\brief Checks wether the map is empty or not.
+		\return true if empty, false if otherwise
 		*/
 		boolean isEmpty();
 		/**
-		\return			sizeType;
-		\brief Returns the size of the map.
+		\return			the current count of values mapped
+		\brief Returns the current size of the map.
 		*/
 		sizeType size();
 		/**
-		\return			Vector<K>;
+		\return			a vector containing all currently used keys
 		\brief Returns an Vector of the keys wich are stored in the map.
 		*/
 		Vector<K> keySet();
 		/**
-		\input			K key;
+		\input		key the key of the valule that iwill be deleted;
 		\brief Removes an Object wich the specific key.
 		*/
 		V& remove(K key);
 		/**
-		\return			Vector<V>;
+		\return			a vector containing all currently used values
 		\brief Returns an Vector of the Objects wich are stored in the map.
 		*/
 		Vector<V> entrySet();
 		/**
-		\input			K key;
-		\return			boolean;
-		\brief Checks if the key is in the map.
+		\input			K key that will be checked;
+		\return			true if the key is contained inside the map;
+		\brief Checks if the key is contained in the map.
 		*/
 		boolean containsKey(K key);
 		/**
-		\input			const Key (K);
-		\return			Object V;
-		\brief Overloading [] operators. They act now like at(index).
+		\brief Overloading [] operators. Works now exactly like get();
 		*/
 		V& operator [](const K& key);
 
