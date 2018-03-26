@@ -10,11 +10,11 @@
 //#include <limits>
 
 
-/** \file Vector.hpp
+/** \file Hashing.hpp
 \author  Leslie Marxen
 \since   0.0.1
 \version 0.0.1
-\brief   This file provides some Hashfunction implementations.
+\brief   This file provides some Hashing implementations.
 */
 
 namespace NOU::NOU_DAT_ALG
@@ -23,19 +23,19 @@ namespace NOU::NOU_DAT_ALG
 
 	/**
 	\param value input value
-	\param max 0 <= output < max
+	\param max the maximum value the out hashvalue wii have (0 <= output < max)
 
-	\return hased value
-	\brief a function that hashes a value between a specific interval
+	\return hashed value
+	\brief a function that hashes a value between a specific interval.
 	*/
 
 	NOU_FUNC NOU::sizeType hashValue(NOU::sizeType value, NOU::sizeType max);
 
 	/**
 	\param inputObject the input that will be hashed.
-	\param max 0 <= output < max.
+	\param max the maximum value the out hashvalue wii have (0 <= output < max)
 
-	\brief A Function to hash an Object for a HashTable
+	\brief A Function that hashes an Object for a HashTable.
 	*/
 
 	template <typename T>
@@ -56,10 +56,10 @@ namespace NOU::NOU_DAT_ALG
 
 
 	/**
-	\param str A gien stringview that is going to be hashed
-	\param max 0 < output < max. defaults to the biggest number available for ease of use
+	\param str A given stringview that is going to be hashed
+	\param max the maximum value the out hashvalue wii have (0 <= output < max)
 
-	\brief A Function to hash an Object for a HashTable
+	\brief A Function that hashes a stringview for a HashTable
 	*/
 
 	template<typename T>
@@ -69,10 +69,10 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	/**
-	\param str A gien String that is going to be hashed
-	\param max 0 < output < max. defaults to the biggest number available for ease of use
+	\param str A given String that is going to be hashed
+	\param max the maximum value the out hashvalue wii have (0 <= output < max)
 
-	\brief A Function to hash an Object for a HashTable
+	\brief A Function that hashes a string for a HashTable
 	*/
 
 	template<typename T>
@@ -86,20 +86,20 @@ namespace NOU::NOU_DAT_ALG
 	using MD5Hash = Hash<16>;
 
 	/**
-	\param input beginning of a byte Array
-	\param size length of the given Byte Array
+	\param input beginning of a byte array that will be hashed
+	\param size length of the given byte array
 
-	\return Hashed input as a 128bit byte Array
-	\brief Hashes a given unput according to the md5 hash
+	\return hash as a 128bit byte array
+	\brief Hashes a given input similar to the md5 hash algorithm
 	*/
 
 	NOU_FUNC MD5Hash md5(const NOU::byte *input, sizeType size);
 
 	/**
-	\param input a StringView
+	\param input a StringView that will be hashed
 
-	\return Hashed input as a 128bit byte Array
-	\brief Hashes a given unput according to the md5 hash
+	\return Hash as a 128bit byte Array
+	\brief Hashes a given input similar to the md5 hash algorithm
 	*/
 
 	template<typename T>
@@ -109,10 +109,10 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	/**
-	\param input a String
+	\param input a string that will be hashed
 
-	\return Hashed input as a 128bit byte Array
-	\brief Hashes a given unput according to the md5 hash
+	\return Hashed input as a 128bit byte array
+	\brief Hashes a given input similar to the md5 hash
 	*/
 
 	template<typename T>
@@ -122,7 +122,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	/**
-	\param input an input byte
+	\param input an input byte that will be rotated
 	\param rotations how often the byte will be rotated
 
 	\return the byte after the rotation
