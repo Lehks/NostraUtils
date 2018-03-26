@@ -2,7 +2,6 @@
 #define	NOU_DAT_ALG_VECTOR_HPP
 
 #include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\ContainerInterfaces.hpp"
 #include "nostrautils\dat_alg\Quicksort.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Utils.hpp"
