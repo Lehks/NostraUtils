@@ -35,6 +35,14 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
 
+	/**
+	\brief compares 2 values with a given inaccuracy.
+	\param t1 first value
+	\param t2 second value
+	\param epsilon given inaccuracy
+
+	\return difference between t1 and t2 considering the inaccuracy
+	*/
 	template<typename T>
 	constexpr NOU_FUNC int32 epsilonCompare(const T &t0, const T &t1, const T &epsilon);
 
