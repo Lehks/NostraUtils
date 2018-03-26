@@ -28,6 +28,7 @@ namespace NOU::NOU_MATH
 			Vec cross(const Vec & vec) const;
 			Vec mult(const Type) const;
 			Type getCom(uint32 index) const;
+			void setCom(uint32 index, T value);
 
 			Vec operator + (const Vec & vec);
 			Vec operator - (const Vec & vec) const;
@@ -66,6 +67,19 @@ namespace NOU::NOU_MATH
 		for (i = 0; i < N; i++)
 		{
 			m_data[i] = list[i];
+		}
+	}
+
+
+	template<uint32 N, typename T>
+	Vec<N, T>::Vec()
+	{
+		sizeType i;
+		T zero = static_cast<T>(0);
+
+		for (i = 0; i < N; i++)
+		{
+			m_data[i] = zero;
 		}
 	}
 
@@ -146,7 +160,8 @@ namespace NOU::NOU_MATH
 		Type l[N];
 
 		if (N != 3) {
-			// Todo: Throw Fatal error instead!
+			NOU_COND_PUSH_DBG_ERROR(N != 3, NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::SIZE_MISMATCH,
+				"Cross operation is only available for 3D vectors!");
 			return Vec<N, T>(l);
 		}
 
@@ -166,11 +181,34 @@ namespace NOU::NOU_MATH
 	template<uint32 N, typename T>
 	typename Vec<N, T>::Type Vec<N, T>::getCom(uint32 index) const
 	{
-		if (index >= N || index < 0) {
-			// TODO: Throw out of bounds exception
-		}
+		NOU_COND_PUSH_DBG_ERROR(
+			(index >= N || index < 0), 
+			NOU_CORE::getErrorHandler(), 
+			NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+			"Index out of bounds!"
+		);
 		
 		return m_data[index];
+	}
+
+
+	/**
+	\param The Vector index to change.
+	\param The new value
+
+	\brief Sets the value of a vector.
+	*/
+	template<uint32 N, typename T>
+	void Vec<N, T>::setCom(uint32 index, T value)
+	{
+		NOU_COND_PUSH_DBG_ERROR(
+			(index >= N || index < 0),
+			NOU_CORE::getErrorHandler(),
+			NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
+			"Index out of bounds!"
+		);
+
+		m_data[index] = value;
 	}
 
 
