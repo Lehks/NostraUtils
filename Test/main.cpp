@@ -21,22 +21,23 @@ int main()
 	Path p5 = "testfile";
 	Path p6 = "test.tar.gz";
 
-	"C:\\Users\\Dennis\\TestDir"; //<- current directory (TestDir)
-
-	"C:\\Users\\Dennis\\TestDir\\MyFile.exe"; //-> "MyFile.exe" 
-	"C:\\Users\\Dennis\\TestDir\\MyFolder\\MyFile.txt"; //-> "MyFolder\\MyFile.txt"
-	"C:\\Users\\Dennis\\TestDir"; //-> "."
-	"C:\\Users\\"; //-> "..\\..\\"
-	"C:\\Users\\SomeOtherDir"; //-> "..\\..\\SomeOtherDir\\"
-
 	Path p7 = "C:\\Test\\Test";
 	Path p8 = "\\Test";
 	Path p9 = "Ichhassemeinleben.exe";
 
-	std::cout << p7.getAbsolutePath().rawStr() << std::endl;
-	std::cout << p8.getAbsolutePath().rawStr() << std::endl;
-	std::cout << p9.getAbsolutePath().rawStr() << std::endl;
+	// "C:\\Users\\Dennis\\TestDir"; //<- current directory (TestDir)
 
+	Path p10 = "C:\\Users\\Dennis\\TestDir\\MyFile.exe"; 
+	Path p11 = "C:\\Users\\Dennis\\TestDir\\MyFolder\\MyFile.txt"; 
+	Path p12 = "C:\\Users\\Dennis\\TestDir"; 
+	Path p13 = "C:\\Users\\"; 
+	Path p14 = "C:\\Users\\SomeOtherDir"; 
+
+	std::cout << p10.getParentPath().rawStr() << std::endl;
+	std::cout << p11.getParentPath().rawStr() << std::endl;
+	std::cout << p12.getParentPath().rawStr() << std::endl;
+	std::cout << p13.getParentPath().rawStr() << std::endl;
+	std::cout << p14.getParentPath().rawStr() << std::endl;
 	/*
 	std::cout << Path::currentWorkingDirectory().getAbsolutePath().rawStr() << std::endl;
 
