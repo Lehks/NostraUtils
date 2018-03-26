@@ -140,7 +140,12 @@ namespace NOU::NOU_DAT_ALG
 		\brief Constructs a new instance that is filled with the characters from the passed string view.
 		*/
 		String(const StringView<CHAR_TYPE> &str = "");
+		/**
+		\param str The initial value of the string.
 
+		\brief Constructs a new instance that is filled with the characters from the passed string view.
+		*/
+		String(ConstCharType *str);
 		/**
 		\param c The initial value of the string.
 
@@ -420,10 +425,10 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		String& appendIf(boolean b, float64 nr);
 		/**
-		\param replacement the charrachter wich will be used to replace.
+		\param replacement the character which will be used to replace.
 		\param index The index.
 
-		\brief Replaces a single charrachter.
+		\brief Replaces a single character.
 		*/
 		void replace(sizeType index, CharType replacement);
 
@@ -463,7 +468,7 @@ namespace NOU::NOU_DAT_ALG
 		index is part of the substring.
 		\param end         The end of the interval of the substring that will be replaced. The character at this index
 		is not part of the substring.
-		\param replacement The strint that will be used to replace the substring that is marked by \p start and \p end.
+		\param replacement The string that will be used to replace the substring that is marked by \p start and \p end.
 		\return            A reference to the instance itself.
 
 		\brief Replaces the substring that is marked by \p start and \p end and replaces it with \p replacement.
@@ -509,7 +514,7 @@ namespace NOU::NOU_DAT_ALG
 		excluded.
 		\return      A reference to the instance itself.
 
-		\brief Overrides all the characters in the interval \f$\left[start, end\right[\f$ with the chracter \p c.
+		\brief Overrides all the characters in the interval \f$\left[start, end\right[\f$ with the character \p c.
 		*/
 		String& fillRange(CharType c, sizeType start, sizeType end);
 
@@ -519,7 +524,7 @@ namespace NOU::NOU_DAT_ALG
 		this is equal to InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, the size of the string will be used.
 		\return      A reference to the instance itself.
 
-		\brief Removes the characters in the interval \f$\left[start, end\right[\f$. This operation is the exact oposite
+		\brief Removes the characters in the interval \f$\left[start, end\right[\f$. This operation is the exact opposite
 		to preserve().
 		*/
 		String& remove(sizeType start, sizeType end = NULL_INDEX);
@@ -531,7 +536,7 @@ namespace NOU::NOU_DAT_ALG
 		\return      A reference to the instance itself.
 
 		\brief Removes all characters, except those in the interval \f$\left[start, end\right[\f$. This operation is the
-		exact oposite to remove(sizeType, sizeType).
+		exact opposite to remove(sizeType, sizeType).
 		*/
 		String& preserve(sizeType start, sizeType end = NULL_INDEX);
 
@@ -699,26 +704,26 @@ namespace NOU::NOU_DAT_ALG
 		const Vector<CharType>& data() const;
 
 		/**
-		\return A reference to the instance itselft.
+		\return A reference to the instance itself.
 
 		\brief Converts all characters in the string to their lower case equivalent.
 		*/
 		String& toLowerCase();
 
 		/**
-		\return A reference to the instance itselft.
+		\return A reference to the instance itself.
 
 		\brief Converts all characters in the string to their upper case equivalent.
 		*/
 		String& toUpperCase();
 
 		/**
-		\return A reference to the instance itselft.
+		\return A reference to the instance itself.
 
-		\brief Removes all whitespaces (characters with numeric values 0x9 and 0x29) at the end and front of the string.
+		\brief Removes all white spaces (characters with numeric values 0x9 and 0x29) at the end and front of the string.
 
 		\details
-		Removes all whitespaces (characters with numeric values 0x9 and 0x29) at the end and front of the string.
+		Removes all white spaces (characters with numeric values 0x9 and 0x29) at the end and front of the string.
 
 		Example:
 		The string
@@ -733,7 +738,7 @@ namespace NOU::NOU_DAT_ALG
 		String& trim();
 
 		/**
-		\return A reference to the instance itselft.
+		\return A reference to the instance itself.
 
 		\brief Clears the string from all characters and sets the size to 0.
 		*/
@@ -913,6 +918,18 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		CharType& operator [] (sizeType index);
 	};
+	/**
+	\brief An alias name for a String that uses a nostra::utils::char8;
+	*/
+	using String8 = String<char8>;
+	/**
+	\brief An alias name for a String that uses a nostra::utils::char16;
+	*/
+	using String16 = String<char16>;
+	/**
+	\brief An alias name for a String that uses a nostra::utils::char32;
+	*/
+	using String32 = String<char32>;
 
 	template<typename CHAR_TYPE>
 	template<typename IT>
@@ -1102,9 +1119,6 @@ namespace NOU::NOU_DAT_ALG
 		}
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
-
-
-		setSize(str.size() - 1);
 	}
 
 	template<typename CHAR_TYPE>
@@ -1116,10 +1130,12 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(c);
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
-
-
-		setSize(m_data.size() - 1);
 	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(ConstCharType *str) :
+		String(StringView<CHAR_TYPE>(str))
+	{}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(const String<CHAR_TYPE> &other) :
@@ -1454,9 +1470,7 @@ namespace NOU::NOU_DAT_ALG
 			m_data.replace(c, i);
 		}
 
-		setSize(m_data.size() - 1);
 		return *this;
-
 	}
 
 	template<typename CHAR_TYPE>
@@ -1520,128 +1534,128 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(CharType c) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(c);
-		return copy();
+		strnew.append(c);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(const StringView<CHAR_TYPE>& str) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(str);
-		return copy();
+		strnew.append(str);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float32 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(f);
-		return copy();
+		strnew.append(f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float64 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(f);
-		return copy();
+		strnew.append(f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, CharType c) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, c);
-		return copy();
+		strnew.appendIf(b, c);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, const StringView<CHAR_TYPE>& str) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, str);
-		return copy();
+		strnew.appendIf(b, str);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float32 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, f);
-		return copy();
+		strnew.appendIf(b, f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float64 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, f);
-		return copy();
+		strnew.appendIf(b, f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
