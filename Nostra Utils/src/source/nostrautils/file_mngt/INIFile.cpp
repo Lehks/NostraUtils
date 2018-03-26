@@ -158,6 +158,7 @@ namespace NOU::NOU_FILE_MNGT
 	boolean INIFile::read()
 	{
 		std::ifstream inifile;
+		std::string ln;
 		NouString line;
 		NouString section;
 
@@ -172,9 +173,9 @@ namespace NOU::NOU_FILE_MNGT
 		section.append(INI_DEFAULT_SECTION);
 
 		// Parse file content line by line
-		while (std::getline(inifile, line))
+		while (std::getline(inifile, ln))
 		{
-			line.clear().append(line.trim());
+			line.clear().append(NouString(ln.c_str()).trim());
 
 			// Check if we have a section
 			if (line.at(0) == '[' && line.at((line.size() - 1)) == ']') {
@@ -203,7 +204,7 @@ namespace NOU::NOU_FILE_MNGT
 		
 		// Open file stream
 		if (!filename.size()) {
-			inifile.open(filename);
+			inifile.open(filename.rawStr());
 		}
 		else {
 			inifile.open(this->m_filename.rawStr());
