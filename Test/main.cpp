@@ -33,11 +33,28 @@ int main()
 	Path p13 = "C:\\Users\\"; 
 	Path p14 = "C:\\Users\\SomeOtherDir"; 
 
+	Path cwd = p10.currentWorkingDirectory();
+
 	std::cout << p10.getParentPath().rawStr() << std::endl;
 	std::cout << p11.getParentPath().rawStr() << std::endl;
 	std::cout << p12.getParentPath().rawStr() << std::endl;
 	std::cout << p13.getParentPath().rawStr() << std::endl;
 	std::cout << p14.getParentPath().rawStr() << std::endl;
+
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+	std::cout << cwd.getAbsolutePath().rawStr() << std::endl;
+
+	std::cout << std::endl;
+	std::cout << std::endl;
+
+	std::cout << p10.getRelativePath().rawStr() << std::endl;
+	std::cout << p11.getRelativePath().rawStr() << std::endl;
+	std::cout << p12.getRelativePath().rawStr() << std::endl;
+	std::cout << p13.getRelativePath().rawStr() << std::endl;
+	std::cout << p14.getRelativePath().rawStr() << std::endl;
+
 	/*
 	std::cout << Path::currentWorkingDirectory().getAbsolutePath().rawStr() << std::endl;
 

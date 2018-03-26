@@ -116,8 +116,8 @@ namespace NOU::NOU_FILE_MNGT
 		if (path == cwd.getAbsolutePath())
 			return ".";
 
-		sizeType prevIndex = -1;
-		sizeType nextIndex = path.find(PATH_SEPARATOR);
+		sizeType prevIndex = - 1;
+		sizeType nextIndex = path.find(PATH_SEPARATOR, prevIndex);
 
 		while (nextIndex != NOU_DAT_ALG::StringView8::NULL_INDEX)
 		{
@@ -147,12 +147,9 @@ namespace NOU::NOU_FILE_MNGT
 
 			prevIndex = nextIndex;
 			nextIndex = path.find(PATH_SEPARATOR, prevIndex);
-		}
+		}		
 
-
-		
-
-		return NOU_DAT_ALG::String8(path.logicalSubstring(prevIndex, path.size()));
+		return NOU_DAT_ALG::String8(path.logicalSubstring(prevIndex +1 , path.size()));
 	}
 
 	NOU_DAT_ALG::String8 Path::evaluateParentPath(const NOU_DAT_ALG::StringView8 &path)
