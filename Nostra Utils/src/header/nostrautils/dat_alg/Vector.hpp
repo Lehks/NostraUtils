@@ -160,7 +160,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\return      Returns a boolean.
 
-		\brief Checks wether the Vector is empty or not.
+		\brief Checks whether the Vector is empty or not.
 		*/
 		boolean empty() const ;
 
@@ -625,7 +625,7 @@ namespace NOU::NOU_DAT_ALG
 		\param other The iterator to compare this iterator to.
 		\return      True, if the iterators are equal, false if not.
 
-		\brief Returns weather two iterators are equal. Two iterators qualify as equal if their internal
+		\brief Returns whether two iterators are equal. Two iterators qualify as equal if their internal
 		index and the vector that they point to are the same.
 		*/
 		constexpr boolean operator == (const VectorIterator &other) const;
@@ -634,7 +634,7 @@ namespace NOU::NOU_DAT_ALG
 		\param other The iterator to compare this iterator to.
 		\return      False, if the iterators are equal, true if not.
 
-		\brief Returns weather two iterators are unequal. This returns the opposite of what the operator
+		\brief Returns whether two iterators are unequal. This returns the opposite of what the operator
 		= would return.
 		*/
 		constexpr boolean operator != (const VectorIterator &other) const;

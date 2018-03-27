@@ -330,7 +330,6 @@
     <ClInclude Include="src\header\nostrautils\mem_mngt\PoolAllocator.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Pointer.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />
-    <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\AsyncTaskResult.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\ConditionVariable.hpp" />
