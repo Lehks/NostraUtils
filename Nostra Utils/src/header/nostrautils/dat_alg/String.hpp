@@ -551,7 +551,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns a string that contains the characters in the interval \f$\left[start, end\right[\f$.
 		*/
-		String substring(sizeType start, sizeType end = NULL_INDEX) const;
+		String substring(sizeType start, sizeType end = NOU_DAT_ALG::StringView8::NULL_INDEX) const;
 
 		/**
 		\return A copy of this string.
