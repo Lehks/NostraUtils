@@ -21,7 +21,7 @@ In the following examples, it is always assumed that "nostrautils/thread/Threads
 To execute functionality in a different thread, Nostra uses the class \link nostra::utils::thread::Task Task 
 \endlink, which in the most basic sense is the combination of a function pointer (or any other sort of 
 invocable, like a lambda) and the parameters that are required to call that invocable. It is also important 
-that the Task on its own does not do any multi-threading yet, nor does it enforce any thread safety (e.g. like
+that the Task on its own does not do any multithreading yet, nor does it enforce any thread safety (e.g. like
  locking its resources).
 
 \subsection subsec_TaskConstruct Constructing a Task
@@ -160,7 +160,7 @@ would cause unnecessary overhead.
 \subsection subsec_TaskExec Executing a Task
 
 Executing a Task is simply done by calling \link nostra::utils::thread::Task::execute execute() \endlink. 
-Since the Task itself does not any multi-threading on its own, the execution is entirely done by the thread 
+Since the Task itself does not any multithreading on its own, the execution is entirely done by the thread 
 that called \link nostra::utils::thread::Task::execute execute() \endlink.
 
 \subsection subsec_TaskResultAccess Accessing the results of a Task
@@ -310,23 +310,91 @@ function that is required by the thread manager). This is also the reason why \l
 nostra::utils::thread::Task::execute execute() \endlink does not return the result of the invocable that it
 calls - it simply has no knowledge of any parameter types (which of course also includes the return type).
 
-\section sec_threadManager The Thread Manager
+\section sec_errorHandling Error Handling
 
-The class \link nostra::utils::thread::ThreadManager ThreadManager \endlink is the central system of the thread management system of Nostra. It is a singleton that acts as a thread pool but also schedules the Tasks that will be executed by the threads.
-    
-As already stated in the \link sec_tasks chapter about tasks \endlink, does the Thread Manager use the \link nostra::utils::thread::Task Task \endlink class (or to be more precise the class \link nostra::utils::thread::internal::AbstractTask AbstractTask \endlink).
+In some way, multi threaded error handling is the same as single threaded error handling. The error handler can be obtained using \link nostra::utils::core::getErrorHandler() getErrorHandler() \endlink and errors can be pushed just as if the program was single threaded. However, there is a difference: As soon as multiple threads are involved there is not only one error handler but there is one error handler per thread. This ensures thread safety, but also means that errors are not shared between threads.
 
-Despite being the central component of the thread management system, a user usually interacts rather little with it (there are other interfaces, like \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink and \link nostra::utils::thread::TaskQueue TaskQueueu \endlink, that provide functionality on a higher level).
+\note
+If the error handling system of Nostra is not the only system being used (e.g. when there are threads being created using the STL), there will be no error handler for these threads and calling \link nostra::utils::core::getErrorHandler() getErrorHandler() \endlink will result in an error.
 
-Conceptually, the thread manager is internally little more than a priority queue for the Tasks and a pool that store the threads.
+\section sec_asyncTaskResult AsyncTaskResult
 
-The maximum amount of threads that can be managed by the thread manager at the same time is (\link nostra::utils::thread::ThreadWrapper::maxThreads ThreadWrapper::maxThreads() \endlink - 1) (-1, because the main thread is not managed by the thread manager).
+The class \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink is the simplest way to execute code in a different thread. It is capable of executing a single task and can easily be used to "outsource" a task while the main thread is doing something different.
 
-\subsection subsec_threadManager_Obtain Obtaining the Thread Manager
-Nostra always provides an already constructed instance of the thread manager. It can be acquired using \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink.
+\subsection subsec_asyncTaskResultUsage Usage
 
-\attention
-The first time that \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink is getting called must be from the main thread. Otherwise the error handling will misbehave.
+The first step of creating an instance of \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink, is creating the \link nostra::utils::thread::Task Task \endlink that will be executed in a different thread:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+
+    return 0;
+}
+\endcode
+
+Afterwards, the AsyncTaskResult can be constructed:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+
+    AsyncTaskResult<NOU::int32, decltype(&addFive), NOU::int32> asyncTaskResult(task);
+
+    return 0;
+}
+\endcode
+
+There are two interesting parts about the line in which the AsyncTaskResult gets created:
+
+\note
+Other than the task class, AsyncTaskResult does not provide a function like \link 
+nostra::utils::thread::makeTask() makeTask() \endlink. This is because AsyncTaskResult can not be moved or 
+copied.
+
+As soon as the instance is created, the task is scheduled for execution (however, no assumptions can be made on when the task will be executed).
+
+\subsubsection subsubsec_asyncTaskResult_stateQuery Querying the State
+The state of the execution can be queried using \link nostra::utils::thread::internal::AbstractAsyncTaskResult::getState() AbstractAsyncTaskResult::getState() \endlink (the states are represented by the enum \link nostra::utils::thread::internal::AbstractAsyncTaskResult AbstractAsyncTaskResult::State \endlink). The possible states are:
+
+<table>
+    <tr><th>Enumeration element name</th><th>Description</th></tr>
+    <tr><td>NOT_STARTED</td><td></td>The execution has not been started yet.</tr>
+    <tr><td>EXECUTING_SYNC</td><td></td>The execution has manually been triggered by a user and is currently executed in the thread that triggered that execution (see \link subsubsec_asyncTaskResult_resultProduction here \endlink).</tr>
+    <tr><td>EXECUTING_ASYNC</td><td></td>The execution is currently done asynchronously.</tr>
+    <tr><td>DONE</td><td></td>The execution has finished.</tr>
+</table>
+
+\subsubsection subsubsec_asyncTaskResult_resultProduction Producing a Result
+
+Since multithreading is often used to calculate a result, AsnycTaskResult (as the name implies) provides functionality to produce a result. To do so, the class uses the functionality to produce the result that is already provided by the tasks (long story short: the return value of the task is the result of the AsyncTaskResult). Obviously, if there is no return value (return type is \p void) there is no result to obtain.
+
+The result is produced after the task is done executing and can be queried using \link nostra::utils::thread::AsyncTaskResult::getResult() AsyncTaskResult::getResult() \endlink. If the result is not produced when <tt>getResult()</tt> is called, the production of the result will be forced. If the task is not already being executed in a different thread, then the task will be executed in the thread that called <tt>getResult()</tt>. If the result should be produced (or the task simply should be executed at a certain point of time) but the value if not necessarily required, \link nostra::utils::thread::internal::AbstractAsyncTaskResult::makeResult() AbstractAsyncTaskResult::makeResult() \endlink can be used.
+
+\note
+When the return type of the task that was passed to the AsyncTaskResult is \p void, <tt>getResult()</tt> and <tt>makeResult()</tt> are equivalent.
+
+\subsection subsec_asyncTaskResult_ErrorHandling Error Handling
+
+Generally, error handling works just as it was already explained in \link sec_errorHandling this chapter \endlink. It should however be noted that it is not possible to access the errors of an instance of AsyncTaskResult outside of it (unless the user sets up such functionality). 
+
+\subsection subsec_asyncTaskResult_AbstractConcreteModel Abstract-Concrete-Model
+
+As the names of the classes that were linked to in this chapter might have implied: There are two classes that make up the AsyncTaskResult. The classes are \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink and \link nostra::utils::thread::internal::AbstractAsyncTaskResult AbstractAsyncTaskResult \endlink. This is because AsyncTaskResult was modeled after the \link subsubsec_AbstractConcreteClassModel Abstract-Concrete-Model \endlink.
+
+
 
 \section sec_lockingResources Locking Resources
 
@@ -411,4 +479,25 @@ which the functions would be executed. For easier understanding, the <tt>calcula
         <td>mutex.unlock()</td>
     </tr>
 </table>
+  
+
+    
+\section sec_threadManager The Thread Manager
+
+The class \link nostra::utils::thread::ThreadManager ThreadManager \endlink is the central system of the thread management system of Nostra. It is a singleton that acts as a thread pool but also schedules the Tasks that will be executed by the threads.
+    
+As already stated in the \link sec_tasks chapter about tasks \endlink, does the Thread Manager use the \link nostra::utils::thread::Task Task \endlink class (or to be more precise the class \link nostra::utils::thread::internal::AbstractTask AbstractTask \endlink).
+
+Despite being the central component of the thread management system, a user usually interacts rather little with it (there are other interfaces, like \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink and \link nostra::utils::thread::TaskQueue TaskQueueu \endlink, that provide functionality on a higher level).
+
+Conceptually, the thread manager is internally little more than a priority queue for the Tasks and a pool that store the threads.
+
+The maximum amount of threads that can be managed by the thread manager at the same time is (\link nostra::utils::thread::ThreadWrapper::maxThreads ThreadWrapper::maxThreads() \endlink - 1) (-1, because the main thread is not managed by the thread manager).
+
+\subsection subsec_threadManager_Obtain Obtaining the Thread Manager
+Nostra always provides an already constructed instance of the thread manager. It can be acquired using \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink.
+
+\attention
+The first time that \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink is getting called must be from the main thread. Otherwise the error handling will misbehave.
+
 */
