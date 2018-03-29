@@ -27,6 +27,7 @@
 #include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\dat_alg\HashMap.hpp"
 #include "nostrautils\thread\Threads.hpp"
+#include "nostrautils\file_mngt\Path.hpp"
 
 #include "DebugClass.hpp"
 
@@ -1601,5 +1602,52 @@ namespace UnitTests
 			Assert::IsTrue(manager.maximumAvailableThreads() == 
 				NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
 		}
-	};
+
+		TEST_METHOD(Path)
+		{
+			NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
+			NOU::NOU_FILE_MNGT::Path p1 = "testdir\\testfile.test";
+			NOU::NOU_FILE_MNGT::Path p2 = "\\test.dir\\testfile.test";
+			NOU::NOU_FILE_MNGT::Path p3 = "test.dir\\testfile";
+			NOU::NOU_FILE_MNGT::Path p4 = "testfile.test\\";
+			NOU::NOU_FILE_MNGT::Path p5 = "testfile";
+			NOU::NOU_FILE_MNGT::Path p6 = "test.tar.gz";
+
+			NOU::NOU_FILE_MNGT::Path p10 = "C:\\Users\\Dennis\\TestDir\\MyFile.exe";
+			NOU::NOU_FILE_MNGT::Path p11 = "C:\\Users\\Dennis\\TestDir\\MyFolder\\MyFile.txt";
+			NOU::NOU_FILE_MNGT::Path p12 = "C:\\Users\\Dennis\\TestDir";
+			NOU::NOU_FILE_MNGT::Path p13 = "D:\\Users\\";
+			NOU::NOU_FILE_MNGT::Path p14 = "D:\\Users\\SomeOtherDir";
+
+			Assert::IsTrue(p.getName() == "testfile");
+			Assert::IsTrue(p1.getName() == "testfile");
+			Assert::IsTrue(p2.getName() == "testfile");
+			Assert::IsTrue(p3.getName() == "testfile");
+			Assert::IsTrue(p4.getName() == "");
+			Assert::IsTrue(p5.getName() == "testfile");
+			Assert::IsTrue(p6.getName() == "test.tar");
+
+			Assert::IsTrue(p.getFileExtension() == "exe");
+			Assert::IsTrue(p1.getFileExtension() == "test");
+			Assert::IsTrue(p2.getFileExtension() == "test");
+			Assert::IsTrue(p3.getFileExtension() == ""); 
+			Assert::IsTrue(p4.getFileExtension() == ""); 
+			Assert::IsTrue(p5.getFileExtension() == ""); 
+			Assert::IsTrue(p6.getFileExtension() == "gz");
+
+			Assert::IsTrue(p.getNameAndExtension() == "testfile.exe");
+			Assert::IsTrue(p1.getNameAndExtension() == "testfile.test");
+			Assert::IsTrue(p2.getNameAndExtension() == "testfile.test");
+			Assert::IsTrue(p3.getNameAndExtension() == "testfile"); 
+			Assert::IsTrue(p4.getNameAndExtension() == ""); 
+			Assert::IsTrue(p5.getNameAndExtension() == "testfile");
+			Assert::IsTrue(p6.getNameAndExtension() == "test.tar.gz");
+
+			Assert::IsTrue(p10.getParentPath() == "C:\\Users\\Dennis\\TestDir"); 
+			Assert::IsTrue(p11.getParentPath() == "C:\\Users\\Dennis\\TestDir\\MyFolder");
+			Assert::IsTrue(p12.getParentPath() == "C:\\Users\\Dennis");
+			Assert::IsTrue(p13.getParentPath() == "D:");
+			Assert::IsTrue(p14.getParentPath() == "D:\\Users"); 
+		}
+	};	
 }
