@@ -1488,15 +1488,16 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::remove(sizeType start, sizeType end)
 	{
-		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
-			end = m_data.size();
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
+			end = m_data.size() - 1;
 
-		for (sizeType i = start; i < end; i++)
+		sizeType removeRange = end - start;
+
+		for (sizeType i = 0; i < removeRange; i++)
 		{
-			m_data.remove(i);
+			m_data.remove(start);
+			setSize(m_data.size() - 1);
 		}
-
-		setSize(m_data.size() - 1);
 		return *this;
 	}
 
