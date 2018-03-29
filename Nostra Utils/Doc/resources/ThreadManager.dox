@@ -351,13 +351,13 @@ int main()
 {
     auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
 
-    AsyncTaskResult<NOU::int32, decltype(&addFive), NOU::int32> asyncTaskResult(task);
+    NOU::NOU_THREAD::AsyncTaskResult<NOU::int32, decltype(&addFive), NOU::int32> asyncTaskResult(task);
 
     return 0;
 }
 \endcode
 
-There are two interesting parts about the line in which the AsyncTaskResult gets created:
+The template parameters are the same as those of the Task that should be executed by the AsyncTaskResult.
 
 \note
 Other than the task class, AsyncTaskResult does not provide a function like \link 
@@ -365,6 +365,9 @@ nostra::utils::thread::makeTask() makeTask() \endlink. This is because AsyncTask
 copied.
 
 As soon as the instance is created, the task is scheduled for execution (however, no assumptions can be made on when the task will be executed).
+
+\attention
+The instance of AsyncTaskResult must stay in scope until the task has finished execution.
 
 \subsubsection subsubsec_asyncTaskResult_stateQuery Querying the State
 The state of the execution can be queried using \link nostra::utils::thread::internal::AbstractAsyncTaskResult::getState() AbstractAsyncTaskResult::getState() \endlink (the states are represented by the enum \link nostra::utils::thread::internal::AbstractAsyncTaskResult AbstractAsyncTaskResult::State \endlink). The possible states are:
@@ -394,7 +397,189 @@ Generally, error handling works just as it was already explained in \link sec_er
 
 As the names of the classes that were linked to in this chapter might have implied: There are two classes that make up the AsyncTaskResult. The classes are \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink and \link nostra::utils::thread::internal::AbstractAsyncTaskResult AbstractAsyncTaskResult \endlink. This is because AsyncTaskResult was modeled after the \link subsubsec_AbstractConcreteClassModel Abstract-Concrete-Model \endlink.
 
+\section sec_taskQueue TaskQueue
+    
+Like \link sec_asyncTaskResult AsyncTaskResult \endlink, the \link nostra::utils::thread::TaskQueue TaskQueue \endlink can be used to execute tasks in a different thread. The TaskQueue however, is more complex, because it allows the execution of multiple tasks in the order that they were given to the queue (TaskQueue behaves like a FIFO Queue). Also, the execution of the next task in the queue will not start until the previous task has finished execution.
 
+The TaskQueue also provides functionality to produce a single result from all of the tasks that are (or were) in the queue. A further description on how this can be achieved can be found in the chapter \link subsec_taskQueue_Accumulation Accumulation \endlink.
+
+\subsection subsec_taskQueue_Usage Usage
+
+An instantiation of a TaskQueue looks like this:
+
+\code{.cpp}
+int main()
+{
+    //For the sake of simplicity, using namespace is used in this example
+    using namespace NOU::NOU_THREAD;
+
+    TaskQueue<int32, int32(*)(int32), TaskQueueAccumulators::FunctionPtr<int32>, int32> tq(&TaskQueueAccumulators::forward<int32>, 5);
+}
+\endcode
+
+Since the line to instantiate the task queue is quite long, the following list will try to break it up into simpler parts.
+
+<ul>
+    <li>
+        The following list will split up the template parameters in the order of their appearance:
+        <ul>
+            <li>
+                int32: The return value of the single tasks that will be pushed to the queue.
+            </li>
+            <li>
+                int32(*)(int32): The invocable type of the tasks that can be executed by the queue.
+            </li>
+            <li>
+                TaskQueueAccumulators::FunctionPtr<int32>: The type of the accumulator. Accumulator are described thoroughly in the chapter \link subsec_taskQueue_Accumulation Accumulation \endlink. If the parameter list of the task (see the next bullet point) is empty, this parameter has a default value (which is \link nostra::utils::thread::TaskQueueAccumulators::FunctionPtr NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr \endlink).
+            </li>
+            <li>
+                int32: The type parameters of the task. Although there is only one parameter in this case, this is the entire parameter list for the tasks that will be executed by the task queue.
+            </li>
+        </ul>
+        Overall, the first, second and every parameter after the third are the same parameters as those of the Task.
+    </li>
+    <li>
+        The constructor parameters are the following:
+        <ul>
+            <li>
+                &TaskQueueAccumulators::forward<int32>: The Accumulator function that will be used by the TaskQueue. Again, this will be described in the chapter \link subsec_taskQueue_Accumulation Accumulation \endlink.
+
+                \note
+                It is important to have the "&" in front of the function name or the program will fail to compile.
+            </li>
+            <li>
+                5: The initial capacity of the queue. This parameter is optional.
+            </li>
+        </ul>
+    </li>
+</ul>
+
+In contrast to AsyncTaskResult, the TaskQueue does not immediately do anything after the instance has been constructed. Since it is a queue, a user needs to push tasks to it first. Pushing tasks is done by using \link nostra::utils::thread::TaskQueue::pushTask pushTask() \endlink:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    //For the sake of simplicity, using namespace is used in this example
+    using namespace NOU::NOU_THREAD;
+
+    TaskQueue<int32, int32(*)(int32), TaskQueueAccumulators::FunctionPtr<int32>, int32> tq(&TaskQueueAccumulators::forward<int32>, 5);
+
+    tq.pushTask(makeTask(&addFive, 1));
+	tq.pushTask(makeTask(&addFive, 2));
+	tq.pushTask(makeTask(&addFive, 3));
+	tq.pushTask(makeTask(&addFive, 4));
+	tq.pushTask(makeTask(&addFive, 5));
+	tq.pushTask(makeTask(&addFive, 6));
+}
+\endcode
+
+In this case, six tasks are pushed to the queue. Those tasks will be executed in the order in which they were pushed to the queue and without any overlapping executions.
+
+\note 
+It is possible to push different tasks (with different invocables) to the queue - they just have to have the same types (of return value and parameters).
+
+\subsection subsec_taskQueue_Accumulation Accumulation
+
+As already stated before, the task queue has the capabilities to produce a "final" result from all the tasks that were in the queue. This is by accumulating all of the single results of the tasks that were executed by the queue.
+
+Note that the accumulation only task place for return types other than <tt>void</tt>. For the type <tt>void</tt>, see \link subsubsec_taskQueue_Accumulation_Void here \endlink.
+
+The following graph describes how four tasks would be used to produce an end result (nodes are invocables and edges are the results of those invocables).
+
+\dot
+digraph example
+{
+    node [shape=record, fontname=Helvetica, fontsize=10];
+    task1  [ label="Task 1" ];
+    task2  [ label="Task 2" ];
+    accum1 [ label="Accumulation Function" ];
+    task1 -> accum1 [ arrowhead="normal" ];
+    task2 -> accum1 [ arrowhead="normal" ];
+    
+    task3  [ label="Task 3" ];
+    accum2 [ label="Accumulation Function" ];
+    task3  -> accum2 [ arrowhead="normal" ];
+    accum1 -> accum2 [ arrowhead="normal" ];
+    
+    task4  [ label="Task 4" ];
+    accum3 [ label="Accumulation Function" ];
+    task4  -> accum3 [ arrowhead="normal" ];
+    accum2 -> accum3 [ arrowhead="normal" ];
+    
+    endresult [ label="End Result", shape="oval" ];
+    accum3 -> endresult [ arrowhead="normal" ];
+}
+\enddot
+
+\note
+This graph shows the process of producing a final result (node "End Result") from a total of four tasks, the concept would be the same of more or less tasks.
+
+To realize accumulators, the TaskQueue uses invocables of the type <tt>R(*)(R&&, R&&)</tt> with <tt>R</tt> being the return type of the task. Also, Nostra provides a bunch of accumulators out of the box. All of these can be found in the namespace \link nostra::utils::thread::TaskQueueAccumulators NOU::NOU_THREAD::TaskQueueAccumulators \endlink. This is a full list of all predefined accumulators available in that namespace (in the examples given in the descriptions, <tt>previous</tt> is the result of the previous accumulation and <tt>current</tt> is the result of the task that was just executed):
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>forward</td>
+        <td>Always forwards the last result. This accumulator is a good choice if no result is required.</td>
+    </tr>
+    <tr>
+        <td>addition</td>
+        <td>Adds the two results by using the operator +. The exact expression would be \code previous + current \endcode</td>
+    </tr>
+    <tr>
+        <td>additionInverted</td>
+        <td>Adds the two results by using the operator +. The exact expression would be \code current + previous \endcode</td>
+    </tr>
+    <tr>
+        <td>subtract</td>
+        <td>Subtracts the two results by using the operator -. The exact expression would be \code previous - current \endcode</td>
+    </tr>
+    <tr>
+        <td>subtractInverted</td>
+        <td>Subtracts the two results by using the operator -. The exact expression would be \code current - previous \endcode</td>
+    </tr>
+    <tr>
+        <td>multiplicate</td>
+        <td>Multiplicates the two results by using the operator *. The exact expression would be \code previous * current \endcode</td>
+    </tr>
+    <tr>
+        <td>multiplicateInverted</td>
+        <td>Multiplicates the two results by using the operator *. The exact expression would be \code current * previous \endcode</td>
+    </tr>
+    <tr>
+        <td>divide</td>
+        <td>Divides the two results by using the operator /. The exact expression would be \code previous / current \endcode</td>
+    </tr>
+    <tr>
+        <td>divideInverted</td>
+        <td>Divides the two results by using the operator /. The exact expression would be \code current / previous \endcode</td>
+    </tr>
+    <tr>
+        <td>memberFunction</td>
+        <td>Calls a member function of the type <tt>R(T::*)(R&&)</tt>. The exact expression would be \code (previous.*function)(current) \endcode with <tt>function</tt> being the member function pointer.</td>
+    </tr>
+    <tr>
+        <td>memberFunctionInverted</td>
+        <td>Calls a member function of the type <tt>R(T::*)(R&&)</tt>. The exact expression would be \code (current.*function)(previous) \endcode with <tt>function</tt> being the member function pointer.</td>
+    </tr>
+</table>
+
+Other than these functions, the namespace also provides the type \link nostra::utils::thread::TaskQueueAccumulators::FunctionPtr FunctionPtr \endlink which is the function pointer type of all of the functions in the namespace TaskQueueAccumulators. The type is made to be used as a template parameter of the TaskQueue (the type was already used in the example of the beginning of the chapter \link sec_TaskQueue TaskQueue \endlink).
+
+\note
+It is not possible to not have an accumulator set (passing <tt>nullptr</tt> as accumulator will result in a runtime error). If no accumulation is required, the accumulator <tt>forward</tt> is a good choice.
+    
+\subsubsection subsubsec_taskQueue_Accumulation_Void Accumulation for the return type void
+
+If the return type of the task is <tt>void</tt>, no accumulation can take place and therefore the specialization for the return type <tt>void</tt> does not have any accumulation mechanics. It does however still have the same parameters - both the template parameter and the constructor still take the accumulator parameters (which is because of technical and compatibility reasons).
 
 \section sec_lockingResources Locking Resources
 
