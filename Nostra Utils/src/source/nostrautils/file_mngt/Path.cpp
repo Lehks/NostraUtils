@@ -171,22 +171,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		if (path.endsWith(PATH_SEPARATOR))
 		{
-			NOU_DAT_ALG::String8 str;
-
-			sizeType prevIndex = 0;
-			sizeType nextIndex = path.find(PATH_SEPARATOR, prevIndex);
-
-			std::cout << path.logicalSubstring(prevIndex, nextIndex).rawStr() << std::endl;
-
-			while (nextIndex != NOU_DAT_ALG::String8::NULL_INDEX)
-			{
-				str.append(path.logicalSubstring(prevIndex, nextIndex));
-
-				prevIndex = nextIndex;
-				nextIndex = path.find(PATH_SEPARATOR, prevIndex);
-			}
-
-			return str;
+			return evaluateParentPath(path.logicalSubstring(0, lastPathSeparator - 1));
 		}
 
 		return NOU_DAT_ALG::String8(path.logicalSubstring(0, lastPathSeparator));
