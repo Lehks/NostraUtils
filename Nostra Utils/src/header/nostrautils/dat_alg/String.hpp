@@ -140,7 +140,12 @@ namespace NOU::NOU_DAT_ALG
 		\brief Constructs a new instance that is filled with the characters from the passed string view.
 		*/
 		String(const StringView<CHAR_TYPE> &str = "");
+		/**
+		\param str The initial value of the string.
 
+		\brief Constructs a new instance that is filled with the characters from the passed string view.
+		*/
+		String(ConstCharType *str);
 		/**
 		\param c The initial value of the string.
 
@@ -433,14 +438,14 @@ namespace NOU::NOU_DAT_ALG
 		\param start       The start of the interval in which the characters will be replaced. The character at this
 		index is included.
 		\param end         The end of the interval in which the characters will be replaced. The character at this
-		index is excluded. If this is equal to InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, the size of
+		index is excluded. If this is equal to StringView<CHAR_TYPE>::NULL_INDEX, the size of
 		the string will be used.
 		\return            A reference to the instance itself.
 
 		\brief Finds all \p target characters and replaces them with \p replacement in the interval \f$\left[target,
 		replacement\right[\f$.
 		*/
-		String& replace(CharType target, CharType replacement, sizeType start = 0, sizeType end = NULL_INDEX);
+		String& replace(CharType target, CharType replacement, sizeType start = 0, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX);
 
 		/**
 		\param target      The substrings that will be replaced with \p replacement.
@@ -450,13 +455,13 @@ namespace NOU::NOU_DAT_ALG
 		\param end         The end of the interval in which the characters will be replaced. The substrings at this
 		index are excluded (they are even excluded if the substring started within the valid
 		interval, but end at or after this index). If this is equal to
-		InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, the size of the string will be used.
+		StringView<CHAR_TYPE>::NULL_INDEX, the size of the string will be used.
 		\return            A reference to the instance itself.
 
 		\brief Finds all \p target substrings and replaces them with \p replacement in the interval \f$\left[target,
 		replacement\right[\f$.
 		*/
-		String& replace(const StringView<CHAR_TYPE> &target, const StringView<CHAR_TYPE> &replacement, sizeType start = 0, sizeType end = NULL_INDEX);
+		String& replace(const StringView<CHAR_TYPE> &target, const StringView<CHAR_TYPE> &replacement, sizeType start = 0, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX);
 
 		/**
 		\param start       The start of the interval of the substring that will be replaced. The character at this
@@ -474,7 +479,7 @@ namespace NOU::NOU_DAT_ALG
 		\param target      The target string that the substring will be inserted to.
 		\param start       The start of the interval that will be copied. The character at this index will be included.
 		\param end         The end of the interval that will be copied. The character at this index will be excluded. If
-		this is equal to InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, the size of the string will be
+		this is equal to StringView<CHAR_TYPE>::NULL_INDEX, the size of the string will be
 		used.
 		\param insertIndex The index at which the substring will be inserted in \p target.
 
@@ -482,14 +487,14 @@ namespace NOU::NOU_DAT_ALG
 		at the index \p insertIndex. This method is the opposite of copySubstringHere() in terms of from where
 		the source substring is pulled and where it is inserted.
 		*/
-		void copySubstringTo(String &target, sizeType start, sizeType end = NULL_INDEX,
+		void copySubstringTo(String &target, sizeType start, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX,
 			sizeType insertIndex = 0) const;
 
 		/**
 		\param src         The target to copy the substring from.
 		\param start       The start of the interval that will be copied. The character at this index will be included.
 		\param end         The end of the interval that will be copied. The character at this index will be excluded. If
-		this is equal to InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, the size of the string will be
+		this is equal to StringView<CHAR_TYPE>::NULL_INDEX, the size of the string will be
 		used.
 		\param insertIndex The index at which the substring will be inserted.
 		\return            A reference to the instance itself.
@@ -499,7 +504,7 @@ namespace NOU::NOU_DAT_ALG
 		where the source substring is pulled and where it is inserted.
 		*/
 		String& copySubstringHere(const StringView<CHAR_TYPE> &src, sizeType start,
-			sizeType end = NULL_INDEX, sizeType insertIndex = 0);
+			sizeType end = StringView<CHAR_TYPE>::NULL_INDEX, sizeType insertIndex = 0);
 
 		/**
 		\param c     The character that will be used to fill the range.
@@ -516,37 +521,37 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param start The start of the interval that will be removed. The character at this index will be included.
 		\param end   The end of the interval that will be removed. The character at this index will be excluded. If
-		this is equal to InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, the size of the string will be used.
+		this is equal StringView<CHAR_TYPE>::NULL_INDEX, the size of the string will be used.
 		\return      A reference to the instance itself.
 
 		\brief Removes the characters in the interval \f$\left[start, end\right[\f$. This operation is the exact opposite
 		to preserve().
 		*/
-		String& remove(sizeType start, sizeType end = NULL_INDEX);
+		String& remove(sizeType start, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX);
 
 		/**
 		\param start The start of the interval that will be preserved. The character at this index will be included.
 		\param end   The end of the interval that will be preserved. The character at this index will be excluded. If
-		this is equal to InitValues::SIZE_T_GENERAL_SPECIAL_INDEX, the size of the string will be used.
+		this is equal to StringView<CHAR_TYPE>::NULL_INDEX, the size of the string will be used.
 		\return      A reference to the instance itself.
 
 		\brief Removes all characters, except those in the interval \f$\left[start, end\right[\f$. This operation is the
 		exact opposite to remove(sizeType, sizeType).
 		*/
-		String& preserve(sizeType start, sizeType end = NULL_INDEX);
+		String& preserve(sizeType start, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX);
 
 		/**
 		\param start The start of the interval of the characters that will be in the substring. The character at this
 		index will included in the substring.
 		\param end   The end of the interval of the characters that will be in the substring. The character at this
-		index will excluded in the substring. If this is equal to InitValues::SIZE_T_GENERAL_SPECIAL_INDEX,
+		index will excluded in the substring. If this is equal to StringView<CHAR_TYPE>::NULL_INDEX,
 		the size of the string will be used.
 		\return      A string view that starts at the index \p start of this instance and has a size of \p end -
 		\p start.
 
 		\brief Returns a string that contains the characters in the interval \f$\left[start, end\right[\f$.
 		*/
-		String substring(sizeType start, sizeType end = NULL_INDEX) const;
+		String substring(sizeType start, sizeType end = StringView<CHAR_TYPE>::NULL_INDEX) const;
 
 		/**
 		\return A copy of this string.
@@ -913,12 +918,24 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		CharType& operator [] (sizeType index);
 	};
+	/**
+	\brief An alias name for a String that uses a nostra::utils::char8;
+	*/
+	using String8 = String<char8>;
+	/**
+	\brief An alias name for a String that uses a nostra::utils::char16;
+	*/
+	using String16 = String<char16>;
+	/**
+	\brief An alias name for a String that uses a nostra::utils::char32;
+	*/
+	using String32 = String<char32>;
 
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)			
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)
 	{
-		
+
 		String<CHAR_TYPE> str;
 		IT temp = i;
 
@@ -961,7 +978,7 @@ namespace NOU::NOU_DAT_ALG
 	// ---------------------------------  DONT LOOK AT IT	-------------------------------
 	template<typename CHAR_TYPE>
 	template<typename IT>
-	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)	
+	String<CHAR_TYPE> String<CHAR_TYPE>::genericFloatToString(IT f)
 	{
 
 		IT tempFloat = f;
@@ -1043,7 +1060,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	inline String<CHAR_TYPE> String<CHAR_TYPE>::booleanToString(boolean b)					
+	inline String<CHAR_TYPE> String<CHAR_TYPE>::booleanToString(boolean b)
 	{
 		String<CHAR_TYPE> str;
 
@@ -1056,37 +1073,37 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)					
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int32 i)
 	{
 		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)					
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(int64 i)
 	{
 		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)					
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint32 i)
 	{
 		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)					
+	String<CHAR_TYPE> String<CHAR_TYPE>::intToString(uint64 i)
 	{
 		return genericIntToString(i);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)					
+	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float32 f)
 	{
 		return genericFloatToString(f);
 	}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)					
+	String<CHAR_TYPE> String<CHAR_TYPE>::floatToString(float64 f)
 	{
 		return  genericFloatToString(f);
 	}
@@ -1102,9 +1119,6 @@ namespace NOU::NOU_DAT_ALG
 		}
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
-
-
-		setSize(str.size() - 1);
 	}
 
 	template<typename CHAR_TYPE>
@@ -1116,10 +1130,12 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(c);
 
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
-
-
-		setSize(m_data.size() - 1);
 	}
+
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE>::String(ConstCharType *str) :
+		String(StringView<CHAR_TYPE>(str))
+	{}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(const String<CHAR_TYPE> &other) :
@@ -1134,32 +1150,32 @@ namespace NOU::NOU_DAT_ALG
 	{}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(int32 i) : 
+	String<CHAR_TYPE>::String(int32 i) :
 		String(NOU_CORE::move(intToString(i)))
 	{}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(int64 i)	:
+	String<CHAR_TYPE>::String(int64 i) :
 		String(NOU_CORE::move(intToString(i)))
 	{}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(uint32 i)	 :
+	String<CHAR_TYPE>::String(uint32 i) :
 		String(NOU_CORE::move(intToString(i)))
 	{}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(uint64 i)	:
+	String<CHAR_TYPE>::String(uint64 i) :
 		String(NOU_CORE::move(intToString(i)))
 	{}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(float32 f) :	
+	String<CHAR_TYPE>::String(float32 f) :
 		String(NOU_CORE::move(floatToString(f)))
 	{}
 
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE>::String(float64 f) :	
+	String<CHAR_TYPE>::String(float64 f) :
 		String(NOU_CORE::move(floatToString(f)))
 	{}
 
@@ -1308,7 +1324,10 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(CharType target, CharType replacement, sizeType start, sizeType end)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1), 
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
@@ -1325,7 +1344,10 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(const StringView<CHAR_TYPE>& target, const StringView<CHAR_TYPE>& replacement, sizeType start, sizeType end)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1),
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
@@ -1342,7 +1364,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(sizeType start, sizeType end, const StringView<CHAR_TYPE>& replacement)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1),
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i <end; i++)
@@ -1428,6 +1450,9 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const
 	{
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
 		target.insert(insertIndex, substring(start, end));
 		return *this;
 	}
@@ -1435,6 +1460,9 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::copySubstringHere(const StringView<CHAR_TYPE>& src, sizeType start, sizeType end, sizeType insertIndex)
 	{
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
 		m_data.insert(insertIndex, src.logicalSubstring(start, end))
 	}
 
@@ -1454,27 +1482,32 @@ namespace NOU::NOU_DAT_ALG
 			m_data.replace(c, i);
 		}
 
-		setSize(m_data.size() - 1);
 		return *this;
-
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::remove(sizeType start, sizeType end)
 	{
-		for (sizeType i = start; i < end; i++)
-		{
-			m_data.remove(i);
-		}
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
+			end = m_data.size() - 1;
 
-		setSize(m_data.size() - 1);
+		sizeType removeRange = end - start;
+
+		for (sizeType i = 0; i < removeRange; i++)
+		{
+			m_data.remove(start);
+			setSize(m_data.size() - 1);
+		}
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::preserve(sizeType start, sizeType end)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1),
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size();
+
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = 0; i < m_data.size() - 1; i++)
@@ -1508,7 +1541,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		String<CHAR_TYPE> strnew;
 
-		for (sizeType i = 0; i < m_data.size()-1; i++)
+		for (sizeType i = 0; i < m_data.size() - 1; i++)
 		{
 			strnew.append(m_data[i]);
 		}
@@ -1520,134 +1553,134 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(CharType c) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(c);
-		return copy();
+		strnew.append(c);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(const StringView<CHAR_TYPE>& str) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(str);
-		return copy();
+		strnew.append(str);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(i);
-		return copy();
+		strnew.append(i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float32 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(f);
-		return copy();
+		strnew.append(f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float64 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		append(f);
-		return copy();
+		strnew.append(f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, CharType c) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, c);
-		return copy();
+		strnew.appendIf(b, c);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, const StringView<CHAR_TYPE>& str) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, str);
-		return copy();
+		strnew.appendIf(b, str);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint32 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint64 i) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, i);
-		return copy();
+		strnew.appendIf(b, i);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float32 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, f);
-		return copy();
+		strnew.appendIf(b, f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float64 f) const
 	{
 		String<CHAR_TYPE> strnew;
-		appendIf(b, f);
-		return copy();
+		strnew.appendIf(b, f);
+		return strnew;
 	}
 
 	template<typename CHAR_TYPE>
 	const Vector<typename String<CHAR_TYPE>::CharType>& String<CHAR_TYPE>::data() const
 	{
-		return m_data; 
+		return m_data;
 	}
 
 	template<typename CHAR_TYPE>
@@ -1672,7 +1705,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			if (m_data.at(i) >= '\u0060' && m_data.at(i) <= '\u007A') //same just vice versa toLowerCase.
 			{
-				String<CHAR_TYPE>::CharType c = m_data.at(i) - 32; 
+				String<CHAR_TYPE>::CharType c = m_data.at(i) - 32;
 				m_data.replace(c, i);
 			}
 		}

@@ -10,7 +10,7 @@
 #include <new>
 
 /**
-\file core/FastQueue.hpp
+\file dat_alg/FastQueue.hpp
 
 \author  Lukas Gross
 \author  Lukas Reichmann
@@ -22,8 +22,9 @@
 namespace NOU::NOU_DAT_ALG
 {
 	/**
-	\tparam T The type of the stored elements.
-	\brief A simple implementation of a queue which can be used in O(1).
+	\tparam T	The type of the stored elements.
+	
+	\brief		A simple implementation of a queue which can be used in O(1).
 	*/
 	template<typename T>
 	class NOU_CLASS FastQueue final
@@ -66,11 +67,11 @@ namespace NOU::NOU_DAT_ALG
 		NOU_MEM_MNGT::UniquePtr<Type, NOU_MEM_MNGT::AllocationCallbackRefDeleter<Type>> m_queue;
 		
 		/**
-		\param src    The source array.
-		\param dst    The destination array.
-		\param amount The amount of data to copy.
+		\param src		The source array.
+		\param dst		The destination array.
+		\param amount	The amount of data to copy.
 
-		\brief Copies the data from \p src to \p dst.
+		\brief			Copies the data from \p src to \p dst.
 		*/
 		void copyFromTo(Type *src, Type *dst, sizeType amount);
 
@@ -78,6 +79,8 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param initialCapacity The initial capacity.
 		\param allocator       The allocator that will be used to allocate data.
+
+		\brief					Constructs a new FastQueue.
 		*/
 		FastQueue(sizeType initialCapacity = MIN_CAPACITY, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
 			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::getInstance());
@@ -93,94 +96,102 @@ namespace NOU::NOU_DAT_ALG
 		boolean empty() const;
 
 		/**
-		\return The current size of the queue.
-		\brief Returns the current size of the queue.
+		\return	The current size of the queue.
+		
+		\brief	Returns the current size of the queue.
 		*/
 		sizeType size() const;
 
 		/**
-		\param data The element which will be stored in the queue.
-		\brief Stores a element in the queue
+		\param data	The element which will be stored in the queue.
+		
+		\brief		Stores a element in the queue
 		*/
 		void pushBack(const Type &data);
 
 		/**
-		\param data The element which will be stored in the queue.
-		\brief Stores a element in the queue
+		\param data	The element which will be stored in the queue.
+		
+		\brief		Stores a element in the queue
 		*/
 		void pushBack(Type &&data);
 
 		/**
 		\param data The element which will be stored in the queue.
-		\brief Calls the pushBack().
+		
+		\brief		Calls the pushBack().
 		*/
 		void push(const Type &data);
 
 		/*
 		/**
 		\param data The element which will be stored in the queue.
-		\brief Calls the pushBack().
+
+		\brief		Calls the pushBack().
 		*/
 		void push(Type &&data);
 
 		/*
 		\return The first element in the queue.
-		\brief Returns the first element in the queue.
+
+		\brief	Returns the first element in the queue.
 		*/
 		Type popFront();
 
 		/**
 		\return The first element in the queue.
-		\brief Calls the popFront().
+
+		\brief	Calls the popFront().
 		*/
 		Type pop();
 
 		/**
-		\return A reference to the first (aka oldest) element in the queue.
+		\return	A reference to the first (aka oldest) element in the queue.
 
-		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
+		\brief	Returns a reference to the first (aka oldest) element in the queue without removing it.
 		*/
 		const Type& peekFront() const;
 
 		/**
-		\return A reference to the first (aka oldest) element in the queue.
+		\return	A reference to the first (aka oldest) element in the queue.
 
-		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
+		\brief	Returns a reference to the first (aka oldest) element in the queue without removing it.
 		*/
 		Type& peekFront();
 
 		/**
 		\return A reference to the first (aka oldest) element in the queue.
 
-		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
+		\brief	Returns a reference to the first (aka oldest) element in the queue without removing it.
 		*/
 		const Type& peek() const;
 
 		/**
 		\return A reference to the first (aka oldest) element in the queue.
 
-		\brief Returns a reference to the first (aka oldest) element in the queue without removing it.
+		\brief	Returns a reference to the first (aka oldest) element in the queue without removing it.
 		*/
 		Type& peek();
 
 		/**
-		\param index0 The first element.
-		\param index1 The second element.
-		\brief Swaps two elements of the queue.
+		\param index0	The first element.
+		\param index1	The second element.
+		
+		\brief			Swaps two elements of the queue.
 		*/
 		void swap(sizeType index0, sizeType index1);
 
 		/**
 		\return The element at the index \p index in the queue. 
 
-		\brief Returns the element at the index \p index in the queue.
+		\brief	Returns the element at the index \p index in the queue.
 		*/
 		Type& at(sizeType index);
 
 		/**
 		\return The element at the index \p index in the queue.
 
-		\brief Returns the element at the index \p index in the queue.
+		\brief	Returns the element at the index \p index in the queue.
 		*/
 		const Type& at(sizeType index) const;
 
@@ -191,38 +202,41 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\return The max capacity of the queue.
-		\brief Returns the max capacity of the queue.
+		
+		\brief	Returns the max capacity of the queue.
 		*/
 		sizeType capacity();
 
 		/**
-		\param additionalCapacity The capacity that will be added to the currently existing capacity.
+		\param additionalCapacity	The capacity that will be added to the currently existing capacity.
 
-		\brief Ensures that after a call to this method, the capacity will be <u>at least</u> the current 
-		       capacity plus \p additionalCapacity.
+		\brief						Ensures that after a call to this method, the capacity will be 
+									<u>at least</u> the current capacity plus \p additionalCapacity.
 		*/
 		void resize(sizeType additionalCapacity);
 
 		/**
-		\return m_allocator.
+		\return	m_allocator.
 
-		\brief Returns m_allocator.
+		\brief	Returns m_allocator.
 		*/
 		const NOU_MEM_MNGT::AllocationCallback<Type>& getAllocationCallback() const;
 
 		/**
-		\param index The index of the element that will be returned.
-		\return A const reference to the element at the specified index.
+		\param index	The index of the element that will be returned.
+		
+		\return			A const reference to the element at the specified index.
 
-		\brief Returns a const reference to the element at the specified index.
+		\brief			Returns a const reference to the element at the specified index.
 		*/
 		const Type& operator [] (sizeType index) const;
 
 		/**
-		\param index The index of the element that will be returned.
-		\return A const reference to the element at the specified index.
+		\param index	The index of the element that will be returned.
 
-		\brief Returns a const reference to the element at the specified index.
+		\return			A const reference to the element at the specified index.
+
+		\brief			Returns a const reference to the element at the specified index.
 		*/
 		Type& operator [] (sizeType index);
 	};
