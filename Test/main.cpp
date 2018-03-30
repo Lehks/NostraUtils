@@ -133,21 +133,17 @@ int main()
 {
 	std::cout << "mt: " << std::this_thread::get_id() << std::endl;
 
-	TaskQueue<void, decltype(&testFunc)> tq(&TaskQueueAccumulators::forward<TaskQueueAccumulators::Void>);
+	auto task1 = makeTask(&func2, 1);
+	auto task2 = makeTask(&testFunc);
 
-	tq.pushTask(makeTask(&testFunc));
-	tq.pushTask(makeTask(&testFunc));
-	tq.pushTask(makeTask(&testFunc));
-	tq.pushTask(makeTask(&testFunc));
-	tq.pushTask(makeTask(&testFunc));
+	AsyncTaskResult<int, decltype(&func2), int> res1(task1);
+	AsyncTaskResult<void, decltype(&testFunc)> res2(task2);
 
 	for (int i = 0; i < 1000000; i++)
 	{
 		i++;
 		i--;
 	}
-
-	tq.getResult();
 
 	std::cin.get();
 }
