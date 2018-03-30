@@ -100,17 +100,6 @@ namespace NOU::NOU_FILE_MNGT
 
 	NOU_DAT_ALG::String8 Path::evaluateRelativePath(const NOU_DAT_ALG::StringView8 &path)
 	{		
-	//  "C:\\Users\\Dennis";										current directory (TestDir)
-
-	//  "C:\\Users\\Dennis\\TestDir\\MyFile.exe";					\\TestDir\\MyFile.exe
-	//  "C:\\Users\\Dennis\\TestDir\\MyFolder\\MyFile.txt";			\\TestDir\\MyFolder\\MyFile.txt
-	//  "C:\\Users\\Dennis\\TestDir";								\\TestDir
-	//  "C:\\Users\\";												..\\
-	//  "C:\\Users\\SomeOtherDir";									..\\SomeOtherDir
-
-	//  Relativer Pfad = Weg von pwd zu path.
-
-
 		Path cwd = currentWorkingDirectory();
 
 #if NOU_OS == NOU_OS_WINDOWS
