@@ -352,6 +352,7 @@
     <ClCompile Include="src\source\nostrautils\thread\ThreadWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="CMakeLists.txt" />
     <Text Include="Doc\output\Warnings.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

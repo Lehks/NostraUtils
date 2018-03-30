@@ -13,6 +13,9 @@
 # Build results
 bin/
 
+#Exported directory with all files requiered for CMake build
+BuildFiles/
+
 #Ignore Test Project
 /Test/*
 
