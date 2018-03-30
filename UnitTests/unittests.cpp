@@ -1169,13 +1169,12 @@ namespace UnitTests
 			str.remove(2, str.size());
 			Assert::AreEqual(str[0], '1');
 			Assert::AreEqual(str[1], '7');
-			Assert::AreNotEqual(str[0], '.');
-		
+			
 			NOU::NOU_DAT_ALG::String<NOU::char8> substr;
-		
+			
 			substr.append(str.substring(0, 1));
 			Assert::AreEqual(str[0], '1');
-		
+			
 			substr.clear();
 			substr.append(str.copy());
 			Assert::AreEqual(str[0], '1');
