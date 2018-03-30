@@ -9,6 +9,7 @@
 #include "nostrautils\thread\Task.hpp"
 #include "nostrautils\dat_alg\Uninitialized.hpp"
 #include "nostrautils\dat_alg\FastQueue.hpp"
+#include "nostrautils\thread\ConditionVariable.hpp"
 #include <type_traits>
 
 
@@ -30,6 +31,21 @@ namespace NOU::NOU_THREAD
 	namespace TaskQueueAccumulators
 	{
 		/**
+		\brief A dummy type that is used by the specialization of TaskQueue that works with tasks that return
+		\p void. 
+
+		\details
+		A dummy type that is used by the specialization of TaskQueue that works with tasks that return \p 
+		void. See the detailed section of that specialization for further details (unfortunately, it is not 
+		possible to have a link to that class here, sorry for the inconvenience).
+
+		\note
+		It does not matter as which type \p Void is defined as it only serves as a dummy. However, it must be 
+		any type other than \p void.
+		*/
+		using Void = int;
+
+		/**
 		\tparam R The type of the results that will be accumulated.
 
 		\brief The type of a function that can be used as an accumulator.
@@ -49,7 +65,7 @@ namespace NOU::NOU_THREAD
 		       choice if no accumulation should happen.
 		*/
 		template<typename R>
-		static R forward(R &&previous, R &&current);
+		NOU_FUNC R forward(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -65,7 +81,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator + overloaded.
 		*/
 		template<typename R>
-		static R addition(R &&previous, R &&current);
+		NOU_FUNC R addition(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -81,7 +97,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator + overloaded.
 		*/
 		template<typename R>
-		static R additionInverted(R &&previous, R &&current);
+		NOU_FUNC R additionInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -97,7 +113,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator - overloaded.
 		*/
 		template<typename R>
-		static R subtract(R &&previous, R &&current);
+		NOU_FUNC R subtract(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -113,7 +129,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator - overloaded.
 		*/
 		template<typename R>
-		static R subtractInverted(R &&previous, R &&current);
+		NOU_FUNC R subtractInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -129,7 +145,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator * overloaded.
 		*/
 		template<typename R>
-		static R multiplicate(R &&previous, R &&current);
+		NOU_FUNC R multiply(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -145,7 +161,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator * overloaded.
 		*/
 		template<typename R>
-		static R multiplicateInverted(R &&previous, R &&current);
+		NOU_FUNC R multiplyInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -161,7 +177,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator / overloaded.
 		*/
 		template<typename R>
-		static R divide(R &&previous, R &&current);
+		NOU_FUNC R divide(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -177,7 +193,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator / overloaded.
 		*/
 		template<typename R>
-		static R divideInverted(R &&previous, R &&current);
+		NOU_FUNC R divideInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -193,7 +209,7 @@ namespace NOU::NOU_THREAD
 			   and \p current the parameter.
 		*/
 		template<typename R, R(R::*FUNC)(R&&)>
-		static R memberFunction(R &&previous, R &&current);
+		NOU_FUNC R memberFunction(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -209,7 +225,7 @@ namespace NOU::NOU_THREAD
 			   and \p previous the parameter.
 		*/
 		template<typename R, R(R::*FUNC)(R&&)>
-		static R memberFunctionInverted(R &&previous, R &&current);
+		NOU_FUNC R memberFunctionInverted(R &&previous, R &&current);
 	};
 
 	/**
@@ -244,7 +260,11 @@ namespace NOU::NOU_THREAD
 	This documentation is only those tasks that have a return type other than void. For a documentation of the
 	specialization that is used when the result type is void, see TaskQueue<void, I, ACCUM, ARGS>. 
 	*/
-	template<typename R, typename I, typename ACCUM = typename TaskQueueAccumulators::FunctionPtr<R>, 
+	template<typename R, typename I, typename ACCUM = 
+		TaskQueueAccumulators::FunctionPtr<
+			NOU_CORE::typeIf_t<
+				NOU_CORE::AreSame<R, void>::value, 
+					TaskQueueAccumulators::Void, R>>,
 		typename... ARGS>
 	class NOU_CLASS TaskQueue
 	{
@@ -305,6 +325,22 @@ namespace NOU::NOU_THREAD
 		\brief The mutex that is used to lock the access to m_result.
 		*/
 		Mutex                              m_resultMutex;
+
+		/**
+		\brief A mutex that is used to synchronize the method getResult() with the execution task.
+		*/
+		Mutex                              m_getResultMutex;
+
+		/**
+		\brief A state that is used to synchronize the method getResult() with the execution task.
+		*/
+		boolean                            m_isExecuting;
+
+		/**
+		\brief A condition variable that is used to synchronize the method getResult() with the execution 
+		       task.
+		*/
+		ConditionVariable                  m_getResultVariable;
 
 		/**
 		\brief The accumulator that will be used to accumulate the results of the tasks.
@@ -403,8 +439,8 @@ namespace NOU::NOU_THREAD
 
 		\details
 		Returns the currently stored, temporary result. Unlike getResult(), this method does not force the
-		the execution of all tasks that are currently in the queue, but returns the result that was produced
-		by the last accumulation.
+		execution of all tasks that are currently in the queue, but returns the result that was produced by 
+		the last accumulation.
 
 		\note
 		This function may be expensive, as the result will be copied instead of moved or returned by
@@ -541,6 +577,22 @@ namespace NOU::NOU_THREAD
 		Mutex                              m_currentTaskMutex;
 
 		/**
+		\brief A mutex that is used to synchronize the method getResult() with the execution task.
+		*/
+		Mutex                              m_getResultMutex;
+
+		/**
+		\brief A state that is used to synchronize the method getResult() with the execution task.
+		*/
+		boolean                            m_isExecuting;
+
+		/**
+		\brief A condition variable that is used to synchronize the method getResult() with the execution 
+		       task.
+		*/
+		ConditionVariable                  m_getResultVariable;
+
+		/**
 		\brief The queue that stores the tasks that will be executed.
 		*/
 		NOU_DAT_ALG::FastQueue<Task>       m_taskQueue;
@@ -657,67 +709,67 @@ namespace NOU::NOU_THREAD
 	namespace TaskQueueAccumulators
 	{
 		template<typename R>
-		R forward(R &&previous, R &&current)
+		NOU_FUNC R forward(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		R addition(R &&previous, R &&current)
+		NOU_FUNC R addition(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) + NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		R additionInverted(R &&previous, R &&current)
+		NOU_FUNC R additionInverted(R &&previous, R &&current)
 		{
 			return addAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
 
 		template<typename R>
-		R subtract(R &&previous, R &&current)
+		NOU_FUNC R subtract(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) - NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		R subtractInverted(R &&previous, R &&current)
+		NOU_FUNC R subtractInverted(R &&previous, R &&current)
 		{
 			return subAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
 
 		template<typename R>
-		R multiplicate(R &&previous, R &&current)
+		NOU_FUNC R multiply(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) * NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		R multiplicateInverted(R &&previous, R &&current)
+		NOU_FUNC R multiplyInverted(R &&previous, R &&current)
 		{
 			return mulAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
 
 		template<typename R>
-		R divide(R &&previous, R &&current)
+		NOU_FUNC R divide(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) / NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		R divideInverted(R &&previous, R &&current)
+		NOU_FUNC R divideInverted(R &&previous, R &&current)
 		{
 			return divAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
 
 		template<typename R, R(R::*FUNC)(R&&)>
-		R memberFunction(R &&previous, R &&current)
+		NOU_FUNC R memberFunction(R &&previous, R &&current)
 		{
 			return (previous.*FUNC)(NOU_CORE::move(current));
 		}
 
 		template<typename R, R(R::*FUNC)(R&&)>
-		R memberFunctionInverted(R &&previous, R &&current)
+		NOU_FUNC R memberFunctionInverted(R &&previous, R &&current)
 		{
 			return (current.*FUNC)(NOU_CORE::move(previous));
 		}
@@ -726,7 +778,9 @@ namespace NOU::NOU_THREAD
 	template<typename R, typename I, typename ACCUM, typename... ARGS>
 	void TaskQueue<R, I, ACCUM, ARGS...>::executeTask(TaskQueue<R, I, ACCUM, ARGS...> *taskQueue)
 	{
-		Uninitialized<Task> tempTask;
+		taskQueue->m_isExecuting = true;
+
+		NOU_DAT_ALG::Uninitialized<Task> tempTask;
 
 		{
 			/*
@@ -751,7 +805,14 @@ namespace NOU::NOU_THREAD
 			taskQueue->accumulate(NOU_CORE::move(result));
 		}
 
-		if (!taskQueue->m_stopParallelExecution)
+		boolean stopParalleExecution;
+
+		{
+			Lock lock(taskQueue->m_getResultMutex);
+			stopParalleExecution = taskQueue->m_stopParallelExecution;
+		}
+
+		if (!stopParalleExecution)
 		{
 			Lock taskQueueLock(taskQueue->m_taskQueueMutex);
 			Lock currentTaskLock(taskQueue->m_currentTaskMutex);
@@ -760,6 +821,12 @@ namespace NOU::NOU_THREAD
 
 			taskQueue->updateExecutingTask();
 		}
+		else
+		{
+			taskQueue->m_getResultVariable.notifyAll();
+		}
+
+		taskQueue->m_isExecuting = false;
 	}
 
 	template<typename R, typename I, typename ACCUM, typename... ARGS>
@@ -836,9 +903,16 @@ namespace NOU::NOU_THREAD
 	const typename TaskQueue<R, I, ACCUM, ARGS...>::Result& 
 		TaskQueue<R, I, ACCUM, ARGS...>::getResult()
 	{
-		m_stopParallelExecution = true;
+		{
+			Lock lock(m_getResultMutex);
+			m_stopParallelExecution = true;
+		}
 
-		//wait for current task to finish execution
+		{
+			Mutex mutex;
+			UniqueLock lock(mutex);
+			m_getResultVariable.wait(lock, [this]() { return !(this->m_isExecuting); });
+		}
 
 		{
 			Lock lock(m_taskQueueMutex);
@@ -852,7 +926,10 @@ namespace NOU::NOU_THREAD
 			}
 		}
 
-		m_stopParallelExecution = false;
+		{
+			Lock lock(m_getResultMutex);
+			m_stopParallelExecution = false;
+		}
 
 		return *m_result;
 	}
@@ -869,7 +946,9 @@ namespace NOU::NOU_THREAD
 	template<typename I, typename ACCUM, typename... ARGS>
 	void TaskQueue<void, I, ACCUM, ARGS...>::executeTask(TaskQueue<void, I, ACCUM, ARGS...> *taskQueue)
 	{
-		Uninitialized<Task> tempTask;
+		taskQueue->m_isExecuting = true;
+
+		NOU_DAT_ALG::Uninitialized<Task> tempTask;
 
 		{
 			/*
@@ -887,7 +966,14 @@ namespace NOU::NOU_THREAD
 
 		tempTask->execute();
 
-		if (!taskQueue->m_stopParallelExecution)
+		boolean stopParallelExecution;
+
+		{
+			Lock lock(taskQueue->m_getResultMutex);
+			stopParallelExecution = taskQueue->m_stopParallelExecution;
+		}
+
+		if (!stopParallelExecution)
 		{
 			Lock taskQueueLock(taskQueue->m_taskQueueMutex);
 			Lock currentTaskLock(taskQueue->m_currentTaskMutex);
@@ -896,6 +982,12 @@ namespace NOU::NOU_THREAD
 
 			taskQueue->updateExecutingTask();
 		}
+		else
+		{
+			taskQueue->m_getResultVariable.notifyAll();
+		}
+
+		taskQueue->m_isExecuting = false;
 	}
 
 	template<typename I, typename ACCUM, typename... ARGS>
@@ -951,9 +1043,16 @@ namespace NOU::NOU_THREAD
 	template<typename I, typename ACCUM, typename... ARGS>
 	void TaskQueue<void, I, ACCUM, ARGS...>::getResult()
 	{
-		m_stopParallelExecution = true;
+		{
+			Lock lock(m_getResultMutex);
+			m_stopParallelExecution = true;
+		}
 
-		//wait for current task to finish execution
+		{
+			Mutex mutex;
+			UniqueLock lock(mutex);
+			m_getResultVariable.wait(lock, [this]() { return !(this->m_isExecuting); });
+		}
 
 		{
 			Lock lock(m_taskQueueMutex);
@@ -965,7 +1064,10 @@ namespace NOU::NOU_THREAD
 			}
 		}
 
-		m_stopParallelExecution = false;
+		{
+			Lock lock(m_getResultMutex);
+			m_stopParallelExecution = false;
+		}
 	}
 
 	template<typename I, typename ACCUM, typename... ARGS>

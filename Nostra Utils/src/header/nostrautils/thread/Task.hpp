@@ -274,17 +274,6 @@ namespace NOU::NOU_THREAD
 		return TaskType(NOU_CORE::forward<typename TaskType::InvocableType>(invocable),
 			NOU_CORE::forward<NOU_CORE::remove_reference_t<ARGS>>(args)...);
 	}
-
-	///\endcond
-
-	template<typename T, typename I, typename... ARGS>
-	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, T, NOU_CORE::remove_reference_t<ARGS>...>, I, T,
-		NOU_CORE::remove_reference_t<ARGS>...> makeMemFuncTask(T&& obj, I&& invocable, ARGS&&...args)
-	{
-		return makeTask(NOU_CORE::forward<I>(invocable), NOU_CORE::forward<T>(obj), 
-			NOU_CORE::forward<ARGS>(args)...);
-	}
-
 }
 
 #endif

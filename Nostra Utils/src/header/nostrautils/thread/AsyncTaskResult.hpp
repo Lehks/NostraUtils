@@ -17,6 +17,33 @@
 
 namespace NOU::NOU_THREAD
 {
+	/**
+	\brief An enumeration that stores that states that a AsyncTaskResult can have.
+	*/
+	enum class AsyncTaskResultState
+	{
+		/**
+		\brief The task has not been started yet.
+		*/
+		NOT_STARTED,
+
+		/**
+		\brief makeResult() has directly or indirectly been called and the task is currently being
+		executed by the thread that called that method.
+		*/
+		EXECUTING_SYNC,
+
+		/**
+		\brief The task is currently being executed by another thread.
+		*/
+		EXECUTING_ASYNC,
+
+		/**
+		\brief The task has finished execution.
+		*/
+		DONE
+	};
+
 	namespace internal
 	{
 		/**
@@ -39,32 +66,7 @@ namespace NOU::NOU_THREAD
 		class NOU_CLASS AbstractAsyncTaskResult
 		{
 		public:
-			/**
-			\brief An enumeration that stores that states that a AsyncTaskResult can have.
-			*/
-			enum class State
-			{
-				/**
-				\brief The task has not been started yet.
-				*/
-				NOT_STARTED,
-				
-				/**
-				\brief makeResult() has directly or indirectly been called and the task is currently being 
-				       executed by the thread that called that method.
-				*/
-				EXECUTING_SYNC,
-				
-				/**
-				\brief The task is currently being executed by another thread.
-				*/
-				EXECUTING_ASYNC,
-
-				/**
-				\brief The task has finished execution.
-				*/
-				DONE
-			};
+			using State = AsyncTaskResultState;
 
 		private:
 			/**
@@ -232,6 +234,13 @@ namespace NOU::NOU_THREAD
 
 		\brief Constructs a new instance with the passed task.
 		*/
+		explicit AsyncTaskResult(const Task &task);
+
+		/**
+		\param task The task to execute.
+
+		\brief Constructs a new instance with the passed task.
+		*/
 		explicit AsyncTaskResult(Task &&task);
 
 		/**
@@ -287,6 +296,7 @@ namespace NOU::NOU_THREAD
 		Task m_task;
 
 	public:
+		explicit AsyncTaskResult(const Task &task);
 		explicit AsyncTaskResult(Task &&task);
 		explicit AsyncTaskResult(I &&invocable, ARGS&&... args);
 
@@ -297,6 +307,14 @@ namespace NOU::NOU_THREAD
 	};
 	///\endcond
 
+
+	template<typename R, typename I, typename... ARGS>
+	AsyncTaskResult<R, I, ARGS...>::AsyncTaskResult(const Task &task) :
+		AbstractAsyncTaskResult(&m_task),
+		m_task(task)
+	{
+		push();
+	}
 
 	template<typename R, typename I, typename... ARGS>
 	AsyncTaskResult<R, I, ARGS...>::AsyncTaskResult(Task &&task) :
@@ -320,6 +338,14 @@ namespace NOU::NOU_THREAD
 	}
 
 
+
+	template<typename I, typename... ARGS>
+	AsyncTaskResult<void, I, ARGS...>::AsyncTaskResult(const Task &task) :
+		AbstractAsyncTaskResult(&m_task),
+		m_task(task)
+	{
+		push();
+	}
 
 	template<typename I, typename... ARGS>
 	AsyncTaskResult<void, I, ARGS...>::AsyncTaskResult(Task &&task) :

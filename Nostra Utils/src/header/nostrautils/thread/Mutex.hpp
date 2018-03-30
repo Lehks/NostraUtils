@@ -67,59 +67,6 @@ namespace NOU::NOU_THREAD
 		*/
 		const UnderlyingType& getUnderlying() const;
 	};
-
-	/**
-	\brief An advanced mutex that is built atop of nostra::utils::thread::Mutex. Instead of just being able to
-	       lock and unlock, this mutex has three levels of being locked.
-	
-	\details
-	An advanced mutex that is built atop of nostra::utils::thread::Mutex. Instead of just being able to lock 
-	and unlock, this mutex has three levels of being locked.
-
-	These three levels are (as represented by the enum Lock): 
-	- NONE
-	- READ
-	- WRITE
-	
-	\todo Add levels
-	*/
-	class NOU_CLASS ReadWriteMutex
-	{
-	public:
-		enum class Lock
-		{
-			NONE,
-			READ,
-			WRITE
-		};
-
-		using UnderlyingType = std::mutex;
-
-	private:
-		Lock m_lock;
-		UnderlyingType m_mutex;
-
-	public:
-		ReadWriteMutex();
-
-		void readLock();
-		void writeLock();
-
-		boolean tryReadLock();
-		boolean tryWriteLock();
-
-		void unlock();
-		void unlockToRead();
-
-		Lock getLockLevel() const;
-
-		boolean isLocked() const;
-		boolean isReadLocked() const;
-		boolean isWriteLocked() const;
-
-		UnderlyingType& getUnderlying();
-		const UnderlyingType& getUnderlying() const;
-	};
 }
 
 #endif
