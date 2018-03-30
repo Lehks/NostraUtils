@@ -110,9 +110,6 @@
     <ClInclude Include="src\header\nostrautils\thread\Lock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\thread\Protection.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\BinaryHeap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
