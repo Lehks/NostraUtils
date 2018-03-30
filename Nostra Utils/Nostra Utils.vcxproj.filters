@@ -29,6 +29,7 @@
     <None Include="src\source\nostrautils\thread\.gitignore" />
     <None Include="Doc\resources\Documentation.dox" />
     <None Include="Doc\resources\Doxyfile" />
+    <None Include="Doc\resources\ThreadManager.dox" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp">
@@ -172,5 +173,8 @@
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\output\Warnings.txt" />
   </ItemGroup>
 </Project>

@@ -41,11 +41,11 @@ namespace NOU::NOU_MEM_MNGT
 		\brief Allocates enough memory to hold \p amount instances of the type \p T.
 
 		\details
-		Allocates enough uninitialized memory to hold \p amount instances of the type \p T. The memory 
-		allocated with this function must be deallocatable using the deallocate() function of the same 
-		allocation callback.
-
-		If no more memory can be allocated, this method shall return \p nullptr.
+		Allocates enough memory to hold \p amount instances of the type \p T. This function may or may not 
+		call constructors. All tough the behavior of calling constructors may change from allocation callback 
+		to allocation callback, it must be consistent along the usage of the same allocator class.
+		The memory allocated with this function must be deallocatable using the deallocate() function of the 
+		same allocation callback.
 		*/
 		virtual T* allocate(sizeType amount = 1) = 0;
 
@@ -55,19 +55,15 @@ namespace NOU::NOU_MEM_MNGT
 		\brief Deallocates memory that was previously allocated by the same allocation callback. 
 
 		\details
-		Deallocates memory that was previously allocated by the same allocation callback. 
-
-		The deallocation of \p nullptr shall always be successful.
-
-		If a deallocation fails, it is advised (but not required) to implement error handing (pushing \link 
-		nostra::utils::core::ErrorCodes::BAD_DEALLOCATION ErrorCodes::BAD_DEALLOCATION \endlink would be a
-		good starting point).
+		Deallocates memory that was previously allocated by the same allocation callback. This function
+		may or may not call destructors. All tough the behavior of calling destructors may change from 
+		allocation callback to allocation callback, it must be consistent along the usage of the same 
+		allocator class.
 
 		\note 
-		This method must only be able to deallocate the memory that was allocated by the very same instance of
-		the callback. It \b may be able to deallocate the memory of other instances of the callback (or even
-		instances of other callbacks), but this behavior is not generally defined and must be defined by each
-		allocated individually.
+		It is only required that the same allocation callback that allocated memory can also deallocate the
+		same memory, however it is allowed for an allocation callback to also deallocate the memory of another
+		callback. This behavior is never defined and may or may not result in a proper deallocation.
 		*/
 		virtual void deallocate(T *data) = 0;
 	};

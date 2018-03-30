@@ -8,11 +8,14 @@
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 
-/** \file Vector.hpp
+/** \file StringView.hpp
 \author	 Lukas Reichmann
 \since   0.0.1
 \version 0.0.1
-\brief   This file provides a String implementation.
+\brief   This file provides the StringView which is an interface between \link nostra::utils::dat_alg::String 
+         String\endlink and C-Strings.
+
+\see nostra::utils::dat_alg::StringView
 */
 
 namespace NOU::NOU_DAT_ALG
@@ -48,7 +51,7 @@ namespace NOU::NOU_DAT_ALG
 	\par Why are there the two attributes m_string and m_dataPtr?
 	Since a string view needs to be able to work with both a string literal and a nostra::utils::data_alg::String, both of these
 	attributes are required for the string view to be "up to date" at any time (in the lifetime of the underlying
-	string). The attribute m_dataPtr is required because because nostra::utils::data_alg::String may reallocate its buffer to
+	string). The attribute m_dataPtr is required because nostra::utils::data_alg::String may reallocate its buffer to
 	store more characters, which invalidates the pointer to the now old buffer. A pointer to a pointer is always up to
 	date, since it points to the variable that points to the buffer (and the address of that variable never changes).
 	*/
@@ -459,7 +462,7 @@ namespace NOU::NOU_DAT_ALG
 		The returned string view will have the same lifetime as its origin string view.
 
 		\warning
-		A string view that is returned by this method should only be used by method's and functions that use the method
+		A string view that is returned by this method should only be used by methods and functions that use the method
 		size() to determine the end of a string and not by those relying on a null terminator (this is due to a string
 		view being read-only by design and therefore the inability to set a new null terminator).
 		*/

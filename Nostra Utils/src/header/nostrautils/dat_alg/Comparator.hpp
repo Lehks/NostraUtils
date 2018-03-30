@@ -4,6 +4,13 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Meta.hpp"
 
+/** \file Comparator.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides mechanics to compare objects without relying on operators.
+*/
+
 namespace NOU::NOU_DAT_ALG
 {
 	/**
@@ -16,12 +23,12 @@ namespace NOU::NOU_DAT_ALG
 
 	\param result The result to be inverted.
 	\return       The converted result.
-	\brief Inverst a CompareResult.
+	\brief Inverts a CompareResult.
 
 	\details
 	Inverts a CompareResult.
 
-	The type \p R must be invertable using the - operator.
+	The type \p R must be invertible using the - operator.
 
 	The resulting values are:\n
 	-1 => 1\n
@@ -47,7 +54,7 @@ namespace NOU::NOU_DAT_ALG
 	\param  a The first object.
 	\param  b The second object.
 	\return The CompareResult that was produced by a and b.
-	\brief Compares two ojects in ascending order.
+	\brief Compares two objects in ascending order.
 
 	\details
 	This function only works for types that support the operators \>, \<, >=, <=, == and -.
@@ -56,7 +63,7 @@ namespace NOU::NOU_DAT_ALG
 	a == b => Result is == 0\n
 	a <  b => Result is < 0
 	
-	\todo Propperly implement specialisation for char8, char16 and char32 (that take in account other 
+	\todo Properly implement specialization for char8, char16 and char32 (that take in account other 
 	      languages)
 	*/
 	template<typename T, typename R = CompareResult>
@@ -67,7 +74,7 @@ namespace NOU::NOU_DAT_ALG
 	\param  a The first object.
 	\param  b The second object.
 	\return The CompareResult that was produced by a and b in an inverted order.
-	\brief Compares two ojects in descending order.
+	\brief Compares two objects in descending order.
 
 	\details
 	This function only works for types that support the operators \>, \<, >=, <=, == and -.

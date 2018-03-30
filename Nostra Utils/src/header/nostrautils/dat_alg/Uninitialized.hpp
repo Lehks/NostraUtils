@@ -6,7 +6,7 @@
 #include "nostrautils\core\ErrorHandler.hpp"
 
 /** 
-\file    Uninitialized.hpp
+\file    dat_alg\Uninitialized.hpp
 \author  Lukas Reichmann
 \since   0.0.1
 \version 1.0

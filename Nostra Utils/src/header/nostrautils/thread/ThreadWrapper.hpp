@@ -7,7 +7,7 @@
 #include <thread>
 
 /**
-\file    core\StdIncludes.hpps
+\file    thread\ThreadWrapper.hpp
 \author  Lukas Reichmann
 \version 0.0.1
 \since   1.0.0

@@ -8,7 +8,7 @@
 
 #include <cstddef>
 
-/** \file Vector.hpp
+/** \file ObjectPool.hpp
 \author  Lukas Reichmann
 \since   0.0.1
 \version 0.0.1
@@ -145,7 +145,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param object The object to push.
-		\return A reference to the created object. NOTE: Allthough a reference to the object is returned, 
+		\return A reference to the created object. NOTE: Although a reference to the object is returned, 
 		        the object is still owned by the pool and does not count as distributed.
 
 		\brief Pushes a new object into the pool. At most, this can be called capacity() times.
@@ -154,7 +154,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param object The object to push.
-		\return A reference to the created object. NOTE: Allthough a reference to the object is returned,
+		\return A reference to the created object. NOTE: Although a reference to the object is returned,
 		the object is still owned by the pool and does not count as distributed.
 
 		\brief Pushes a new object into the pool. At most, this can be called capacity() times.
@@ -164,7 +164,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\tparam ARGS The types of the parameters that will be used to construct the new object.
 		\param args The parameters that will be used to construct the new object.
-		\return A reference to the created object. NOTE: Allthough a reference to the object is returned,
+		\return A reference to the created object. NOTE: Although a reference to the object is returned,
 		the object is still owned by the pool and does not count as distributed.
 
 		\brief Pushes a new object into the pool. This object will be constructed from the parameters that

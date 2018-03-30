@@ -6,12 +6,22 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Meta.hpp"
 
+/** \file Pointer.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides smart pointer classes (which is currently only \link 
+         nostra::utils::mem_mngt::UniquePtr UniquePtr \endlink).
+
+\see nostra::utils::mem_mngt::UniquePtr
+*/
+
 namespace NOU::NOU_MEM_MNGT
 {
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A deleter that calls <tt>delete<tt>.
+	\brief A deleter that calls <tt>delete</tt>.
 	*/
 	template<typename T>
 	NOU_FUNC void defaultDeleter(T *t);
@@ -19,7 +29,7 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A deleter that calls <tt>delete[]<tt>.
+	\brief A deleter that calls <tt>delete[]</tt>.
 	*/
 	template<typename T>
 	NOU_FUNC void defaultArrayDeleter(T *t);
@@ -35,7 +45,7 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A deleter that calls no functions at all. This can be used if a pointer wrapps around a pointer to
+	\brief A deleter that calls no functions at all. This can be used if a pointer wraps around a pointer to
 	memory that does not need to be freed.
 	*/
 	template<typename T>
@@ -44,11 +54,11 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A Deleter for Smart Pointers that wrapps nostra::utils::mem_mngt::AllocationCallback::deallocate.
+	\brief A Deleter for Smart Pointers that wraps nostra::utils::mem_mngt::AllocationCallback::deallocate.
 	This version does store it's Callback, so the Callback will be stored in the class itself.
 
 	\details
-	Alltough this class is designed to work with childclasses of nostra::utils::mem_mngt::AllocationCallback,
+	All tough this class is designed to work with child classes of nostra::utils::mem_mngt::AllocationCallback,
 	it works with all classes that have a <tt>.deallocate()</tt> member function.
 	*/
 	template<typename T, typename ALLOCATOR>
@@ -95,7 +105,7 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A Deleter for Smart Pointers that wrapps nostra::utils::mem_mngt::AllocationCallback::deallocate.
+	\brief A Deleter for Smart Pointers that wraps nostra::utils::mem_mngt::AllocationCallback::deallocate.
 	This version does not store it's Callback, so the Callback that was passed to the constructor must
 	be alive for the entire time that this Deleter is used.
 	*/
@@ -386,6 +396,8 @@ namespace NOU::NOU_MEM_MNGT
 		UniquePtr& operator = (Type *ptr);
 	};
 
+	///\cond
+
 	template<typename T>
 	void defaultDeleter(T *t)
 	{
@@ -613,6 +625,8 @@ namespace NOU::NOU_MEM_MNGT
 
 		return *this;
 	}
+
+	///\endcond
 }
 
 #endif

@@ -1,6 +1,7 @@
 #ifndef NOU_DAT_ALG_FAST_QUEUE_HPP
 #define NOU_DAT_ALG_FAST_QUEUE_HPP
 
+#include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Utils.hpp"
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
@@ -8,9 +9,8 @@
 #include "nostrautils\core\ErrorHandler.hpp"
 
 #include <new>
-
 /**
-\file dat_alg/FastQueue.hpp
+\file dat_alg\FastQueue.hpp
 
 \author  Lukas Gross
 \author  Lukas Reichmann
@@ -19,16 +19,24 @@
 
 \brief A file that contains the nostra::utils::core::FastQueue class.
 */
+
 namespace NOU::NOU_DAT_ALG
 {
 	/**
-	\tparam T	The type of the stored elements.
-	
-	\brief		A simple implementation of a queue which can be used in O(1).
+	\tparam T The type of the stored elements.
+	\brief A FIFO-Queue that, under certain circumstances, can operate in O(1).
+
+	\details
+	A FIFO-Queue that, under certain circumstances, can operate in O(1). 
+
+	This queue is a good choice if the push / pop ratio is about 1:1 and the queue is frequently empty. In
+	that case, both the push and pop operations can be done in O(1).
 	*/
 	template<typename T>
 	class NOU_CLASS FastQueue final
 	{
+
+
 	public:
 		/**
 		\brief Local class alias.
@@ -84,7 +92,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		FastQueue(sizeType initialCapacity = MIN_CAPACITY, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
 			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::getInstance());
-
+		
 		/**
 		\brief Destructs an instance of FastQueue.
 		*/
@@ -123,7 +131,6 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		void push(const Type &data);
 
-		/*
 		/**
 		\param data The element which will be stored in the queue.
 
@@ -210,8 +217,8 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param additionalCapacity	The capacity that will be added to the currently existing capacity.
 
-		\brief						Ensures that after a call to this method, the capacity will be 
-									<u>at least</u> the current capacity plus \p additionalCapacity.
+		\brief Ensures that after a call to this method, the capacity will be <b>at least</b> the current 
+		       capacity plus \p additionalCapacity.
 		*/
 		void resize(sizeType additionalCapacity);
 
@@ -239,6 +246,8 @@ namespace NOU::NOU_DAT_ALG
 		\brief			Returns a const reference to the element at the specified index.
 		*/
 		Type& operator [] (sizeType index);
+		///\endcond
+
 	};
 
 	template<typename T>

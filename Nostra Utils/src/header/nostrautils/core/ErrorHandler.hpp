@@ -178,7 +178,7 @@ namespace NOU::NOU_CORE
 		/**
 		\return Returns the id.
 
-		\Brief	Returns the id of the error object.
+		\brief Returns the id of the error object.
 		*/
 		ErrorType getID() const;
 	};

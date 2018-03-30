@@ -290,6 +290,7 @@
   <ItemGroup>
     <None Include="Doc\resources\Documentation.dox" />
     <None Include="Doc\resources\Doxyfile" />
+    <None Include="Doc\resources\ThreadManager.dox" />
     <None Include="src\header\nostrautils\core\.gitignore" />
     <None Include="src\header\nostrautils\dat_alg\.gitignore" />
     <None Include="src\header\nostrautils\file_mngt\.gitignore" />
@@ -349,6 +350,9 @@
     <ClCompile Include="src\source\nostrautils\thread\Mutex.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\ThreadManager.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\ThreadWrapper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\output\Warnings.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

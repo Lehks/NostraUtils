@@ -146,7 +146,7 @@ namespace NOU::NOU_THREAD
 			Priority m_id;
 
 			/**
-			\param The ID of the instance.
+			\param id The ID of the instance.
 
 			\brief Constructs a new instance from the passed id.
 			*/
@@ -228,14 +228,14 @@ namespace NOU::NOU_THREAD
 			boolean              m_taskReady;
 
 			/**
-			\param The thread that is stored by this bundle.
+			\param thread The thread that is stored by this bundle.
 
 			\brief Constructs a new instance with the passed thread.
 			*/
 			ThreadDataBundle(ThreadWrapper &&thread);
 
 			/**
-			\param The instance to move from.
+			\param tdb The instance to move from.
 
 			\brief Moves the data from \p tdb to the instance that is being constructed by the constructor.
 			*/

@@ -262,7 +262,7 @@ namespace NOU::NOU_THREAD
 	typename Task<void, I, ARGS...>::ReturnType Task<void, I, ARGS...>::moveResult()
 	{}
 
-
+	///\cond
 
 	template<typename I, typename... ARGS>
 	Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I, 
