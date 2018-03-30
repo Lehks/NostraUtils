@@ -13,6 +13,9 @@
 # Build results
 bin/
 
+#CMake build directory
+Build/
+
 #Ignore Test Project
 /Test/*
 
