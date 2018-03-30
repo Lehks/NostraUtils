@@ -234,6 +234,13 @@ namespace NOU::NOU_THREAD
 
 		\brief Constructs a new instance with the passed task.
 		*/
+		explicit AsyncTaskResult(const Task &task);
+
+		/**
+		\param task The task to execute.
+
+		\brief Constructs a new instance with the passed task.
+		*/
 		explicit AsyncTaskResult(Task &&task);
 
 		/**
@@ -289,6 +296,7 @@ namespace NOU::NOU_THREAD
 		Task m_task;
 
 	public:
+		explicit AsyncTaskResult(const Task &task);
 		explicit AsyncTaskResult(Task &&task);
 		explicit AsyncTaskResult(I &&invocable, ARGS&&... args);
 
@@ -299,6 +307,14 @@ namespace NOU::NOU_THREAD
 	};
 	///\endcond
 
+
+	template<typename R, typename I, typename... ARGS>
+	AsyncTaskResult<R, I, ARGS...>::AsyncTaskResult(const Task &task) :
+		AbstractAsyncTaskResult(&m_task),
+		m_task(task)
+	{
+		push();
+	}
 
 	template<typename R, typename I, typename... ARGS>
 	AsyncTaskResult<R, I, ARGS...>::AsyncTaskResult(Task &&task) :
@@ -322,6 +338,14 @@ namespace NOU::NOU_THREAD
 	}
 
 
+
+	template<typename I, typename... ARGS>
+	AsyncTaskResult<void, I, ARGS...>::AsyncTaskResult(const Task &task) :
+		AbstractAsyncTaskResult(&m_task),
+		m_task(task)
+	{
+		push();
+	}
 
 	template<typename I, typename... ARGS>
 	AsyncTaskResult<void, I, ARGS...>::AsyncTaskResult(Task &&task) :

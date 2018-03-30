@@ -144,7 +144,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator * overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R multiplicate(R &&previous, R &&current);
+		NOU_FUNC R multiply(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -160,7 +160,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator * overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R multiplicateInverted(R &&previous, R &&current);
+		NOU_FUNC R multiplyInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -744,13 +744,13 @@ namespace NOU::NOU_THREAD
 		}
 
 		template<typename R>
-		NOU_FUNC R multiplicate(R &&previous, R &&current)
+		NOU_FUNC R multiply(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) * NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		NOU_FUNC R multiplicateInverted(R &&previous, R &&current)
+		NOU_FUNC R multiplyInverted(R &&previous, R &&current)
 		{
 			return mulAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
