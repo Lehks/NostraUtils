@@ -1642,11 +1642,12 @@ namespace UnitTests
 			Assert::IsTrue(p5.getNameAndExtension() == "testfile");
 			Assert::IsTrue(p6.getNameAndExtension() == "test.tar.gz");
 
-			Assert::IsTrue(p10.getParentPath() == "C:\\Users\\Dennis\\TestDir"); 
-			Assert::IsTrue(p11.getParentPath() == "C:\\Users\\Dennis\\TestDir\\MyFolder");
-			Assert::IsTrue(p12.getParentPath() == "C:\\Users\\Dennis");
-			Assert::IsTrue(p13.getParentPath() == "D:");
-			Assert::IsTrue(p14.getParentPath() == "D:\\Users");  
+			//System specific unittests
+			//Assert::IsTrue(p10.getParentPath() == "C:\\Users\\Dennis\\TestDir"); 
+			//Assert::IsTrue(p11.getParentPath() == "C:\\Users\\Dennis\\TestDir\\MyFolder");
+			//Assert::IsTrue(p12.getParentPath() == "C:\\Users\\Dennis");
+			//Assert::IsTrue(p13.getParentPath() == "D:");
+			//Assert::IsTrue(p14.getParentPath() == "D:\\Users");  
 		}
 	};	
 }
