@@ -6,6 +6,16 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\core\Meta.hpp"
 
+/** \file Pointer.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides smart pointer classes (which is currently only \link 
+         nostra::utils::mem_mngt::UniquePtr UniquePtr \endlink).
+
+\see nostra::utils::mem_mngt::UniquePtr
+*/
+
 namespace NOU::NOU_MEM_MNGT
 {
 	/**

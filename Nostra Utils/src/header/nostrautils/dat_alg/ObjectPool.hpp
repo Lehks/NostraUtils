@@ -8,7 +8,7 @@
 
 #include <cstddef>
 
-/** \file Vector.hpp
+/** \file ObjectPool.hpp
 \author  Lukas Reichmann
 \since   0.0.1
 \version 0.0.1

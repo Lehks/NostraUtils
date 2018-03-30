@@ -8,11 +8,14 @@
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 
-/** \file Vector.hpp
+/** \file StringView.hpp
 \author	 Lukas Reichmann
 \since   0.0.1
 \version 0.0.1
-\brief   This file provides a String implementation.
+\brief   This file provides the StringView which is an interface between \link nostra::utils::dat_alg::String 
+         String\endlink and C-Strings.
+
+\see nostra::utils::dat_alg::StringView
 */
 
 namespace NOU::NOU_DAT_ALG

@@ -6,6 +6,15 @@
 
 #include <condition_variable>
 
+/** \file CondtionVariable.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides a condition variable class.
+
+\see nostra::utils::thread::CondtionVariable
+*/
+
 namespace NOU::NOU_THREAD
 {
 	/**

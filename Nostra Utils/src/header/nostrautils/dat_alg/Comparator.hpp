@@ -4,6 +4,13 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Meta.hpp"
 
+/** \file Comparator.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides mechanics to compare objects without relying on operators.
+*/
+
 namespace NOU::NOU_DAT_ALG
 {
 	/**

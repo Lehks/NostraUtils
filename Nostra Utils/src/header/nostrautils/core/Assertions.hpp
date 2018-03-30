@@ -4,6 +4,13 @@
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 
+/** \file Assertions.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides functionality to use dynamic assertions.
+*/
+
 /**
 \param b The expression to check.
 
