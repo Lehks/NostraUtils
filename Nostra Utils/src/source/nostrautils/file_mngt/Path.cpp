@@ -123,21 +123,22 @@ namespace NOU::NOU_FILE_MNGT
 		if (path == cwd.getAbsolutePath())
 			return ".";
 
-		sizeType prevIndex = - 1;
+		sizeType prevIndex = 0;
 		sizeType nextIndex = path.find(PATH_SEPARATOR, prevIndex);
 
 		while (nextIndex != NOU_DAT_ALG::StringView8::NULL_INDEX)
 		{
+
 			if (cwd.getAbsolutePath().logicalSubstring(prevIndex + 1, nextIndex) != path.logicalSubstring(prevIndex + 1, nextIndex))
 			{
 				NOU_DAT_ALG::String8 str;
-				sizeType separatorCounter = 1;
+				sizeType separatorCounter = 0;
 				sizeType firstIndexOfDifference = prevIndex;
 
 				while (nextIndex != NOU_DAT_ALG::StringView8::NULL_INDEX)
 				{
 					prevIndex = nextIndex;
-					nextIndex = cwd.getAbsolutePath().find(PATH_SEPARATOR, prevIndex);
+					nextIndex = cwd.getAbsolutePath().find(PATH_SEPARATOR, prevIndex + 1);
 
 					separatorCounter++;
 				}
@@ -147,7 +148,7 @@ namespace NOU::NOU_FILE_MNGT
 					str.append("..").append(PATH_SEPARATOR);
 				}
 
-				str.append(path.logicalSubstring(firstIndexOfDifference, path.size()));
+				str.append(path.logicalSubstring(firstIndexOfDifference + 1, path.size()));
 
 				return str;
 			}
