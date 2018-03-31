@@ -1,13 +1,20 @@
 #ifndef NOU_CORE_ASSERTIONS_HPP
 #define	NOU_CORE_ASSERTIONS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+
+/** \file Assertions.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides functionality to use dynamic assertions.
+*/
 
 /**
 \param b The expression to check.
 
-\brief Checks wether \p b evaluates to <tt>true</tt>. If not, an ASSERT_ERROR will be set in the error
+\brief Checks whether \p b evaluates to <tt>true</tt>. If not, an ASSERT_ERROR will be set in the error
        handler.
 */
 #ifndef NOU_ASSERT

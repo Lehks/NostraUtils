@@ -1,18 +1,22 @@
 #ifndef NOU_DAT_ALG_STRING_VIEW_HPP
 #define	NOU_DAT_ALG_STRING_VIEW_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\dat_alg\Comparator.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/dat_alg/Comparator.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
 
-/** \file Vector.hpp
+/** \file StringView.hpp
 \author	 Lukas Reichmann
 \since   0.0.1
 \version 0.0.1
-\brief   This file provides a String implementation.
+\brief   This file provides the StringView which is an interface between \link nostra::utils::dat_alg::String 
+         String\endlink and C-Strings.
+
+\see nostra::utils::dat_alg::StringView
 */
 
 namespace NOU::NOU_DAT_ALG
@@ -29,7 +33,7 @@ namespace NOU::NOU_DAT_ALG
 	interface to work with either type.
 
 	This class is supposed to be very lightweight, so converting from a string literal to a string view is 
-	always possible without performance inpact.
+	always possible without performance impact.
 
 	Since a string view is truly read-only, the content of the represented string can not be changed, nor can 
 	a new string be assigned to an existing instance of this class.
@@ -46,9 +50,9 @@ namespace NOU::NOU_DAT_ALG
 	(since the buffer of the string is deallocated when the string is destructed).
 
 	\par Why are there the two attributes m_string and m_dataPtr?
-	Since a string view needs to be abled to work with both a string literal and a nostra::utils::data_alg::String, both of these
-	attributes are requiered for the string view to be "up to date" at any time (in the lifetime of the underlying
-	string). The attribute m_dataPtr is requiered because because nostra::utils::data_alg::String may reallocate its buffer to
+	Since a string view needs to be able to work with both a string literal and a nostra::utils::data_alg::String, both of these
+	attributes are required for the string view to be "up to date" at any time (in the lifetime of the underlying
+	string). The attribute m_dataPtr is required because nostra::utils::data_alg::String may reallocate its buffer to
 	store more characters, which invalidates the pointer to the now old buffer. A pointer to a pointer is always up to
 	date, since it points to the variable that points to the buffer (and the address of that variable never changes).
 	*/
@@ -72,7 +76,7 @@ namespace NOU::NOU_DAT_ALG
 		using StringReverseConstIterator = VectorReverseConstIterator<ConstCharType>;
 
 		/**
-		\brief The character that is used to seperate the decimal places from the remaining digits by stringToFloat32()
+		\brief The character that is used to separate the decimal places from the remaining digits by stringToFloat32()
 		and stringToFloat64() by default.
 		*/
 		static constexpr ConstCharType DECIMAL_PLACE_SEPARATOR = '.'; ///\todo Localize
@@ -118,7 +122,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\tparam OT                   The output type.
 		\param str                   The string to convert.
-		\param decimalPlaceSeparator The character that is used to seperate the decimal places.
+		\param decimalPlaceSeparator The character that is used to separate the decimal places.
 		\return                      The converted number.
 	
 		\brief Converts a string into any floating point type number.
@@ -158,7 +162,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief A pointer to the string that is represented by this string view.
 		\note
-		This is only used if the instance was instanciated using StringView(ConstCharType*).
+		This is only used if the instance was instantiated using StringView(ConstCharType*).
 		*/
 		ConstCharType  *m_string;
 
@@ -186,7 +190,7 @@ namespace NOU::NOU_DAT_ALG
 	public:
 		/**
 		\param str0 The first string.
-		\param str1 The seccond string.
+		\param str1 The second string.
 		\return     A result according to alphabetical order.
 
 		\brief Compares the two passed strings in alphabetical order. The single characters are compared using
@@ -260,7 +264,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param str                   The string to convert.
-		\param decimalPlaceSeparator The character that is used to seperate the decimal places.
+		\param decimalPlaceSeparator The character that is used to separate the decimal places.
 		\return                      The number that is represented by the passed string.
 
 		\brief Converts a string into a nou::float32. If the method fails, the error register will be set accordingly
@@ -272,7 +276,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param str                   The string to convert.
-		\param decimalPlaceSeparator The character that is used to seperate the decimal places.
+		\param decimalPlaceSeparator The character that is used to separate the decimal places.
 		\return                      The number that is represented by the passed string.
 
 		\brief Converts a string into a nou::float64. If the method fails, the error register will be set accordingly
@@ -298,6 +302,7 @@ namespace NOU::NOU_DAT_ALG
 		///\todo check if correct constructors are getting called.
 		constexpr StringView(const StringView &other); 
 
+	//  no need to exist (and it breaks the constexpr of the class)
 	//	virtual ~StringView() = default;
 
 		/**
@@ -307,7 +312,7 @@ namespace NOU::NOU_DAT_ALG
 		if the substring was not found. This value is always either
 		NULL_INDEX, or \>= \p startIndex.
 
-		\brief Returns the index of the first occurence of \p str in the string represented by this string view that is
+		\brief Returns the index of the first occurrence of \p str in the string represented by this string view that is
 		at or after the index \p startIndex.
 		*/
 		constexpr sizeType find(const StringView &str, sizeType startIndex = 0) const;
@@ -319,7 +324,7 @@ namespace NOU::NOU_DAT_ALG
 		if the character was not found. This value is always either
 		NULL_INDEX, or \>= \p startIndex.
 
-		\brief Returns the index of the first occurence of \p c in the string represented by this string view that is at
+		\brief Returns the index of the first occurrence of \p c in the string represented by this string view that is at
 		or after the index \p startIndex.
 		*/
 		constexpr sizeType find(CharType c, sizeType startIndex = 0) const;
@@ -417,7 +422,7 @@ namespace NOU::NOU_DAT_ALG
 		Returns the string in its raw form which is a pointer to the string itself. If the template type is \c char,
 		this will return a simple C-string.
 
-		This method exists mainly for compatablity with functions or methods that take in pointers to a string.
+		This method exists mainly for compatibility with functions or methods that take in pointers to a string.
 
 		\note
 		If the source of the string is nostra::utils::data_alg::String, the lifetime of the returned string
@@ -458,7 +463,7 @@ namespace NOU::NOU_DAT_ALG
 		The returned string view will have the same lifetime as its origin string view.
 
 		\warning
-		A string view that is returned by this method should only be used by methos and functions that use the method
+		A string view that is returned by this method should only be used by methods and functions that use the method
 		size() to determine the end of a string and not by those relying on a null terminator (this is due to a string
 		view being read-only by design and therefore the inability to set a new null terminator).
 		*/
@@ -508,8 +513,8 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Copies the data from the other StringView to this one.
 		*/
-		///\todo Check if corret operator is getting called
-		constexpr virtual StringView& operator = (const StringView &other);
+		///\todo Check if correct operator is getting called
+		virtual StringView& operator = (const StringView &other);
 
 		/**
 		\param str The string to compare to.
@@ -569,17 +574,17 @@ namespace NOU::NOU_DAT_ALG
 	};
 
 	/**
-	\brief An aliasname for a StringView that uses a nostra::utils::char8;
+	\brief An alias name for a StringView that uses a nostra::utils::char8;
 	*/
 	using StringView8 = StringView<char8>;
 
 	/**
-	\brief An aliasname for a StringView that uses a nostra::utils::char16;
+	\brief An alias name for a StringView that uses a nostra::utils::char16;
 	*/
 	using StringView16 = StringView<char16>;
 
 	/**
-	\brief An aliasname for a StringView that uses a nostra::utils::char32;
+	\brief An alias name for a StringView that uses a nostra::utils::char32;
 	*/
 	using StringView32 = StringView<char32>;
 
@@ -624,7 +629,7 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename OT>
-	static OT StringView<CHAR_TYPE>::genericStringToUint(const StringView &str)
+	OT StringView<CHAR_TYPE>::genericStringToUint(const StringView &str)
 	{
 		OT ret = 0;
 
@@ -642,7 +647,7 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename OT>
-	static OT StringView<CHAR_TYPE>::genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator)
+	OT StringView<CHAR_TYPE>::genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator)
 	{
 		sizeType preDecPointNumbers = 0;
 		boolean isNegative = false;
@@ -790,7 +795,7 @@ namespace NOU::NOU_DAT_ALG
 				return charCompareResult;
 		}
 
-		//one string starts with the other one, now the order depends on their lenght
+		//one string starts with the other one, now the order depends on their length
 		return genericComparator<sizeType>(str0.size(), str1.size());
 	}
 
@@ -1060,7 +1065,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr StringView<CHAR_TYPE>& StringView<CHAR_TYPE>::operator = (const StringView<CHAR_TYPE> &other)
+	StringView<CHAR_TYPE>& StringView<CHAR_TYPE>::operator = (const StringView<CHAR_TYPE> &other)
 	{
 		m_string = other.m_string;
 		m_dataPtr = m_string == nullptr ? other.m_dataPtr : &m_string;

@@ -1,7 +1,9 @@
 #include "nostrautils\core\Logging.hpp"
 #include <iostream>
+#include <string>
+#include <type_traits>
 
-int main()
+class Person
 {
 	NOU::NOU_CORE::Logger log;
 
