@@ -257,7 +257,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		//calculate address of the chunk
 		return reinterpret_cast<Chunk*>(reinterpret_cast<byte*>(const_cast<Type*>(&object))
-			- NOU_OFFSET_OF(Chunk, m_data);
+			- NOU_OFFSET_OF(Chunk, m_data));
 	}
 
 	template<typename T>

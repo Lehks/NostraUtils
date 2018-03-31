@@ -6,6 +6,7 @@
 #include "nostrautils\mem_mngt\PoolAllocator.hpp"
 #include "nostrautils\core\ErrorHandler.hpp"
 #include "nostrautils\mem_mngt\GeneralPurposeAllocator.hpp"
+#include "nostrautils/thread/Threads.hpp"
 
 #include <iostream>
 #include <string>
@@ -42,34 +43,53 @@ public:
 	}
 };
 
+long func(int i)
+{
+	std::cout << "Func! " << i << " "  << std::this_thread::get_id() << std::endl;
+	return i + 5;
+}
+
+long func2(int i)
+{
+	std::cout << "Func2! " << i << " " << std::this_thread::get_id() << std::endl;
+	return i + 6;
+}
+
+class A
+{
+
+};
+
+int funcA(const A)
+{
+	return 1;
+}
+
 int main()
 {
-	//NOU::NOU_CORE::ErrorHandler::setCallback(callback);
+	using namespace NOU::NOU_THREAD;
+	
+	const A a;
 
-	using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<Person>;
+	auto task = makeTask(&funcA, a);
 
-	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
-	NOU::NOU_DAT_ALG::Vector<HandleType> test;
+	std::cout << "Main: " << std::this_thread::get_id() << std::endl;
 
-	test.push(gpa.allocateObjects<Person>(1, 40, "Mike", "Braun"));
-	test.at(0).getRaw()->print();
 
-	gpa.deallocateObjects(test.at(0));
-	test.pop();
-	gpa.deallocateObjects(test.at(0));
+	TaskQueue<long, decltype(&func), TaskQueueAccumulators::FunctionPtr<long>, int> tq(&TaskQueueAccumulators::forward<long>);
 
-	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
-	test.push(gpa.allocateObjects<Person>(1, 40, "Petra", "Braun"));
-	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
-	test.push(gpa.allocateObjects<Person>(1, 22, "Laura", "Meier"));
-	for (int i = 0; i < test.size(); i++)
-	{
-		test.at(i).getRaw()->print();
-	}
-	for (int i = 0; i < test.size(); i++)
-	{
-		gpa.deallocateObjects(test.at(i));
-	}
+	tq.pushTask(makeTask(&func, 1));
+	tq.pushTask(makeTask(&func, 2));
+	tq.pushTask(makeTask(&func, 3));
+	tq.pushTask(makeTask(&func2, 4));
+	tq.pushTask(makeTask(&func2, 5));
+	tq.pushTask(makeTask(&func2, 6));
 
-	system("pause");
+	tq.close();
+	long res = tq.getResult();
+
+	using namespace std::chrono_literals;
+	std::this_thread::sleep_for(1s);
+
+	std::cin.get();
 }

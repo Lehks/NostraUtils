@@ -18,8 +18,16 @@
 \brief A file that contains utility functions that are used all over NOU.
 */
 
+/**
+\param Type   The type that holds the member \p member.
+\param member The member to get the offset of.
+
+\return The offset of \p Member in the class/struct Type.
+
+\brief A macro that returns the offset of the passed member.
+*/
 #ifndef NOU_OFFSET_OF
-#define NOU_OFFSET_OF(Type, Member) NOU::sizeType(&((Type*)(nullptr))->Member))
+#define NOU_OFFSET_OF(Type, member) NOU::sizeType(&((Type*)nullptr)->member)
 #endif
 
 namespace NOU::NOU_CORE
