@@ -141,7 +141,7 @@ namespace NOU::NOU_MEM_MNGT
 			\brief					Allocates a new Object with all passed elements.
 			*/
 			template <typename T, typename... ARGS>
-			T* allocateObject(sizeType amountofObjects = 1, ARGS&&... args);
+			T* allocateObject(sizeType amountOfObjects = 1, ARGS&&... args);
 		};
 	}
 
@@ -419,12 +419,12 @@ namespace NOU::NOU_MEM_MNGT
 
 	template <typename T, typename... ARGS>
 	T* internal::GeneralPurposeAllocatorFreeChunk::allocateObject
-	(sizeType amountofObjects, ARGS&&... args)
+	(sizeType amountOfObjects, ARGS&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 
 		byte* allocationLocation = reinterpret_cast<byte*>(nextMultiple(alignof(T), ((sizeType)m_addr) + 1));
-		sizeType amountOfBytes = amountofObjects * sizeof(T);
+		sizeType amountOfBytes = amountOfObjects * sizeof(T);
 		byte* newAddr = allocationLocation + amountOfBytes;
 
 		if (newAddr <= m_addr + m_size)
@@ -436,7 +436,7 @@ namespace NOU::NOU_MEM_MNGT
 			m_size -= newAddr - m_addr;
 			m_addr = newAddr;
 
-			for (sizeType i = 0; i < amountofObjects; i++)
+			for (sizeType i = 0; i < amountOfObjects; i++)
 			{
 				T* object = addressof(returnPointer[i]);
 				new(object) T(NOU_CORE::forward<ARGS>(args)...);
