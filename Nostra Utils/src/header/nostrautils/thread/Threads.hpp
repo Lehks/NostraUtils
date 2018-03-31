@@ -6,7 +6,6 @@
 #include "nostrautils\thread\ThreadWrapper.hpp"
 #include "nostrautils\thread\Task.hpp"
 
-#include "nostrautils\thread\Protection.hpp"
 #include "nostrautils\thread\ThreadManager.hpp"
 
 #include "nostrautils\thread\TaskQueue.hpp"

@@ -408,7 +408,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	typename const FastQueue<T>::Type& FastQueue<T>::at(sizeType index) const
+	const typename FastQueue<T>::Type& FastQueue<T>::at(sizeType index) const
 	{
 		if (index >= size())
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
