@@ -1608,7 +1608,7 @@ namespace UnitTests
 				NOU::int32 x;
 				NOU::int32 y;
 				NOU::int32 z;
-			}
+			};
 
 			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, x) == offsetof(TestStruct, x));
 			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, y) == offsetof(TestStruct, y));
