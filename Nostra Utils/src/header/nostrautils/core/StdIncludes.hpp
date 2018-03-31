@@ -417,8 +417,12 @@ and replace * with the compiler name.
 #ifndef NOU_COMPILER
 
 #    ifdef _MSC_VER
+	 //Clang also defines _MSC_VER on a Windows environment. The definition of that macro has been disabled in the
+	 //CMake file.
 #    define NOU_COMPILER NOU_COMPILER_VISUAL_CPP
-#    elif defined __GNUC__
+#    elif defined __GNUC__ 
+	 //Clang also defines __GNUC__ on a Unix/Linux environment. The definition of that macro has been disabled in the
+	 //CMake file.
 #    define NOU_COMPILER NOU_COMPILER_GCC
 #    elif defined __clang__
 #    define NOU_COMPILER NOU_COMPILER_CLANG
