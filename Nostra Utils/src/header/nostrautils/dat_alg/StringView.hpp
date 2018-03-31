@@ -808,7 +808,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	constexpr boolean StringView<CHAR_TYPE>::isCharacter(ConstCharType c)
 	{
-		return c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z';
+		return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
 	}
 
 	template<typename CHAR_TYPE>

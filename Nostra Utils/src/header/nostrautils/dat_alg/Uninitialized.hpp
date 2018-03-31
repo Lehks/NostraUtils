@@ -38,7 +38,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The data that stores the object.
 		*/
-		byte    m_dataChunk[sizeof(T)] alignas (T);
+		alignas (T) byte m_dataChunk[sizeof(T)];
 
 		/**
 		\brief True, if the object has been initialized, false if not.
@@ -108,11 +108,10 @@ namespace NOU::NOU_DAT_ALG
 		\code
 		Uninitialized<String> str;
 
-		/*
-		 * void someFunction(String *str) is an exemplary function that writes the result to the string that
-		 * was passed to it (it constructs a new string and does not work with any potentially already 
-		 * pre-constructed that are passed to it).
-		 *\/
+		//void someFunction(String *str) is an exemplary function that writes the result to the string that
+		//was passed to it (it constructs a new string and does not work with any potentially already 
+		//pre-constructed that are passed to it).
+
 		someFunction(str.data());
 		str.makeValid();
 		\endcode

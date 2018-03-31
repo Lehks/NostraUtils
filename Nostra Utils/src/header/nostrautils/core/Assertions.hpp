@@ -23,7 +23,7 @@
 				 NOU_FUNC_NAME "; Line: " NOU_LINE_STRING "; File: " __FILE__, NOU_FUNC_NAME, __LINE__, \
 				__FILE__)
 #    else
-#        define NOU_ASSERT
+#        define NOU_ASSERT(b)
 #    endif
 #endif
 
