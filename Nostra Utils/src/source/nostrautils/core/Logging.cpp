@@ -4,8 +4,18 @@ namespace NOU::NOU_CORE
 {
 	Event::Event(EventLevelCodes eventLevel, StringType eventMsg) :
 		m_eventLevel(eventLevel),
-		m_eventMsg(eventMsg)
+		m_eventMsg(eventMsg),
+		m_timestamp(getTime())
 	{}
+
+	Event::StringType Event::getTime()
+	{
+		time_t now = time(0);
+
+		StringType localTime = ctime(&now);
+
+		return localTime;
+	}
 
 	const Event::StringType Event::getEventLevel() const
 	{
@@ -17,13 +27,9 @@ namespace NOU::NOU_CORE
 		return m_eventMsg;
 	}
 
-	ILogger::StringType ILogger::getTime()
+	const Event::StringType& Event::getTimestamp() const
 	{
-		time_t now = time(0);
-
-		StringType localTime = ctime(&now);
-
-		return localTime;
+		return m_timestamp;
 	}
 
 	Event::StringType enumToString(EventLevelCodes eventLevel)
@@ -62,10 +68,11 @@ namespace NOU::NOU_CORE
 	}
 
 	NOU::NOU_THREAD::TaskQueue<void, decltype(&Logger::callLoggingTarget),
-		NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event>
+		NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, const Event>
 		Logger::taskQueue;
 
-	void Logger::logAll(Event& events)
+
+	void Logger::logAll(const Event& events)
 	{
 		for (sizeType i = 0; i < s_logger.size(); i++)
 		{
@@ -73,7 +80,7 @@ namespace NOU::NOU_CORE
 		}
 	}
 
-	void Logger::callLoggingTarget(ILogger *logger, Event event)
+	void Logger::callLoggingTarget(ILogger *logger, const Event event)
 	{
 		logger->write(event);
 	}

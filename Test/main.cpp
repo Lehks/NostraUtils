@@ -13,7 +13,11 @@ int main()
 	log.pushLogger(clog);
 	
 	log.write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid value in fn()");
+
+	using namespace std::chrono_literals;
+	std::this_thread::sleep_for(1s);
 	log.write(NOU::NOU_CORE::EventLevelCodes::FATAL, "Access violation in 0xDCDCDCDCDC");
+
 
 	std::cin.get();
 }

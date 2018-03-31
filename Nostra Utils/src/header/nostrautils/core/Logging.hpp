@@ -78,6 +78,16 @@ namespace NOU::NOU_CORE
 		*/
 		StringType m_eventMsg;
 
+		/**
+		\brief The attribute, which stores the time the event happened / The event object was created.
+		*/
+		StringType m_timestamp;
+
+		/**
+		\brief Returns the current local time.
+		*/
+		static StringType getTime();
+
 	public:
 
 		/**
@@ -102,6 +112,13 @@ namespace NOU::NOU_CORE
 		\brief	Returns the event message of the event object.
 		*/
 		const StringType& getEventMsg() const;
+
+		/**
+		\return	A reference to the timestamp.
+
+		\brief	Returns the timestamp when the event happened.
+		*/
+		const StringType& getTimestamp() const;
 	};
 
 	///\cond
@@ -130,11 +147,6 @@ namespace NOU::NOU_CORE
 		*/
 		using StringType = Event::StringType;
 
-		/**
-		\brief Returns the current local time.
-		*/
-		StringType getTime();
-
 	private:
 		/**
 		\param event	A const referenced object of the event class.
@@ -161,11 +173,6 @@ namespace NOU::NOU_CORE
 	private:
 
 		/**
-		\brief The timestamp when a logging entry was created.
-		*/
-		StringType m_date;
-
-		/**
 		\param event	A const reference to an event object.
 
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry 
@@ -173,8 +180,7 @@ namespace NOU::NOU_CORE
 		*/
 		void write(const Event& event) override
 		{
-			m_date = getTime();
-			std::cout << m_date.rawStr() << event.getEventLevel().rawStr() << ": "
+			std::cout << event.getTimestamp().rawStr() << event.getEventLevel().rawStr() << ": "
 				<< event.getEventMsg().rawStr() << "\n" << std::endl;
 		}
 	};
@@ -185,11 +191,6 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS FileLogger : public ILogger
 	{
 	private:
-
-		/**
-		\brief The timestamp when a logging entry was created.
-		*/
-		StringType m_date;
 
 		/**
 		\param event	A const reference to an event object.
@@ -227,24 +228,28 @@ namespace NOU::NOU_CORE
 		*/
 		static NOU::NOU_DAT_ALG::Vector<ILogger*> s_logger;
 
-
-
 		/**
 		\param event	A const reference to an event object.
 
 		\brief			Calls the write function for every objects in s_logger.
 		*/
-		static void logAll(Event& events);
+		static void logAll(const Event& events);
 
-		static void callLoggingTarget(ILogger *logger, Event event);
+		/**
+		\param logger	The logger to write the event to.
+		\param event	The event to write.
+
+		\brief			Calls <tt>logger->write(event)</tt>. This is required for the task queue.
+		*/
+		static void callLoggingTarget(ILogger *logger, const Event event);
 
 		static NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
 			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
-			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event>
+			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, const Event>
 			taskQueue;
 
 	public:
-		
+
 		/**
 		\param log	A reference to an ILogger object.
 
