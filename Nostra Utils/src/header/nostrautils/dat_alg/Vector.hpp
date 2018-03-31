@@ -5,6 +5,7 @@
 #include "nostrautils/mem_mngt/AllocationCallback.hpp"
 #include "nostrautils/core/Utils.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
 
 #include <new>
 

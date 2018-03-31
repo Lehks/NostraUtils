@@ -7,6 +7,7 @@
 #include "nostrautils/core/Utils.hpp"
 #include "nostrautils/dat_alg/Comparator.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
 
 /** \file StringView.hpp
 \author	 Lukas Reichmann
@@ -513,7 +514,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Copies the data from the other StringView to this one.
 		*/
 		///\todo Check if correct operator is getting called
-		constexpr virtual StringView& operator = (const StringView &other);
+		virtual StringView& operator = (const StringView &other);
 
 		/**
 		\param str The string to compare to.
@@ -628,7 +629,7 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename OT>
-	static OT StringView<CHAR_TYPE>::genericStringToUint(const StringView &str)
+	OT StringView<CHAR_TYPE>::genericStringToUint(const StringView &str)
 	{
 		OT ret = 0;
 
@@ -646,7 +647,7 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename OT>
-	static OT StringView<CHAR_TYPE>::genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator)
+	OT StringView<CHAR_TYPE>::genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator)
 	{
 		sizeType preDecPointNumbers = 0;
 		boolean isNegative = false;
@@ -1064,7 +1065,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr StringView<CHAR_TYPE>& StringView<CHAR_TYPE>::operator = (const StringView<CHAR_TYPE> &other)
+	StringView<CHAR_TYPE>& StringView<CHAR_TYPE>::operator = (const StringView<CHAR_TYPE> &other)
 	{
 		m_string = other.m_string;
 		m_dataPtr = m_string == nullptr ? other.m_dataPtr : &m_string;

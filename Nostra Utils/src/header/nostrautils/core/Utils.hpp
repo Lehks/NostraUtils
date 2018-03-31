@@ -5,6 +5,8 @@
 #include "nostrautils/core/Meta.hpp"
 #include "nostrautils/dat_alg/Comparator.hpp"
 
+#include <utility>
+
 /**
 \file core/Utils.hpp
 
@@ -15,6 +17,10 @@
 
 \brief A file that contains utility functions that are used all over NOU.
 */
+
+#ifndef NOU_OFFSET_OF
+#define NOU_OFFSET_OF(Type, Member) NOU::sizeType(&((Type*)(nullptr))->Member))
+#endif
 
 namespace NOU::NOU_CORE
 {

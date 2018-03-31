@@ -1,6 +1,6 @@
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\FastQueue.hpp"
-#include "nostrautils\thread\ThreadManager.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/FastQueue.hpp"
+#include "nostrautils/thread/ThreadManager.hpp"
 
 namespace NOU::NOU_CORE
 {

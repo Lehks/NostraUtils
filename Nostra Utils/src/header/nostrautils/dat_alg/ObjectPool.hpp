@@ -6,8 +6,6 @@
 #include "nostrautils/mem_mngt/AllocationCallback.hpp"
 #include "nostrautils/core/Assertions.hpp"
 
-#include <cstddef>
-
 /** \file ObjectPool.hpp
 \author  Lukas Reichmann
 \since   0.0.1
@@ -259,7 +257,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		//calculate address of the chunk
 		return reinterpret_cast<Chunk*>(reinterpret_cast<byte*>(const_cast<Type*>(&object))
-			- offsetof(Chunk, m_data));
+			- NOU_OFFSET_OF(Chunk, m_data);
 	}
 
 	template<typename T>

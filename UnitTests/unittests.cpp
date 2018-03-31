@@ -4,29 +4,29 @@
 
 #define NOU_DEBUG
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\Version.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\dat_alg\Comparator.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\FastQueue.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Uninitialized.hpp"
-#include "nostrautils\mem_mngt\PoolAllocator.hpp"
-#include "nostrautils\mem_mngt\GeneralPurposeAllocator.hpp"
-#include "nostrautils\dat_alg\BinaryHeap.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\dat_alg\Hashing.hpp"
-#include "nostrautils\dat_alg\BinarySearch.hpp"
-#include "nostrautils\dat_alg\ObjectPool.hpp"
-#include "nostrautils\dat_alg\HashMap.hpp"
-#include "nostrautils\thread\Threads.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/Version.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/dat_alg/Comparator.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/FastQueue.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Uninitialized.hpp"
+#include "nostrautils/mem_mngt/PoolAllocator.hpp"
+#include "nostrautils/mem_mngt/GeneralPurposeAllocator.hpp"
+#include "nostrautils/dat_alg/BinaryHeap.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/Hashing.hpp"
+#include "nostrautils/dat_alg/BinarySearch.hpp"
+#include "nostrautils/dat_alg/ObjectPool.hpp"
+#include "nostrautils/dat_alg/HashMap.hpp"
+#include "nostrautils/thread/Threads.hpp"
 
 #include "DebugClass.hpp"
 
@@ -716,7 +716,7 @@ namespace UnitTests
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
 				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345")>::value);
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!§$%&")>::value);
+				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!ï¿½$%&")>::value);
 
 			constexpr NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
@@ -1599,6 +1599,20 @@ namespace UnitTests
 
 			Assert::IsTrue(manager.maximumAvailableThreads() == 
 				NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
+		}
+
+		TEST_METHOD(OffsetOf)
+		{
+			struct TestStruct
+			{
+				NOU::int32 x;
+				NOU::int32 y;
+				NOU::int32 z;
+			}
+
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, x) == offsetof(TestStruct, x));
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, y) == offsetof(TestStruct, y));
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, z) == offsetof(TestStruct, z));
 		}
 	};
 }

@@ -1,4 +1,4 @@
-#include "nostrautils\thread\ConditionVariable.hpp"
+#include "nostrautils/thread/ConditionVariable.hpp"
 
 namespace NOU::NOU_THREAD
 {

@@ -1,4 +1,4 @@
-#include "nostrautils\thread\Mutex.hpp"
+#include "nostrautils/thread/Mutex.hpp"
 
 namespace NOU::NOU_THREAD
 {
