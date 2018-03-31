@@ -1,4 +1,4 @@
-#include "nostrautils\core\Logging.hpp"
+#include "nostrautils/core/Logging.hpp"
 
 namespace NOU::NOU_CORE
 {
@@ -52,7 +52,7 @@ namespace NOU::NOU_CORE
 			return "Unknown";
 		}
 	}
-
+	
 	NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> Logger::s_allocator;
 	NOU::NOU_DAT_ALG::Vector<ILogger*> Logger::s_logger(1, s_allocator);
 
@@ -61,12 +61,21 @@ namespace NOU::NOU_CORE
 		s_logger.pushBack(&log);
 	}
 
-	void Logger::logAll(const Event& event)
+	NOU::NOU_THREAD::TaskQueue<void, decltype(&Logger::callLoggingTarget),
+		NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event>
+		Logger::taskQueue;
+
+	void Logger::logAll(Event& events)
 	{
 		for (sizeType i = 0; i < s_logger.size(); i++)
 		{
-			s_logger[i]->write(event);
+			taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, s_logger[i], events));
 		}
+	}
+
+	void Logger::callLoggingTarget(ILogger *logger, Event event)
+	{
+		logger->write(event);
 	}
 
 	void Logger::write(EventLevelCodes level, const StringType &msg)

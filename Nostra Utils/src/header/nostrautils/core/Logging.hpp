@@ -4,10 +4,11 @@
 #define _CRT_SECURE_NO_WARNINGS //Only because compiler warnings by the chrono header because a warning
 								//about ctime.
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/thread/Threads.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -89,16 +90,16 @@ namespace NOU::NOU_CORE
 		Event(EventLevelCodes eventLevel, StringType eventMsg);
 
 		/**
-		\return Returns the event level.
+		\return The event level.
 
-		\brief Returns the event level of the event object.
+		\brief	Returns the event level of the event object.
 		*/
 		const StringType getEventLevel() const;
 
 		/**
-		\return Returns a reference to the event message.
+		\return A reference to the event message.
 
-		\brief Returns the event message of the event object.
+		\brief	Returns the event message of the event object.
 		*/
 		const StringType& getEventMsg() const;
 	};
@@ -120,7 +121,7 @@ namespace NOU::NOU_CORE
 	public:
 
 		/**
-		\brief The deconstructor of the ILogger interface. It is defined as default.
+		\brief The destructor of the ILogger interface. It is defined as default.
 		*/
 		virtual ~ILogger() = default;
 
@@ -136,19 +137,19 @@ namespace NOU::NOU_CORE
 
 	private:
 		/**
-		\param event A const referenced object of the event class.
+		\param event	A const referenced object of the event class.
 		
-		\brief A pure virtual class whose behavior will be overridden in derived classes.
+		\brief			A pure virtual class whose behavior will be overridden in derived classes.
 		*/
 		virtual void write(const Event& event) = 0;
 	};
 
 	/**
-	\return Returns the enum as a string.
+	\param eventLevel	A enum of the event level.
+	
+	\return				Returns the enum as a string.
 
-	\param eventLevel A enum of the event level.
-
-	\brief Returns the enum value as a string value.
+	\brief				Returns the enum value as a string value.
 	*/
 	NOU_FUNC Event::StringType enumToString(EventLevelCodes eventLevel);
 
@@ -165,10 +166,10 @@ namespace NOU::NOU_CORE
 		StringType m_date;
 
 		/**
-		\param event A const reference to an event object.
+		\param event	A const reference to an event object.
 
-		\brief A overridden function of the write() in the ILogger interface. Writes the log entry to the
-			   console.
+		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry 
+						to the console.
 		*/
 		void write(const Event& event) override
 		{
@@ -177,6 +178,31 @@ namespace NOU::NOU_CORE
 				<< event.getEventMsg().rawStr() << "\n" << std::endl;
 		}
 	};
+
+	/**
+	\brief A derived class of the ILogger interface. Used for writing logs to a file.
+	*/
+	class NOU_CLASS FileLogger : public ILogger
+	{
+	private:
+
+		/**
+		\brief The timestamp when a logging entry was created.
+		*/
+		StringType m_date;
+
+		/**
+		\param event	A const reference to an event object.
+
+		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
+						to the console.
+		*/
+		void write(const Event& event) override
+		{
+			///TODO implementation pending for file system.
+		}
+	};
+
 	/**
 	\brief A class for storing the different logger and writing logs to all of them.
 	*/
@@ -201,29 +227,37 @@ namespace NOU::NOU_CORE
 		*/
 		static NOU::NOU_DAT_ALG::Vector<ILogger*> s_logger;
 
-		/**
-		\param event A const reference to an event object.
 
-		\brief Calls the write function for every objects in s_logger.
+
+		/**
+		\param event	A const reference to an event object.
+
+		\brief			Calls the write function for every objects in s_logger.
 		*/
-		static void logAll(const Event& event);
+		static void logAll(Event& events);
+
+		static void callLoggingTarget(ILogger *logger, Event event);
+
+		static NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
+			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
+			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event>
+			taskQueue;
 
 	public:
 		
 		/**
-		\param log A reference to an ILogger object.
+		\param log	A reference to an ILogger object.
 
-		\brief Pushes an logger to s_logger.
+		\brief		Pushes an logger to s_logger.
 		*/
 		static void pushLogger(ILogger &log);
 
 		/**
-		\param level A enum value, which represents the level of the event.
+		\param level	A enum value, which represents the level of the event.
+		\param msg		A const reference to the message, which specifies the event.
 
-		\param msg A const reference to the message, which specifies the event.
-
-		\brief Creates a new event object from the level and msg parameters and calls the logAll() with this
-			   event object.
+		\brief			Creates a new event object from the level and msg parameters and calls the logAll() 
+						with this event object.
 		*/
 		static void write(EventLevelCodes level, const StringType &msg);
 	};
