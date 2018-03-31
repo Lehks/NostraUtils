@@ -1,8 +1,8 @@
 #ifndef	NOU_DAT_ALG_COMPARTOR_HPP
 #define	NOU_DAT_ALG_COMPARTOR_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
 
 /** \file Comparator.hpp
 \author	 Lukas Reichmann

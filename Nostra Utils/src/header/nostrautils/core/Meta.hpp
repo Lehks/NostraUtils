@@ -1,7 +1,7 @@
 #ifndef NOU_CORE_META_HPP
 #define NOU_CORE_META_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
 
 #include <type_traits>
 

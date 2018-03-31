@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_BINARYHEAP_HPP
 #define NOU_DAT_ALG_BINARYHEAP_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 /** \file BinaryHeap.hpp
 \author  Dennis Franz

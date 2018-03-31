@@ -1,9 +1,9 @@
 #ifndef NOU_DAT_ALG_UTILS_HPP
 #define NOU_DAT_ALG_UTILS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/Meta.hpp"
 
 /** \file dat_alg/Utils.hpp
 \author  Dennis Franz

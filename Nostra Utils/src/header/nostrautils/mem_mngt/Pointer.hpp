@@ -1,10 +1,10 @@
 #ifndef NOU_MEMORY_MNGT_POINTER_HPP
 #define NOU_MEMORY_MNGT_POINTER_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\Utils.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/Utils.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/Meta.hpp"
 
 /** \file Pointer.hpp
 \author	 Lukas Reichmann

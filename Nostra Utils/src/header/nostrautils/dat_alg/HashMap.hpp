@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_HASHMAP_HPP
 #define	NOU_DAT_ALG_HASHMAP_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Hashing.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Hashing.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 /** \file Vector.hpp
 \author  Leslie Marxen	

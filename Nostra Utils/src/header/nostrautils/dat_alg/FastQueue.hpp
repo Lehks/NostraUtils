@@ -1,12 +1,12 @@
 #ifndef NOU_DAT_ALG_FAST_QUEUE_HPP
 #define NOU_DAT_ALG_FAST_QUEUE_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 #include <new>
 /**

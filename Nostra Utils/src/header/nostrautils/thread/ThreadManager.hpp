@@ -1,14 +1,14 @@
 #ifndef	NOU_THREAD_THREAD_MANAGER_HPP
 #define	NOU_THREAD_THREAD_MANAGER_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\thread\ThreadWrapper.hpp"
-#include "nostrautils\thread\Task.hpp"
-#include "nostrautils\thread\Mutex.hpp"
-#include "nostrautils\thread\ConditionVariable.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/thread/ThreadWrapper.hpp"
+#include "nostrautils/thread/Task.hpp"
+#include "nostrautils/thread/Mutex.hpp"
+#include "nostrautils/thread/ConditionVariable.hpp"
 
 #include <iostream>
 

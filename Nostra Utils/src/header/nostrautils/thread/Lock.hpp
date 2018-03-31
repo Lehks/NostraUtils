@@ -1,8 +1,8 @@
 #ifndef NOU_THREAD_LOCK_HPP
 #define NOU_THREAD_LOCK_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\thread\Mutex.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/thread/Mutex.hpp"
 
 #include <mutex>
 

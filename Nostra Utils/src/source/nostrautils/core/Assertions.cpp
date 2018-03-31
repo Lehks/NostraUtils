@@ -1,5 +1,5 @@
-#include "nostrautils\core\Assertions.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/Assertions.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 #include <iostream>
 

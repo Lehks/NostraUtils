@@ -1,9 +1,9 @@
 #ifndef	NOU_DAT_ALG_UNINITIALIZED_HPP
 #define	NOU_DAT_ALG_UNINITIALIZED_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 /** 
 \file    dat_alg\Uninitialized.hpp

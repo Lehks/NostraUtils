@@ -1,10 +1,10 @@
 #ifndef NOU_DAT_ALG_VECTOR_HPP
 #define	NOU_DAT_ALG_VECTOR_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 #include <new>
 

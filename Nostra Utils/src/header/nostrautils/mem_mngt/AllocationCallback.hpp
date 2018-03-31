@@ -1,8 +1,8 @@
 #ifndef	NOU_MEM_MNGT_ALLOCATION_CALLBACK_HPP
 #define	NOU_MEM_MNGT_ALLOCATION_CALLBACK_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\Utils.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/Utils.hpp"
 
 #include <iostream>
 

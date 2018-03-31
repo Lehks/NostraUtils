@@ -1,9 +1,9 @@
 #ifndef NOU_CORE_ERROR_HANDLER_HPP
 #define NOU_CORE_ERROR_HANDLER_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
+#include "nostrautils/core/Meta.hpp"
 
 /**
 \file core/ErrorHandler.hpp

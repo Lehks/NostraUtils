@@ -1,9 +1,9 @@
 #ifndef NOU_CORE_UTILS_HPP
 #define NOU_CORE_UTILS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\dat_alg\Comparator.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/dat_alg/Comparator.hpp"
 
 /**
 \file core/Utils.hpp

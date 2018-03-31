@@ -1,15 +1,15 @@
 #ifndef	NOU_THREAD_TASK_QUEUE_HPP
 #define NOU_THREAD_TASK_QUEUE_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\thread\ThreadManager.hpp"
-#include "nostrautils\thread\Task.hpp"
-#include "nostrautils\dat_alg\Uninitialized.hpp"
-#include "nostrautils\dat_alg\FastQueue.hpp"
-#include "nostrautils\thread\ConditionVariable.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/thread/ThreadManager.hpp"
+#include "nostrautils/thread/Task.hpp"
+#include "nostrautils/dat_alg/Uninitialized.hpp"
+#include "nostrautils/dat_alg/FastQueue.hpp"
+#include "nostrautils/thread/ConditionVariable.hpp"
 #include <type_traits>
 
 

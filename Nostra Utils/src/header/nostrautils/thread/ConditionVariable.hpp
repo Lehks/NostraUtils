@@ -1,8 +1,8 @@
 #ifndef NOU_THREAD_CONDITION_VARIABLE_HPP
 #define NOU_THREAD_CONDITION_VARIABLE_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\thread\Lock.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/thread/Lock.hpp"
 
 #include <condition_variable>
 

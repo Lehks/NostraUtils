@@ -1,10 +1,10 @@
 #ifndef	NOU_THREAD_ASYNC_TASK_RESULT_HPP
 #define	NOU_THREAD_ASYNC_TASK_RESULT_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\thread\Task.hpp"
-#include "nostrautils\thread\ThreadManager.hpp"
-#include "nostrautils\thread\Mutex.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/thread/Task.hpp"
+#include "nostrautils/thread/ThreadManager.hpp"
+#include "nostrautils/thread/Mutex.hpp"
 
 /** \file thread\AsyncTaskResult.hpp
 \author	 Lukas Reichmann

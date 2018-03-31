@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_STRING_HPP
 #define	NOU_DAT_ALG_STRING_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 #include <iostream>
 #include <stdlib.h>

@@ -1,8 +1,8 @@
 #ifndef NOU_THREAD_MUTEX_HPP
 #define	NOU_THREAD_MUTEX_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
 
 #include <mutex>
 

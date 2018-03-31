@@ -1,12 +1,12 @@
 #ifndef NOU_DAT_ALG_STRING_VIEW_HPP
 #define	NOU_DAT_ALG_STRING_VIEW_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\dat_alg\Comparator.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/dat_alg/Comparator.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 /** \file StringView.hpp
 \author	 Lukas Reichmann

@@ -1,8 +1,8 @@
 #ifndef NOU_CORE_ASSERTIONS_HPP
 #define	NOU_CORE_ASSERTIONS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 /** \file Assertions.hpp
 \author	 Lukas Reichmann

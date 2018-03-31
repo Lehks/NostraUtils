@@ -1,10 +1,10 @@
 #ifndef	NOU_THREAD_TASK_HPP
 #define	NOU_THREAD_TASK_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\dat_alg\Uninitialized.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/dat_alg/Uninitialized.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
 
 #include <tuple>
 #include <type_traits>
