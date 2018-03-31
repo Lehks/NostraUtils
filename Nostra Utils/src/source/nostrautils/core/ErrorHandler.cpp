@@ -70,7 +70,7 @@ namespace NOU::NOU_CORE
 		NOU_MEM_MNGT::GenericAllocationCallback<Error>::getInstance()), NOU_MEM_MNGT::defaultDeleter);
 
 #ifndef NOU_ADD_ERROR
-#define NOU_ADD_ERROR(pool, code) pool##->at(ErrorCodes::##code) = Error(#code, ErrorCodes::##code)
+#define NOU_ADD_ERROR(pool, code) pool->at(ErrorCodes::code) = Error(#code, ErrorCodes::code)
 #endif
 
 	DefaultErrorPool::DefaultErrorPool()

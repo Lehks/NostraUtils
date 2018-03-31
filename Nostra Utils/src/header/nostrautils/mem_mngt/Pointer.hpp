@@ -454,13 +454,13 @@ namespace NOU::NOU_MEM_MNGT
 	template<typename T>
 	const NOU_MEM_MNGT::AllocationCallback<T>& AllocationCallbackRefDeleter<T>::getAllocator() const
 	{
-		m_allocator.dellocate(data);
+		return m_allocator;
 	}
 
 	template<typename T>
 	NOU_MEM_MNGT::AllocationCallback<T>& AllocationCallbackRefDeleter<T>::getAllocator()
 	{
-		m_allocator.dellocate(data);
+		return m_allocator;
 	}
 
 	template<typename T>

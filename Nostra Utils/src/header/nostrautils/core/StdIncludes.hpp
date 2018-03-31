@@ -633,7 +633,7 @@ static_cast<NOU::uint32> 									 \
 #	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
 #	define NOU_FUNC_NAME __FUNCSIG__
 #	elif NOU_COMPILER == NOU_COMPILER_GCC
-#	define NOU_FUNC_NAME __PRETTY__FUNCTION__
+#	define NOU_FUNC_NAME __PRETTY_FUNCTION__
 #	elif NOU_COMPILER == NOU_COMPILER_CLANG
 #	define NOU_FUNC_NAME __func__ ///\Todo check
 #	elif NOU_COMPILER == NOU_COMPILER_INTEL_CPP
@@ -643,7 +643,7 @@ static_cast<NOU::uint32> 									 \
 #	elif NOU_COMPILER == NOU_COMPILER_DOXYGEN
 #	define NOU_FUNC_NAME __FUNCSIG__
 #	else
-#	define NOU_COMPILER_NAME __func__
+#	define NOU_FUNC_NAME __func__
 #	endif
 
 #endif

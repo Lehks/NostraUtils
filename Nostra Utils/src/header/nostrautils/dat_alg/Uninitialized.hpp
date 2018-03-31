@@ -240,7 +240,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename... ARGS>
 	Uninitialized<T>::Uninitialized(ARGS&&... args) : m_constructorCalled(true)
 	{
-		new ((T*)(m_dataChunk)) T(forward<ARGS...>(args...));
+		new ((T*)(m_dataChunk)) T(NOU_CORE::forward<ARGS...>(args...));
 	}
 
 	template<typename T>
