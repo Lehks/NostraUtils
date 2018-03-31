@@ -35,6 +35,6 @@ This is very platform and generator dependent. At this point, it is assumed that
 2. Call the command "make". This will build the project and place the output files in the folder "Build/bin/".
 
 ### Windows
-1. Open the file "Build/Nostra Utils.sln" using Visual Studio.
+1. Open the file "Build/NostraUtils.sln" using Visual Studio.
 2. In the toolbar at the top,choose "Release" as configuration. The default value is "Debug".
 3. In the solution explorer, right click the project "ALL_BUILD" and from the context menu select "Build". This will build the project and place the output files in the folder "Build/bin/".
