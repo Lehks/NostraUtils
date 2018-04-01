@@ -1534,7 +1534,6 @@ namespace NOU::NOU_DAT_ALG
 		{
 			strnew.append(m_data.at(i));
 		}
-		strnew.append(StringView<CHAR_TYPE>::NULL_TERMINATOR);
 		strnew.setSize(strnew.m_data.size() - 1);
 
 		return strnew;
