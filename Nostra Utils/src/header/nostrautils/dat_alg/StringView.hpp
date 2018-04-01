@@ -7,6 +7,7 @@
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\dat_alg\Comparator.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\dat_alg\Utils.hpp"
 
 /** \file Vector.hpp
 \author	 Lukas Reichmann
