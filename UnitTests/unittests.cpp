@@ -664,167 +664,126 @@ namespace UnitTests
 
 		TEST_METHOD(StringView)
 		{
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('A')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('Z')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('a')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('z')>::value);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('A'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('Z'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('a'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('z'));
 
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter(' ')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('3')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('%')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('-')>::value);
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('3'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('-'));
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('1')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('2')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('3')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('4')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('5')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('6')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('7')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('8')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('9')>::value);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('1'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('2'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('3'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('4'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('5'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('6'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('7'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('8'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('9'));
 
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit(' ')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('A')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('%')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('-')>::value);
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('A'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('-'));
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true")>::value);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
 
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false")>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde")>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345")>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!�$%&")>::value);
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!�$%&"));
 
-			constexpr NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
+			NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[0] == 'H'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[1] == 'e'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[2] == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[3] == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[4] == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[5] == ' '>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[6] == 'W'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[7] == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[8] == 'r'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[9] == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[10] == 'd'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[11] == '!'>::value);
+			Assert::IsTrue(sv[0] == 'H');
+			Assert::IsTrue(sv[1] == 'e');
+			Assert::IsTrue(sv[2] == 'l');
+			Assert::IsTrue(sv[3] == 'l');
+			Assert::IsTrue(sv[4] == 'o');
+			Assert::IsTrue(sv[5] == ' ');
+			Assert::IsTrue(sv[6] == 'W');
+			Assert::IsTrue(sv[7] == 'o');
+			Assert::IsTrue(sv[8] == 'r');
+			Assert::IsTrue(sv[9] == 'l');
+			Assert::IsTrue(sv[10] == 'd');
+			Assert::IsTrue(sv[11] == '!');
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.size() == 12>::value);
+			Assert::IsTrue(sv.size() == 12);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(0) == 'H'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(1) == 'e'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(2) == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(3) == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(4) == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(5) == ' '>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(6) == 'W'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(7) == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(8) == 'r'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(9) == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(10) == 'd'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(11) == '!'>::value);
+			Assert::IsTrue(*sv.indexIterator(0) == 'H');
+			Assert::IsTrue(*sv.indexIterator(1) == 'e');
+			Assert::IsTrue(*sv.indexIterator(2) == 'l');
+			Assert::IsTrue(*sv.indexIterator(3) == 'l');
+			Assert::IsTrue(*sv.indexIterator(4) == 'o');
+			Assert::IsTrue(*sv.indexIterator(5) == ' ');
+			Assert::IsTrue(*sv.indexIterator(6) == 'W');
+			Assert::IsTrue(*sv.indexIterator(7) == 'o');
+			Assert::IsTrue(*sv.indexIterator(8) == 'r');
+			Assert::IsTrue(*sv.indexIterator(9) == 'l');
+			Assert::IsTrue(*sv.indexIterator(10) == 'd');
+			Assert::IsTrue(*sv.indexIterator(11) == '!');
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv == "Hello World!">::value);
+			Assert::IsTrue(sv == "Hello World!");
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('e') == 1>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('e', 1) == 1>::value);
+			Assert::IsTrue(sv.find('e') == 1);
+			Assert::IsTrue(sv.find('e', 1) == 1);
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('o') == 4>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('o', 5) == 7>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('z') ==
-				NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
+			Assert::IsTrue(sv.find('o') == 4);
+			Assert::IsTrue(sv.find('o', 5) == 7);
+			Assert::IsTrue(sv.find('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("ello") == 1>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("o") == 4>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("o", 5) == 7>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("test") ==
-				NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
+			Assert::IsTrue(sv.find("ello") == 1);
+			Assert::IsTrue(sv.find("o") == 4);
+			Assert::IsTrue(sv.find("o", 5) == 7);
+			Assert::IsTrue(sv.find("test") == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOf('H') == 0>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOf('o') == 4>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
+			Assert::IsTrue(sv.firstIndexOf('H') == 0);
+			Assert::IsTrue(sv.firstIndexOf('o') == 4);
+			Assert::IsTrue(sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOf('H') == 0>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOf('o') == 7>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
+			Assert::IsTrue(sv.lastIndexOf('H') == 0);
+			Assert::IsTrue(sv.lastIndexOf('o') == 7);
+			Assert::IsTrue(sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOfNot('H') == 1>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOfNot('o') == 0>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOfNot('z') == 0>::value);
+			Assert::IsTrue(sv.firstIndexOfNot('H') == 1);
+			Assert::IsTrue(sv.firstIndexOfNot('o') == 0);
+			Assert::IsTrue(sv.firstIndexOfNot('z') == 0);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOfNot('H') == 11>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOfNot('o') == 11>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOfNot('z') == 11>::value);
+			Assert::IsTrue(sv.lastIndexOfNot('H') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('o') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('z') == 11);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.startsWith('H')>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.startsWith('g')>::value);
+			Assert::IsTrue(sv.startsWith('H'));
+			Assert::IsFalse(sv.startsWith('g'));
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.startsWith("Hell")>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.startsWith("World")>::value);
+			Assert::IsTrue(sv.startsWith("Hell"));
+			Assert::IsFalse(sv.startsWith("World"));
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.endsWith("rld!")>::value == true);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.endsWith("World")>::value == true);
+			Assert::IsTrue(sv.endsWith("rld!") == true);
+			Assert::IsFalse(sv.endsWith("World") == true);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Abc")
-			> 0)>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Hello World!")
-				== 0)>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Xyz")
-				< 0)>::value);
+			Assert::IsTrue((sv.compareTo("Abc") > 0));
+			Assert::IsTrue((sv.compareTo("Hello World!") == 0));
+			Assert::IsTrue((sv.compareTo("Xyz") < 0));
 
-			constexpr NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
+			NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr.size() == 6>::value);
+			Assert::IsTrue(subStr.size() == 6);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[0] == 'W'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[1] == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[2] == 'r'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[3] == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[4] == 'd'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[5] == '!'>::value);
+			Assert::IsTrue(subStr[0] == 'W');
+			Assert::IsTrue(subStr[1] == 'o');
+			Assert::IsTrue(subStr[2] == 'r');
+			Assert::IsTrue(subStr[3] == 'l');
+			Assert::IsTrue(subStr[4] == 'd');
+			Assert::IsTrue(subStr[5] == '!');
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv == "Hello World!">::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv != "Hello z World!">::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant < sv < "xyz">::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv > "abc")>::value);
+			Assert::IsTrue(sv == "Hello World!");
+			Assert::IsTrue(sv != "Hello z World!");
+			Assert::IsTrue(sv < "xyz");
+			Assert::IsTrue((sv > "abc"));
 
 			NOU::NOU_DAT_ALG::StringView8 sv1 = "Hello World!";
 			NOU::NOU_DAT_ALG::StringView8 sv2 = "Bye World!";
@@ -845,15 +804,24 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-9999999") == -9999999);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-0") == -0);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123"), 123.0f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999"), 9999999.0f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0"), 0.0f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456"), 123.456f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99"), 5.99f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5"), 14.5f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123"), 123.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999"), 9999999.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0"), 0.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456"), 123.456f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99"), 5.99f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5"), 14.5f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
 		
 			NOU_CHECK_ERROR_HANDLER;
 		}
