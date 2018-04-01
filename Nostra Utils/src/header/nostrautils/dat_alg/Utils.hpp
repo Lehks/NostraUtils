@@ -114,6 +114,8 @@ namespace NOU::NOU_DAT_ALG
 		T abs = (diff < 0 ? -diff : diff);
 		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
 	}
+
+
 }
 
 #endif
