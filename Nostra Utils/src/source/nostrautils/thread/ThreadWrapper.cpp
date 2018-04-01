@@ -1,4 +1,4 @@
-#include "nostrautils\thread\ThreadWrapper.hpp"
+#include "nostrautils/thread/ThreadWrapper.hpp"
 
 namespace NOU::NOU_THREAD
 {

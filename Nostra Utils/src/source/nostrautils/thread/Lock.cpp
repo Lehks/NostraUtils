@@ -1,5 +1,5 @@
-#include "nostrautils\thread\Lock.hpp"
-#include "nostrautils\core\Utils.hpp"
+#include "nostrautils/thread/Lock.hpp"
+#include "nostrautils/core/Utils.hpp"
 
 namespace NOU::NOU_THREAD
 {

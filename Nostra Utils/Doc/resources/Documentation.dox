@@ -16,7 +16,7 @@
 /** 
 \namespace nostra::utils::dat_alg
 \brief The namespace that contains all components of the Nostra Utils library that are related to 
-	   datastructures and/or algorithms.
+	   data structures and/or algorithms.
 */
 
 /** 

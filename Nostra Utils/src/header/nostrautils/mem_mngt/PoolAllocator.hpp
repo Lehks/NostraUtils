@@ -1,10 +1,10 @@
 #ifndef NOU_MEM_MNGT_POOL_ALLOCATOR_HPP
 #define NOU_MEM_MNGT_POOL_ALLOCATOR_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\mem_mngt\Utils.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/mem_mngt/Utils.hpp"
 
 /**
 \file mem_mngt/PoolAllocator.hpp

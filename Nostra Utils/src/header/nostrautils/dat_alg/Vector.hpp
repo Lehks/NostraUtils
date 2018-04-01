@@ -1,10 +1,11 @@
 #ifndef NOU_DAT_ALG_VECTOR_HPP
 #define	NOU_DAT_ALG_VECTOR_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
 
 #include <new>
 
@@ -140,8 +141,8 @@ namespace NOU::NOU_DAT_ALG
 		\brief Standard destructor.
 
 		\details 
-		Note that the Vectors memory isn't allocated with the new keyword therefore the memory gets not deallocated with the delete keyword. 
-		For more details look at the implication.
+		Note that the Vectors memory is not allocated with the new keyword therefore the memory gets not dealocated with the delete keyword. 
+		For more deatils look at the implication.
 		*/
 		~Vector<T>();
 
@@ -194,7 +195,7 @@ namespace NOU::NOU_DAT_ALG
 		const T& at(sizeType index) const;
 
 		/**
-		\param additionalCapactiy Additional capacity amount.
+		\param additionalCapacity Additional capacity amount.
 
 		\brief Expends the capacity of the vector.
 		*/

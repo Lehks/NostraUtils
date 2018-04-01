@@ -1,9 +1,9 @@
 #ifndef NOU_CORE_ERROR_HANDLER_HPP
 #define NOU_CORE_ERROR_HANDLER_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
+#include "nostrautils/core/Meta.hpp"
 
 /**
 \file core/ErrorHandler.hpp
@@ -178,7 +178,7 @@ namespace NOU::NOU_CORE
 		/**
 		\return Returns the id.
 
-		\Brief	Returns the id of the error object.
+		\brief Returns the id of the error object.
 		*/
 		ErrorType getID() const;
 	};
@@ -190,6 +190,8 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS ErrorPool
 	{
 	public:
+
+		virtual ~ErrorPool() = default;
 
 		/**
 		\brief Uses the alias ErrorType for the sizeType.

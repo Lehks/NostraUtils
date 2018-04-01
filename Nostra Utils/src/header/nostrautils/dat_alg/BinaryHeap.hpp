@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_BINARYHEAP_HPP
 #define NOU_DAT_ALG_BINARYHEAP_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 /** \file BinaryHeap.hpp
 \author  Dennis Franz
@@ -104,7 +104,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief "Standard" move constructor.
 		*/
-		BinaryHeap(BinaryHeap<T> && otehr);
+		BinaryHeap(BinaryHeap<T> && other);
 		/**
 		\param data				The data that will be one part of the Pair which gets inserted in the vector.
 		\param priority			Which is the other part of the Pair thats get inserted in the vector.
@@ -150,8 +150,8 @@ namespace NOU::NOU_DAT_ALG
 		T& get();
 
 		/**
-		\param is				The id that is searched.
-		\param new priority		The new priority that will be replace the old one.
+		\param id				The id that is searched.
+		\param newpriority		The new priority that will be replace the old one.
 
 		\brief This Function searches the heap for the given id and replace its old id of the element with the new one.
 		*/

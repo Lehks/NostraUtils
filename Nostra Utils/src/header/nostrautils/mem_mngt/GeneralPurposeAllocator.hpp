@@ -1,12 +1,12 @@
 #ifndef NOU_MEM_MNGT_GENERAL_PURPOSE_ALLOCATOR_HPP
 #define NOU_MEM_MNGT_GENERAL_PURPOSE_ALLOCATOR_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\dat_alg\BinarySearch.hpp"
-#include "nostrautils\mem_mngt\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/dat_alg/BinarySearch.hpp"
+#include "nostrautils/mem_mngt/Utils.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 /**
 \file mem_mngt/GeneralPurposeAllocator.hpp
@@ -129,16 +129,19 @@ namespace NOU::NOU_MEM_MNGT
 
 
 			/**
-			\tparam				The return type.
-			\param arguments	All passed parameters.
+			\tparam	T				The return type.
+			\tparam ARGS			The passed data of the object.
+			\param	args			All passed parameters.
+			\param	amountOfObjects	Defines the amount of objects which will be created. Can be set manually or
+									use the default size.
 
-			\return				A pointer to the allocated object or a null-pointer if the element could 
-								not be allocated.
+			\return					A pointer to the allocated object or a null-pointer if the element could 
+									not be allocated.
 
-			\brief				Allocates a new Object with all passed elements.
+			\brief					Allocates a new Object with all passed elements.
 			*/
-			template <typename T, typename... arguments>
-			T* allocateObject(sizeType amountofObjects = 1, arguments&&... args);
+			template <typename T, typename... ARGS>
+			T* allocateObject(sizeType amountOfObjects = 1, ARGS&&... args);
 		};
 	}
 
@@ -306,10 +309,10 @@ namespace NOU::NOU_MEM_MNGT
 
 		/**
 		\tparam T				The type of the object which will be allocated.
-		\tparam arguments		The passed data of the object.
-		\param amountOfObjects	Defines the amount of objects which will be created. Can be set manually or
+		\tparam ARGS			The passed data of the object.
+		\param	amountOfObjects	Defines the amount of objects which will be created. Can be set manually or
 								use the default size.
-		\param arguments		The data of the object which will be allocated.
+		\param	args			The data of the object which will be allocated.
 
 		\return					A pointer to the allocated Objects. If the GPA exceeded its maximum capacity
 								it will return a null-pointer to indicate that the next object cannot be 
@@ -318,13 +321,13 @@ namespace NOU::NOU_MEM_MNGT
 		\brief					Allocates memory in the GPA for the passed object. Allows to allocate the 
 								passed object multiple times.
 		*/
-		template <typename T, typename... arguments>
-		GeneralPurposeAllocatorPointer<T> allocateObjects(sizeType amountOfObjects = 1, arguments&&... args);
+		template <typename T, typename... ARGS>
+		GeneralPurposeAllocatorPointer<T> allocateObjects(sizeType amountOfObjects = 1, ARGS&&... args);
 
 		/**
 		\tparam T			The type of the object which will be allocated.
-		\tparam arguments	The passed data of the object.
-		\param arguments	The data of the object which will be allocated.
+		\tparam ARGS		The passed data of the object.
+		\param	args		The data of the object which will be allocated.
 
 		\return				A pointer to the allocated Objects. If the GPA exceeded its maximum capacity
 							it will return a null-pointer to indicate that the next object cannot
@@ -336,8 +339,8 @@ namespace NOU::NOU_MEM_MNGT
 
 		\details			Calls the allocateObjects() with the parameter amountOfObjects = 1.
 		*/
-		template <typename T, typename... arguments>
-		GeneralPurposeAllocatorPointer<T> allocateObject(arguments&&... args);
+		template <typename T, typename... ARGS>
+		GeneralPurposeAllocatorPointer<T> allocateObject(ARGS&&... args);
 
 		/**
 		\tparam T		The type of the object which will be deallocated.
@@ -414,14 +417,14 @@ namespace NOU::NOU_MEM_MNGT
 		return m_addr == other.m_addr;
 	}
 
-	template <typename T, typename... arguments>
+	template <typename T, typename... ARGS>
 	T* internal::GeneralPurposeAllocatorFreeChunk::allocateObject
-	(sizeType amountofObjects, arguments&&... args)
+	(sizeType amountOfObjects, ARGS&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 
 		byte* allocationLocation = reinterpret_cast<byte*>(nextMultiple(alignof(T), ((sizeType)m_addr) + 1));
-		sizeType amountOfBytes = amountofObjects * sizeof(T);
+		sizeType amountOfBytes = amountOfObjects * sizeof(T);
 		byte* newAddr = allocationLocation + amountOfBytes;
 
 		if (newAddr <= m_addr + m_size)
@@ -433,10 +436,10 @@ namespace NOU::NOU_MEM_MNGT
 			m_size -= newAddr - m_addr;
 			m_addr = newAddr;
 
-			for (sizeType i = 0; i < amountofObjects; i++)
+			for (sizeType i = 0; i < amountOfObjects; i++)
 			{
 				T* object = addressof(returnPointer[i]);
-				new(object) T(NOU_CORE::forward<arguments>(args)...);
+				new(object) T(NOU_CORE::forward<ARGS>(args)...);
 			}
 
 			return returnPointer;
@@ -526,16 +529,16 @@ namespace NOU::NOU_MEM_MNGT
 		}
 	}
 
-	template <typename T, typename... arguments>
+	template <typename T, typename... ARGS>
 	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> 
-		GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects, arguments&&... args)
+		GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects, ARGS&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 	
 		for (sizeType i = 0; i < m_freeChunks.size(); i++)
 		{
 			T* data = m_freeChunks[i].allocateObject<T>(amountOfObjects,
-				NOU_CORE::forward<arguments>(args)...);
+				NOU_CORE::forward<ARGS>(args)...);
 			if (data != nullptr)
 			{
 				if (m_freeChunks[i].m_size == 0)
@@ -549,11 +552,11 @@ namespace NOU::NOU_MEM_MNGT
 		return GeneralPurposeAllocatorPointer<T>(nullptr, 0);///\todo better error handling???
 	}
 
-	template<typename T, typename... arguments>
+	template<typename T, typename... ARGS>
 	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> 
-		GeneralPurposeAllocator::allocateObject(arguments&&...args)
+		GeneralPurposeAllocator::allocateObject(ARGS&&...args)
 	{
-		return allocateObjects<T>(1, NOU_CORE::forward<arguments>(args)...);
+		return allocateObjects<T>(1, NOU_CORE::forward<ARGS>(args)...);
 	}
 
 	template <typename T>
