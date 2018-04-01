@@ -13,7 +13,7 @@ using namespace NOU_FILE_MNGT;
 
 int main()
 {
-	Path p14 = "D:\\NostraUtils\\Test\\Dennis\\Hallo\\";
+	Path p14 = "D:\\NostraUtils\\Test\\Dennis\\Hallo";
 
 	Path cwd = Path::currentWorkingDirectory();
 
