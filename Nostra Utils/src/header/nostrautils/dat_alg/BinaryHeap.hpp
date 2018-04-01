@@ -86,6 +86,7 @@ namespace NOU::NOU_DAT_ALG
 	public:
 		/**
 		\param isMinHeap		A boolean that indicates whether this heap will be a min or a max heap.
+		\param size				The initial size of the binary heap.
 		\param allocator		An allocator reference for the internal Vector.
 
 		\brief "Standard" constructor.
