@@ -1,7 +1,5 @@
 #include "nostrautils\core\Logging.hpp"
 #include <iostream>
-#include <string>
-#include <type_traits>
 
 int main()
 {
@@ -20,4 +18,4 @@ int main()
 
 
 	std::cin.get();
-}
+}							

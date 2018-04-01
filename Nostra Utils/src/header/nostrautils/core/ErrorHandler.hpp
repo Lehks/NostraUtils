@@ -191,6 +191,8 @@ namespace NOU::NOU_CORE
 	{
 	public:
 
+		virtual ~ErrorPool() = default;
+
 		/**
 		\brief Uses the alias ErrorType for the sizeType.
 		*/

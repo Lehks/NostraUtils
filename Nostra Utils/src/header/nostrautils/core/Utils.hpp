@@ -51,7 +51,7 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T& min(T &a, T &b); ///\todo min/max: add specializations for primitive types w/o references
+	constexpr NOU_FUNC T& min(T &a, T &b);
 	/**
 	\tparam The type of the parameters.
 
@@ -63,7 +63,7 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T& min(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp); ///\todo min/max: add specializations for primitive types w/o references
+	constexpr NOU_FUNC T& min(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
 	/**
 	\tparam The type of the parameters.
 
@@ -74,7 +74,7 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& min(const T &a,const T &b); ///\todo min/max: add specializations for primitive types w/o references
+	constexpr NOU_FUNC const T& min(const T &a,const T &b);
 	/**
 	\tparam The type of the parameters.
 
@@ -86,7 +86,7 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& min(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp); ///\todo min/max: add specializations for primitive types w/o references
+	constexpr NOU_FUNC const T& min(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
 	/**
 	\tparam The type of the parameters.
 

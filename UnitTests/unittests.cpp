@@ -18,6 +18,8 @@
 #include "nostrautils/dat_alg/FastQueue.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
 #include "nostrautils/dat_alg/Uninitialized.hpp"
+#include "nostrautils/dat_alg/Quicksort.hpp"
+#include "nostrautils/dat_alg/Random.hpp"
 #include "nostrautils/mem_mngt/PoolAllocator.hpp"
 #include "nostrautils/mem_mngt/GeneralPurposeAllocator.hpp"
 #include "nostrautils/dat_alg/BinaryHeap.hpp"
@@ -27,6 +29,8 @@
 #include "nostrautils/dat_alg/ObjectPool.hpp"
 #include "nostrautils/dat_alg/HashMap.hpp"
 #include "nostrautils/thread/Threads.hpp"
+#include "nostrautils/file_mngt/Path.hpp"
+
 
 #include "DebugClass.hpp"
 
@@ -429,7 +433,7 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'b') < 0);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') < 0);
-		
+
 
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
@@ -484,8 +488,8 @@ namespace UnitTests
 			Assert::IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
 			Assert::IsTrue(*uPtr == *rawPtr);
 			Assert::IsTrue(uPtr);
-			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr, 
-						NOU::NOU_MEM_MNGT::defaultDeleter));
+			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr,
+				NOU::NOU_MEM_MNGT::defaultDeleter));
 			Assert::IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
 			Assert::IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
 			Assert::IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
@@ -504,7 +508,7 @@ namespace UnitTests
 			{
 				//check if this compiles
 				NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
-				
+
 				//destructor is called here
 			}
 
@@ -522,7 +526,7 @@ namespace UnitTests
 
 		TEST_METHOD(FastQueue)
 		{
-			while(NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
+			while (NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
 				NOU::NOU_CORE::getErrorHandler().popError();
 
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
@@ -567,14 +571,14 @@ namespace UnitTests
 			Assert::IsTrue(allocator.getCounter() == 0);
 
 			NOU::NOU_DAT_ALG::FastQueue<int> fq;
-		
+
 			fq.push(1);
 			fq.push(2);
 			fq.push(3);
 			fq.push(4);
-		
+
 			Assert::IsTrue(fq.peek() == 1);
-		
+
 			Assert::IsTrue(fq.pop() == 1);
 			Assert::IsTrue(fq.pop() == 2);
 			Assert::IsTrue(fq.pop() == 3);
@@ -633,7 +637,7 @@ namespace UnitTests
 		
 			NOU_CHECK_ERROR_HANDLER;
 		}
-		
+
 		TEST_METHOD(AllocationCallbackDeleter)
 		{
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> dbgAlloc;
@@ -646,7 +650,7 @@ namespace UnitTests
 			Assert::IsTrue(dbgAlloc.getCounter() == 0);
 
 			auto callback = NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>();
-			NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int, 
+			NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int,
 				NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>> deleter1(callback);
 
 			int *iPtr1 = deleter1.getAllocator().allocate();
@@ -761,7 +765,7 @@ namespace UnitTests
 			Assert::IsTrue(
 				NOU::NOU_CORE::BooleanConstant<sv.find('o', 5) == 7>::value);
 			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('z') == 
+				NOU::NOU_CORE::BooleanConstant<sv.find('z') ==
 				NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
 
 			Assert::IsTrue(
@@ -771,7 +775,7 @@ namespace UnitTests
 			Assert::IsTrue(
 				NOU::NOU_CORE::BooleanConstant<sv.find("o", 5) == 7>::value);
 			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("test") == 
+				NOU::NOU_CORE::BooleanConstant<sv.find("test") ==
 				NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
 
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOf('H') == 0>::value);
@@ -800,7 +804,7 @@ namespace UnitTests
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.endsWith("World")>::value == true);
 
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Abc")
-				> 0)>::value);
+			> 0)>::value);
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Hello World!")
 				== 0)>::value);
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Xyz")
@@ -819,7 +823,7 @@ namespace UnitTests
 
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv == "Hello World!">::value);
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv != "Hello z World!">::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv < "xyz">::value);
+			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant < sv < "xyz">::value);
 			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv > "abc")>::value);
 
 			NOU::NOU_DAT_ALG::StringView8 sv1 = "Hello World!";
@@ -941,11 +945,11 @@ namespace UnitTests
 			Assert::IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFnName()) == NOU_FUNC_NAME);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFile()) == __FILE__);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) == 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) ==
 				"The index was out of bounds.");
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) == 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) ==
 				"INDEX_OUT_OF_BOUNDS");
-		
+
 			auto errorPeek = handler.peekError();
 			auto errorPop = handler.popError();
 
@@ -967,7 +971,7 @@ namespace UnitTests
 			//validate that the order in which the errors are popped is correct
 			Assert::IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
 			Assert::IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
-			
+
 			Assert::IsTrue(handler.getErrorCount() == 0);
 
 			NOU::NOU_CORE::ErrorHandler::ErrorType error = 50000;
@@ -983,7 +987,7 @@ namespace UnitTests
 
 		TEST_METHOD(EpsilonCompare)
 		{
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) <  0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) < 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(123.456, 123.457, 0.1) == 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
 
@@ -1025,8 +1029,35 @@ namespace UnitTests
 
 				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
 			}
-
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(Quicksort)
+
+		{
+
+			int arr[5] = {2,1,3,5,4};
+			NOU::NOU_DAT_ALG::qsort(arr, 0, 4);
+			Assert::IsTrue(arr[0] == 1);
+			Assert::IsTrue(arr[1] == 2);
+			Assert::IsTrue(arr[2] == 3);
+			Assert::IsTrue(arr[3] == 4);
+			Assert::IsTrue(arr[4] == 5);
+
+
+
+			
+		}
+
+		TEST_METHOD(Random)
+		{
+			NOU::NOU_DAT_ALG::Random random;
+
+			for (NOU::uint32 i = 0; i < 100; i++)
+			{
+				typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(0, 10);
+				Assert::IsTrue(rand >= 0 && rand <= 10);
+			}
 		}
 
 		TEST_METHOD(PoolAllocator)
@@ -1644,5 +1675,71 @@ namespace UnitTests
 
 			NOU_CHECK_ERROR_HANDLER;
 		}
-	};
+
+		TEST_METHOD(Path)
+		{
+			NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
+			NOU::NOU_FILE_MNGT::Path p1 = "testdir\\testfile.test";
+			NOU::NOU_FILE_MNGT::Path p2 = "\\test.dir\\testfile.test";
+			NOU::NOU_FILE_MNGT::Path p3 = "test.dir\\testfile";
+			NOU::NOU_FILE_MNGT::Path p4 = "testfile.test\\";
+			NOU::NOU_FILE_MNGT::Path p5 = "testfile";
+			NOU::NOU_FILE_MNGT::Path p6 = "test.tar.gz";
+
+			NOU::NOU_FILE_MNGT::Path p10 = "C:\\Users\\TestUser\\TestDir\\MyFile.exe";
+			NOU::NOU_FILE_MNGT::Path p11 = "C:\\Users\\TestUser\\TestDir\\MyFolder\\MyFile.txt";
+			NOU::NOU_FILE_MNGT::Path p12 = "C:\\Users\\TestUser\\TestDir";
+			NOU::NOU_FILE_MNGT::Path p13 = "D:\\Users\\";
+			NOU::NOU_FILE_MNGT::Path p14 = "D:\\Users\\SomeOtherDir";
+
+			NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+
+			NOU::NOU_DAT_ALG::String8 str = cwd.getAbsolutePath();
+			str.append("\\Test\\TestUser\\TestDir2");
+
+			// p15 == cwd\\Test\\Dennis\\WasGehtAb
+			NOU::NOU_FILE_MNGT::Path p15 = str;
+
+			Assert::IsTrue(p.getName() == "testfile");
+			Assert::IsTrue(p1.getName() == "testfile");
+			Assert::IsTrue(p2.getName() == "testfile");
+			Assert::IsTrue(p3.getName() == "testfile");
+			Assert::IsTrue(p4.getName() == "");
+			Assert::IsTrue(p5.getName() == "testfile");
+			Assert::IsTrue(p6.getName() == "test.tar");
+
+			Assert::IsTrue(p.getFileExtension() == "exe");
+			Assert::IsTrue(p1.getFileExtension() == "test");
+			Assert::IsTrue(p2.getFileExtension() == "test");
+			Assert::IsTrue(p3.getFileExtension() == ""); 
+			Assert::IsTrue(p4.getFileExtension() == ""); 
+			Assert::IsTrue(p5.getFileExtension() == ""); 
+			Assert::IsTrue(p6.getFileExtension() == "gz");
+
+			Assert::IsTrue(p.getNameAndExtension() == "testfile.exe");
+			Assert::IsTrue(p1.getNameAndExtension() == "testfile.test");
+			Assert::IsTrue(p2.getNameAndExtension() == "testfile.test");
+			Assert::IsTrue(p3.getNameAndExtension() == "testfile"); 
+			Assert::IsTrue(p4.getNameAndExtension() == ""); 
+			Assert::IsTrue(p5.getNameAndExtension() == "testfile");
+			Assert::IsTrue(p6.getNameAndExtension() == "test.tar.gz");
+
+			Assert::IsTrue(p10.getParentPath() == "C:\\Users\\TestUser\\TestDir"); 
+			Assert::IsTrue(p11.getParentPath() == "C:\\Users\\TestUser\\TestDir\\MyFolder");
+			Assert::IsTrue(p12.getParentPath() == "C:\\Users\\TestUser");
+			Assert::IsTrue(p13.getParentPath() == "D:");
+			Assert::IsTrue(p14.getParentPath() == "D:\\Users");  
+
+			Assert::IsTrue(p15.getRelativePath() == "\\Test\\TestUser\\TestDir2");
+			if (str.startsWith('C'))
+			{
+				NOU::NOU_FILE_MNGT::Path p16 = "D:\\Users\\TestUser\\TestDir";
+				Assert::IsTrue(p16.getRelativePath() == "D:\\Users\\TestUser\\TestDir");
+			}
+			else {
+				NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
+				Assert::IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
+			}
+		}
+	};	
 }

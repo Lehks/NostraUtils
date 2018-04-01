@@ -315,6 +315,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\BinarySearch.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\LazyEvaluationProperty.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ObjectPool.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\HashMap.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp" />
@@ -324,6 +325,8 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
+    <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp" />
+    <ClInclude Include="src\header\nostrautils\file_mngt\Path.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\GeneralPurposeAllocator.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\PoolAllocator.hpp" />
@@ -339,12 +342,17 @@
     <ClInclude Include="src\header\nostrautils\thread\ThreadManager.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\ThreadWrapper.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Threads.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Quicksort.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Random.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
     <ClCompile Include="src\source\nostrautils\core\Logging.cpp" />
+    <ClCompile Include="src\source\nostrautils\dat_alg\Random.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp" />
+    <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp" />
+    <ClCompile Include="src\source\nostrautils\file_mngt\Path.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\AsyncTaskResult.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\ConditionVariable.cpp" />
