@@ -2,8 +2,10 @@
 #define NOU_FILE_MNGT_FOLDER_HPP
 
 #include "nostrautils\dat_alg\String.hpp"
+#include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
-#include <stdlib.h>
+#include "nostrautils\file_mngt\File.hpp"
+#include "nostrautils\file_mngt\Path.hpp"
 
 /** \file Folder.hpp
 \author  Mahan Karimi
@@ -23,7 +25,7 @@ namespace NOU::NOU_FILE_MNGT
 			NOU::NOU_DAT_ALG::StringView8  m_path; 
 			NOU::NOU_DAT_ALG::StringView8  m_name; 
 
-
+			NOU::NOU_DAT_ALG::String8	   m_absolutePath;
 	public :
 		/*
 		\brief Constructor of the class 
@@ -33,49 +35,24 @@ namespace NOU::NOU_FILE_MNGT
 
 		Folder(const NOU::NOU_DAT_ALG::StringView<char8> &m_name, const NOU::NOU_DAT_ALG::StringView<char8> &m_path);
 
-		//listContent(); 
+		NOU::NOU_DAT_ALG::Vector<Folder> listFolders() const; // "ls" kommando (Nur alle Ordner anzeigen)
+
+		NOU::NOU_DAT_ALG::Vector<File> listFiles() const; // ls kommando (Alle datein anzeigen und in nem Vector speicher)
 
 		/*
 		\ brief A function that gives you the currently path of you folder.
 		\ param an object of type Folder .
 		\ return current path of you folder.
 		*/
+		void create(const char * m_path);
 
-		void getPath(Folder); 
-
-		/*
-		\brief A function that gives you the name of you folder.
-		\param an object of type folder .
-		\return name of the folder. 
-		*/
-
-		void getName(Folder);
-
-		/*
-		\brief A function that allows you to change the name of you folder. 
-		\param an object of type folder.
-		*/
-
-		void setName(Folder);
-
-		/*
-		\brief A function that allows you to change the current path of a folder.
-		\param an object of type folder . 
-		*/
-
-		void setPath(Folder); 
-
-		/*
-		\brief A function that allows you to change the rights of a folder. 
-		*/
-
-		void changeRights(); 
+		bool exists();
 
 		/*
 		\brief A function that allows you to change the groups of a folder .
 		*/
 
-		void changeGroups();
+		
 	};
 }
 #endif

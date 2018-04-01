@@ -201,5 +201,8 @@
     <ClCompile Include="src\source\nostrautils\file_mngt\Path.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\source\nostrautils\file_mngt\Folder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
