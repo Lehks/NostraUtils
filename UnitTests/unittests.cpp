@@ -1656,11 +1656,21 @@ namespace UnitTests
 			NOU::NOU_FILE_MNGT::Path p5 = "testfile";
 			NOU::NOU_FILE_MNGT::Path p6 = "test.tar.gz";
 
-			NOU::NOU_FILE_MNGT::Path p10 = "C:\\Users\\Dennis\\TestDir\\MyFile.exe";
-			NOU::NOU_FILE_MNGT::Path p11 = "C:\\Users\\Dennis\\TestDir\\MyFolder\\MyFile.txt";
-			NOU::NOU_FILE_MNGT::Path p12 = "C:\\Users\\Dennis\\TestDir";
+			NOU::NOU_FILE_MNGT::Path p10 = "C:\\Users\\TestUser\\TestDir\\MyFile.exe";
+			NOU::NOU_FILE_MNGT::Path p11 = "C:\\Users\\TestUser\\TestDir\\MyFolder\\MyFile.txt";
+			NOU::NOU_FILE_MNGT::Path p12 = "C:\\Users\\TestUser\\TestDir";
 			NOU::NOU_FILE_MNGT::Path p13 = "D:\\Users\\";
 			NOU::NOU_FILE_MNGT::Path p14 = "D:\\Users\\SomeOtherDir";
+
+			NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+
+			NOU::NOU_DAT_ALG::String8 str = cwd.getAbsolutePath();
+			str.append("\\Test\\TestUser\\TestDir2");
+
+			// p15 == cwd\\Test\\Dennis\\WasGehtAb
+			NOU::NOU_FILE_MNGT::Path p15 = str;
+
+			NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
 
 			Assert::IsTrue(p.getName() == "testfile");
 			Assert::IsTrue(p1.getName() == "testfile");
@@ -1686,12 +1696,14 @@ namespace UnitTests
 			Assert::IsTrue(p5.getNameAndExtension() == "testfile");
 			Assert::IsTrue(p6.getNameAndExtension() == "test.tar.gz");
 
-			//System specific unittests
-			//Assert::IsTrue(p10.getParentPath() == "C:\\Users\\Dennis\\TestDir"); 
-			//Assert::IsTrue(p11.getParentPath() == "C:\\Users\\Dennis\\TestDir\\MyFolder");
-			//Assert::IsTrue(p12.getParentPath() == "C:\\Users\\Dennis");
-			//Assert::IsTrue(p13.getParentPath() == "D:");
-			//Assert::IsTrue(p14.getParentPath() == "D:\\Users");  
+			Assert::IsTrue(p10.getParentPath() == "C:\\Users\\TestUser\\TestDir"); 
+			Assert::IsTrue(p11.getParentPath() == "C:\\Users\\TestUser\\TestDir\\MyFolder");
+			Assert::IsTrue(p12.getParentPath() == "C:\\Users\\TestUser");
+			Assert::IsTrue(p13.getParentPath() == "D:");
+			Assert::IsTrue(p14.getParentPath() == "D:\\Users");  
+
+			Assert::IsTrue(p15.getRelativePath() == "\\Test\\TestUser\\TestDir2");
+			Assert::IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
 		}
 	};	
 }

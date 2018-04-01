@@ -8,24 +8,28 @@
 using namespace std;
 using namespace NOU;
 //using namespace NOU_CORE;
-//using namespace NOU_DAT_ALG;
+using namespace NOU_DAT_ALG;
 using namespace NOU_FILE_MNGT;
 
 int main()
 {
-	Path p14 = "D:\\NostraUtils\\Test\\Dennis\\Hallo";
+	String8 sv = "Hello World!";
+	String8 s = sv.substring(0, 5);
 
-	Path cwd = Path::currentWorkingDirectory();
+	std::cout << s.rawStr() << std::endl;
 
-	Path p18 = cwd.getAbsolutePath();
+	NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
 
-	NOU_DAT_ALG::String8 str = p18.getParentPath();
+	NOU::NOU_DAT_ALG::String8 str = cwd.getAbsolutePath();
+	str.append("\\Test\\Dennis\\WasGehtAb");
 
-	Path p19 = str;
+	std::cout << str.rawStr() << std::endl;
+
+	NOU::NOU_FILE_MNGT::Path p15 = str;
 
 	std::cout << Path::currentWorkingDirectory().getAbsolutePath().rawStr() << std::endl;
 
-	std::cout << p14.getRelativePath().rawStr() << std::endl;
+	std::cout << p15.getRelativePath().rawStr() << std::endl;
 
 	std::cout << std::endl;
 	std::cout << std::endl;

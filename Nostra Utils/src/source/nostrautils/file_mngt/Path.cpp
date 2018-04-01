@@ -114,13 +114,10 @@ namespace NOU::NOU_FILE_MNGT
 		if (path == cwd.getAbsolutePath())
 			return ".";
 
-		std::cout << str.substring(0, cwd.getAbsolutePath().size() - 1).size() << std::endl;
-		std::cout << cwd.getAbsolutePath().size() << std::endl;
-
-		if (str.substring(0, cwd.getAbsolutePath().size() - 1) == cwd.getAbsolutePath())
+		if (str.substring(0, cwd.getAbsolutePath().size()) == cwd.getAbsolutePath())
 		{
-			sizeType lastPathSeparator = cwd.getAbsolutePath().lastIndexOf(PATH_SEPARATOR);
-			return NOU_DAT_ALG::String8(path.logicalSubstring(lastPathSeparator + 1, path.size()));
+			sizeType lastPathSeparator = cwd.getAbsolutePath().size();
+			return NOU_DAT_ALG::String8(path.logicalSubstring(lastPathSeparator, path.size()));
 		}
 
 
