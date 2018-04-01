@@ -1,8 +1,8 @@
 #ifndef NOU_THREAD_LOCK_HPP
 #define NOU_THREAD_LOCK_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\thread\Mutex.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/thread/Mutex.hpp"
 
 #include <mutex>
 
@@ -33,6 +33,9 @@ namespace NOU::NOU_THREAD
 	public:
 		/**
 		\param mutex The mutex to lock.
+		\param lock  Defines whether the mutex should be locked or not. This can be used to adapt a lock from 
+		             a different instance of the lock class (the destructor will unlock the mutex even if the 
+					 mutex was not explicitly locked here).
 
 		\brief If not already locked, this will lock the mutex.
 		*/

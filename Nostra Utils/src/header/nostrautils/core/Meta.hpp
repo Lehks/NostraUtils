@@ -1,9 +1,16 @@
 #ifndef NOU_CORE_META_HPP
 #define NOU_CORE_META_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
 
 #include <type_traits>
+
+/** \file Meta.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides a collection of meta functions.
+*/
 
 namespace NOU::NOU_CORE
 {
@@ -95,15 +102,15 @@ namespace NOU::NOU_CORE
 
 
 	/**
-	\tparam B  The boolean that determines which type will be choosen.
+	\tparam B  The boolean that determines which type will be chosen.
 	\tparam T1 The first type.
 	\tparam T2 The second type.
-	\return    The choosen type according to B.
+	\return    The chosen type according to B.
 
 	\brief A function that chooses between two types.
 
 	\details
-	This functions chooses one of two types. If B is true, the first type will be choosen, otherwise the 
+	This functions chooses one of two types. If B is true, the first type will be chosen, otherwise the 
 	second one.
 	*/
 	template<boolean B, typename T1, typename T2>
@@ -150,7 +157,7 @@ namespace NOU::NOU_CORE
 	using removeConst_t = typename removeConst<T>::type;
 
 	/**
-	\tparam The enum the the underlying type should be determined for.
+	\tparam The enum the underlying type should be determined for.
 
 	\brief Determines the underlying type of an enum.
 	*/
@@ -165,9 +172,9 @@ namespace NOU::NOU_CORE
 
 	/**
 	\tparam T0 The type to compare the other types to.
-	\tparam T1 The second (requiered) type.
+	\tparam T1 The second (required) type.
 	\tparam T2 Other types that may also be passed and that also need to be the same as \p T0 in order for the
-	           function to retun TrueType.
+	           function to return TrueType.
 
 	\return TrueType, if all passed types are the same, FalseType if not.
 
@@ -199,7 +206,7 @@ namespace NOU::NOU_CORE
 	struct IsInvocable : typeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
 
 	/**
-	\tparma R    The return type.
+	\tparam R    The return type.
 	\tparam T    The type to check if it is invocable.
 	\tparam ARGS The types that \p T needs to be invoked with.
 
@@ -217,7 +224,7 @@ namespace NOU::NOU_CORE
 
 	\return TrueType, if the type \p T is default constructible, FalseType if not.
 
-	\brief Checks wether a type is default constructible or not.
+	\brief Checks whether a type is default constructible or not.
 	*/
 	template<typename T>
 	struct IsDefaultConstructible : typeIf_t<std::is_default_constructible<T>::value, 

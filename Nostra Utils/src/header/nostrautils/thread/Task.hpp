@@ -1,10 +1,10 @@
 #ifndef	NOU_THREAD_TASK_HPP
 #define	NOU_THREAD_TASK_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\dat_alg\Uninitialized.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/dat_alg/Uninitialized.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
 
 #include <tuple>
 #include <type_traits>
@@ -91,7 +91,8 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief The arguments that will be passed to the invocable.
 		*/
-		std::tuple<ARGS...> m_args;
+		//removeConst b/c otherwise it is not possible to pass const objects to the constructor
+		std::tuple<NOU_CORE::removeConst_t<ARGS>...> m_args;
 
 		/**
 		\brief The invocable.
@@ -173,7 +174,7 @@ namespace NOU::NOU_THREAD
 		using InvocableType = I;
 
 	private:
-		std::tuple<ARGS...> m_args;
+		std::tuple<NOU_CORE::removeConst_t<ARGS>...> m_args;
 		InvocableType m_invocable;
 
 	public:
@@ -209,7 +210,7 @@ namespace NOU::NOU_THREAD
 	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I,
 		NOU_CORE::remove_reference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args);
 
-
+	///\cond
 	template<typename R, typename I, typename... ARGS>
 	Task<R, I, ARGS...>::Task(InvocableType&& invocable, ARGS&&... args) :
 		m_invocable(NOU_CORE::forward<InvocableType>(invocable)),
@@ -262,8 +263,6 @@ namespace NOU::NOU_THREAD
 	typename Task<void, I, ARGS...>::ReturnType Task<void, I, ARGS...>::moveResult()
 	{}
 
-
-
 	template<typename I, typename... ARGS>
 	Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I, 
 		NOU_CORE::remove_reference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args)
@@ -274,6 +273,7 @@ namespace NOU::NOU_THREAD
 		return TaskType(NOU_CORE::forward<typename TaskType::InvocableType>(invocable),
 			NOU_CORE::forward<NOU_CORE::remove_reference_t<ARGS>>(args)...);
 	}
+	///\endcond
 }
 
 #endif

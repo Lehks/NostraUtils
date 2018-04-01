@@ -29,6 +29,7 @@
 #include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\dat_alg\HashMap.hpp"
 #include "nostrautils\thread\Threads.hpp"
+#include "nostrautils\file_mngt\Path.hpp"
 
 
 #include "DebugClass.hpp"
@@ -719,7 +720,7 @@ namespace UnitTests
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
 				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345")>::value);
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!§$%&")>::value);
+				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!ï¿½$%&")>::value);
 
 			constexpr NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
@@ -1198,13 +1199,12 @@ namespace UnitTests
 			str.remove(2, str.size());
 			Assert::AreEqual(str[0], '1');
 			Assert::AreEqual(str[1], '7');
-			Assert::AreNotEqual(str[0], '.');
-		
+			
 			NOU::NOU_DAT_ALG::String<NOU::char8> substr;
-		
+			
 			substr.append(str.substring(0, 1));
 			Assert::AreEqual(str[0], '1');
-		
+			
 			substr.clear();
 			substr.append(str.copy());
 			Assert::AreEqual(str[0], '1');
@@ -1591,6 +1591,21 @@ namespace UnitTests
 			return i;
 		}
 
+		class DummyClass
+		{
+			//empty class
+		};
+
+		static NOU::int32 taskTestFunction3(const DummyClass dc)
+		{
+			return 1;
+		}
+
+		static void taskTestFunction4(const DummyClass dc)
+		{
+
+		}
+
 		TEST_METHOD(Task)
 		{
 			NOU::int32 i1 = 5;
@@ -1601,6 +1616,7 @@ namespace UnitTests
 			task1.execute();
 
 			Assert::IsTrue(out == i1);
+
 
 
 			//just to make sure that INVALID_OBJECT is the first error in the handler later
@@ -1619,6 +1635,16 @@ namespace UnitTests
 			task2.execute();
 
 			Assert::IsTrue(task2.getResult() == i2);
+
+
+			//check if this compiles
+			const DummyClass dc;
+
+			auto task3 = NOU::NOU_THREAD::makeTask(&taskTestFunction3, dc);
+
+			auto task4 = NOU::NOU_THREAD::makeTask(&taskTestFunction4, dc);
+
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		//no more tests are possible, since the remaining methods of thread manager are either not reliable 
@@ -1630,6 +1656,84 @@ namespace UnitTests
 
 			Assert::IsTrue(manager.maximumAvailableThreads() == 
 				NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
+
+			NOU_CHECK_ERROR_HANDLER;
 		}
-	};
+
+		TEST_METHOD(OffsetOf)
+		{
+			struct TestStruct
+			{
+				NOU::int32 x;
+				NOU::int32 y;
+				NOU::int32 z;
+			};
+
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, x) == offsetof(TestStruct, x));
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, y) == offsetof(TestStruct, y));
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, z) == offsetof(TestStruct, z));
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(Path)
+		{
+			NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
+			NOU::NOU_FILE_MNGT::Path p1 = "testdir\\testfile.test";
+			NOU::NOU_FILE_MNGT::Path p2 = "\\test.dir\\testfile.test";
+			NOU::NOU_FILE_MNGT::Path p3 = "test.dir\\testfile";
+			NOU::NOU_FILE_MNGT::Path p4 = "testfile.test\\";
+			NOU::NOU_FILE_MNGT::Path p5 = "testfile";
+			NOU::NOU_FILE_MNGT::Path p6 = "test.tar.gz";
+
+			NOU::NOU_FILE_MNGT::Path p10 = "C:\\Users\\TestUser\\TestDir\\MyFile.exe";
+			NOU::NOU_FILE_MNGT::Path p11 = "C:\\Users\\TestUser\\TestDir\\MyFolder\\MyFile.txt";
+			NOU::NOU_FILE_MNGT::Path p12 = "C:\\Users\\TestUser\\TestDir";
+			NOU::NOU_FILE_MNGT::Path p13 = "D:\\Users\\";
+			NOU::NOU_FILE_MNGT::Path p14 = "D:\\Users\\SomeOtherDir";
+
+			NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+
+			NOU::NOU_DAT_ALG::String8 str = cwd.getAbsolutePath();
+			str.append("\\Test\\TestUser\\TestDir2");
+
+			// p15 == cwd\\Test\\Dennis\\WasGehtAb
+			NOU::NOU_FILE_MNGT::Path p15 = str;
+
+			NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
+
+			Assert::IsTrue(p.getName() == "testfile");
+			Assert::IsTrue(p1.getName() == "testfile");
+			Assert::IsTrue(p2.getName() == "testfile");
+			Assert::IsTrue(p3.getName() == "testfile");
+			Assert::IsTrue(p4.getName() == "");
+			Assert::IsTrue(p5.getName() == "testfile");
+			Assert::IsTrue(p6.getName() == "test.tar");
+
+			Assert::IsTrue(p.getFileExtension() == "exe");
+			Assert::IsTrue(p1.getFileExtension() == "test");
+			Assert::IsTrue(p2.getFileExtension() == "test");
+			Assert::IsTrue(p3.getFileExtension() == ""); 
+			Assert::IsTrue(p4.getFileExtension() == ""); 
+			Assert::IsTrue(p5.getFileExtension() == ""); 
+			Assert::IsTrue(p6.getFileExtension() == "gz");
+
+			Assert::IsTrue(p.getNameAndExtension() == "testfile.exe");
+			Assert::IsTrue(p1.getNameAndExtension() == "testfile.test");
+			Assert::IsTrue(p2.getNameAndExtension() == "testfile.test");
+			Assert::IsTrue(p3.getNameAndExtension() == "testfile"); 
+			Assert::IsTrue(p4.getNameAndExtension() == ""); 
+			Assert::IsTrue(p5.getNameAndExtension() == "testfile");
+			Assert::IsTrue(p6.getNameAndExtension() == "test.tar.gz");
+
+			Assert::IsTrue(p10.getParentPath() == "C:\\Users\\TestUser\\TestDir"); 
+			Assert::IsTrue(p11.getParentPath() == "C:\\Users\\TestUser\\TestDir\\MyFolder");
+			Assert::IsTrue(p12.getParentPath() == "C:\\Users\\TestUser");
+			Assert::IsTrue(p13.getParentPath() == "D:");
+			Assert::IsTrue(p14.getParentPath() == "D:\\Users");  
+
+			Assert::IsTrue(p15.getRelativePath() == "\\Test\\TestUser\\TestDir2");
+			Assert::IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
+		}
+	};	
 }

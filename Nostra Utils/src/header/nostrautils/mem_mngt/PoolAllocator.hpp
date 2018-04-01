@@ -1,10 +1,10 @@
 #ifndef NOU_MEM_MNGT_POOL_ALLOCATOR_HPP
 #define NOU_MEM_MNGT_POOL_ALLOCATOR_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\mem_mngt\Utils.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/mem_mngt/Utils.hpp"
 
 /**
 \file mem_mngt/PoolAllocator.hpp
@@ -19,9 +19,9 @@ namespace NOU::NOU_MEM_MNGT
 {
 
 	/**
-	\tparam T The type of the elements that are stored in the PoolBlock.
+	\tparam T	The type of the elements that are stored in the PoolBlock.
 
-	\brief An union that defines the PoolBlock.
+	\brief		An union that defines the PoolBlock.
 	*/
 	template <typename T>
 	union PoolBlock
@@ -41,9 +41,9 @@ namespace NOU::NOU_MEM_MNGT
 	};
 
 	/**
-	\tparam T The type of the stored elements.
+	\tparam T	The type of the stored elements.
 
-	\brief A class that defines the PoolAllocator.
+	\brief		A class that defines the PoolAllocator.
 	*/
 	template <typename T>
 	class NOU_CLASS PoolAllocator
@@ -82,13 +82,13 @@ namespace NOU::NOU_MEM_MNGT
 	public:
 
 		/**
-		\param size The size of the PoolAllocator. Can be set manually or can use the default size.
+		\param size			The size of the PoolAllocator. Can be set manually or can use the default size.
 
-		\param allocator Reference to an AllocationCallback that is used for initializing the m_blocks
-		vector.
+		\param allocator	Reference to an AllocationCallback that is used for initializing the m_blocks
+							vector.
 
-		\brief Constructs a new PoolAllocator. Calls the newPool(sizeType size), which creates the 
-		PoolAllocator.
+		\brief				Constructs a new PoolAllocator. Calls the newPool(sizeType size), which creates 
+							the PoolAllocator.
 		*/
 		explicit PoolAllocator(sizeType size = POOL_ALLOCATOR_DEFAULT_SIZE, 
 			AllocationCallback<PoolBlock<T>*> &allocator = 
@@ -115,10 +115,10 @@ namespace NOU::NOU_MEM_MNGT
 		PoolAllocator& operator=(const PoolAllocator&& other)	= delete;
 
 		/**
-		\param size The size of the new PoolAllocator. Can be set manually or can use the default size.
+		\param size	The size of the new PoolAllocator. Can be set manually or can use the default size.
 
-		\brief Creates new PoolBlocks which are stored in the m_blocks vector. When a new PoolBlock is
-			   created, the last element of the old one points to the new one.
+		\brief		Creates new PoolBlocks which are stored in the m_blocks vector. When a new PoolBlock is
+					created, the last element of the old one points to the new one.
 		*/
 		void newPool(sizeType size = POOL_ALLOCATOR_DEFAULT_SIZE);
 
@@ -128,21 +128,20 @@ namespace NOU::NOU_MEM_MNGT
 		~PoolAllocator();
 
 		/**
-		\tparam arguments The type of passed arguments to the method.
+		\tparam arguments	The type of passed arguments to the method.
+		\param args			The passed arguments.
 
-		\param args The passed arguments.
+		\return				Returns a pointer to an object of type T.
 
-		\return Returns a pointer to an object of type T.
-
-		\brief Allocates the PoolBlocks for the objects.
+		\brief				Allocates the PoolBlocks for the objects.
 		*/
 		template <typename... arguments>
 		T* allocate(arguments&&... args);
 
 		/**
-		\param data A pointer of type T to the object that will be deallocated.
+		\param data	A pointer of type T to the object that will be deallocated.
 
-		\brief Deallocates the PoolBlock that stores the passed element.
+		\brief		Deallocates the PoolBlock that stores the passed element.
 		*/
 		void deallocate(T* data);
 	};

@@ -1,18 +1,19 @@
 #ifndef	NOU_THREAD_TASK_QUEUE_HPP
 #define NOU_THREAD_TASK_QUEUE_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\thread\ThreadManager.hpp"
-#include "nostrautils\thread\Task.hpp"
-#include "nostrautils\dat_alg\Uninitialized.hpp"
-#include "nostrautils\dat_alg\FastQueue.hpp"
-#include "nostrautils\thread\ConditionVariable.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/thread/ThreadManager.hpp"
+#include "nostrautils/thread/Task.hpp"
+#include "nostrautils/dat_alg/Uninitialized.hpp"
+#include "nostrautils/dat_alg/FastQueue.hpp"
+#include "nostrautils/thread/ConditionVariable.hpp"
 #include <type_traits>
 
-/** \file thread\AsyncTaskResult.hpp
+
+/** \file thread\TaskQueue.hpp
 \author	 Lukas Reichmann
 \since   0.0.1
 \version 0.0.1
@@ -144,7 +145,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator * overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R multiplicate(R &&previous, R &&current);
+		NOU_FUNC R multiply(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -160,7 +161,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator * overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R multiplicateInverted(R &&previous, R &&current);
+		NOU_FUNC R multiplyInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -258,7 +259,6 @@ namespace NOU::NOU_THREAD
 	\note 
 	This documentation is only those tasks that have a return type other than void. For a documentation of the
 	specialization that is used when the result type is void, see TaskQueue<void, I, ACCUM, ARGS>. 
-	///\todo check if this link works
 	*/
 	template<typename R, typename I, typename ACCUM = 
 		TaskQueueAccumulators::FunctionPtr<
@@ -520,14 +520,7 @@ namespace NOU::NOU_THREAD
 
 	\note
 	This documentation is only those tasks that have the return type void. For a documentation of the class 
-	that is used when the result type is not void, see TaskQueue<R, I, ACCUM, ARGS>.
-
-	\note
-	Since the main class has a default parameter for \p ACCUM, so does this specialization. However, it is not
-	possible to use <tt>TaskQueueAccumulators::FunctionPtr<void></tt> (for technical reasons that are not 
-	important at this point). Instead, the class uses 
-	TaskQueueAccumulators::FunctionPtr<TaskQueueAccumulators::Void> as its default accumulator type.
-	///\todo check if this link works
+	that is used when the result type is not void, see TaskQueue.
 	*/
 	template<typename I, typename ACCUM, typename... ARGS>
 	class NOU_CLASS TaskQueue<void, I, ACCUM, ARGS...>
@@ -711,6 +704,8 @@ namespace NOU::NOU_THREAD
 		void close();
 	};
 
+	///\cond
+
 	namespace TaskQueueAccumulators
 	{
 		template<typename R>
@@ -744,13 +739,13 @@ namespace NOU::NOU_THREAD
 		}
 
 		template<typename R>
-		NOU_FUNC R multiplicate(R &&previous, R &&current)
+		NOU_FUNC R multiply(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) * NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		NOU_FUNC R multiplicateInverted(R &&previous, R &&current)
+		NOU_FUNC R multiplyInverted(R &&previous, R &&current)
 		{
 			return mulAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
@@ -1080,6 +1075,8 @@ namespace NOU::NOU_THREAD
 	{
 		m_closed = true;
 	}
+
+///\endcond
 }
 
 #endif

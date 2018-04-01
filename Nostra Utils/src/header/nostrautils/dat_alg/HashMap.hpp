@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_HASHMAP_HPP
 #define	NOU_DAT_ALG_HASHMAP_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Hashing.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Hashing.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 /** \file Vector.hpp
 \author  Leslie Marxen	
@@ -66,8 +66,8 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		Vector<K> keySet();
 		/**
-		\input			K key;
-		\brief Removes an Object which the specific key.
+		\param key;
+		\brief Removes an Object wich the specific key.
 		*/
 		V& remove(K key);
 		/**
@@ -76,13 +76,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		Vector<V> entrySet();
 		/**
-		\input			K key;
+		\param			key;
 		\return			boolean;
 		\brief Checks if the key is in the map.
 		*/
 		boolean containsKey(K key);
 		/**
-		\input			const Key (K);
+		\param			key;
 		\return			Object V;
 		\brief Overloading [] operators. They act now like at(index).
 		*/
@@ -90,7 +90,7 @@ namespace NOU::NOU_DAT_ALG
 
 	};
 
-
+	///\cond
 
 	template <typename K, typename V>
 	HashMap<K,V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
@@ -268,5 +268,7 @@ namespace NOU::NOU_DAT_ALG
 	V& HashMap<K,V>::operator [](const K &key) {
 		return get(key);
 	}
+
+	///\endcond
 }
 #endif

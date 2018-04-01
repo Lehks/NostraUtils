@@ -1,4 +1,4 @@
-#include "nostrautils\dat_alg\Hashing.hpp"
+#include "nostrautils/dat_alg/Hashing.hpp"
 
 namespace NOU::NOU_DAT_ALG
 {
