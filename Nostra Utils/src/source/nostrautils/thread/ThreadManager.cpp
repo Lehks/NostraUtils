@@ -1,9 +1,9 @@
-#include "nostrautils\thread\ThreadManager.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\dat_alg\BinaryHeap.hpp"
-#include "nostrautils\dat_alg\ObjectPool.hpp"
-#include "nostrautils\core\Assertions.hpp"
-#include "nostrautils\dat_alg\HashMap.hpp"
+#include "nostrautils/thread/ThreadManager.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/dat_alg/BinaryHeap.hpp"
+#include "nostrautils/dat_alg/ObjectPool.hpp"
+#include "nostrautils/core/Assertions.hpp"
+#include "nostrautils/dat_alg/HashMap.hpp"
 
 #include <iostream>
 

@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_STRING_HPP
 #define	NOU_DAT_ALG_STRING_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 #include <iostream>
 #include <stdlib.h>
@@ -153,13 +153,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		String(CharType c);
 		/**
-		\param c Another String.
+		\param other Another String.
 
 		\brief Copy Constructor.
 		*/
 		String(const String &other);
 		/**
-		\param c Another String.
+		\param other Another String.
 
 		\brief Move Constructor.
 		*/
@@ -1433,7 +1433,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float32 nr)
 	{
 		if (b)
-			append(FloatToString(nr));
+			append(floatToString(nr));
 
 		return *this;
 	}
@@ -1442,7 +1442,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float64 nr)
 	{
 		if (b)
-			append(FloatToString(nr));
+			append(floatToString(nr));
 
 		return *this;
 	}
@@ -1463,7 +1463,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = m_data.size();
 
-		m_data.insert(insertIndex, src.logicalSubstring(start, end))
+		m_data.insert(insertIndex, src.logicalSubstring(start, end));
 	}
 
 	template<typename CHAR_TYPE>
@@ -1472,7 +1472,7 @@ namespace NOU::NOU_DAT_ALG
 		NOU_COND_PUSH_ERROR((start > m_data.size() - 1),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		else if (start <= m_data.capacity() && end > m_data.capacity())
+		if (start <= m_data.capacity() && end > m_data.capacity())
 		{
 			m_data.expandCapacity(end - m_data.capacity());
 		}
@@ -1504,8 +1504,8 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::preserve(sizeType start, sizeType end)
 	{
-		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
-			end = m_data.size();
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
+			end = m_data.size() - 1;
 
 		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
@@ -1525,12 +1525,16 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::substring(sizeType start, sizeType end) const
 	{
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
+			end = m_data.size() - 1;
+
 		String<CHAR_TYPE> strnew;
 
-		for (sizeType i = start; i < end; i++)
+		for (sizeType i = start; i <= end; i++)
 		{
-			strnew.m_data.at(i) = m_data.at(i);
+			strnew.append(m_data.at(i));
 		}
+		strnew.append(StringView<CHAR_TYPE>::NULL_TERMINATOR);
 		strnew.setSize(strnew.m_data.size() - 1);
 
 		return strnew;
@@ -1541,7 +1545,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		String<CHAR_TYPE> strnew;
 
-		for (sizeType i = 0; i < m_data.size() - 1; i++)
+		for (sizeType i = 0; i < m_data.size(); i++)
 		{
 			strnew.append(m_data[i]);
 		}

@@ -717,7 +717,7 @@ namespace UnitTests
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
 				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345")>::value);
 			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!§$%&")>::value);
+				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!ï¿½$%&")>::value);
 
 			constexpr NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
@@ -1561,6 +1561,21 @@ namespace UnitTests
 			return i;
 		}
 
+		class DummyClass
+		{
+			//empty class
+		};
+
+		static NOU::int32 taskTestFunction3(const DummyClass dc)
+		{
+			return 1;
+		}
+
+		static void taskTestFunction4(const DummyClass dc)
+		{
+
+		}
+
 		TEST_METHOD(Task)
 		{
 			NOU::int32 i1 = 5;
@@ -1571,6 +1586,7 @@ namespace UnitTests
 			task1.execute();
 
 			Assert::IsTrue(out == i1);
+
 
 
 			//just to make sure that INVALID_OBJECT is the first error in the handler later
@@ -1589,6 +1605,16 @@ namespace UnitTests
 			task2.execute();
 
 			Assert::IsTrue(task2.getResult() == i2);
+
+
+			//check if this compiles
+			const DummyClass dc;
+
+			auto task3 = NOU::NOU_THREAD::makeTask(&taskTestFunction3, dc);
+
+			auto task4 = NOU::NOU_THREAD::makeTask(&taskTestFunction4, dc);
+
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		//no more tests are possible, since the remaining methods of thread manager are either not reliable 
@@ -1600,6 +1626,24 @@ namespace UnitTests
 
 			Assert::IsTrue(manager.maximumAvailableThreads() == 
 				NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(OffsetOf)
+		{
+			struct TestStruct
+			{
+				NOU::int32 x;
+				NOU::int32 y;
+				NOU::int32 z;
+			};
+
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, x) == offsetof(TestStruct, x));
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, y) == offsetof(TestStruct, y));
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, z) == offsetof(TestStruct, z));
+
+			NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(Path)
