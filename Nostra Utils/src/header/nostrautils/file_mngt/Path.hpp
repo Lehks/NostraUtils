@@ -1,10 +1,10 @@
 #ifndef NOU_FILE_MNGT_PATH_HPP
 #define NOU_FILE_MNGT_PATH_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\dat_alg\LazyEvaluationProperty.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/LazyEvaluationProperty.hpp"
 
 /** \file Vector.hpp
 \author  Dennis Franz

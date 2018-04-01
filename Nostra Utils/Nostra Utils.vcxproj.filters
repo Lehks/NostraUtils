@@ -143,9 +143,6 @@
     <ClInclude Include="src\header\nostrautils\thread\Threads.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\file_mngt\FileManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -185,9 +182,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\source\nostrautils\file_mngt\FileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp">

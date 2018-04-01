@@ -1,4 +1,4 @@
-#include "nostrautils\file_mngt\Path.hpp"
+#include "nostrautils/file_mngt/Path.hpp"
 #include <iostream>
 
 

@@ -1,9 +1,9 @@
 #ifndef NOU_FILE_MNGT_FILE_HPP
 #define NOU_FILE_MNGT_FILE_HPP
 
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 #include <stdio.h>
 
 
