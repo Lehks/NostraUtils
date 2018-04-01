@@ -1700,8 +1700,6 @@ namespace UnitTests
 			// p15 == cwd\\Test\\Dennis\\WasGehtAb
 			NOU::NOU_FILE_MNGT::Path p15 = str;
 
-			NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
-
 			Assert::IsTrue(p.getName() == "testfile");
 			Assert::IsTrue(p1.getName() == "testfile");
 			Assert::IsTrue(p2.getName() == "testfile");
@@ -1733,7 +1731,15 @@ namespace UnitTests
 			Assert::IsTrue(p14.getParentPath() == "D:\\Users");  
 
 			Assert::IsTrue(p15.getRelativePath() == "\\Test\\TestUser\\TestDir2");
-			Assert::IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
+			if (str.startsWith('C'))
+			{
+				NOU::NOU_FILE_MNGT::Path p16 = "D:\\Users\\TestUser\\TestDir";
+				Assert::IsTrue(p16.getRelativePath() == "D:\\Users\\TestUser\\TestDir");
+			}
+			else {
+				NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
+				Assert::IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
+			}
 		}
 	};	
 }
