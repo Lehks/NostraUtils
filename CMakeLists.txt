@@ -19,4 +19,12 @@ if (${COMPILE_AS_DEBUG})
 endif()
 #===
 
+set (GCC_IDENTIFICATION_MACRO_REM "-U__GNUC__")
+set (MSVC_IDENTIFICATION_MACRO_REM "-U_MSC_VER")
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	add_definitions(${GCC_IDENTIFICATION_MACRO_REM})
+	add_definitions(${MSVC_IDENTIFICATION_MACRO_REM})
+endif()
+
 add_subdirectory(Nostra\ Utils)
