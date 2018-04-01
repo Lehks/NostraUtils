@@ -117,12 +117,14 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
+    <ClInclude Include="src\header\nostrautils\dat_alg\Quicksort.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\mem_mngt\GeneralPurposeAllocator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp">
+    <ClInclude Include="src\header\nostrautils\dat_alg\Random.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\BinarySearch.hpp">
@@ -141,9 +143,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\thread\Threads.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\header\nostrautils\file_mngt\FileManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp">
@@ -185,9 +184,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\source\nostrautils\file_mngt\FileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp">
