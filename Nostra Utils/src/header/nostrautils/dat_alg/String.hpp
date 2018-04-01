@@ -1528,13 +1528,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
 			end = m_data.size() - 1;
 
-		String<CHAR_TYPE> strnew;
-
-		for (sizeType i = start; i <= end; i++)
-		{
-			strnew.append(m_data.at(i));
-		}
-		strnew.setSize(strnew.m_data.size() - 1);
+		String<CHAR_TYPE> strnew = StringView<CHAR_TYPE>::logicalSubstring(start, end);
 
 		return strnew;
 	}
