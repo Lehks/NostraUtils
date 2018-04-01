@@ -18,6 +18,7 @@ int main()
 	NOU::NOU_DAT_ALG::String8 str = "HalloDennis";
 
 	std::cout << str.substring(0, 4).rawStr() << std::endl;
+	std::cout << str.substring(0, 4).size() << std::endl;
 
 	system("pause");
 }
