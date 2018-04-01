@@ -102,6 +102,8 @@ namespace NOU::NOU_FILE_MNGT
 	{		
 		Path cwd = currentWorkingDirectory();
 
+		NOU::NOU_DAT_ALG::String8 str = path;
+
 #if NOU_OS == NOU_OS_WINDOWS
 		if (!cwd.getAbsolutePath().startsWith(path.at(0)))
 		{
@@ -112,8 +114,14 @@ namespace NOU::NOU_FILE_MNGT
 		if (path == cwd.getAbsolutePath())
 			return ".";
 
+		if (path.size() != cwd.getAbsolutePath().size())
+		{
+			
+		}
+
+
 		sizeType prevIndex = 0;
-		sizeType nextIndex = path.find(PATH_SEPARATOR, prevIndex);
+		sizeType nextIndex = cwd.getAbsolutePath().find(PATH_SEPARATOR, prevIndex);
 
 		while (nextIndex != NOU_DAT_ALG::StringView8::NULL_INDEX)
 		{
@@ -143,7 +151,7 @@ namespace NOU::NOU_FILE_MNGT
 			}
 
 			prevIndex = nextIndex;
-			nextIndex = path.find(PATH_SEPARATOR, prevIndex);
+			nextIndex = cwd.getAbsolutePath().find(PATH_SEPARATOR, prevIndex);
 		}		
 
 		return NOU_DAT_ALG::String8(path.logicalSubstring(prevIndex +1 , path.size()));
