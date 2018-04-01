@@ -1,10 +1,9 @@
 #ifndef NOU_DAT_ALG_QUICKSORT_HPP
 #define NOU_DAT_ALG_QUICKSORT_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\dat_alg\Comparator.hpp"
-
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/dat_alg/Comparator.hpp"
 
 /** \file Quicksort.hpp
 \author  Mahan Karimi

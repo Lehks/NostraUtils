@@ -1,5 +1,5 @@
 
-#include "nostrautils\dat_alg\Random.hpp"
+#include "nostrautils/dat_alg/Random.hpp"
 
 namespace NOU::NOU_DAT_ALG
 {

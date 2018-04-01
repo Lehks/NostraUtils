@@ -1,10 +1,10 @@
 #ifndef NOU_DAT_ALG_RANDOM_HPP
 #define NOU_DAT_ALG_RANDOM_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\dat_alg\Comparator.hpp"
-#include <iostream>
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/dat_alg/Comparator.hpp"
+#include <iostream>	 
 #include <ctime>
 
 
