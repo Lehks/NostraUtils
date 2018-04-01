@@ -1,7 +1,17 @@
 #include "nostrautils/file_mngt/File.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
 
 namespace NOU::NOU_FILE_MNGT
 {
+	void File::fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode)
+	{
+		#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+			fopen_s(file, filename.rawStr(), mode.rawStr());
+		#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+			fopen(file, filename.rawStr(), mode.rawStr());
+		#endif
+	}
+
 	File::File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode)
 	{
 		//#pragma warning(suppress : 4996)
@@ -92,22 +102,22 @@ namespace NOU::NOU_FILE_MNGT
 			switch (m_mode)
 			{
 				case AccessMode::READ:
-					fopen_s(&m_data, m_absolutePath.rawStr(), "r");
+					fopen(&m_data, m_absolutePath, "r");
 					break;
 				case AccessMode::WRITE:
-					fopen_s(&m_data, m_absolutePath.rawStr(), "w");
+					fopen(&m_data, m_absolutePath.rawStr(), "w");
 					break;
 				case AccessMode::APPEND:
-					fopen_s(&m_data, m_absolutePath.rawStr(), "a");
+					fopen(&m_data, m_absolutePath.rawStr(), "a");
 					break;
 				case AccessMode::READ_WRITE:
-					fopen_s(&m_data, m_absolutePath.rawStr(), "r+");
+					fopen(&m_data, m_absolutePath.rawStr(), "r+");
 					break;
 				case AccessMode::READ_WRITE_RESET:
-					fopen_s(&m_data, m_absolutePath.rawStr(), "w+");
+					fopen(&m_data, m_absolutePath.rawStr(), "w+");
 					break;
 				case AccessMode::READ_APPEND:
-					fopen_s(&m_data, m_absolutePath.rawStr(), "a+");
+					fopen(&m_data, m_absolutePath.rawStr(), "a+");
 					break;
 			}
 		}
@@ -140,7 +150,6 @@ namespace NOU::NOU_FILE_MNGT
 
 	void File::calcAbsolutePath()
 	{
-		m_absolutePath;
 		m_absolutePath.append(m_path);
 		m_absolutePath.append("/");
 		m_absolutePath.append(m_name);

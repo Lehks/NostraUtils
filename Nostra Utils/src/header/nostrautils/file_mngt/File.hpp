@@ -47,6 +47,17 @@ namespace NOU::NOU_FILE_MNGT
 	{
 	private:
 		/**
+		 \param file     The file handle of the opened file. This is an output parameter.
+		 \param filename The name of the file to open.
+		 \param mode     The mode to open the file with.
+
+		 \return A handle to the opened file.
+
+		 \brief Wraps around either fopen() on POSIX systems or fopen_s() on a Windows system.
+		*/
+		static void fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode);
+
+		/**
 		\brief File stream of the opened File
 		*/
 		FILE															*m_data;
