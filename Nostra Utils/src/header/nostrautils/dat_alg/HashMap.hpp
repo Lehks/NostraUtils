@@ -163,6 +163,7 @@ namespace NOU::NOU_DAT_ALG
 		if (m_data[n].size() == 0) 
 		{	//if nothing is mapped to HashPos n, return null
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
+			return nullptr;
 		}
 
 		for (sizeType i = 0; i < m_data[n].size(); i++)
@@ -174,6 +175,7 @@ namespace NOU::NOU_DAT_ALG
 		}
 
 		NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
+		return nullptr;
 	}
 
 	template<typename K, typename V>
