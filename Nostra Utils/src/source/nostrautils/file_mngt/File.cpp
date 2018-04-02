@@ -14,9 +14,6 @@ namespace NOU::NOU_FILE_MNGT
 
 	File::File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode)
 	{
-		//#pragma warning(suppress : 4996)
-		//m_data = fopen(name, mode);
-		//m_head = reinterpret_cast<byte*>(m_data);
 
 		setPath(path);
 		setMode(mode);
@@ -86,10 +83,10 @@ namespace NOU::NOU_FILE_MNGT
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
 		if (m_mode != AccessMode::READ)
 		{
-		/*	char8 *p;
+			char8 *p;
 			p = s.rawStr;
 			fread(p, s.size(), 1, m_data);
-		*/	return true;
+			return true;
 		}
 		return false;
 	}
