@@ -1,9 +1,10 @@
 #ifndef NOU_FILE_MNGT_FILE_HPP
 #define NOU_FILE_MNGT_FILE_HPP
 
-#include "nostrautils/dat_alg/String.hpp"
-#include "nostrautils/dat_alg/StringView.hpp"
-#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils\dat_alg\String.hpp"
+#include "nostrautils\dat_alg\StringView.hpp"
+#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\file_mngt\Path.hpp"
 #include <stdio.h>
 
 
@@ -69,26 +70,18 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief Path to the folder containing the file
 		*/
-		NOU::NOU_DAT_ALG::StringView8							m_path;
-		/**
-		\brief Absolute path to the corresponding File
-		*/
-		NOU::NOU_DAT_ALG::String8								m_absolutePath;
-		/**
-		\brief Name of the File
-		*/
-		NOU::NOU_DAT_ALG::StringView8							m_name;
+		//NOU::NOU_DAT_ALG::StringView8							m_path
+		Path															m_path;
 
 	public:
 
 		/**
 		\brief Constructor of the File class
-		0
-		\param name name of the file
+
 		\param mode how the file will be interpreted(Read/Write)
-		\param path absolute path to the file
+		\param path Path object containing the path to the file
 		*/
-		File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode = AccessMode::READ_WRITE);
+		File(const Path &path, AccessMode mode = AccessMode::READ_WRITE);
 		
 		/**
 		\brief Copy-constructor of the File class
@@ -161,19 +154,6 @@ namespace NOU::NOU_FILE_MNGT
 
 		bool isCurrentlyOpen();
 
-		
-		/**
-		\brief Getter for name
-		\return name
-		*/
-		const NOU::NOU_DAT_ALG::StringView8& getName();
-
-		/**
-		\brief Setter for name
-		\param name name of the File
-		*/
-		void setName(const NOU::NOU_DAT_ALG::StringView8 &name);
-
 		/**
 		\brief Getter for AccessMode
 		\return current AccessMode 
@@ -190,31 +170,13 @@ namespace NOU::NOU_FILE_MNGT
 		\brief Getter for Path
 		\return path
 		*/
-		const NOU::NOU_DAT_ALG::StringView8& getPath();
-		/**
-		\brief Setter for the Path
-		\param path Path of the file
-		*/
-		void setPath(const NOU::NOU_DAT_ALG::StringView8 &path);
-
-		/**
-		\brief Getter for absolutepath
-		\return absolutepath
-		*/
-		const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath();
+		const Path& getPath();
 
 		/**
 		\brief Getter for datastream
 		\return datastream
 		*/
 		FILE* getData(); 
-
-	private:
-
-		/**
-		\brief Calculates the internal stored absulute path from the name and path
-		*/
-		void calcAbsolutePath();
 
 	};
 }

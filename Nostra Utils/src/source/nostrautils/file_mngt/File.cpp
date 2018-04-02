@@ -12,26 +12,23 @@ namespace NOU::NOU_FILE_MNGT
 		#endif
 	}
 
-	File::File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode)
-	{
 
-		setPath(path);
+	File::File(const Path &path, AccessMode mode) :
+		m_path(path),
+		m_mode(mode)
+	{
 		setMode(mode);
-		setName(name);
-		m_data = nullptr;
-		
 	}
 	//mv
-	File::File(File &&other)
+	File::File(File &&other) :
+		m_path(other.m_path),
+		m_mode(other.m_mode),
+		m_data(other.m_data)
+
 	{
-		setName(other.m_name);
-		m_data = other.m_data;
-		setPath(other.m_path);
-		setMode(other.m_mode);
 		other.close();
 		other.setMode(AccessMode::READ_WRITE);
-		other.setName("");
-		other.setPath("");
+		other.m_path;
 	}
 
 	File::~File()
@@ -84,7 +81,7 @@ namespace NOU::NOU_FILE_MNGT
 		if (m_mode != AccessMode::READ)
 		{
 			char8 *p;
-			p = s.rawStr;
+			p = s->rawStr;
 			fread(p, s.size(), 1, m_data);
 			return true;
 		}
@@ -99,22 +96,22 @@ namespace NOU::NOU_FILE_MNGT
 			switch (m_mode)
 			{
 				case AccessMode::READ:
-					fopen(&m_data, m_absolutePath, "r");
+					fopen(&m_data, m_path.getAbsolutePath(), "r");
 					break;
 				case AccessMode::WRITE:
-					fopen(&m_data, m_absolutePath.rawStr(), "w");
+					fopen(&m_data, m_path.getAbsolutePath(), "w");
 					break;
 				case AccessMode::APPEND:
-					fopen(&m_data, m_absolutePath.rawStr(), "a");
+					fopen(&m_data, m_path.getAbsolutePath(), "a");
 					break;
 				case AccessMode::READ_WRITE:
-					fopen(&m_data, m_absolutePath.rawStr(), "r+");
+					fopen(&m_data, m_path.getAbsolutePath(), "r+");
 					break;
 				case AccessMode::READ_WRITE_RESET:
-					fopen(&m_data, m_absolutePath.rawStr(), "w+");
+					fopen(&m_data, m_path.getAbsolutePath(), "w+");
 					break;
 				case AccessMode::READ_APPEND:
-					fopen(&m_data, m_absolutePath.rawStr(), "a+");
+					fopen(&m_data, m_path.getAbsolutePath(), "a+");
 					break;
 			}
 		}
@@ -143,25 +140,7 @@ namespace NOU::NOU_FILE_MNGT
 	bool File::isCurrentlyOpen()
 	{
 		return m_data != nullptr;
-	}
-
-	void File::calcAbsolutePath()
-	{
-		m_absolutePath.append(m_path);
-		m_absolutePath.append("/");
-		m_absolutePath.append(m_name);
-		close();
-	}
-	
-	const NOU::NOU_DAT_ALG::StringView8& File::getName()
-	{
-		return m_name;
-	}
-	void File::setName(const NOU::NOU_DAT_ALG::StringView8 &name)
-	{
-		m_name = name;
-		calcAbsolutePath();
-	}
+	}	
 
 	const AccessMode& File::getMode()
 	{
@@ -172,20 +151,11 @@ namespace NOU::NOU_FILE_MNGT
 		m_mode = mode;
 	}
 
-	const NOU::NOU_DAT_ALG::StringView8& File::getPath()
+	const Path& File::getPath()
 	{
 		return m_path;
 	}
-	void File::setPath(const NOU::NOU_DAT_ALG::StringView8 &path)
-	{
-		m_path = path;
-		calcAbsolutePath();
-	}
 
-	const NOU::NOU_DAT_ALG::StringView8& File::getAbsolutePath()
-	{
-		return m_absolutePath;
-	}
 	FILE* File::getData()
 	{
 		return m_data;
