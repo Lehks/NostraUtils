@@ -51,7 +51,6 @@ namespace NOU::NOU_FILE_MNGT
 		 \param filename The name of the file to open.
 		 \param mode     The mode to open the file with.
 
-		 \return A handle to the opened file.
 
 		 \brief Wraps around either fopen() on POSIX systems or fopen_s() on a Windows system.
 		*/
