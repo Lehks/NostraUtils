@@ -71,7 +71,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param key		the key where a value will be returned
 		\return value
-		\brief Returns the corresponding value mapped to a specific key
+		\brief Returns the corresponding value mapped to a specific key or nullptr if it does not exist
 		*/
 		V& get(const K &key);
 		/**
@@ -173,7 +173,6 @@ namespace NOU::NOU_DAT_ALG
 			m_size++;
 			return true;
 		}
-
 	}
 
 	template <typename K, typename V>
