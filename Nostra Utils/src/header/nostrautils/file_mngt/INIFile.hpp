@@ -3,6 +3,7 @@
 
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\dat_alg\String.hpp"
+#include "nostrautils\dat_alg\HashMap.hpp"
 #include <unordered_map>
 
 
@@ -25,22 +26,22 @@ namespace NOU::NOU_FILE_MNGT
 			/**
 			\brief Holds the parsed key value pairs, with the values being NouStrings.
 			*/
-			std::unordered_map<NouString, NouString> m_data_string;
+			NOU::NOU_DAT_ALG::HashMap<NouString, NouString> m_data_string;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being int32.
 			*/
-			std::unordered_map<NouString, int32> m_data_integer;
+			NOU::NOU_DAT_ALG::HashMap<NouString, int32> m_data_integer;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being float32.
 			*/
-			std::unordered_map<NouString, float32> m_data_float;
+			NOU::NOU_DAT_ALG::HashMap<NouString, float32> m_data_float;
 
 			/**
 			\brief Holds the parsed sections and the amount of keys within that section
 			*/
-			std::unordered_map<NouString, int32> m_data_sections;
+			NOU::NOU_DAT_ALG::HashMap<NouString, int32> m_data_sections;
 
 			/**
 			\brief The target file name to read from/write to.
@@ -166,7 +167,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as NouString.
 			*/
-			NouString getString(const NouString &, const NouString & = INI_DEFAULT_SECTION) const;
+			NouString getString(const NouString &, const NouString & = INI_DEFAULT_SECTION);
 
 			/**
 			\param The key to search
@@ -174,7 +175,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as integer.
 			*/
-			int32 getInt(const NouString &, const NouString & = INI_DEFAULT_SECTION) const;
+			int32 getInt(const NouString &, const NouString & = INI_DEFAULT_SECTION);
 
 			/**
 			\param The key to search
@@ -182,7 +183,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as float.
 			*/
-			float32 getFloat(const NouString &, const NouString & = INI_DEFAULT_SECTION) const;
+			float32 getFloat(const NouString &, const NouString & = INI_DEFAULT_SECTION);
 
 			/**
 			\param The key to search
@@ -190,7 +191,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Checks if a given key exists in the given section.
 			*/
-			boolean keyExists(const NouString &, const NouString & = INI_DEFAULT_SECTION) const;
+			boolean keyExists(const NouString &, const NouString & = INI_DEFAULT_SECTION);
 	};
 }
 #endif
