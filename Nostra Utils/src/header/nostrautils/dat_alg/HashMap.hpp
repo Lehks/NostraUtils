@@ -214,7 +214,7 @@ namespace NOU::NOU_DAT_ALG
 			}
 		}
 
-		return tmpPair.dataTwo;
+		return tmpPair->dataTwo;
 	}
 
 	template<typename K, typename V>
