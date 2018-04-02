@@ -24,9 +24,26 @@ namespace NOU::NOU_FILE_MNGT
 
 	
 
-	bool Folder::exists()
+	bool Folder::exists(const NOU::NOU_FILE_MNGT::Path &p)
 	{
+		if()
 		return true;
+		
 	}
+
+	void Folder::read_directory(const NOU::NOU_DAT_ALG::String8& name, NOU::NOU_DAT_ALG::Vector<NOU::NOU_DAT_ALG::String8> & v)
+	{
+		NOU::NOU_DAT_ALG::String8 pattern(name);
+		pattern.append("\\*");
+		WIN32_FIND_DATA data;
+		HANDLE hFind;
+		if ((hFind = FindFirstFile(pattern.rawStr(), &data)) != INVALID_HANDLE_VALUE) {
+			do {
+				v.emplaceBack(data.cFileName);
+			} while (FindNextFile(hFind, &data) != 0);
+			FindClose(hFind);
+		}
+	}
+
 
 }

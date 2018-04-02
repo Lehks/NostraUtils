@@ -46,7 +46,9 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		void create(const char * m_path);
 
-		bool exists();
+		bool exists(const NOU::NOU_FILE_MNGT::Path &p);
+
+		void read_directory(const NOU::NOU_DAT_ALG::String8& name, NOU::NOU_DAT_ALG::Vector<NOU::NOU_DAT_ALG::String8> & v);
 
 		/*
 		\brief A function that allows you to change the groups of a folder .
