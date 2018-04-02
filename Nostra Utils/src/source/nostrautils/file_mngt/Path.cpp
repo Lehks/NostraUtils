@@ -1,4 +1,4 @@
-#include "nostrautils\file_mngt\Path.hpp"
+#include "nostrautils/file_mngt/Path.hpp"
 #include <iostream>
 
 
@@ -100,37 +100,43 @@ namespace NOU::NOU_FILE_MNGT
 
 	NOU_DAT_ALG::String8 Path::evaluateRelativePath(const NOU_DAT_ALG::StringView8 &path)
 	{		
-	//  "C:\\Users\\Dennis";										current directory (TestDir)
-
-	//  "C:\\Users\\Dennis\\TestDir\\MyFile.exe";					\\TestDir\\MyFile.exe
-	//  "C:\\Users\\Dennis\\TestDir\\MyFolder\\MyFile.txt";			\\TestDir\\MyFolder\\MyFile.txt
-	//  "C:\\Users\\Dennis\\TestDir";								\\TestDir
-	//  "C:\\Users\\";												..\\
-	//  "C:\\Users\\SomeOtherDir";									..\\SomeOtherDir
-
-	//  Relativer Pfad = Weg von pwd zu path.
-
-
 		Path cwd = currentWorkingDirectory();
+
+		NOU::NOU_DAT_ALG::String8 str = path;
+
+#if NOU_OS == NOU_OS_WINDOWS
+		if (!cwd.getAbsolutePath().startsWith(path.at(0)))
+		{
+			return path;
+		}
+#endif
 
 		if (path == cwd.getAbsolutePath())
 			return ".";
 
-		sizeType prevIndex = -1;
-		sizeType nextIndex = path.find(PATH_SEPARATOR);
+		if (str.substring(0, cwd.getAbsolutePath().size()) == cwd.getAbsolutePath())
+		{
+			sizeType lastPathSeparator = cwd.getAbsolutePath().size();
+			return NOU_DAT_ALG::String8(path.logicalSubstring(lastPathSeparator, path.size()));
+		}
+
+
+		sizeType prevIndex = 0;
+		sizeType nextIndex = cwd.getAbsolutePath().find(PATH_SEPARATOR, prevIndex);
 
 		while (nextIndex != NOU_DAT_ALG::StringView8::NULL_INDEX)
 		{
+
 			if (cwd.getAbsolutePath().logicalSubstring(prevIndex + 1, nextIndex) != path.logicalSubstring(prevIndex + 1, nextIndex))
 			{
 				NOU_DAT_ALG::String8 str;
-				sizeType separatorCounter = 1;
+				sizeType separatorCounter = 0;
 				sizeType firstIndexOfDifference = prevIndex;
 
 				while (nextIndex != NOU_DAT_ALG::StringView8::NULL_INDEX)
 				{
 					prevIndex = nextIndex;
-					nextIndex = cwd.getAbsolutePath().find(PATH_SEPARATOR, prevIndex);
+					nextIndex = cwd.getAbsolutePath().find(PATH_SEPARATOR, prevIndex + 1);
 
 					separatorCounter++;
 				}
@@ -140,19 +146,16 @@ namespace NOU::NOU_FILE_MNGT
 					str.append("..").append(PATH_SEPARATOR);
 				}
 
-				str.append(path.logicalSubstring(firstIndexOfDifference, path.size()));
+				str.append(path.logicalSubstring(firstIndexOfDifference + 1, path.size()));
 
 				return str;
 			}
 
 			prevIndex = nextIndex;
-			nextIndex = path.find(PATH_SEPARATOR, prevIndex);
-		}
+			nextIndex = cwd.getAbsolutePath().find(PATH_SEPARATOR, prevIndex);
+		}		
 
-
-		
-
-		return NOU_DAT_ALG::String8(path.logicalSubstring(prevIndex, path.size()));
+		return NOU_DAT_ALG::String8(path.logicalSubstring(prevIndex +1 , path.size()));
 	}
 
 	NOU_DAT_ALG::String8 Path::evaluateParentPath(const NOU_DAT_ALG::StringView8 &path)
@@ -165,7 +168,12 @@ namespace NOU::NOU_FILE_MNGT
 			return "";
 		}
 
-		return NOU_DAT_ALG::String8(path.logicalSubstring(0, lastPathSeparator));;
+		if (path.endsWith(PATH_SEPARATOR))
+		{
+			return evaluateParentPath(path.logicalSubstring(0, lastPathSeparator - 1));
+		}
+
+		return NOU_DAT_ALG::String8(path.logicalSubstring(0, lastPathSeparator));
 	}
 
 	Path Path::currentWorkingDirectory()
@@ -179,7 +187,16 @@ namespace NOU::NOU_FILE_MNGT
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 		char cwd[1024];
 
-		char *getcwd(char *cwd, sizeof(cwd));
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused" 
+#endif
+
+		*getcwd(cwd, sizeof(cwd));
+
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
 
 		return Path(cwd);
 #endif

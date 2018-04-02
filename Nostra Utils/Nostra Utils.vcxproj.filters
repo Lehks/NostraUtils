@@ -29,6 +29,7 @@
     <None Include="src\source\nostrautils\thread\.gitignore" />
     <None Include="Doc\resources\Documentation.dox" />
     <None Include="Doc\resources\Doxyfile" />
+    <None Include="Doc\resources\ThreadManager.dox" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp">
@@ -56,9 +57,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp">
@@ -91,6 +89,9 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Uninitialized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\BinaryHeap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\thread\ThreadManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -112,19 +113,18 @@
     <ClInclude Include="src\header\nostrautils\thread\Lock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\thread\Protection.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\BinaryHeap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
+    <ClInclude Include="src\header\nostrautils\dat_alg\Quicksort.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\mem_mngt\GeneralPurposeAllocator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp">
+    <ClInclude Include="src\header\nostrautils\dat_alg\Random.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\BinarySearch.hpp">
@@ -143,9 +143,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\thread\Threads.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\header\nostrautils\file_mngt\FileManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp">
@@ -192,9 +189,6 @@
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\source\nostrautils\file_mngt\FileManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -204,5 +198,9 @@
     <ClCompile Include="src\source\nostrautils\file_mngt\Folder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\output\Warnings.txt" />
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>

@@ -1,10 +1,10 @@
 #ifndef NOU_DAT_ALG_HASHFUNCTION_HPP
 #define	NOU_DAT_ALG_HASHFUNCTION_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\String.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/String.hpp"
 #include <limits>
 
 

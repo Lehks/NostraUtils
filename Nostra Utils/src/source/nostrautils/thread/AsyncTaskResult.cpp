@@ -1,4 +1,4 @@
-#include "nostrautils\thread\AsyncTaskResult.hpp"
+#include "nostrautils/thread/AsyncTaskResult.hpp"
 
 namespace NOU::NOU_THREAD
 {

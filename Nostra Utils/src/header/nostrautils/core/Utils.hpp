@@ -1,9 +1,11 @@
 #ifndef NOU_CORE_UTILS_HPP
 #define NOU_CORE_UTILS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\dat_alg\Comparator.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/dat_alg/Comparator.hpp"
+
+#include <utility>
 
 /**
 \file core/Utils.hpp
@@ -13,8 +15,20 @@
 \version 0.0.1
 \since   1.0.0
 
-\brief A file that contains utility funtions that are used all over NOU.
+\brief A file that contains utility functions that are used all over NOU.
 */
+
+/**
+\param Type   The type that holds the member \p member.
+\param member The member to get the offset of.
+
+\return The offset of \p Member in the class/struct Type.
+
+\brief A macro that returns the offset of the passed member.
+*/
+#ifndef NOU_OFFSET_OF
+#define NOU_OFFSET_OF(Type, member) NOU::sizeType(&((Type*)nullptr)->member)
+#endif
 
 namespace NOU::NOU_CORE
 {
@@ -28,44 +42,56 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	NOU_FUNC typename remove_reference<T>::type&& move(T&& t);
 	/**
-	\param a First Type.
-	\param b Second Type.
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
 	\return Minimum of the two types.
 
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T& min(T &a, T &b); ///\todo min/max: add specialisations for primitve types w/o references
+	constexpr NOU_FUNC T& min(T &a, T &b);
 	/**
-	\param a First Type.
-	\param b Second Type.
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
+	\param comp The comparator that defines the order of the passed parameters.
 	\return Minimum of the two types.
 
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T& min(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp); ///\todo min/max: add specialisations for primitve types w/o references
+	constexpr NOU_FUNC T& min(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
 	/**
-	\param a First Type.
-	\param b Second Type.
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
 	\return Minimum of the two types.
 
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& min(const T &a,const T &b); ///\todo min/max: add specialisations for primitve types w/o references
+	constexpr NOU_FUNC const T& min(const T &a,const T &b);
 	/**
-	\param a First Type.
-	\param b Second Type.
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
+	\param comp The comparator that defines the order of the passed parameters.
 	\return Minimum of the two types.
 
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& min(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp); ///\todo min/max: add specialisations for primitve types w/o references
+	constexpr NOU_FUNC const T& min(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
 	/**
-	\param a First Type.
-	\param b Second Type.
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
 	\return Maximum of the two types.
 
 	\brief A Function to return the maximum of two given types.
@@ -73,8 +99,11 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr NOU_FUNC T& max(T &a, T &b);
 	/**
-	\param a First Type.
-	\param b Second Type.
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
+	\param comp The comparator that defines the order of the passed parameters.
 	\return Maximum of the two types.
 
 	\brief A Function to return the maximum of two given types.
@@ -82,8 +111,10 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr NOU_FUNC T& max(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
 	/**
-	\param a First Type.
-	\param b Second Type.
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
 	\return Maximum of the two types.
 
 	\brief A Function to return the maximum of two given types.
@@ -91,8 +122,11 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr NOU_FUNC const T& max(const T &a, const T &b);
 	/**
-	\param a First Type.
-	\param b Second Type.
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
+	\param comp The comparator that defines the order of the passed parameters.
 	\return Maximum of the two types.
 
 	\brief A Function to return the maximum of two given types.
@@ -207,9 +241,10 @@ namespace NOU::NOU_CORE
 	/**
 	\tparam The type of the values to clamp.
 
-	\param t   The value to clamp.
-	\param min The minimum value for \p t.
-	\param max The maximum value for \p t.
+	\param t    The value to clamp.
+	\param min  The minimum value for \p t.
+	\param max  The maximum value for \p t.
+	\param comp The comparator that defines the order of the passed parameters.
 
 	\brief Clamps a value.
 
@@ -223,9 +258,10 @@ namespace NOU::NOU_CORE
 	/**
 	\tparam The type of the values to clamp.
 
-	\param t   The value to clamp.
-	\param min The minimum value for \p t.
-	\param max The maximum value for \p t.
+	\param t    The value to clamp.
+	\param min  The minimum value for \p t.
+	\param max  The maximum value for \p t.
+	\param comp The comparator that defines the order of the passed parameters.
 
 	\brief Clamps a value.
 

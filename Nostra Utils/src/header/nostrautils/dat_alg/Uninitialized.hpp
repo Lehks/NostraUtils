@@ -1,12 +1,12 @@
 #ifndef	NOU_DAT_ALG_UNINITIALIZED_HPP
 #define	NOU_DAT_ALG_UNINITIALIZED_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 /** 
-\file    Uninitialized.hpp
+\file    dat_alg\Uninitialized.hpp
 \author  Lukas Reichmann
 \since   0.0.1
 \version 1.0
@@ -38,7 +38,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The data that stores the object.
 		*/
-		byte    m_dataChunk[sizeof(T)] alignas (T);
+		alignas (T) byte m_dataChunk[sizeof(T)];
 
 		/**
 		\brief True, if the object has been initialized, false if not.
@@ -108,11 +108,10 @@ namespace NOU::NOU_DAT_ALG
 		\code
 		Uninitialized<String> str;
 
-		/*
-		 * void someFunction(String *str) is an exemplary function that writes the result to the string that
-		 * was passed to it (it constructs a new string and does not work with any potentially already 
-		 * pre-constructed that are passed to it).
-		 *\/
+		//void someFunction(String *str) is an exemplary function that writes the result to the string that
+		//was passed to it (it constructs a new string and does not work with any potentially already 
+		//pre-constructed that are passed to it).
+
 		someFunction(str.data());
 		str.makeValid();
 		\endcode
@@ -240,7 +239,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename... ARGS>
 	Uninitialized<T>::Uninitialized(ARGS&&... args) : m_constructorCalled(true)
 	{
-		new ((T*)(m_dataChunk)) T(forward<ARGS...>(args...));
+		new ((T*)(m_dataChunk)) T(NOU_CORE::forward<ARGS...>(args...));
 	}
 
 	template<typename T>

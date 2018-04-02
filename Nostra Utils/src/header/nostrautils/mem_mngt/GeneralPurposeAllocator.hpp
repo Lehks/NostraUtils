@@ -1,15 +1,15 @@
 #ifndef NOU_MEM_MNGT_GENERAL_PURPOSE_ALLOCATOR_HPP
 #define NOU_MEM_MNGT_GENERAL_PURPOSE_ALLOCATOR_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\dat_alg\BinarySearch.hpp"
-#include "nostrautils\mem_mngt\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/dat_alg/BinarySearch.hpp"
+#include "nostrautils/mem_mngt/Utils.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 /**
-\file dat_alg/GeneralPurposeAllocator.hpp
+\file mem_mngt/GeneralPurposeAllocator.hpp
 
 \author  Lukas Gross
 \version 0.0.1
@@ -22,19 +22,18 @@ namespace NOU::NOU_MEM_MNGT
 	namespace internal
 	{
 		/**
-		\tparam T The type of the parameters
+		\tparam T			The type of the parameters
+		\param multipleOf	The value you want a multiple of.
+		\param value		Your current value.
 
-		\param multipleOf The value you want a multiple of.
+		\return				A multiple of your value and your multipleOf.
 
-		\param value Your current value.
+		\brief				Returns the next multiple of your multipleOf where your value fits in.
 
-		\return A multiple of your value and your multipleOf.
-
-		\brief Returns the next multiple of your multipleOf where your value fits in.
-
-		\details e.g. You have a value (e.g. 10) and want to know if it fits in another value
-				 (e.g. 8). The 10 does not fit in the 8. So you double the 8 and the 10 fits in the 16.
-				 Then your return value will be 16, because 10 fits in the 16 which is a multiple of 8.
+		\details			e.g. You have a value (e.g. 10) and want to know if it fits in another value
+							(e.g. 8). The 10 does not fit in the 8. So you double the 8 and the 10 fits in 
+							the 16. Then your return value will be 16, because 10 fits in the 16 which is a 
+							multiple of 8.
 		*/
 		template <typename T>
 		T nextMultiple(T multipleOf, T value)
@@ -62,103 +61,105 @@ namespace NOU::NOU_MEM_MNGT
 			sizeType m_size;
 
 			/**
-			\param addr A byte pointer to the address of the free chunks.
+			\param addr	A byte pointer to the address of the free chunks.
+			\param size	The size of the free chunks.
 
-			\param size The size of the free chunks.
-
-			\brief Constructs a new free chunk object.
+			\brief		Constructs a new free chunk object.
 			*/
 			GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size);
 
 			/**
-			\param other A const reference to a GeneralPurposeAllocatorFreeChunk.
+			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
 
-			\return True if the chunks touch each other and false if not.
+			\return			True if the chunks touch each other and false if not.
 
-			\brief Checks if the address of the chunk and the passed chunk touches each other.
+			\brief			Checks if the address of the chunk and the passed chunk touches each other.
 			*/
 			boolean touches(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
-			\param other A const reference to a GeneralPurposeAllocatorFreeChunk.
+			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
 
-			\return True if the address of the chunk is bigger than the address of the passed chunk.
-					False if not.
+			\return			True if the address of the chunk is bigger than the address of the passed chunk.
+							False if not.
 
-			\brief Overloads the > operator.
+			\brief			Overloads the > operator.
 			*/
 			boolean operator>(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
-			\param other A const reference to a GeneralPurposeAllocatorFreeChunk.
+			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
 
-			\return True if the address of the chunk is smaller than the address of the passed chunk.
-					False if not.
+			\return			True if the address of the chunk is smaller than the address of the passed chunk.
+							False if not.
 
-			\brief Overloads the < operator.
+			\brief			Overloads the < operator.
 			*/
 			boolean operator<(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
-			\param other A const reference to a GeneralPurposeAllocatorFreeChunk.
+			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
 
-			\return True if the address of the chunk is bigger or equal to the address of the passed chunk.
-					False if not.
+			\return			True if the address of the chunk is bigger or equal to the address of the passed 
+							chunk. False if not.
 
-			\brief Overloads the >= operator.
+			\brief			Overloads the >= operator.
 			*/
 			boolean operator>=(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
-			\param other A const reference to a GeneralPurposeAllocatorFreeChunk.
+			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
 
-			\return True if the address of the chunk is smaller or equal to the address of the passed chunk.
-					False if not.
+			\return			True if the address of the chunk is smaller or equal to the address of the passed
+							chunk. False if not.
 
-			\brief Overloads the <= operator.
+			\brief			Overloads the <= operator.
 			*/
 			boolean operator<=(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
-			\param other A const reference to a GeneralPurposeAllocatorFreeChunk.
+			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
 					
-			\return True if the address of the chunk is equal to the address of the passed chunk.
-					False if not.
+			\return			True if the address of the chunk is equal to the address of the passed chunk.
+							False if not.
 
-			\brief Overloads the == operator.
+			\brief			Overloads the == operator.
 			*/
 			boolean operator==(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 
 			/**
-			\tparam T The return type.
+			\tparam	T				The return type.
+			\tparam ARGS			The passed data of the object.
+			\param	args			All passed parameters.
+			\param	amountOfObjects	Defines the amount of objects which will be created. Can be set manually or
+									use the default size.
 
-			\param arguments All passed parameters.
+			\return					A pointer to the allocated object or a null-pointer if the element could 
+									not be allocated.
 
-			\return A pointer to the allocated object or a null-pointer if the element could not be allocated.
-
-			\brief Allocates a new Object with all passed elements.
+			\brief					Allocates a new Object with all passed elements.
 			*/
-			template <typename T, typename... arguments>
-			T* allocateObject(sizeType amountofObjects = 1, arguments&&... args);
+			template <typename T, typename... ARGS>
+			T* allocateObject(sizeType amountOfObjects = 1, ARGS&&... args);
 		};
 	}
 
 	/**
-	\brief Defines the GeneralPurposeAllocator class, which is used to allocate and deallocate objects.
+	\brief		Defines the GeneralPurposeAllocator class, which is used to allocate and deallocate objects.
 
-	\details The GeneralPurposeAllocator (GPA) cannot increase its size. If the GPA is constructed with the 
-			 default size or a passed size it can only be increased by creating a new GPA with a bigger size.
+	\details	The GeneralPurposeAllocator (GPA) cannot increase its size. If the GPA is constructed with the 
+				default size or a passed size it can only be increased by creating a new GPA with a bigger size.
 	*/
 	class GeneralPurposeAllocator
 	{
 	public:
 
 		/**
-		\tparam T The type of the pointer.
+		\tparam T	The type of the pointer.
 
-		\brief Defines the GeneralPurposeAllocatorPointer class, which is used for saving a pointer to the
-			   allocator.
+		\brief		Defines the GeneralPurposeAllocatorPointer class, which is used for saving a pointer to the
+					allocator.
 		*/
 		template <typename T>
 		class GeneralPurposeAllocatorPointer
@@ -183,84 +184,83 @@ namespace NOU::NOU_MEM_MNGT
 		public:
 
 			/**
-			\param pdata A pointer to the elements where the pointer is pointing to.
+			\param pdata	A pointer to the elements where the pointer is pointing to.
+			\param size		The amount of objects.
 
-			\param size The amount of objects.
-
-			\brief Creates a pointer to the elements in the GeneralPurposeAllocator.
+			\brief			Creates a pointer to the elements in the GeneralPurposeAllocator.
 			*/
 			GeneralPurposeAllocatorPointer(T* pdata, sizeType size);
 
 			/**
-			\return The pointer stored in the GeneralPurposeAllocatorPointer.
+			\return	The pointer stored in the GeneralPurposeAllocatorPointer.
 
-			\brief Returns the pointer which is stored in the GeneralPurposeAllocatorPointer.
+			\brief	Returns the pointer which is stored in the GeneralPurposeAllocatorPointer.
 			*/
 			T* operator->();
 
 			/**
 			\return The pointer stored in the GeneralPurposeAllocatorPointer.
 
-			\brief Returns a const pointer to the pointer which is stored in the 
-				   GeneralPurposeAllocatorPointer.
+			\brief	Returns a const pointer to the pointer which is stored in the 
+					GeneralPurposeAllocatorPointer.
 			*/
 			const T* operator->() const;
 
 			/**
 			\return A reference to the pointer stored in the GeneralPurposeAllocatorPointer.
 
-			\brief Returns a reference to the pointer which is stored in the GeneralPurposeAllocatorPointer.
+			\brief	Returns a reference to the pointer which is stored in the GeneralPurposeAllocatorPointer.
 			*/
 			T& operator*();
 
 			/**
-			\return A reference to the pointer stored in the GeneralPurposeAllocatorPointer.
+			\return	A reference to the pointer stored in the GeneralPurposeAllocatorPointer.
 
-			\brief Returns a const reference to the pointer which is stored in the 
-				   GeneralPurposeAllocatorPointer.
+			\brief	Returns a const reference to the pointer which is stored in the 
+					GeneralPurposeAllocatorPointer.
 			*/
 			const T& operator*() const;
 
 			/**
-			\param index The index of the element.
+			\param index	The index of the element.
 
-			\return A reference to the element.
+			\return			A reference to the element.
 
-			\brief Returns a reference of the element at the passed index.
+			\brief			Returns a reference of the element at the passed index.
 			*/
 			T& operator[](int index);
 
 			/**
-			\param index The index of the element.
+			\param index	The index of the element.
 
-			\return A const reference to the element.
+			\return			A const reference to the element.
 
-			\brief Returns a const reference of the element at the passed index.
+			\brief			Returns a const reference of the element at the passed index.
 			*/
 			const T& operator[](int index) const;
 
 			/**
-			\return The pointer which is stored in the GeneralPurposeAllocatorPointer.
+			\return	The pointer which is stored in the GeneralPurposeAllocatorPointer.
 
-			\brief Returns the raw pointer.
+			\brief	Returns the raw pointer.
 			*/
 			T* getRaw();
 
 			/**
-			\param ptr A void pointer.
+			\param ptr	A void pointer.
 
-			\return True when the pointers are equal and false if not.
+			\return		True when the pointers are equal and false if not.
 			
-			\brief Compares the passed pointer with the stored pointer and checks if they are equal.
+			\brief		Compares the passed pointer with the stored pointer and checks if they are equal.
 			*/
 			boolean operator==(void* ptr) const;
 
 			/**
-			\param ptr A void pointer.
+			\param ptr	A void pointer.
 
-			\return True when the pointers are not equal and false if they are.
+			\return		True when the pointers are not equal and false if they are.
 
-			\brief Compares the passed pointer with the stored pointer and checks if they are not equal.
+			\brief		Compares the passed pointer with the stored pointer and checks if they are not equal.
 			*/
 			boolean operator!=(void* ptr) const;
 		};
@@ -291,9 +291,9 @@ namespace NOU::NOU_MEM_MNGT
 	public:
 
 		/**
-		\param size The size of the GPA. Can be set manually or the default size.
+		\param size	The size of the GPA. Can be set manually or the default size.
 
-		\brief Creates a new GPA with a passed size or the default size.
+		\brief		Creates a new GPA with a passed size or the default size.
 		*/
 		explicit GeneralPurposeAllocator(sizeType size = GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
 
@@ -308,63 +308,57 @@ namespace NOU::NOU_MEM_MNGT
 		~GeneralPurposeAllocator();
 
 		/**
-		\tparam T The type of the object which will be allocated.
+		\tparam T				The type of the object which will be allocated.
+		\tparam ARGS			The passed data of the object.
+		\param	amountOfObjects	Defines the amount of objects which will be created. Can be set manually or
+								use the default size.
+		\param	args			The data of the object which will be allocated.
 
-		\tparam arguments The passed data of the object.
+		\return					A pointer to the allocated Objects. If the GPA exceeded its maximum capacity
+								it will return a null-pointer to indicate that the next object cannot be 
+								stored.
 
-		\param amountOfObjects Defines the amount of objects which will be created. Can be set manually or
-			   use the default size.
-
-		\param arguments The data of the object which will be allocated.
-
-		\return A pointer to the allocated Objects. If the GPA exceeded its maximum capacity it will return
-				a null-pointer to indicate that the next object cannot be stored.
-
-		\brief Allocates memory in the GPA for the passed object. Allows to allocate the passed object
-			   multiple times.
+		\brief					Allocates memory in the GPA for the passed object. Allows to allocate the 
+								passed object multiple times.
 		*/
-		template <typename T, typename... arguments>
-		GeneralPurposeAllocatorPointer<T> allocateObjects(sizeType amountOfObjects = 1, arguments&&... args);
+		template <typename T, typename... ARGS>
+		GeneralPurposeAllocatorPointer<T> allocateObjects(sizeType amountOfObjects = 1, ARGS&&... args);
 
 		/**
-		\tparam T The type of the object which will be allocated.
+		\tparam T			The type of the object which will be allocated.
+		\tparam ARGS		The passed data of the object.
+		\param	args		The data of the object which will be allocated.
 
-		\tparam arguments The passed data of the object.
+		\return				A pointer to the allocated Objects. If the GPA exceeded its maximum capacity
+							it will return a null-pointer to indicate that the next object cannot
+							be stored.
 
-		\param arguments The data of the object which will be allocated.
+		\brief				Allocates memory in the GPA for the passed object. Allows to allocate the passed 
+							object only ones. For multiple allocations of the same object use the 
+							allocateObjects().
 
-		\return A pointer to the allocated Objects. If the GPA exceeded its maximum capacity it will return
-				a null-pointer to indicate that the next object cannot be stored.
-
-		\brief Allocates memory in the GPA for the passed object. Allows to allocate the passed object
-		only ones. For multiple allocations of the same object use the allocateObjects().
-
-		\details Calls the allocateObjects() with the parameter amountOfObjects = 1.
+		\details			Calls the allocateObjects() with the parameter amountOfObjects = 1.
 		*/
-		template <typename T, typename... arguments>
-		GeneralPurposeAllocatorPointer<T> allocateObject(arguments&&... args);
+		template <typename T, typename... ARGS>
+		GeneralPurposeAllocatorPointer<T> allocateObject(ARGS&&... args);
 
 		/**
-		\tparam T The type of the object which will be deallocated.
+		\tparam T		The type of the object which will be deallocated.
+		\param pointer	A  pointer to the object which will be deallocated.
 
-		\param pointer A  pointer to the object which will be deallocated.
-
-		\brief Deallocated the object at the location the pointer points to.
+		\brief			Deallocated the object at the location the pointer points to.
 		*/
 		template <typename T>
 		void deallocateObjects(GeneralPurposeAllocatorPointer<T> pointer);
 
 		/**
-		\tparam T The type of the object in the GPA.
+		\tparam T				The type of the object in the GPA.
+		\param left				A pointer reference to the left element in the GPA.
+		\param right			A pointer reference to the right element in the GPA.
+		\param insertionIndex	The index where the new element will be inserted.
 
-		\param left A pointer reference to the left element in the GPA.
-
-		\param right A pointer reference to the right element in the GPA.
-
-		\param insertionIndex The index where the new element will be inserted.
-
-		\brief Saves the left and right element in two passed pointers dependent on the insertion index where
-			   you want to insert a new element.
+		\brief					Saves the left and right element in two passed pointers dependent on the 
+								insertion index where you want to insert a new element.
 		*/
 		template<typename T>
 		void getNeigbors(T*& left, T*& right, sizeType insertionIndex);
@@ -423,14 +417,14 @@ namespace NOU::NOU_MEM_MNGT
 		return m_addr == other.m_addr;
 	}
 
-	template <typename T, typename... arguments>
+	template <typename T, typename... ARGS>
 	T* internal::GeneralPurposeAllocatorFreeChunk::allocateObject
-	(sizeType amountofObjects, arguments&&... args)
+	(sizeType amountOfObjects, ARGS&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 
 		byte* allocationLocation = reinterpret_cast<byte*>(nextMultiple(alignof(T), ((sizeType)m_addr) + 1));
-		sizeType amountOfBytes = amountofObjects * sizeof(T);
+		sizeType amountOfBytes = amountOfObjects * sizeof(T);
 		byte* newAddr = allocationLocation + amountOfBytes;
 
 		if (newAddr <= m_addr + m_size)
@@ -442,10 +436,10 @@ namespace NOU::NOU_MEM_MNGT
 			m_size -= newAddr - m_addr;
 			m_addr = newAddr;
 
-			for (sizeType i = 0; i < amountofObjects; i++)
+			for (sizeType i = 0; i < amountOfObjects; i++)
 			{
 				T* object = addressof(returnPointer[i]);
-				new(object) T(NOU_CORE::forward<arguments>(args)...);
+				new(object) T(NOU_CORE::forward<ARGS>(args)...);
 			}
 
 			return returnPointer;
@@ -535,16 +529,16 @@ namespace NOU::NOU_MEM_MNGT
 		}
 	}
 
-	template <typename T, typename... arguments>
+	template <typename T, typename... ARGS>
 	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> 
-		GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects, arguments&&... args)
+		GeneralPurposeAllocator::allocateObjects(sizeType amountOfObjects, ARGS&&... args)
 	{
 		static_assert(alignof(T) <= 128, "Max alignment of 128 was exceeded!");
 	
 		for (sizeType i = 0; i < m_freeChunks.size(); i++)
 		{
 			T* data = m_freeChunks[i].allocateObject<T>(amountOfObjects,
-				NOU_CORE::forward<arguments>(args)...);
+				NOU_CORE::forward<ARGS>(args)...);
 			if (data != nullptr)
 			{
 				if (m_freeChunks[i].m_size == 0)
@@ -558,11 +552,11 @@ namespace NOU::NOU_MEM_MNGT
 		return GeneralPurposeAllocatorPointer<T>(nullptr, 0);///\todo better error handling???
 	}
 
-	template<typename T, typename... arguments>
+	template<typename T, typename... ARGS>
 	GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T> 
-		GeneralPurposeAllocator::allocateObject(arguments&&...args)
+		GeneralPurposeAllocator::allocateObject(ARGS&&...args)
 	{
-		return allocateObjects<T>(1, NOU_CORE::forward<arguments>(args)...);
+		return allocateObjects<T>(1, NOU_CORE::forward<ARGS>(args)...);
 	}
 
 	template <typename T>

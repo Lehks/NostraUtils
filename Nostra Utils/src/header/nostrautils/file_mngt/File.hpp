@@ -4,6 +4,7 @@
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\StringView.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils\file_mngt\Path.hpp"
 #include <stdio.h>
 
 
@@ -22,9 +23,9 @@ namespace NOU::NOU_FILE_MNGT
 {
 	/*
 	\brief Enum that stores all different AccessModes of a file
-	\details	READ				= opens file for Reading purposes
-				WRITE				= opens file for Writing purposes (overwriting)
-				APPEND				= opens file for Appending purposes (not overwriting)
+	\details	READ				= opens file for reading purposes
+				WRITE				= opens file for writing purposes (overwriting)
+				APPEND				= opens file for appending purposes (not overwriting)
 				READ_WRITE			= opens file for both reading and writing (overwriting)
 				READ_WRITE_RESETS	= opens the file for both reading and writing purposes after clearing the file(overwriting)
 				READ_APPEND			= opens the file for both reading and writing purposes (not overwriting)
@@ -40,56 +41,58 @@ namespace NOU::NOU_FILE_MNGT
 	};
 
 	/**
-	\brief Class that handles very basic i/o for a single File
+	\brief Class that handles very basic i/o on a single file
 	*/
 
 	class NOU_CLASS File
 	{
 	private:
 		/**
+		 \param file     The file handle of the opened file. This is an output parameter.
+		 \param filename The name of the file to open.
+		 \param mode     The mode to open the file with.
+
+
+		 \brief Wraps around either fopen() on POSIX systems or fopen_s() on a Windows system.
+		*/
+		static void fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode);
+
+		/**
 		\brief File stream of the opened File
 		*/
 		FILE															*m_data;
 		/**
-		\brief wether the file is in append, write, read mode or any combination of those
+		\brief Wether the file is in append, write, read mode or any combination of those
 		*/
 		AccessMode														m_mode;
 
 
 		/**
-		\brief path to the Folder containing the File
+		\brief Path to the folder containing the file
 		*/
-		NOU::NOU_DAT_ALG::StringView8							m_path;
-		/**
-		\brief absolute path to the corresponding File
-		*/
-		NOU::NOU_DAT_ALG::String8								m_absolutePath;
-		/**
-		\brief name of the File
-		*/
-		NOU::NOU_DAT_ALG::StringView8							m_name;
+		//NOU::NOU_DAT_ALG::StringView8							m_path
+		Path															m_path;
 
 	public:
 
 		/**
-		\brief construcor of the File class
+		\brief Constructor of the File class
 
-		\param name name of the File
-		\param mode how the File will be interpreted(Read/Write)
-		\param path absolute path to the file
+		\param mode how the file will be interpreted(Read/Write)
+		\param path Path object containing the path to the file
 		*/
-		File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode = AccessMode::READ_WRITE);
+		File(const Path &path, AccessMode mode = AccessMode::READ_WRITE);
 		
 		/**
-		\brief copy construcor of the File class
+		\brief Copy-constructor of the File class
 
-		\param other other constructer from which this will copy
+		\param other other constructer from which this constructor will copy
 		*/
 		File(const File &other) = delete;
 		/**
-		\brief move construcor of the File class
+		\brief Move-construcor of the File class
 
-		\param other other constructer from where everything will be moved
+		\param other other constructer from which this constructor will move
 		*/
 		File(File &&other);
 		/**
@@ -97,15 +100,15 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		~File();
 		/**
-		\brief reads a single byte from the File
+		\brief Reads a single byte from the file
 
-		\return read byte
+		\return the read byte
 		*/
 		byte read();
 
 		/**
-		\brief reads a string from given size
-		\param size StringSize in byte 
+		\brief reads a string of given size
+		\param size size of the string in byte 
 		*/
 		void read(sizeType size, char8 &buffer);
 
@@ -118,93 +121,62 @@ namespace NOU::NOU_FILE_MNGT
 
 
 		/**
-		\brief writes a string into a file
+		\brief Writes a string into a file
 		\param s the given string
 		\return true if successfully written, false if otherwise
 		*/
 		bool write(const NOU::NOU_DAT_ALG::StringView8 &s);
 
 		/**
-		\brief opens the internal filestream
+		\brief Opens the internal filestream
 
 		\return true if successfully opened, false if otherwise
 		*/
 		bool open();
 
 		/**
-		\brief closes the internal filestream
+		\brief Closes the internal filestream
 
 		\return true if successfully closed, false if otherwise
 		*/
 		bool close();
 
 		/**
-		\brief creates the file if not allready existing
+		\brief Creates the file if not allready existing
 		*/
 		void createFile();
 
 		/** 
-		\brief checks if the Filestream is opened
+		\brief Checks if the Filestream is opened
 
 		\return true if currently opened, false if not
 		*/
 
 		bool isCurrentlyOpen();
 
-		
 		/**
-		\brief getter for name
-		\return name
-		*/
-		const NOU::NOU_DAT_ALG::StringView8& getName();
-
-		/**
-		\brief setter for name
-		\param name name of the File
-		*/
-		void setName(const NOU::NOU_DAT_ALG::StringView8 &name);
-
-		/**
-		\brief getter for AccessMode
-		\return AccessMode
+		\brief Getter for AccessMode
+		\return current AccessMode 
 		*/
 		const AccessMode& getMode();
 
 		/**
-		\brief setter for AccessMode
-		\param mode AccessMode of the File
+		\brief Setter for AccessMode
+		\param mode AccessMode of the file
 		*/
 		void setMode(AccessMode mode);
 
 		/**
-		\brief getter for Path
-		\return Path
+		\brief Getter for Path
+		\return path
 		*/
-		const NOU::NOU_DAT_ALG::StringView8& getPath();
-		/**
-		\brief setter for Path
-		\param path Path of the file
-		*/
-		void setPath(const NOU::NOU_DAT_ALG::StringView8 &path);
+		const Path& getPath();
 
 		/**
-		\brief getter for absolutepath
-		\return absolutepath
-		*/
-		const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath();
-
-		/**
-		\brief getter for datastream
+		\brief Getter for datastream
 		\return datastream
 		*/
 		FILE* getData(); 
-
-	private:
-
-		/**
-		\brief calculates the internal stored absulute path from the name and path
-		*/
-		void calcAbsolutePath();
 
 	};
 }

@@ -1,7 +1,7 @@
 #ifndef	NOU_MEM_MNGT_UTILS_HPP
 #define	NOU_MEM_MNGT_UTILS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
 
 #include <memory>
 
