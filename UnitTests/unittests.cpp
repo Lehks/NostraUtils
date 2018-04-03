@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
+#define NOU_DEBUG
+
 #include "nostrautils\core\StdIncludes.hpp"
 #include "nostrautils\core\Utils.hpp"
 #include "nostrautils\core\Version.hpp"
@@ -19,11 +21,14 @@
 #include "nostrautils\dat_alg\BinaryHeap.hpp"
 #include "nostrautils\dat_alg\String.hpp"
 #include "nostrautils\dat_alg\Hashing.hpp"
+#include "nostrautils\dat_alg\BinarySearch.hpp"
+#include "nostrautils\dat_alg\ObjectPool.hpp"
 #include "nostrautils\dat_alg\HashMap.hpp"
 
 #include "DebugClass.hpp"
 
 #include <type_traits>
+#include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -34,6 +39,32 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 					NOU::NOU_CORE::getErrorHandler().popError();										 \
 				}																						 \
 				Assert::IsTrue(errorCount == 0);					 
+
+void printErrors()
+{
+	while (NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
+	{
+		std::string msg;
+		msg += NOU::NOU_CORE::getErrorHandler().peekError().getName();
+		msg += " ";
+		msg += std::to_string(NOU::NOU_CORE::getErrorHandler().peekError().getLine());
+		msg += " ";
+		msg += NOU::NOU_CORE::getErrorHandler().peekError().getFile();
+		NOU::NOU_CORE::getErrorHandler().popError();
+
+		Logger::WriteMessage(msg.c_str());
+	}
+}
+																				   \
+#define NOU_CHECK_ERROR_HANDLER  												   \
+																				   \
+{																				   \
+	NOU::sizeType __errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount(); \
+																				   \
+	printErrors();																   \
+																				   \
+	Assert::IsTrue(__errorCount == 0);											   \
+}
 
 //both functions are used in test IsInvocable
 void dummyFunc0(int)
@@ -1130,8 +1161,92 @@ namespace UnitTests
 			h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
 			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
 
+			//MD5 TESTS
+
+			i1 = 0;
+			i2 = 0;
+
+
+			//Same output, different input objects with same value(byte Hash)
+			NOU::byte b0[] = { 54, 245, 987, 14, 7634 };
+			NOU::byte b1[] = { 54, 245, 987, 14, 7634 };
+
+			NOU::NOU_DAT_ALG::MD5Hash m0 = NOU::NOU_DAT_ALG::md5(b0, sizeof(b0) / sizeof(b0[0]));
+			NOU::NOU_DAT_ALG::MD5Hash m1 = NOU::NOU_DAT_ALG::md5(b1, sizeof(b1) / sizeof(b1[0]));
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				Assert::AreEqual(m0[i], m1[i]);
+			}
+				
+			//different output with only one little difference(byte Hash)
+
+			NOU::byte b2[] = { 54, 245, 988, 14, 7634 };
+
+			m1 = NOU::NOU_DAT_ALG::md5(b1, sizeof(b2) / sizeof(b2[0]));
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				i1 = (m0[i] == m1[i]) ? i1 + 1 : i1;
+			}
+
+			Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+
+			//Same output, different input objects with same value(String Hash)
+
+			m0 = NOU::NOU_DAT_ALG::md5(&str1);
+			m1 = NOU::NOU_DAT_ALG::md5(&str2);
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				Assert::AreEqual(m0[i], m1[i]);
+			}
+
+			//different output with only one little difference(byte Hash)
+
+			i1 = 0;
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> str3 = "The quick onyx goblan jumps over the lazy dwarf";
+
+			m1 = NOU::NOU_DAT_ALG::md5(&str3);
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				i1 = (m0[i] == m1[i]) ? i1 + 1 : i1;
+			}
+
+			Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+
+			//Same output, different input objects with same value(StringView Hash)
+
+			NOU::NOU_DAT_ALG::StringView<NOU::char8> sv0 = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::NOU_DAT_ALG::StringView<NOU::char8> sv1 = "The quick onyx goblin jumps over the lazy dwarf";
+
+			m0 = NOU::NOU_DAT_ALG::md5(&sv0);
+			m1 = NOU::NOU_DAT_ALG::md5(&sv1);
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				Assert::AreEqual(m0[i], m1[i]);
+			}
+
+			//different output with only one little difference(StringView Hash)
+
+			i1 = 0;
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> sv2 = "The quick onyx goblan jumps over the lazy dwarf";
+
+			m1 = NOU::NOU_DAT_ALG::md5(&sv2);
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				i1 = (m0[i] == m1[i]) ? i1 + 1 : i1;
+			}
+
+			Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+
+
 			NOU_CHECK_ERROR_HANDLER;
-		
 		}
 
 		TEST_METHOD(HashMap) 
@@ -1199,7 +1314,264 @@ namespace UnitTests
 			Assert::AreEqual(a[2], 10);
 			Assert::AreEqual(a[3], 41);
 
+		}
+
+		TEST_METHOD(BinarySearch)
+		{
+			NOU::NOU_DAT_ALG::Vector<NOU::sizeType> vec;
+			vec.pushBack(1);
+			vec.pushBack(5);
+			vec.pushBack(13);
+			vec.pushBack(18);
+			vec.pushBack(21);
+			vec.pushBack(43);
+			vec.pushBack(92);
+
+			NOU::sizeType search_vals[] = { 1, 5, 19, 21, 92, 43, 103, 0};
+
+			
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[0], 0, vec.size() - 1) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[1], 0, vec.size() - 1) == 1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1) == -1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[3], 0, vec.size() - 1) == 4);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[4], 0, vec.size() - 1) == 6);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[5], 0, vec.size() - 1) == 5);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1) == -1);
+
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[0], 0, -1) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[1], 0, -1) == 1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[2], 0, -1) == -1);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[3], 0, -1) == 4);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[4], 0, -1) == 6);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[5], 0, -1) == 5);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[6], 0, -1) == -1);
+
+			NOU::sizeType insertionIndex;
+
+			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1, &insertionIndex);
+			Assert::IsTrue(insertionIndex == 4);
+			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1, &insertionIndex);
+			Assert::IsTrue(insertionIndex == 7);
+			NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[7], 0, vec.size() - 1, &insertionIndex);
+			Assert::IsTrue(insertionIndex == 0);
+
 			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(VectorIterator)
+		{
+			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec;
+
+			vec.push(NOU::DebugClass(0));
+			vec.push(NOU::DebugClass(1));
+			vec.push(NOU::DebugClass(2));
+			vec.push(NOU::DebugClass(3));
+			vec.push(NOU::DebugClass(4));
+			vec.push(NOU::DebugClass(5));
+
+
+			//Iterator
+			Assert::IsTrue(vec.begin() == vec.begin());
+			Assert::IsTrue(vec.begin() + 3 == vec.begin() + 3);
+			Assert::IsTrue(vec.end() == vec.end());
+
+			Assert::IsTrue(vec.begin() != vec.end());
+			Assert::IsTrue(vec.begin() + 3 != vec.begin() + 4);
+
+
+
+			Assert::IsTrue(vec.begin()->get() == 0);
+			Assert::IsTrue((++vec.begin())->get() == 1);
+			Assert::IsTrue((vec.begin() + 1)->get() == 1);
+			Assert::IsTrue((vec.begin() + 2)->get() == 2);
+			Assert::IsTrue((vec.begin() + 3)->get() == 3);
+			Assert::IsTrue((vec.begin() + 4)->get() == 4);
+			Assert::IsTrue((vec.begin() + 5)->get() == 5);
+
+			Assert::IsTrue((vec.end() - 1)->get() == 5);
+			Assert::IsTrue((vec.end() - 2)->get() == 4);
+			Assert::IsTrue((vec.end() - 3)->get() == 3);
+			Assert::IsTrue((vec.end() - 4)->get() == 2);
+			Assert::IsTrue((vec.end() - 5)->get() == 1);
+			Assert::IsTrue((vec.end() - 6)->get() == 0);
+
+			auto it = vec.begin();
+
+			Assert::IsTrue(it->get() == 0);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 1);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 2);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 3);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 4);
+
+			it += 1;
+			Assert::IsTrue(it->get() == 5);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 4);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 3);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 2);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 1);
+
+			it -= 1;
+			Assert::IsTrue(it->get() == 0);
+
+
+
+
+			//Reverse Iterator
+			Assert::IsTrue(vec.rbegin() == vec.rbegin());
+			Assert::IsTrue(vec.rbegin() + 3 == vec.rbegin() + 3);
+			Assert::IsTrue(vec.end() == vec.end());
+
+			Assert::IsTrue(vec.rbegin() != vec.rend());
+			Assert::IsTrue(vec.rbegin() + 3 != vec.rbegin() + 4);
+
+
+
+			Assert::IsTrue(vec.rbegin()->get() == 5);
+			Assert::IsTrue((++vec.rbegin())->get() == 4);
+			Assert::IsTrue((vec.rbegin() + 1)->get() == 4);
+			Assert::IsTrue((vec.rbegin() + 2)->get() == 3);
+			Assert::IsTrue((vec.rbegin() + 3)->get() == 2);
+			Assert::IsTrue((vec.rbegin() + 4)->get() == 1);
+			Assert::IsTrue((vec.rbegin() + 5)->get() == 0);
+
+			Assert::IsTrue((vec.rend() - 1)->get() == 0);
+			Assert::IsTrue((vec.rend() - 2)->get() == 1);
+			Assert::IsTrue((vec.rend() - 3)->get() == 2);
+			Assert::IsTrue((vec.rend() - 4)->get() == 3);
+			Assert::IsTrue((vec.rend() - 5)->get() == 4);
+			Assert::IsTrue((vec.rend() - 6)->get() == 5);
+
+			auto rit = vec.rbegin();
+
+			Assert::IsTrue(rit->get() == 5);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 4);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 3);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 2);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 1);
+
+			rit += 1;
+			Assert::IsTrue(rit->get() == 0);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 1);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 2);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 3);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 4);
+
+			rit -= 1;
+			Assert::IsTrue(rit->get() == 5);
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(ObjectPool)
+		{
+			NOU::NOU_DAT_ALG::ObjectPool<NOU::DebugClass> objPool(5);
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 0);
+			Assert::IsTrue(objPool.remainingObjects() == 0);
+
+			objPool.pushObject(NOU::DebugClass(0));
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 1);
+			Assert::IsTrue(objPool.remainingObjects() == 1);
+
+			objPool.pushObject(NOU::DebugClass(1));
+			objPool.pushObject(NOU::DebugClass(2));
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 3);
+
+			NOU::DebugClass &obj0 = objPool.get();
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 2);
+
+			NOU::DebugClass &obj1 = objPool.get();
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 1);
+
+			objPool.giveBack(obj0);
+
+			Assert::IsTrue(objPool.capacity() == 5);
+			Assert::IsTrue(objPool.size() == 3);
+			Assert::IsTrue(objPool.remainingObjects() == 2);
+			NOU::int64 i1 = 243536768574;
+			NOU::int64 i2 = 243536768574;
+
+			NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
+			NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
+
+			h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
+			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+
+
+
+			//MD5 TESTS
+
+			NOU::char8 str3[] = "Franz jagt im komplett verwahrlosten Taxi quer durch Bayern";
+			NOU::char8 str4[] = "Frank jagt im komplett verwahrlosten Taxi quer durch Bayern";
+			NOU::char8 str5[] = "";
+
+
+			NOU::NOU_DAT_ALG::MD5Hash hash0 = NOU::NOU_DAT_ALG::md5(reinterpret_cast<NOU::byte*>(str3), NOU::NOU_DAT_ALG::stringlen<NOU::char8>(str3));
+			NOU::NOU_DAT_ALG::MD5Hash hash1 = NOU::NOU_DAT_ALG::md5(reinterpret_cast<NOU::byte*>(str4), NOU::NOU_DAT_ALG::stringlen<NOU::char8>(str4));
+			NOU::NOU_DAT_ALG::MD5Hash hash2 = NOU::NOU_DAT_ALG::md5(reinterpret_cast<NOU::byte*>(str5), NOU::NOU_DAT_ALG::stringlen<NOU::char8>(str5));
+
+			NOU::int32 pair0, pair1, pair2;
+			pair0 = 0;  // hash0 == hash1
+			pair1 = 0;	// hash0 == hash2
+			pair2 = 0;	// hash1 == hash2
+
+			for (NOU::sizeType i = 0; i < 16; i++)
+			{
+				pair0 = (hash0[i] == hash1[i]) ? pair0 + 1 : pair0;
+				pair1 = (hash0[i] == hash2[i]) ? pair1 + 1 : pair1;
+				pair2 = (hash1[i] == hash2[i]) ? pair2 + 1 : pair2;
+			}
+			Assert::IsTrue(pair0 < 16);
+			Assert::IsTrue(pair1 < 16);
+			Assert::IsTrue(pair2 < 16);
+
 		}
 	};
 }

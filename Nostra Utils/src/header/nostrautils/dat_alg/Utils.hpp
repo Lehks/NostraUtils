@@ -7,21 +7,47 @@
 
 /** \file Utils.hpp
 \author  Dennis Franz
+\author	 Lukas Reichmann
+\author	 Lukas Gross
 \since   0.0.1
 \version 0.0.1
 \brief   This file provides useful utility functions for dat_alg.
 */
 
+#ifndef NOU_XOR
+#define NOU_XOR(a,b) ((!a & b) | (a & !b))
+#endif
+
 namespace NOU::NOU_DAT_ALG
 {
-	template<typename O, typename T>
-	struct NOU_CLASS Pair
-	{
-		O	dataOne;
-		T	dataTwo;
-		Pair(const O& dataOne, const T& dataTwo);
-		Pair(O&& dataOne, T&& dataTwo);
+	/**
+	\param CLASSNAME The name of the pair class.
+	\param DATAONE_NAME The name of the first data field.
+	\param DATATWO_NAME The name of the second data field.
+
+	\brief Defines a templated pair class with custom names for the two data fields. There is a default
+	implementation called Pair.
+	*/
+#define NOU_DEFINE_PAIR(CLASSNAME, DATAONE_NAME, DATATWO_NAME)	 \
+	template<typename O, typename T>							 \
+	struct NOU_CLASS CLASSNAME									 \
+	{															 \
+		O	DATAONE_NAME;										 \
+		T	DATATWO_NAME;										 \
+																 \
+		CLASSNAME(const O &DATAONE_NAME, const T &DATATWO_NAME): \
+			DATAONE_NAME(DATAONE_NAME),							 \
+			DATATWO_NAME(DATATWO_NAME)							 \
+		{}														 \
+																 \
+		CLASSNAME(O&& DATAONE_NAME, T&& DATATWO_NAME) :			 \
+			DATAONE_NAME(NOU_CORE::move(DATAONE_NAME)),			 \
+			DATATWO_NAME(NOU_CORE::move(DATATWO_NAME))			 \
+		{}														 \
 	};
+
+	NOU_DEFINE_PAIR(Pair, dataOne, dataTwo)
+
 	/**
 	\param dataone First Type.
 	\param datatwo Second Type.
@@ -43,8 +69,21 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
 
+	/**
+	\tparam The type of the parameters.
+
+	\param t0 A const reference to the first compared parameter.
+
+	\param t1 A const reference to the second compared parameter.
+
+	\param epsilon A const reference to the passed epsilon.
+
+	\return True if the difference between the two parameters is smaller than the epsilon.
+
+	\brief Compares two parameters to a passed epsilon. 
+	*/
 	template<typename T>
-	constexpr NOU_FUNC int32 epsilonCompare(const T &t0, const T &t1, const T &epsilon);
+	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon);
 
 	template<typename T>
 	void swap(T *dataone, T *datatwo) 
@@ -73,25 +112,12 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC int32 epsilonCompare(const T &t0, const T &t1, const T &epsilon)
+	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon)
 	{
 		T diff = t0 - t1;
 		T abs = (diff < 0 ? -diff : diff);
 		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
 	}
-
-
-	template<typename O, typename T>
-	Pair<O, T>::Pair(const O& dataOne, const T& dataTwo) :
-		dataOne(dataOne),
-		dataTwo(dataTwo)
-	{}
-
-	template<typename O, typename T>
-	Pair<O, T>::Pair(O&& dataOne, T&& dataTwo) :
-		dataOne(NOU_CORE::move(dataOne)),
-		dataTwo(NOU_CORE::move(dataTwo))
-	{}
 }
 
 #endif

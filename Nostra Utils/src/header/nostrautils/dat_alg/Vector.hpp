@@ -360,12 +360,12 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief returns a pointer reference to the current data.
 		*/
-		T*& data();
+		T* const & data();
 
 		/**
 		\brief returns a const pointer reference to the current data.
 		*/
-		const T*& data() const;
+		const T* const & data() const;
 
 		/**
 		\brief Clears the Vector.
@@ -636,6 +636,50 @@ namespace NOU::NOU_DAT_ALG
 		= would return.
 		*/
 		constexpr boolean operator != (const VectorIterator &other) const;
+
+		/**
+		\param value The value to add.
+
+		\return A new iterator with the value of this operator plus the added value.
+
+		\brief Adds two iterators. E.g. if this iterator points to the first object and \p value is two, the
+		       resulting operator would point to the third object. Note that the order in which these 
+			   iterators are named (first, second, etc.) is relative to Vector::begin(). 
+		*/
+		constexpr VectorIterator operator + (sizeType value) const;
+
+		/**
+		\param value The value to subtract.
+
+		\return A new iterator with the value of this operator minus the subtracted value.
+
+		\brief Subtracts two iterators. E.g. if this iterator points to the second object and \p value is one, 
+		       the resulting operator would point to the first object. Note that the order in which these 
+			   iterators are named (first, second, etc.) is relative to Vector::begin(). 
+		*/
+		constexpr VectorIterator operator - (sizeType value) const;
+
+		/**
+		\param value The value to add.
+
+		\return A reference to this instance.
+
+		\brief Adds the passed iterator to this one. E.g. if this iterator points to the first object and 
+		       \p value is two, this iterator would point to the third object afterwards. Note that the 
+			   order in which these iterators are named (first, second, etc.) is relative to Vector::begin(). 
+		*/
+		constexpr VectorIterator& operator += (sizeType value);
+
+		/**
+		\param value The value to subtract.
+
+		\return A reference to this instance.
+
+		\brief Subtracts the passed iterator to this one. E.g. if this iterator points to the second object 
+	           and \p value is one, this iterator would point to the first object afterwards. Note that the 
+			   order in which these iterators are named (first, second, etc.) is relative to Vector::begin(). 
+		*/
+		constexpr VectorIterator& operator -= (sizeType value);
 	};
 
 	/**
@@ -727,6 +771,50 @@ namespace NOU::NOU_DAT_ALG
 		= would return.
 		*/
 		constexpr boolean operator != (const VectorReverseIterator &other) const;
+
+		/**
+		\param value The value to add.
+
+		\return A new iterator with the value of this operator plus the added value.
+
+		\brief Adds two iterators. E.g. if this iterator points to the first object and \p value is two, the
+		resulting operator would point to the third object. Note that the order in which these iterators are 
+		named (first, second, etc.) is relative to Vector::rbegin().
+		*/
+		constexpr VectorReverseIterator operator + (sizeType value) const;
+
+		/**
+		\param value The value to subtract.
+
+		\return A new iterator with the value of this operator minus the subtracted value.
+
+		\brief Subtracts two iterators. E.g. if this iterator points to the second object and \p value is one,
+		the resulting operator would point to the first object. Note that the order in which these iterators 
+		are named (first, second, etc.) is relative to Vector::rbegin().
+		*/
+		constexpr VectorReverseIterator operator - (sizeType value) const;
+
+		/**
+		\param value The value to add.
+
+		\return A reference to this instance.
+
+		\brief Adds the passed iterator to this one. E.g. if this iterator points to the first object and
+		\p value is two, this iterator would point to the third object afterwards. Note that the order in 
+		which these iterators are named (first, second, etc.) is relative to Vector::rbegin().
+		*/
+		constexpr VectorReverseIterator& operator += (sizeType value);
+
+		/**
+		\param value The value to subtract.
+
+		\return A reference to this instance.
+
+		\brief Subtracts the passed iterator to this one. E.g. if this iterator points to the second object
+		and \p value is one, this iterator would point to the first object afterwards. Note that the order in 
+		which these iterators are named (first, second, etc.) is relative to Vector::rbegin().
+		*/
+		constexpr VectorReverseIterator& operator -= (sizeType value);
 	};
 
 
@@ -1026,7 +1114,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	const T*& Vector<T>::data() const
+	T* const & Vector<T>::data()
+	{
+		return m_data;
+	}
+
+	template<typename T>
+	const T* const & Vector<T>::data() const
 	{
 		return m_data;
 	}
@@ -1046,12 +1140,6 @@ namespace NOU::NOU_DAT_ALG
 	void Vector<T>::setSize(sizeType size)
 	{
 		m_size = size;
-	}
-
-	template<typename T>
-	T*& Vector<T>::data()
-	{
-		return m_data;
 	}
 
 	template<typename T>
@@ -1277,6 +1365,36 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
+	constexpr VectorIterator<T> VectorIterator<T>::operator + (sizeType value) const
+	{
+		return VectorIterator<T>(m_index + value, const_cast<const T**>(m_dataPtr));
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T> VectorIterator<T>::operator - (sizeType value) const
+	{
+		return VectorIterator<T>(m_index - value, const_cast<const T**>(m_dataPtr));
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T>& VectorIterator<T>::operator += (sizeType value)
+	{
+		m_index += value;
+
+		return *this;
+	}
+
+	template<typename T>
+	constexpr VectorIterator<T>& VectorIterator<T>::operator -= (sizeType value)
+	{
+		m_index -= value;
+
+		return *this;
+	}
+
+
+
+	template<typename T>
 	constexpr VectorReverseIterator<T>::VectorReverseIterator(sizeType index, const T **dataPtr) :
 		m_dataPtr(const_cast<T**>(dataPtr)), //const cast is safe at this point
 		m_index(index)
@@ -1342,6 +1460,34 @@ namespace NOU::NOU_DAT_ALG
 	constexpr boolean VectorReverseIterator<T>::operator != (const VectorReverseIterator<T> &other) const
 	{
 		return !(*this == other);
+	}
+
+	template<typename T>
+	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator + (sizeType value) const
+	{
+		return VectorReverseIterator<T>(m_index - value, const_cast<const T**>(m_dataPtr));
+	}
+
+	template<typename T>
+	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator - (sizeType value) const
+	{
+		return VectorReverseIterator<T>(m_index + value, const_cast<const T**>(m_dataPtr));
+	}
+
+	template<typename T>
+	constexpr VectorReverseIterator<T>& VectorReverseIterator<T>::operator += (sizeType value)
+	{
+		m_index -= value;
+
+		return *this;
+	}
+
+	template<typename T>
+	constexpr VectorReverseIterator<T>& VectorReverseIterator<T>::operator -= (sizeType value)
+	{
+		m_index += value;
+
+		return *this;
 	}
 }
 
