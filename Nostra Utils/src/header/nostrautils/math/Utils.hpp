@@ -23,34 +23,28 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T>
-	constexpr T sqrt(const T &number)
+	constexpr T sqrt(const T &number) 
 	{
-		return ::sqrt<T>(number);
+		T i = 3;
+		T n;
+		T a;
+		n = (a + (a / a)) / 2;
+		while (i != 0)
+		{
+			number = (n + (a / n)) / 2;
+			i--;
+		}
+		return number;
 	}
 
 	template<typename T>
 	constexpr T cbrt(const T &number)
 	{
-		return ::cbrt<T>(number);
-	}
-
-	template<typename T>
-	constexpr float root(float radikant, float wurzel)
-	{
-		float h;
-		float ret;
-
-		if (radikant < 9)
-			ret = radikant / (wurzel + 1);
-
-		if ((radikant > 9) && (radikant < 50))
-			ret = radikant / (wurzel + 6);
-
-		if (radikant > 50)
-			h = 1e-04;
-
-		return ret;
-	}
+		T basis;
+		NOU::uint64 b = 0.33333333333333;
+		number = pow(basis, b);
+		return number;
+	}		
 }
 
 #endif
