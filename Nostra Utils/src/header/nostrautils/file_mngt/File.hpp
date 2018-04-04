@@ -117,7 +117,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\return true if successfully written, false if otherwise
 		*/
-		bool write(byte b);
+		boolean write(byte b);
 
 
 		/**
@@ -125,21 +125,21 @@ namespace NOU::NOU_FILE_MNGT
 		\param s the given string
 		\return true if successfully written, false if otherwise
 		*/
-		bool write(const NOU::NOU_DAT_ALG::StringView8 &s);
+		boolean write(const NOU::NOU_DAT_ALG::StringView8 &s);
 
 		/**
 		\brief Opens the internal filestream
 
 		\return true if successfully opened, false if otherwise
 		*/
-		bool open();
+		boolean open();
 
 		/**
 		\brief Closes the internal filestream
 
 		\return true if successfully closed, false if otherwise
 		*/
-		bool close();
+		boolean close();
 
 		/**
 		\brief Creates the file if not allready existing
@@ -152,7 +152,7 @@ namespace NOU::NOU_FILE_MNGT
 		\return true if currently opened, false if not
 		*/
 
-		bool isCurrentlyOpen();
+		boolean isCurrentlyOpen();
 
 		/**
 		\brief Getter for AccessMode

@@ -64,7 +64,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	bool File::write(byte b)
+	boolean File::write(byte b)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
 		if (m_mode != AccessMode::READ)
@@ -75,7 +75,7 @@ namespace NOU::NOU_FILE_MNGT
 		return false;
 	}
 
-	bool File::write(const NOU::NOU_DAT_ALG::StringView8 &s)
+	boolean File::write(const NOU::NOU_DAT_ALG::StringView8 &s)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
 		if (m_mode != AccessMode::READ)
@@ -87,7 +87,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	bool File::open()
+	boolean File::open()
 	{
 		if (!isCurrentlyOpen())
 		{
@@ -115,7 +115,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 		return m_data != nullptr;
 	}
-	bool File::close()
+	boolean File::close()
 	{
 		if (isCurrentlyOpen())
 		{
@@ -135,7 +135,7 @@ namespace NOU::NOU_FILE_MNGT
 		close();
 	}
 
-	bool File::isCurrentlyOpen()
+	boolean File::isCurrentlyOpen()
 	{
 		return m_data != nullptr;
 	}	
