@@ -224,7 +224,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		sizeType h;
 
-		h = hashObj(&key, m_size);
+		h = hashObj(&key, m_data.capacity());
 
 		for (sizeType i = 0; i < m_data[h].size(); i++)
 		{
