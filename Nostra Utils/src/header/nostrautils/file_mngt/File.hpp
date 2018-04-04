@@ -110,7 +110,7 @@ namespace NOU::NOU_FILE_MNGT
 		\brief reads a string of given size
 		\param size size of the string in byte 
 		*/
-		void read(sizeType size, char8 &buffer);
+		void read(sizeType size, char8 *buffer);
 
 		/**
 		\brief writes a single byte into a file according to the i/o mode that is set

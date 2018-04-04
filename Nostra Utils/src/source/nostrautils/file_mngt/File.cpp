@@ -17,7 +17,7 @@ namespace NOU::NOU_FILE_MNGT
 		m_path(path),
 		m_mode(mode)
 	{
-		setMode(mode);
+		m_data == nullptr;
 	}
 	//mv
 	File::File(File &&other) :
@@ -50,7 +50,7 @@ namespace NOU::NOU_FILE_MNGT
 		return fgetc(m_data);
 	}
 
-	void File::read(sizeType size, char8 &buffer)
+	void File::read(sizeType size, char8 *buffer)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
@@ -60,7 +60,7 @@ namespace NOU::NOU_FILE_MNGT
 			return;
 		}
 		open();
-		fread(&buffer, size, 1, m_data);
+		fread(buffer, size, 1, m_data);
 	}
 
 
@@ -113,7 +113,7 @@ namespace NOU::NOU_FILE_MNGT
 					break;
 			}
 		}
-		return getData() != nullptr;
+		return m_data != nullptr;
 	}
 	bool File::close()
 	{
@@ -146,6 +146,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 	void File::setMode(AccessMode mode)
 	{
+		close();
 		m_mode = mode;
 	}
 
