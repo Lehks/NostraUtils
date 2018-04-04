@@ -1153,13 +1153,15 @@ namespace UnitTests
 			NOU::int64 i2 = 243536768574;
 		
 			NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
-			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+			//Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+			Assert::IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 20));
 		
 			NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
 			NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 		
 			h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
-			Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+			//Assert::AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+			Assert::IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
 
 			//MD5 TESTS
 
@@ -1176,7 +1178,8 @@ namespace UnitTests
 
 			for (NOU::sizeType i = 0; i < 16; i++)
 			{
-				Assert::AreEqual(m0[i], m1[i]);
+				//Assert::AreEqual(m0[i], m1[i]);
+				Assert::IsTrue(m0[i] == m1[i]);
 			}
 				
 			//different output with only one little difference(byte Hash)
@@ -1190,7 +1193,8 @@ namespace UnitTests
 				i1 = (m0[i] == m1[i]) ? i1 + 1 : i1;
 			}
 
-			Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+			//Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+			Assert::IsFalse(i1 == static_cast<NOU::int64>(16));
 
 			//Same output, different input objects with same value(String Hash)
 
@@ -1199,7 +1203,8 @@ namespace UnitTests
 
 			for (NOU::sizeType i = 0; i < 16; i++)
 			{
-				Assert::AreEqual(m0[i], m1[i]);
+				//Assert::AreEqual(m0[i], m1[i]);
+				Assert::IsTrue(m0[i] == m1[i]);
 			}
 
 			//different output with only one little difference(byte Hash)
@@ -1215,7 +1220,8 @@ namespace UnitTests
 				i1 = (m0[i] == m1[i]) ? i1 + 1 : i1;
 			}
 
-			Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+			//Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+			Assert::IsFalse(i1 == static_cast<NOU::int64>(16));
 
 			//Same output, different input objects with same value(StringView Hash)
 
@@ -1227,7 +1233,8 @@ namespace UnitTests
 
 			for (NOU::sizeType i = 0; i < 16; i++)
 			{
-				Assert::AreEqual(m0[i], m1[i]);
+				//Assert::AreEqual(m0[i], m1[i]);
+				Assert::IsTrue(m0[i] == m1[i]);
 			}
 
 			//different output with only one little difference(StringView Hash)
@@ -1243,7 +1250,8 @@ namespace UnitTests
 				i1 = (m0[i] == m1[i]) ? i1 + 1 : i1;
 			}
 
-			Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+			//Assert::AreNotEqual(i1, static_cast<NOU::int64>(16));
+			Assert::IsFalse(i1 == static_cast<NOU::int64>(16));
 
 
 			NOU_CHECK_ERROR_HANDLER;
@@ -1273,8 +1281,10 @@ namespace UnitTests
 			}
 			NOU::char8 k = 'h';
 		
-			NOU::int32 count = hm.remove(k);
-			Assert::IsTrue(1 == count);
+			//NOU::int32 count = hm.remove(k, &out);
+			
+			NOU::boolean r = hm.remove(k);
+			Assert::IsTrue(r);
 
 			//Assert::AreEqual(1, count);
 
@@ -1332,7 +1342,6 @@ namespace UnitTests
 			Assert::IsTrue(a[1] == 49875);
 			Assert::IsTrue(a[2] == 10);
 			Assert::IsTrue(a[3] == 41);
-
 
 		}
 
