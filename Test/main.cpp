@@ -16,9 +16,12 @@
 int main()
 {
 	NOU::NOU_DAT_ALG::String8 str = "HalloDennis";
+	NOU::NOU_DAT_ALG::String8 str2 = "Dennis";
 
-	std::cout << str.substring(0, 4).rawStr() << std::endl;
-	std::cout << str.substring(0, 4).size() << std::endl;
+	str = str2;
+
+	std::cout << str.rawStr() << std::endl;
+	std::cout << str.size() << std::endl;
 
 	system("pause");
 }
