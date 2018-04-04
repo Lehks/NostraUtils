@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_HASHMAP_HPP
 #define	NOU_DAT_ALG_HASHMAP_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Hashing.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Hashing.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 /** \file Vector.hpp
 \author  Leslie Marxen
@@ -28,7 +28,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The default count of the internal used buckets.
 		*/
-		const static NOU::sizeType							LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more ofthen O(1) occurs
+		const static NOU::sizeType							LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more often O(1) occurs
 
 		/**
 		\brief count of current objects stored inside the map.
@@ -55,15 +55,15 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		HashMap(const HashMap &other);
 		/**
-		\brief Move-comstructor
+		\brief Move-constructor
 		\param other the HashMap from where this one will move
 		*/
 		HashMap(HashMap &&other);
 
 		/**
 		\param			key the key where the value will be mapped to
-		\param		    value the vaule that will be mapped
-		\return			true if sucessfully mapped, false if otherwise
+		\param		    value the value that will be mapped
+		\return			true if successfully mapped, false if otherwise
 		\brief maps a value to a specific key
 		*/
 		NOU::boolean map(const K &key,const V &value);//WIP
@@ -75,7 +75,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		V& get(const K &key);
 		/**
-		\brief Checks wether the map is empty or not.
+		\brief Checks whether the map is empty or not.
 		\return true if empty, false if otherwise
 		*/
 		boolean isEmpty();
@@ -86,17 +86,17 @@ namespace NOU::NOU_DAT_ALG
 		sizeType size();
 		/**
 		\return			a vector containing all currently used keys
-		\brief Returns an Vector of the keys wich are stored in the map.
+		\brief Returns an Vector of the keys which are stored in the map.
 		*/
 		Vector<K> keySet();
 		/**
-		\input		key the key of the valule that iwill be deleted;
-		\brief Removes an Object wich the specific key.
+		\input		key the key of the value that will be deleted;
+		\brief Removes an Object which the specific key.
 		*/
-		V& remove(K key);
+		boolean remove(K key, V *out = nullptr);
 		/**
 		\return			a vector containing all currently used values
-		\brief Returns an Vector of the Objects wich are stored in the map.
+		\brief Returns an Vector of the Objects which are stored in the map.
 		*/
 		Vector<V> entrySet();
 		/**
@@ -104,7 +104,7 @@ namespace NOU::NOU_DAT_ALG
 		\return			true if the key is contained inside the map;
 		\brief Checks if the key is contained in the map.
 		*/
-		boolean containsKey(K key);
+		boolean containsKey(const K &key);
 		/**
 		\brief Overloading [] operators. Works now exactly like get();
 		*/
@@ -112,7 +112,7 @@ namespace NOU::NOU_DAT_ALG
 
 	};
 
-
+	///\cond
 
 	template <typename K, typename V>
 	HashMap<K,V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
@@ -184,7 +184,7 @@ namespace NOU::NOU_DAT_ALG
 		if (m_data[n].size() == 0) 
 		{	//if nothing is mapped to HashPos n, return null
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
-			return m_data.getData()[0].dataTwo;
+			return m_data.data()[0].data()[0].dataTwo;
 		}
 
 		for (sizeType i = 0; i < m_data[n].size(); i++)
@@ -196,7 +196,7 @@ namespace NOU::NOU_DAT_ALG
 		}
 
 		NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
-		return m_data.getData()[0].dataTwo;
+		return m_data.data()[0].data()[0].dataTwo;
 	}
 
 	template<typename K, typename V>
@@ -220,22 +220,26 @@ namespace NOU::NOU_DAT_ALG
 
 
 	template <typename K, typename V>
-	V& HashMap<K,V>::remove(K key)
+	boolean HashMap<K,V>::remove(K key, V *out)
 	{
 		sizeType h;
-		Pair<K, V> tmpPair(key, this->get(key));
 
-		h = hashObj(&key, m_size);
+		h = hashObj(&key, m_data.capacity());
 
 		for (sizeType i = 0; i < m_data[h].size(); i++)
 		{
 			if (m_data[h][i].dataOne == key)
 			{
+				if (out != nullptr)
+				{
+					*out = NOU_CORE::move(m_data[h][i].dataTwo);
+				}
 				m_data[h].remove(i);
+				return true;
 			}
 		}
 
-		return tmpPair->dataTwo;
+		return false;
 	}
 
 	template<typename K, typename V>
@@ -274,7 +278,7 @@ namespace NOU::NOU_DAT_ALG
 		return entrySetVec;
 	}
 	template <typename K, typename V>
-	boolean HashMap<K, V>::containsKey(K key) 
+	boolean HashMap<K, V>::containsKey(const K &key) 
 	{
 		Vector<K> tmp = keySet();
 
@@ -291,5 +295,7 @@ namespace NOU::NOU_DAT_ALG
 	V& HashMap<K,V>::operator [](const K &key) {
 		return get(key);
 	}
+
+	///\endcond
 }
 #endif

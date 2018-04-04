@@ -1,19 +1,16 @@
 #ifndef NOU_DAT_ALG_UTILS_HPP
 #define NOU_DAT_ALG_UTILS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/Meta.hpp"
 
-/** 
-\file dat_alg/Utils.hpp
-
+/** \file dat_alg/Utils.hpp
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \author	 Lukas Gross
 \since   0.0.1
 \version 0.0.1
-
 \brief   This file provides useful utility functions for dat_alg.
 */
 
@@ -121,6 +118,8 @@ namespace NOU::NOU_DAT_ALG
 		T abs = (diff < 0 ? -diff : diff);
 		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
 	}
+
+
 }
 
 #endif

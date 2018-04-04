@@ -290,6 +290,7 @@
   <ItemGroup>
     <None Include="Doc\resources\Documentation.dox" />
     <None Include="Doc\resources\Doxyfile" />
+    <None Include="Doc\resources\ThreadManager.dox" />
     <None Include="src\header\nostrautils\core\.gitignore" />
     <None Include="src\header\nostrautils\dat_alg\.gitignore" />
     <None Include="src\header\nostrautils\file_mngt\.gitignore" />
@@ -313,6 +314,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\BinarySearch.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\LazyEvaluationProperty.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\ObjectPool.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\HashMap.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp" />
@@ -322,9 +324,8 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Comparator.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
-    <ClInclude Include="src\header\nostrautils\file_mngt\INIFile.hpp">
-      <DeploymentContent>false</DeploymentContent>
-    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp" />
+    <ClInclude Include="src\header\nostrautils\file_mngt\Path.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\GeneralPurposeAllocator.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\PoolAllocator.hpp" />
@@ -335,18 +336,21 @@
     <ClInclude Include="src\header\nostrautils\thread\ConditionVariable.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Lock.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Mutex.hpp" />
-    <ClInclude Include="src\header\nostrautils\thread\Protection.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Task.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\TaskQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\ThreadManager.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\ThreadWrapper.hpp" />
     <ClInclude Include="src\header\nostrautils\thread\Threads.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Quicksort.hpp" />
+    <ClInclude Include="src\header\nostrautils\dat_alg\Random.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\source\nostrautils\file_mngt\INIFile.cpp" />
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
+    <ClCompile Include="src\source\nostrautils\dat_alg\Random.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp" />
+    <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp" />
+    <ClCompile Include="src\source\nostrautils\file_mngt\Path.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\AsyncTaskResult.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\ConditionVariable.cpp" />
@@ -354,6 +358,10 @@
     <ClCompile Include="src\source\nostrautils\thread\Mutex.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\ThreadManager.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\ThreadWrapper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+    <Text Include="Doc\output\Warnings.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

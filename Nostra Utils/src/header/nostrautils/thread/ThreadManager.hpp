@@ -1,14 +1,14 @@
 #ifndef	NOU_THREAD_THREAD_MANAGER_HPP
 #define	NOU_THREAD_THREAD_MANAGER_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\thread\ThreadWrapper.hpp"
-#include "nostrautils\thread\Task.hpp"
-#include "nostrautils\thread\Mutex.hpp"
-#include "nostrautils\thread\ConditionVariable.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/thread/ThreadWrapper.hpp"
+#include "nostrautils/thread/Task.hpp"
+#include "nostrautils/thread/Mutex.hpp"
+#include "nostrautils/thread/ConditionVariable.hpp"
 
 #include <iostream>
 
@@ -146,7 +146,7 @@ namespace NOU::NOU_THREAD
 			Priority m_id;
 
 			/**
-			\param The ID of the instance.
+			\param id The ID of the instance.
 
 			\brief Constructs a new instance from the passed id.
 			*/
@@ -228,14 +228,14 @@ namespace NOU::NOU_THREAD
 			boolean              m_taskReady;
 
 			/**
-			\param The thread that is stored by this bundle.
+			\param thread The thread that is stored by this bundle.
 
 			\brief Constructs a new instance with the passed thread.
 			*/
 			ThreadDataBundle(ThreadWrapper &&thread);
 
 			/**
-			\param The instance to move from.
+			\param tdb The instance to move from.
 
 			\brief Moves the data from \p tdb to the instance that is being constructed by the constructor.
 			*/

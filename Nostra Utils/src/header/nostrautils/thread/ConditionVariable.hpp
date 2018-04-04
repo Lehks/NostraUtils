@@ -1,10 +1,19 @@
 #ifndef NOU_THREAD_CONDITION_VARIABLE_HPP
 #define NOU_THREAD_CONDITION_VARIABLE_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\thread\Lock.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/thread/Lock.hpp"
 
 #include <condition_variable>
+
+/** \file ConditionVariable.hpp
+\author	 Lukas Reichmann
+\since   0.0.1
+\version 0.0.1
+\brief   This file provides a condition variable class.
+
+\see nostra::utils::thread::CondtionVariable
+*/
 
 namespace NOU::NOU_THREAD
 {

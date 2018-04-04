@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_STRING_HPP
 #define	NOU_DAT_ALG_STRING_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 #include <iostream>
 #include <stdlib.h>
@@ -153,13 +153,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		String(CharType c);
 		/**
-		\param c Another String.
+		\param other Another String.
 
 		\brief Copy Constructor.
 		*/
 		String(const String &other);
 		/**
-		\param c Another String.
+		\param other Another String.
 
 		\brief Move Constructor.
 		*/
@@ -781,6 +781,21 @@ namespace NOU::NOU_DAT_ALG
 		string.
 		*/
 		StringReverseIterator rend();
+		/**
+		\param str The string to replace the actual string.
+		\return  The actual string															///////////////////////////
+
+		\brief copy assignment operator.
+		*/
+		String operator = (const String& str);
+
+		/**
+		\param str The string to replace the actual string.
+		\return  The actual string															//////////////////////////////
+
+		\brief move assignment operator.
+		*/
+		String operator = (String&& str);
 
 		/**
 		\param c The character to concatenate.
@@ -1108,6 +1123,11 @@ namespace NOU::NOU_DAT_ALG
 		return  genericFloatToString(f);
 	}
 
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wuninitialized" 
+#endif
+
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(const StringView<CHAR_TYPE> &str) :
 		m_data(str.size()),
@@ -1121,6 +1141,15 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 	}
 
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
+
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wuninitialized" 
+#endif
+
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(CharType c) :
 		m_data(1),
@@ -1132,10 +1161,19 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 	}
 
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
+
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(ConstCharType *str) :
 		String(StringView<CHAR_TYPE>(str))
 	{}
+
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wuninitialized" 
+#endif
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(const String<CHAR_TYPE> &other) :
@@ -1143,11 +1181,24 @@ namespace NOU::NOU_DAT_ALG
 		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), other.size())
 	{}
 
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
+
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wuninitialized" 
+#endif
+
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(String<CHAR_TYPE> &&other) :
 		m_data(NOU_CORE::forward<decltype(m_data)>(other.m_data)),
 		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), other.size())
 	{}
+	
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(int32 i) :
@@ -1327,7 +1378,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = m_data.size();
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1), 
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
@@ -1433,7 +1484,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float32 nr)
 	{
 		if (b)
-			append(FloatToString(nr));
+			append(floatToString(nr));
 
 		return *this;
 	}
@@ -1442,7 +1493,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float64 nr)
 	{
 		if (b)
-			append(FloatToString(nr));
+			append(floatToString(nr));
 
 		return *this;
 	}
@@ -1454,7 +1505,6 @@ namespace NOU::NOU_DAT_ALG
 			end = m_data.size();
 
 		target.insert(insertIndex, substring(start, end));
-		return *this;
 	}
 
 	template<typename CHAR_TYPE>
@@ -1463,23 +1513,22 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = m_data.size();
 
-		m_data.insert(insertIndex, src.logicalSubstring(start, end))
+		insert(insertIndex, src.logicalSubstring(start, end));
+
+		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::fillRange(CharType c, sizeType start, sizeType end)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1),
-			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
-
-		else if (start <= m_data.capacity() && end > m_data.capacity())
+		if (start <= m_data.capacity() && end > m_data.capacity())
 		{
-			m_data.expandCapacity(end - m_data.capacity());
+			m_data.expandCapacity(end - m_data.capacity() + 1);
 		}
 
 		for (sizeType i = start; i < end; i++)
 		{
-			m_data.replace(c, i);
+			m_data.replace(i,c);
 		}
 
 		return *this;
@@ -1505,17 +1554,17 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::preserve(sizeType start, sizeType end)
 	{
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
-			end = m_data.size() - 1;
+			end = m_data.size();
 
 		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		for (sizeType i = 0; i < m_data.size() - 1; i++)
+		for (sizeType i = 0; i < m_data.size(); i++)
 		{
-			if (i == start)
-				i = end;
-
-			m_data.remove(i);
+			if (i < start)
+				m_data.remove(0);
+			else if (i > start && i > end)
+				m_data.remove(end);
 		}
 
 		setSize(m_data.size() - 1);
@@ -1549,7 +1598,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(CharType c) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.append(c);
 		return strnew;
 	}
@@ -1557,7 +1606,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(const StringView<CHAR_TYPE>& str) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.append(str);
 		return strnew;
 	}
@@ -1565,7 +1614,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int32 i) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.append(i);
 		return strnew;
 	}
@@ -1573,7 +1622,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(int64 i) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.append(i);
 		return strnew;
 	}
@@ -1581,7 +1630,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint32 i) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.append(i);
 		return strnew;
 	}
@@ -1589,7 +1638,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(uint64 i) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.append(i);
 		return strnew;
 	}
@@ -1597,7 +1646,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float32 f) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.append(f);
 		return strnew;
 	}
@@ -1605,7 +1654,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concat(float64 f) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.append(f);
 		return strnew;
 	}
@@ -1613,7 +1662,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, CharType c) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.appendIf(b, c);
 		return strnew;
 	}
@@ -1621,7 +1670,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, const StringView<CHAR_TYPE>& str) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.appendIf(b, str);
 		return strnew;
 	}
@@ -1629,7 +1678,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int32 i) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.appendIf(b, i);
 		return strnew;
 	}
@@ -1637,7 +1686,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, int64 i) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.appendIf(b, i);
 		return strnew;
 	}
@@ -1645,7 +1694,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint32 i) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.appendIf(b, i);
 		return strnew;
 	}
@@ -1653,7 +1702,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, uint64 i) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.appendIf(b, i);
 		return strnew;
 	}
@@ -1661,7 +1710,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float32 f) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.appendIf(b, f);
 		return strnew;
 	}
@@ -1669,7 +1718,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::concatIf(boolean b, float64 f) const
 	{
-		String<CHAR_TYPE> strnew;
+		String<CHAR_TYPE> strnew(*this);
 		strnew.appendIf(b, f);
 		return strnew;
 	}
@@ -1737,9 +1786,8 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::clear()
 	{
 		m_data.clear();
-		setSize(m_data.size());
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
-		setSize(m_data.size() - 1);
+		setSize(0);
 		return *this;
 	}
 
@@ -1777,6 +1825,26 @@ namespace NOU::NOU_DAT_ALG
 	typename String<CHAR_TYPE>::StringReverseIterator String<CHAR_TYPE>::rend()
 	{
 		return m_data.rend();
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator=(const String & str)
+	{
+		m_data = str.m_data;
+		StringView<CHAR_TYPE>::m_dataPtr = const_cast<ConstCharType**>(&m_data.data());
+		setSize(str.size());
+
+		return *this;
+	}
+	template<typename CHAR_TYPE>
+	String<CHAR_TYPE> String<CHAR_TYPE>::operator=(String && str)
+	{
+
+		m_data = NOU_CORE::move(str.m_data);
+		StringView<CHAR_TYPE>::m_dataPtr = const_cast<ConstCharType**>(&m_data.data());
+		setSize(str.size());
+
+		return *this;
+
 	}
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::operator+(CharType c) const

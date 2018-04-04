@@ -32,7 +32,7 @@
 #endif
 
 /**
-\brief The name of the namespace that contains all components that are related to datastructures and/or 
+\brief The name of the namespace that contains all components that are related to data structures and/or 
        algorithms.
 */
 #ifndef NOU_DAT_ALG
@@ -134,13 +134,13 @@ operating system is Macintosh, use
 
 \details
 The operating system identifier for an unknown system. This macro is always defined, to check if the current 
-operating system is unknwon, use
+operating system is unknown, use
 
 \code{.cpp}
 #if NOU_OS == NOU_OS_UNKNOWN
 \endcode
 
-An unknown operating system does not cause an error per se, however, it may cause major problems (e.g. the
+An unknown operating system does not cause an error per-se, however, it may cause major problems (e.g. the
 value for NOU_OS_LIBRARY will not be set properly).
 */
 #ifndef NOU_OS_UNKNOWN
@@ -163,7 +163,7 @@ identifier.
 \brief Defined as the identifier of the current operating system.
 
 \details
-This macro is defined as the identifier of the current operating system. To check for a certain opeating 
+This macro is defined as the identifier of the current operating system. To check for a certain operating 
 system, use
 
 \code{.cpp}
@@ -203,7 +203,7 @@ value for NOU_OS_LIBRARY will not be set properly).
 (<tt>.dll</tt>) on MS Windows.
 
 \details
-For optimisation purposes, functions that will be imported from a DLL should be marked with
+For optimization purposes, functions that will be imported from a DLL should be marked with
 <tt>__declspec(dllimport)</tt> on MS Windows when using the Visual C++ compiler. If this macro is defined, all
 symbols that were exported into a DLL will be marked for import.
 
@@ -417,8 +417,12 @@ and replace * with the compiler name.
 #ifndef NOU_COMPILER
 
 #    ifdef _MSC_VER
+	 //Clang also defines _MSC_VER on a Windows environment. The definition of that macro has been disabled in the
+	 //CMake file.
 #    define NOU_COMPILER NOU_COMPILER_VISUAL_CPP
-#    elif defined __GNUC__
+#    elif defined __GNUC__ 
+	 //Clang also defines __GNUC__ on a Unix/Linux environment. The definition of that macro has been disabled in the
+	 //CMake file.
 #    define NOU_COMPILER NOU_COMPILER_GCC
 #    elif defined __clang__
 #    define NOU_COMPILER NOU_COMPILER_CLANG
@@ -624,18 +628,20 @@ static_cast<NOU::uint32> 									 \
 #endif
 
 /**
-\brief The macro which is used for getting the function name.
+\brief Expands to a string literal with the function signature of the function that this macro was placed in.
 
-\todo Verify!
+\note
+Although this macro is platform independent, it is not guaranteed that using this macro in the same function
+on different platforms also produces the same result.
 */
 #ifndef NOU_FUNC_NAME
 
 #	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
 #	define NOU_FUNC_NAME __FUNCSIG__
 #	elif NOU_COMPILER == NOU_COMPILER_GCC
-#	define NOU_FUNC_NAME __PRETTY__FUNCTION__
+#	define NOU_FUNC_NAME NOU_STRINGIFY(__PRETTY_FUNCTION__)
 #	elif NOU_COMPILER == NOU_COMPILER_CLANG
-#	define NOU_FUNC_NAME __func__ ///\Todo check
+#	define NOU_FUNC_NAME NOU_STRINGIFY(__PRETTY_FUNCTION__)
 #	elif NOU_COMPILER == NOU_COMPILER_INTEL_CPP
 #	define NOU_FUNC_NAME __func__ ///\Todo check
 #	elif NOU_COMPILER == NOU_COMPILER_MIN_GW
@@ -643,7 +649,7 @@ static_cast<NOU::uint32> 									 \
 #	elif NOU_COMPILER == NOU_COMPILER_DOXYGEN
 #	define NOU_FUNC_NAME __FUNCSIG__
 #	else
-#	define NOU_COMPILER_NAME __func__
+#	define NOU_FUNC_NAME __func__
 #	endif
 
 #endif
@@ -757,17 +763,17 @@ namespace NOU
 	using char32 = char32_t;
 
 	/**
-	\brief A floating point type with a widht of 32 bit.
+	\brief A floating point type with a width of 32 bit.
 
-	\note If the compiler does not support a 32 bit float, this will be the larget floating point type 
+	\note If the compiler does not support a 32 bit float, this will be the largest floating point type 
 	      available.
 	*/
 	using float32 = NOU_CORE::ChooseFloat32::type;
 
 	/**
-	\brief A floating point type with a widht of 64 bit.
+	\brief A floating point type with a width of 64 bit.
 
-	\note If the compiler does not support a 64 bit float, this will be the larget floating point type
+	\note If the compiler does not support a 64 bit float, this will be the largest floating point type
 	available.
 	*/
 	using float64 = NOU_CORE::ChooseFloat64::type;

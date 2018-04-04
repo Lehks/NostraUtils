@@ -1,7 +1,7 @@
 #ifndef NOU_DAT_ALG_BINARY_SEARCH_HPP
 #define NOU_DAT_ALG_BINARY_SEARCH_HPP
 
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 /** 
 \file dat_alg/BinarySearch.hpp
