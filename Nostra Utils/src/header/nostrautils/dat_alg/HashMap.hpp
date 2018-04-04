@@ -93,7 +93,7 @@ namespace NOU::NOU_DAT_ALG
 		\input		key the key of the valule that iwill be deleted;
 		\brief Removes an Object wich the specific key.
 		*/
-		V& remove(K key);
+		boolean remove(K key, V *out = nullptr);
 		/**
 		\return			a vector containing all currently used values
 		\brief Returns an Vector of the Objects wich are stored in the map.
@@ -220,10 +220,9 @@ namespace NOU::NOU_DAT_ALG
 
 
 	template <typename K, typename V>
-	V& HashMap<K,V>::remove(K key)
+	boolean HashMap<K,V>::remove(K key, V *out)
 	{
 		sizeType h;
-		Pair<K, V> tmpPair(key, this->get(key));
 
 		h = hashObj(&key, m_size);
 
@@ -231,11 +230,16 @@ namespace NOU::NOU_DAT_ALG
 		{
 			if (m_data[h][i].dataOne == key)
 			{
+				if (out != nullpt)
+				{
+					*out = NOU_CORE::move(m_data[h]);
+				}
 				m_data[h].remove(i);
+				return true;
 			}
 		}
 
-		return tmpPair->dataTwo;
+		return false;
 	}
 
 	template<typename K, typename V>
