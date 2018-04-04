@@ -13,30 +13,6 @@ using namespace NOU_FILE_MNGT;
 
 int main()
 {
-	String8 sv = "Hello World!";
-	String8 s = sv.substring(0, 5);
-
-	std::cout << s.rawStr() << std::endl;
-
-	NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
-
-	NOU::NOU_DAT_ALG::String8 str = cwd.getAbsolutePath();
-	str.append("\\Test\\Dennis\\WasGehtAb");
-
-	std::cout << str.rawStr() << std::endl;
-
-	NOU::NOU_FILE_MNGT::Path p15 = str;
-
-	std::cout << Path::currentWorkingDirectory().getAbsolutePath().rawStr() << std::endl;
-
-	std::cout << p15.getRelativePath().rawStr() << std::endl;
-
-	std::cout << std::endl;
-	std::cout << std::endl;
-
-	
-
-	std::cout << std::endl;
-
-	std::cin.get();
+	File f(Path::currentWorkingDirectory());
+	system("pause");
 }							

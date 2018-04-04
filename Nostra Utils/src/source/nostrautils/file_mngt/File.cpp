@@ -80,9 +80,7 @@ namespace NOU::NOU_FILE_MNGT
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
 		if (m_mode != AccessMode::READ)
 		{
-			void *p;
-			p = &(s.rawStr()[0]);
-			fread(p, s.size(), 1, m_data);
+			fwrite(s.rawStr(), sizeof(s.rawStr()[0]), s.size(), m_data);
 			return true;
 		}
 		return false;
