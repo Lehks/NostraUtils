@@ -28,7 +28,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The default count of the internal used buckets.
 		*/
-		const static NOU::sizeType							LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more ofthen O(1) occurs
+		const static NOU::sizeType							LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more often O(1) occurs
 
 		/**
 		\brief count of current objects stored inside the map.
@@ -55,15 +55,15 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		HashMap(const HashMap &other);
 		/**
-		\brief Move-comstructor
+		\brief Move-constructor
 		\param other the HashMap from where this one will move
 		*/
 		HashMap(HashMap &&other);
 
 		/**
 		\param			key the key where the value will be mapped to
-		\param		    value the vaule that will be mapped
-		\return			true if sucessfully mapped, false if otherwise
+		\param		    value the value that will be mapped
+		\return			true if successfully mapped, false if otherwise
 		\brief maps a value to a specific key
 		*/
 		NOU::boolean map(const K &key,const V &value);//WIP
@@ -75,7 +75,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		V& get(const K &key);
 		/**
-		\brief Checks wether the map is empty or not.
+		\brief Checks whether the map is empty or not.
 		\return true if empty, false if otherwise
 		*/
 		boolean isEmpty();
@@ -86,17 +86,17 @@ namespace NOU::NOU_DAT_ALG
 		sizeType size();
 		/**
 		\return			a vector containing all currently used keys
-		\brief Returns an Vector of the keys wich are stored in the map.
+		\brief Returns an Vector of the keys which are stored in the map.
 		*/
 		Vector<K> keySet();
 		/**
-		\input		key the key of the valule that iwill be deleted;
-		\brief Removes an Object wich the specific key.
+		\input		key the key of the value that will be deleted;
+		\brief Removes an Object which the specific key.
 		*/
 		boolean remove(K key, V *out = nullptr);
 		/**
 		\return			a vector containing all currently used values
-		\brief Returns an Vector of the Objects wich are stored in the map.
+		\brief Returns an Vector of the Objects which are stored in the map.
 		*/
 		Vector<V> entrySet();
 		/**
