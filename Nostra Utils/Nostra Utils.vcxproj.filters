@@ -29,6 +29,7 @@
     <None Include="src\source\nostrautils\thread\.gitignore" />
     <None Include="Doc\resources\Documentation.dox" />
     <None Include="Doc\resources\Doxyfile" />
+    <None Include="Doc\resources\ThreadManager.dox" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp">
@@ -58,9 +59,6 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -85,16 +83,48 @@
     <ClInclude Include="src\header\nostrautils\core\Assertions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\mem_mngt\PoolAllocator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Uninitialized.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\BinaryHeap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\ThreadManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\AsyncTaskResult.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\Task.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\ThreadWrapper.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\Mutex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\TaskQueue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\Lock.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\BinaryHeap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
+    <ClInclude Include="src\header\nostrautils\dat_alg\Quicksort.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\mem_mngt\GeneralPurposeAllocator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp">
+    <ClInclude Include="src\header\nostrautils\dat_alg\Random.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\BinarySearch.hpp">
@@ -104,6 +134,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\HashMap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\ConditionVariable.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\ContainerInterfaces.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\thread\Threads.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\file_mngt\Path.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\dat_alg\LazyEvaluationProperty.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -117,8 +165,36 @@
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\source\nostrautils\thread\ThreadWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\thread\Mutex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\thread\ThreadManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\thread\Lock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\thread\ConditionVariable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\thread\AsyncTaskResult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\file_mngt\Path.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Doc\output\Warnings.txt" />
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>

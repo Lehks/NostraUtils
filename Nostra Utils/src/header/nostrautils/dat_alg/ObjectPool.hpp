@@ -1,13 +1,12 @@
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\Assertions.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/Assertions.hpp"
 
-#include <cstddef>
-
-/** \file Vector.hpp
+/** \file ObjectPool.hpp
 \author  Lukas Reichmann
 \since   0.0.1
 \version 0.0.1
@@ -73,15 +72,23 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	class ObjectPool
 	{
-	public:
+	private:
 		/**
 		\brief The type of object that will be stored in the pool.
 		*/
 		using Type = T;
 
-	private:
 		using Chunk = internal::ObjectPoolChunk<Type>;
 
+	public:
+
+		/**
+		\brief The type that needs to be used by an allocation callback in order for that callback to be 
+		       compatible with an object pool.
+		*/
+		using AllocType = Chunk;
+
+	private:
 		/**
 		\brief The vector in which the different chunks are being stored.
 		*/
@@ -128,36 +135,41 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Constructs a new instance.
 		*/
-		explicit ObjectPool(sizeType capacity, NOU_MEM_MNGT::AllocationCallback<Chunk> &allocationCallback
-			= NOU_MEM_MNGT::GenericAllocationCallback<Chunk>::getInstance());
+		explicit ObjectPool(sizeType capacity, NOU_MEM_MNGT::AllocationCallback<AllocType> &allocationCallback
+			= NOU_MEM_MNGT::GenericAllocationCallback<AllocType>::getInstance());
 
 		ObjectPool(const ObjectPool&) = delete;
 		ObjectPool(ObjectPool&&) = delete;
 
 		/**
 		\param object The object to push.
+		\return A reference to the created object. NOTE: Although a reference to the object is returned, 
+		        the object is still owned by the pool and does not count as distributed.
 
 		\brief Pushes a new object into the pool. At most, this can be called capacity() times.
 		*/
-		void pushObject(const Type &object);
+		T& pushObject(const Type &object);
 
 		/**
 		\param object The object to push.
+		\return A reference to the created object. NOTE: Although a reference to the object is returned,
+		the object is still owned by the pool and does not count as distributed.
 
 		\brief Pushes a new object into the pool. At most, this can be called capacity() times.
 		*/
-		void pushObject(Type &&object);
+		T& pushObject(Type &&object);
 
 		/**
 		\tparam ARGS The types of the parameters that will be used to construct the new object.
-
 		\param args The parameters that will be used to construct the new object.
+		\return A reference to the created object. NOTE: Although a reference to the object is returned,
+		the object is still owned by the pool and does not count as distributed.
 
 		\brief Pushes a new object into the pool. This object will be constructed from the parameters that
 		were passed to this method. At most, this can be called capacity() times.
 		*/
 		template<typename... ARGS>
-		void emplaceObject(ARGS&&... args);
+		T& emplaceObject(ARGS&&... args);
 
 		/**
 		\return An object from the pool.
@@ -211,6 +223,28 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the amount of objects left for distribution.
 		*/
 		sizeType remainingObjects() const;
+
+		/**
+		\tparam The type of the predicate.
+
+		\param predicate The predicate to execute.
+
+		\brief Executes a predicate for each element (both distributed and not) in the pool. This predicate 
+		       must have the signature void(T&).
+		*/
+		template<typename P>
+		void foreach(P predicate);
+
+		/**
+		\tparam The type of the predicate.
+
+		\param predicate The predicate to execute.
+
+		\brief Executes a predicate for each element (both distributed and not) in the pool. This predicate
+		must have the signature void(const T&).
+		*/
+		template<typename P>
+		void foreach(P predicate) const;
 	};
 
 	template<typename T>
@@ -223,7 +257,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		//calculate address of the chunk
 		return reinterpret_cast<Chunk*>(reinterpret_cast<byte*>(const_cast<Type*>(&object))
-			- offsetof(Chunk, m_data));
+			- NOU_OFFSET_OF(Chunk, m_data));
 	}
 
 	template<typename T>
@@ -247,27 +281,27 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename T>
 	ObjectPool<T>::ObjectPool(sizeType capacity,
-		NOU_MEM_MNGT::AllocationCallback<Chunk> &allocationCallback) :
+		NOU_MEM_MNGT::AllocationCallback<AllocType> &allocationCallback) :
 		m_data(capacity, allocationCallback),
 		m_remainingObjects(0),
 		m_head(nullptr)
 	{}
 
 	template<typename T>
-	void ObjectPool<T>::pushObject(const Type &object)
+	T& ObjectPool<T>::pushObject(const Type &object)
 	{
-		emplaceObject(object);
+		return emplaceObject(object);
 	}
 
 	template<typename T>
-	void ObjectPool<T>::pushObject(Type &&object)
+	T& ObjectPool<T>::pushObject(Type &&object)
 	{
-		emplaceObject(NOU_CORE::move(object));
+		return emplaceObject(NOU_CORE::move(object));
 	}
 
 	template<typename T>
 	template<typename... ARGS>
-	void ObjectPool<T>::emplaceObject(ARGS&&... args)
+	T& ObjectPool<T>::emplaceObject(ARGS&&... args)
 	{
 #ifdef NOU_DEBUG
 		sizeType oldCapacity = m_data.capacity();
@@ -279,10 +313,10 @@ namespace NOU::NOU_DAT_ALG
 		{
 			NOU_PUSH_DBG_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_STATE,
 				"The pool is full. No more objects can be pushed to it.");
-			return;
+			return m_head->m_data; //not the value that was expected, but something has to be returned
 		}
 
-		m_data.pushBack(Chunk(NOU_CORE::forward<ARGS>(args)...));
+		m_data.emplaceBack(NOU_CORE::move(Chunk(NOU_CORE::forward<ARGS>(args)...)));
 
 		m_remainingObjects++; //there is now one more object left
 
@@ -291,12 +325,14 @@ namespace NOU::NOU_DAT_ALG
 #endif
 
 		setAsHead(m_data.data() + m_data.size() - 1); //set the just inserted chunk as head
+
+		return m_data[m_data.size() - 1].m_data;
 	}
 
 	template<typename T>
 	typename ObjectPool<T>::Type& ObjectPool<T>::get()
 	{
-		NOU_COND_PUSH_DBG_ERROR(!(m_head == nullptr), NOU_CORE::getErrorHandler(),
+		NOU_COND_PUSH_DBG_ERROR((m_head == nullptr), NOU_CORE::getErrorHandler(),
 			NOU_CORE::ErrorCodes::INVALID_STATE, "The pool is empty. Use pushObject() to push a new object.");
 
 		Chunk *head = m_head;
@@ -363,5 +399,29 @@ namespace NOU::NOU_DAT_ALG
 	sizeType ObjectPool<T>::remainingObjects() const
 	{
 		return m_remainingObjects;
+	}
+
+	template<typename T>
+	template<typename P>
+	void ObjectPool<T>::foreach(P predicate)
+	{
+		static_assert(NOU_CORE::IsInvocableR<void, P, T&>::value);
+		
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			predicate(m_data[i].m_data);
+		}
+	}
+
+	template<typename T>
+	template<typename P>
+	void ObjectPool<T>::foreach(P predicate) const
+	{
+		static_assert(NOU_CORE::IsInvocableR<void, P, const T&>::value);
+
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			predicate(m_data[i].m_data);
+		}
 	}
 }

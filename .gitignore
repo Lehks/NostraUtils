@@ -13,8 +13,14 @@
 # Build results
 bin/
 
+#CMake build directory (which is in the root directory of the repository)
+/Build/
+
 #Ignore Test Project
 /Test/*
+
+#VSCode settings
+/.vscode/
 
 # Visual Studio 2015 cache/options directory
 .vs/

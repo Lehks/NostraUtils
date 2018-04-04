@@ -1,8 +1,8 @@
 #ifndef	NOU_CORE_VERSION_HPP
 #define	NOU_CORE_VERSION_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
 
 /**
 \file core/Version.hpp

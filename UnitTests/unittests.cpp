@@ -4,26 +4,33 @@
 
 #define NOU_DEBUG
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\Version.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\dat_alg\Comparator.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\FastQueue.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Uninitialized.hpp"
-#include "nostrautils\dat_alg\BinaryHeap.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\dat_alg\Hashing.hpp"
-#include "nostrautils\dat_alg\BinarySearch.hpp"
-#include "nostrautils\dat_alg\ObjectPool.hpp"
-#include "nostrautils\dat_alg\HashMap.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/Version.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/dat_alg/Comparator.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/FastQueue.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Uninitialized.hpp"
+#include "nostrautils/dat_alg/Quicksort.hpp"
+#include "nostrautils/dat_alg/Random.hpp"
+#include "nostrautils/mem_mngt/PoolAllocator.hpp"
+#include "nostrautils/mem_mngt/GeneralPurposeAllocator.hpp"
+#include "nostrautils/dat_alg/BinaryHeap.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/Hashing.hpp"
+#include "nostrautils/dat_alg/BinarySearch.hpp"
+#include "nostrautils/dat_alg/ObjectPool.hpp"
+#include "nostrautils/dat_alg/HashMap.hpp"
+#include "nostrautils/thread/Threads.hpp"
+#include "nostrautils/file_mngt/Path.hpp"
+
 
 #include "DebugClass.hpp"
 
@@ -426,7 +433,7 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'b') < 0);
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') < 0);
-		
+
 
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
@@ -481,8 +488,8 @@ namespace UnitTests
 			Assert::IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
 			Assert::IsTrue(*uPtr == *rawPtr);
 			Assert::IsTrue(uPtr);
-			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr, 
-						NOU::NOU_MEM_MNGT::defaultDeleter));
+			Assert::IsFalse(NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr,
+				NOU::NOU_MEM_MNGT::defaultDeleter));
 			Assert::IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
 			Assert::IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
 			Assert::IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
@@ -501,7 +508,7 @@ namespace UnitTests
 			{
 				//check if this compiles
 				NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
-				
+
 				//destructor is called here
 			}
 
@@ -519,7 +526,7 @@ namespace UnitTests
 
 		TEST_METHOD(FastQueue)
 		{
-			while(NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
+			while (NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
 				NOU::NOU_CORE::getErrorHandler().popError();
 
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
@@ -564,14 +571,14 @@ namespace UnitTests
 			Assert::IsTrue(allocator.getCounter() == 0);
 
 			NOU::NOU_DAT_ALG::FastQueue<int> fq;
-		
+
 			fq.push(1);
 			fq.push(2);
 			fq.push(3);
 			fq.push(4);
-		
+
 			Assert::IsTrue(fq.peek() == 1);
-		
+
 			Assert::IsTrue(fq.pop() == 1);
 			Assert::IsTrue(fq.pop() == 2);
 			Assert::IsTrue(fq.pop() == 3);
@@ -630,7 +637,7 @@ namespace UnitTests
 		
 			NOU_CHECK_ERROR_HANDLER;
 		}
-		
+
 		TEST_METHOD(AllocationCallbackDeleter)
 		{
 			NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> dbgAlloc;
@@ -643,7 +650,7 @@ namespace UnitTests
 			Assert::IsTrue(dbgAlloc.getCounter() == 0);
 
 			auto callback = NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>();
-			NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int, 
+			NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int,
 				NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>> deleter1(callback);
 
 			int *iPtr1 = deleter1.getAllocator().allocate();
@@ -657,167 +664,126 @@ namespace UnitTests
 
 		TEST_METHOD(StringView)
 		{
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('A')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('Z')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('a')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('z')>::value);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('A'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('Z'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('a'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('z'));
 
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter(' ')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('3')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('%')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isCharacter('-')>::value);
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('3'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isCharacter('-'));
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('1')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('2')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('3')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('4')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('5')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('6')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('7')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('8')>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('9')>::value);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('1'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('2'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('3'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('4'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('5'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('6'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('7'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('8'));
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('9'));
 
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit(' ')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('A')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('%')>::value);
-			Assert::IsFalse(
-				NOU::NOU_CORE::BooleanConstant<NOU::NOU_DAT_ALG::StringView8::isDigit('-')>::value);
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit(' '));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('A'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('%'));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::isDigit('-'));
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true")>::value);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
 
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false")>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde")>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345")>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<
-				NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!§$%&")>::value);
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
+			Assert::IsFalse(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!ï¿½$%&"));
 
-			constexpr NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
+			NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[0] == 'H'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[1] == 'e'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[2] == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[3] == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[4] == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[5] == ' '>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[6] == 'W'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[7] == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[8] == 'r'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[9] == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[10] == 'd'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv[11] == '!'>::value);
+			Assert::IsTrue(sv[0] == 'H');
+			Assert::IsTrue(sv[1] == 'e');
+			Assert::IsTrue(sv[2] == 'l');
+			Assert::IsTrue(sv[3] == 'l');
+			Assert::IsTrue(sv[4] == 'o');
+			Assert::IsTrue(sv[5] == ' ');
+			Assert::IsTrue(sv[6] == 'W');
+			Assert::IsTrue(sv[7] == 'o');
+			Assert::IsTrue(sv[8] == 'r');
+			Assert::IsTrue(sv[9] == 'l');
+			Assert::IsTrue(sv[10] == 'd');
+			Assert::IsTrue(sv[11] == '!');
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.size() == 12>::value);
+			Assert::IsTrue(sv.size() == 12);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(0) == 'H'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(1) == 'e'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(2) == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(3) == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(4) == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(5) == ' '>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(6) == 'W'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(7) == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(8) == 'r'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(9) == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(10) == 'd'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<*sv.indexIterator(11) == '!'>::value);
+			Assert::IsTrue(*sv.indexIterator(0) == 'H');
+			Assert::IsTrue(*sv.indexIterator(1) == 'e');
+			Assert::IsTrue(*sv.indexIterator(2) == 'l');
+			Assert::IsTrue(*sv.indexIterator(3) == 'l');
+			Assert::IsTrue(*sv.indexIterator(4) == 'o');
+			Assert::IsTrue(*sv.indexIterator(5) == ' ');
+			Assert::IsTrue(*sv.indexIterator(6) == 'W');
+			Assert::IsTrue(*sv.indexIterator(7) == 'o');
+			Assert::IsTrue(*sv.indexIterator(8) == 'r');
+			Assert::IsTrue(*sv.indexIterator(9) == 'l');
+			Assert::IsTrue(*sv.indexIterator(10) == 'd');
+			Assert::IsTrue(*sv.indexIterator(11) == '!');
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv == "Hello World!">::value);
+			Assert::IsTrue(sv == "Hello World!");
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('e') == 1>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('e', 1) == 1>::value);
+			Assert::IsTrue(sv.find('e') == 1);
+			Assert::IsTrue(sv.find('e', 1) == 1);
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('o') == 4>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('o', 5) == 7>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find('z') == 
-				NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
+			Assert::IsTrue(sv.find('o') == 4);
+			Assert::IsTrue(sv.find('o', 5) == 7);
+			Assert::IsTrue(sv.find('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("ello") == 1>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("o") == 4>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("o", 5) == 7>::value);
-			Assert::IsTrue(
-				NOU::NOU_CORE::BooleanConstant<sv.find("test") == 
-				NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
+			Assert::IsTrue(sv.find("ello") == 1);
+			Assert::IsTrue(sv.find("o") == 4);
+			Assert::IsTrue(sv.find("o", 5) == 7);
+			Assert::IsTrue(sv.find("test") == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOf('H') == 0>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOf('o') == 4>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
+			Assert::IsTrue(sv.firstIndexOf('H') == 0);
+			Assert::IsTrue(sv.firstIndexOf('o') == 4);
+			Assert::IsTrue(sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOf('H') == 0>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOf('o') == 7>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX>::value);
+			Assert::IsTrue(sv.lastIndexOf('H') == 0);
+			Assert::IsTrue(sv.lastIndexOf('o') == 7);
+			Assert::IsTrue(sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOfNot('H') == 1>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOfNot('o') == 0>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.firstIndexOfNot('z') == 0>::value);
+			Assert::IsTrue(sv.firstIndexOfNot('H') == 1);
+			Assert::IsTrue(sv.firstIndexOfNot('o') == 0);
+			Assert::IsTrue(sv.firstIndexOfNot('z') == 0);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOfNot('H') == 11>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOfNot('o') == 11>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.lastIndexOfNot('z') == 11>::value);
+			Assert::IsTrue(sv.lastIndexOfNot('H') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('o') == 11);
+			Assert::IsTrue(sv.lastIndexOfNot('z') == 11);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.startsWith('H')>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.startsWith('g')>::value);
+			Assert::IsTrue(sv.startsWith('H'));
+			Assert::IsFalse(sv.startsWith('g'));
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.startsWith("Hell")>::value);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.startsWith("World")>::value);
+			Assert::IsTrue(sv.startsWith("Hell"));
+			Assert::IsFalse(sv.startsWith("World"));
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv.endsWith("rld!")>::value == true);
-			Assert::IsFalse(NOU::NOU_CORE::BooleanConstant<sv.endsWith("World")>::value == true);
+			Assert::IsTrue(sv.endsWith("rld!") == true);
+			Assert::IsFalse(sv.endsWith("World") == true);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Abc")
-				> 0)>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Hello World!")
-				== 0)>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv.compareTo("Xyz")
-				< 0)>::value);
+			Assert::IsTrue((sv.compareTo("Abc") > 0));
+			Assert::IsTrue((sv.compareTo("Hello World!") == 0));
+			Assert::IsTrue((sv.compareTo("Xyz") < 0));
 
-			constexpr NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
+			NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr.size() == 6>::value);
+			Assert::IsTrue(subStr.size() == 6);
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[0] == 'W'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[1] == 'o'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[2] == 'r'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[3] == 'l'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[4] == 'd'>::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<subStr[5] == '!'>::value);
+			Assert::IsTrue(subStr[0] == 'W');
+			Assert::IsTrue(subStr[1] == 'o');
+			Assert::IsTrue(subStr[2] == 'r');
+			Assert::IsTrue(subStr[3] == 'l');
+			Assert::IsTrue(subStr[4] == 'd');
+			Assert::IsTrue(subStr[5] == '!');
 
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv == "Hello World!">::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv != "Hello z World!">::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<sv < "xyz">::value);
-			Assert::IsTrue(NOU::NOU_CORE::BooleanConstant<(sv > "abc")>::value);
+			Assert::IsTrue(sv == "Hello World!");
+			Assert::IsTrue(sv != "Hello z World!");
+			Assert::IsTrue(sv < "xyz");
+			Assert::IsTrue((sv > "abc"));
 
 			NOU::NOU_DAT_ALG::StringView8 sv1 = "Hello World!";
 			NOU::NOU_DAT_ALG::StringView8 sv2 = "Bye World!";
@@ -838,15 +804,24 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-9999999") == -9999999);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-0") == -0);
 
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123"), 123.0f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999"), 9999999.0f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0"), 0.0f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456"), 123.456f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99"), 5.99f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5"), 14.5f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123"), 123.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999"), 9999999.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0"), 0.0f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456"), 123.456f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99"), 5.99f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5"), 14.5f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+				NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
 		
 			NOU_CHECK_ERROR_HANDLER;
 		}
@@ -938,11 +913,11 @@ namespace UnitTests
 			Assert::IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFnName()) == NOU_FUNC_NAME);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFile()) == __FILE__);
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) == 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) ==
 				"The index was out of bounds.");
-			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) == 
+			Assert::IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) ==
 				"INDEX_OUT_OF_BOUNDS");
-		
+
 			auto errorPeek = handler.peekError();
 			auto errorPop = handler.popError();
 
@@ -964,7 +939,7 @@ namespace UnitTests
 			//validate that the order in which the errors are popped is correct
 			Assert::IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
 			Assert::IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
-			
+
 			Assert::IsTrue(handler.getErrorCount() == 0);
 
 			NOU::NOU_CORE::ErrorHandler::ErrorType error = 50000;
@@ -980,7 +955,7 @@ namespace UnitTests
 
 		TEST_METHOD(EpsilonCompare)
 		{
-			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) <  0);
+			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) < 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(123.456, 123.457, 0.1) == 0);
 			Assert::IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
 
@@ -1022,9 +997,128 @@ namespace UnitTests
 
 				Assert::IsTrue(NOU::DebugClass::getCounter() == 1);
 			}
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+		}
+
+		TEST_METHOD(Quicksort)
+
+		{
+
+			int arr[5] = {2,1,3,5,4};
+			NOU::NOU_DAT_ALG::qsort(arr, 0, 4);
+			Assert::IsTrue(arr[0] == 1);
+			Assert::IsTrue(arr[1] == 2);
+			Assert::IsTrue(arr[2] == 3);
+			Assert::IsTrue(arr[3] == 4);
+			Assert::IsTrue(arr[4] == 5);
+
+
+
+			
+		}
+
+		TEST_METHOD(Random)
+		{
+			NOU::NOU_DAT_ALG::Random random;
+
+			for (NOU::uint32 i = 0; i < 100; i++)
+			{
+				typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(0, 10);
+				Assert::IsTrue(rand >= 0 && rand <= 10);
+			}
+		}
+
+		TEST_METHOD(PoolAllocator)
+		{
+			NOU::NOU_MEM_MNGT::PoolAllocator<NOU::DebugClass> pa;
+
+			NOU::NOU_DAT_ALG::Vector<NOU::DebugClass*> dbgCls;
+
+			NOU::sizeType testValue = 1234;
+
+			const NOU::sizeType ALLOC_SIZE = 4321;
 
 			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				dbgCls.push(pa.allocate(testValue));
+			}
+
+			for (NOU::DebugClass* value : dbgCls)
+			{
+				Assert::IsTrue(value->get() == testValue);
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == ALLOC_SIZE);
+
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				pa.deallocate(dbgCls.pop());
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 		
+			{
+				NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> uninit;
+
+				Assert::IsTrue(!uninit.isValid());
+
+				uninit = NOU::DebugClass(1);
+
+				Assert::IsTrue(uninit.isValid());
+
+				uninit.destroy();
+
+				Assert::IsTrue(!uninit.isValid());
+
+				Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+			}
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(GeneralPurposeAllocator)
+		{
+			using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::
+				GeneralPurposeAllocatorPointer<NOU::DebugClass>;
+
+			NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
+			NOU::NOU_DAT_ALG::Vector<HandleType> dbgVec;
+			NOU::sizeType testValue = 12345;
+			const NOU::sizeType ALLOC_SIZE = 40;
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			dbgVec.push(gpa.allocateObjects<NOU::DebugClass>(1, testValue));
+			gpa.deallocateObjects(dbgVec.at(0));
+			dbgVec.pop();
+			gpa.deallocateObjects(dbgVec.at(0));
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+			NOU::NOU_CORE::getErrorHandler().popError();
+			
+			for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+			{
+				dbgVec.push(gpa.allocateObject<NOU::DebugClass>(testValue));
+			}
+
+			for (HandleType &value : dbgVec)
+			{
+				Assert::IsTrue(value->get() == testValue);
+			}
+
+			for (int i = 0; i < dbgVec.size(); i++)
+			{
+				gpa.deallocateObjects(dbgVec.at(i));
+			}
+
+			Assert::IsTrue(NOU::DebugClass::getCounter() == 0);
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
@@ -1073,13 +1167,12 @@ namespace UnitTests
 			str.remove(2, str.size());
 			Assert::AreEqual(str[0], '1');
 			Assert::AreEqual(str[1], '7');
-			Assert::AreNotEqual(str[0], '.');
-		
+			
 			NOU::NOU_DAT_ALG::String<NOU::char8> substr;
-		
+			
 			substr.append(str.substring(0, 1));
 			Assert::AreEqual(str[0], '1');
-		
+			
 			substr.clear();
 			substr.append(str.copy());
 			Assert::AreEqual(str[0], '1');
@@ -1089,6 +1182,47 @@ namespace UnitTests
 			substr.append("AAAAA");
 			str.append("Hallo");
 		
+			NOU::NOU_DAT_ALG::String<NOU::char8> str1;
+			NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "Hallo";
+
+			str1 = str2;
+			Assert::IsTrue(str1 == "Hallo");
+
+			str1 = "User";
+			Assert::IsTrue(str1 == "User");
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> str3 = str1.substring(0, 2);
+			Assert::IsTrue(str3 == "Us");
+
+			str1 = str3.fillRange('a', 0, 2);
+			Assert::IsTrue(str1 == "aa");
+
+			str1 = "NostraUtils";
+
+			str3 = str1.preserve(6, 11);
+			Assert::IsTrue(str3 == "Utils");
+
+			str1 = "";
+
+			str2 = str1.concat("Hallo");
+			Assert::IsTrue(str2 == "Hallo");
+			str1 = str2.concat(1);
+			Assert::IsTrue(str1 == "Hallo1");
+			str2 = str1.concat('a');
+			Assert::IsTrue(str2 == "Hallo1a");
+			str1 = str2.concat(1.3);
+			Assert::IsTrue(str1 == "Hallo1a1.3");
+
+			str1 = "User";
+			str2 = "Hallo";
+
+			str1.copySubstringTo(str2, 0,4,5);
+			Assert::IsTrue(str2 == "HalloUser");
+
+			str1 = "User";
+			str1.copySubstringHere("Hallo",0,5,0);
+			Assert::IsTrue(str1 == "HalloUser");
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
@@ -1602,5 +1736,166 @@ namespace UnitTests
 			Assert::IsTrue(pair2 < 16);
 
 		}
-	};
+
+		static void taskTestFunction1(NOU::int32 i, NOU::int32 *out)
+		{
+			*out = i;
+		}
+
+		static NOU::int32 taskTestFunction2(NOU::int32 i)
+		{
+			return i;
+		}
+
+		class DummyClass
+		{
+			//empty class
+		};
+
+		static NOU::int32 taskTestFunction3(const DummyClass dc)
+		{
+			return 1;
+		}
+
+		static void taskTestFunction4(const DummyClass dc)
+		{
+
+		}
+
+		TEST_METHOD(Task)
+		{
+			NOU::int32 i1 = 5;
+			NOU::int32 out;
+
+			auto task1 = NOU::NOU_THREAD::makeTask(&taskTestFunction1, i1, &out);
+
+			task1.execute();
+
+			Assert::IsTrue(out == i1);
+
+
+
+			//just to make sure that INVALID_OBJECT is the first error in the handler later
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+
+			NOU::int32 i2 = 5;
+
+			auto task2 = NOU::NOU_THREAD::makeTask(&taskTestFunction2, i2);
+
+			task2.getResult();
+
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+			Assert::IsTrue(NOU::NOU_CORE::getErrorHandler().popError().getID() == 
+				NOU::NOU_CORE::ErrorCodes::INVALID_OBJECT);
+
+			task2.execute();
+
+			Assert::IsTrue(task2.getResult() == i2);
+
+
+			//check if this compiles
+			const DummyClass dc;
+
+			auto task3 = NOU::NOU_THREAD::makeTask(&taskTestFunction3, dc);
+
+			auto task4 = NOU::NOU_THREAD::makeTask(&taskTestFunction4, dc);
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		//no more tests are possible, since the remaining methods of thread manager are either not reliable 
+		//(like currentlyAvailableThreads(), which may change any moment) or there are no observable values 
+		//produced (like pushTask())
+		TEST_METHOD(ThreadManager)
+		{
+			NOU::NOU_THREAD::ThreadManager &manager = NOU::NOU_THREAD::getThreadManager();
+
+			Assert::IsTrue(manager.maximumAvailableThreads() == 
+				NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(OffsetOf)
+		{
+			struct TestStruct
+			{
+				NOU::int32 x;
+				NOU::int32 y;
+				NOU::int32 z;
+			};
+
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, x) == offsetof(TestStruct, x));
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, y) == offsetof(TestStruct, y));
+			Assert::IsTrue(NOU_OFFSET_OF(TestStruct, z) == offsetof(TestStruct, z));
+
+			NOU_CHECK_ERROR_HANDLER;
+		}
+
+		TEST_METHOD(Path)
+		{
+			NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
+			NOU::NOU_FILE_MNGT::Path p1 = "testdir\\testfile.test";
+			NOU::NOU_FILE_MNGT::Path p2 = "\\test.dir\\testfile.test";
+			NOU::NOU_FILE_MNGT::Path p3 = "test.dir\\testfile";
+			NOU::NOU_FILE_MNGT::Path p4 = "testfile.test\\";
+			NOU::NOU_FILE_MNGT::Path p5 = "testfile";
+			NOU::NOU_FILE_MNGT::Path p6 = "test.tar.gz";
+
+			NOU::NOU_FILE_MNGT::Path p10 = "C:\\Users\\TestUser\\TestDir\\MyFile.exe";
+			NOU::NOU_FILE_MNGT::Path p11 = "C:\\Users\\TestUser\\TestDir\\MyFolder\\MyFile.txt";
+			NOU::NOU_FILE_MNGT::Path p12 = "C:\\Users\\TestUser\\TestDir";
+			NOU::NOU_FILE_MNGT::Path p13 = "D:\\Users\\";
+			NOU::NOU_FILE_MNGT::Path p14 = "D:\\Users\\SomeOtherDir";
+
+			NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+
+			NOU::NOU_DAT_ALG::String8 str = cwd.getAbsolutePath();
+			str.append("\\Test\\TestUser\\TestDir2");
+
+			// p15 == cwd\\Test\\Dennis\\WasGehtAb
+			NOU::NOU_FILE_MNGT::Path p15 = str;
+
+			Assert::IsTrue(p.getName() == "testfile");
+			Assert::IsTrue(p1.getName() == "testfile");
+			Assert::IsTrue(p2.getName() == "testfile");
+			Assert::IsTrue(p3.getName() == "testfile");
+			Assert::IsTrue(p4.getName() == "");
+			Assert::IsTrue(p5.getName() == "testfile");
+			Assert::IsTrue(p6.getName() == "test.tar");
+
+			Assert::IsTrue(p.getFileExtension() == "exe");
+			Assert::IsTrue(p1.getFileExtension() == "test");
+			Assert::IsTrue(p2.getFileExtension() == "test");
+			Assert::IsTrue(p3.getFileExtension() == ""); 
+			Assert::IsTrue(p4.getFileExtension() == ""); 
+			Assert::IsTrue(p5.getFileExtension() == ""); 
+			Assert::IsTrue(p6.getFileExtension() == "gz");
+
+			Assert::IsTrue(p.getNameAndExtension() == "testfile.exe");
+			Assert::IsTrue(p1.getNameAndExtension() == "testfile.test");
+			Assert::IsTrue(p2.getNameAndExtension() == "testfile.test");
+			Assert::IsTrue(p3.getNameAndExtension() == "testfile"); 
+			Assert::IsTrue(p4.getNameAndExtension() == ""); 
+			Assert::IsTrue(p5.getNameAndExtension() == "testfile");
+			Assert::IsTrue(p6.getNameAndExtension() == "test.tar.gz");
+
+			Assert::IsTrue(p10.getParentPath() == "C:\\Users\\TestUser\\TestDir"); 
+			Assert::IsTrue(p11.getParentPath() == "C:\\Users\\TestUser\\TestDir\\MyFolder");
+			Assert::IsTrue(p12.getParentPath() == "C:\\Users\\TestUser");
+			Assert::IsTrue(p13.getParentPath() == "D:");
+			Assert::IsTrue(p14.getParentPath() == "D:\\Users");  
+
+			Assert::IsTrue(p15.getRelativePath() == "\\Test\\TestUser\\TestDir2");
+			if (str.startsWith('C'))
+			{
+				NOU::NOU_FILE_MNGT::Path p16 = "D:\\Users\\TestUser\\TestDir";
+				Assert::IsTrue(p16.getRelativePath() == "D:\\Users\\TestUser\\TestDir");
+			}
+			else {
+				NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
+				Assert::IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
+			}
+		}
+	};	
 }

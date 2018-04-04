@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_HASHMAP_HPP
 #define	NOU_DAT_ALG_HASHMAP_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Hashing.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Hashing.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 /** \file Vector.hpp
 \author  Leslie Marxen
@@ -104,7 +104,7 @@ namespace NOU::NOU_DAT_ALG
 		\return			true if the key is contained inside the map;
 		\brief Checks if the key is contained in the map.
 		*/
-		boolean containsKey(K key);
+		boolean containsKey(const K &key);
 		/**
 		\brief Overloading [] operators. Works now exactly like get();
 		*/
@@ -112,7 +112,7 @@ namespace NOU::NOU_DAT_ALG
 
 	};
 
-
+	///\cond
 
 	template <typename K, typename V>
 	HashMap<K,V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
@@ -278,7 +278,7 @@ namespace NOU::NOU_DAT_ALG
 		return entrySetVec;
 	}
 	template <typename K, typename V>
-	boolean HashMap<K, V>::containsKey(K key) 
+	boolean HashMap<K, V>::containsKey(const K &key) 
 	{
 		Vector<K> tmp = keySet();
 
@@ -295,5 +295,7 @@ namespace NOU::NOU_DAT_ALG
 	V& HashMap<K,V>::operator [](const K &key) {
 		return get(key);
 	}
+
+	///\endcond
 }
 #endif
