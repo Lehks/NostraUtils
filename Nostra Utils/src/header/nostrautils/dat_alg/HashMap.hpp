@@ -184,7 +184,7 @@ namespace NOU::NOU_DAT_ALG
 		if (m_data[n].size() == 0) 
 		{	//if nothing is mapped to HashPos n, return null
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
-			return m_data.getData()[0].dataTwo;
+			return m_data.data()[0].data()[0].dataTwo;
 		}
 
 		for (sizeType i = 0; i < m_data[n].size(); i++)
@@ -196,7 +196,7 @@ namespace NOU::NOU_DAT_ALG
 		}
 
 		NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
-		return m_data.getData()[0].dataTwo;
+		return m_data.data()[0].data()[0].dataTwo;
 	}
 
 	template<typename K, typename V>
@@ -230,9 +230,9 @@ namespace NOU::NOU_DAT_ALG
 		{
 			if (m_data[h][i].dataOne == key)
 			{
-				if (out != nullpt)
+				if (out != nullptr)
 				{
-					*out = NOU_CORE::move(m_data[h]);
+					*out = NOU_CORE::move(m_data[h][i].dataTwo);
 				}
 				m_data[h].remove(i);
 				return true;

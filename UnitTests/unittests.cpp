@@ -1256,21 +1256,27 @@ namespace UnitTests
 			NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
 			NOU::boolean b;
 		
-			Assert::AreEqual(hm.isEmpty(), true);
+			//Assert::AreEqual(hm.isEmpty(), true);
+			Assert::IsTrue(hm.isEmpty() == true);
 		
 			for (NOU::sizeType i = 0; i < str.size(); i++) {
 				b = hm.map(str.at(i), 1);
 			}
 		
-			Assert::AreEqual(hm.isEmpty(), false);
+			//Assert::AreEqual(hm.isEmpty(), false);
+
+			Assert::IsTrue(hm.isEmpty() == false);
 		
-			for (int i = 0; i < str.size(); i++) {
-				Assert::AreEqual(hm.get(str.at(i)), 1);
+			for (NOU::sizeType i = 0; i < str.size(); i++) {
+				//Assert::AreEqual(hm.get(str.at(i)), 1);
+				Assert::IsTrue(hm.get(str.at(i)) == 1);
 			}
 			NOU::char8 k = 'h';
 		
 			NOU::int32 count = hm.remove(k);
-			Assert::AreEqual(1, count);
+			Assert::IsTrue(1 == count);
+
+			//Assert::AreEqual(1, count);
 
 
 			for (NOU::sizeType i = 0; i < str.size(); i++)
@@ -1286,8 +1292,11 @@ namespace UnitTests
 				}
 			}
 			
-			Assert::AreEqual(hm1.get('h'), 2);
-			Assert::AreEqual(hm1.get(' '), 8);
+			//Assert::AreEqual(hm1.get('h'), 2);
+			//Assert::AreEqual(hm1.get(' '), 8);
+
+			Assert::IsTrue(hm1.get('h') == 2);
+			Assert::IsTrue(hm1.get(' ') == 8);
 
 			NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
 
@@ -1300,19 +1309,30 @@ namespace UnitTests
 
 			c = cm.entrySet();
 
-			Assert::AreEqual(c[0], 1);
-			Assert::AreEqual(c[1], 4);
-			Assert::AreEqual(c[2], 3);
-			Assert::AreEqual(c[3], 2);
+			//Assert::AreEqual(c[0], 1);
+			//Assert::AreEqual(c[1], 4);
+			//Assert::AreEqual(c[2], 3);
+			//Assert::AreEqual(c[3], 2);
+
+			Assert::IsTrue(c[0] == 1);
+			Assert::IsTrue(c[1] == 4);
+			Assert::IsTrue(c[2] == 3);
+			Assert::IsTrue(c[3] == 2);
 
 			NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
 
 			a = cm.keySet();
 
-			Assert::AreEqual(a[0], 5);
-			Assert::AreEqual(a[1], 49875);
-			Assert::AreEqual(a[2], 10);
-			Assert::AreEqual(a[3], 41);
+			//Assert::AreEqual(a[0], 5);
+			//Assert::AreEqual(a[1], 49875);
+			//Assert::AreEqual(a[2], 10);
+			//Assert::AreEqual(a[3], 41);
+
+			Assert::IsTrue(a[0] == 5);
+			Assert::IsTrue(a[1] == 49875);
+			Assert::IsTrue(a[2] == 10);
+			Assert::IsTrue(a[3] == 41);
+
 
 		}
 
