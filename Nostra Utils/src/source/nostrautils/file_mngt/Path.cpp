@@ -187,7 +187,16 @@ namespace NOU::NOU_FILE_MNGT
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 		char cwd[1024];
 
-		char *getcwd(char *cwd, sizeof(cwd));
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused" 
+#endif
+
+		*getcwd(cwd, sizeof(cwd));
+
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
 
 		return Path(cwd);
 #endif

@@ -8,7 +8,9 @@ GitHub: https://github.com/Lehks/NostraUtils
 
 If you do not have the code yet, use the following command to clone the repository to your local
 machine:  
-*git clone https://github.com/Lehks/NostraUtils.git*  
+```bash
+git clone https://github.com/Lehks/NostraUtils.git
+```` 
 or download the ZIP-compressed directly from GitHub using the link above.
 
 ## Building the Project
@@ -29,14 +31,29 @@ It is assumed, that the command *cmake* is in the system's PATH variable. Otherw
 CMake executable must be given instead of just *cmake*.
 
 ##### Unix/Linux
-Call the command *mkdir Build/ ; cd Build/ ; cmake ../* from the project's root directory.
+Call the command 
+```bash
+mkdir Build/ ; cd Build/ ; cmake ../
+``` 
+from the project's root directory.
+
+**Note:** If any other compiler than GCC should be used, it is necessary to call these commands before:  
+
+```bash
+export CC=/absolute/path/to/the/c/compiler/executable
+export CXX=/absolute/path/to/the/c++/compiler/executable
+```
 
 ##### Windows
+Call the command 
+```bash
+md Build & cd Build & cmake ../
+``` 
+from the project's root directory.
+
 **Note:** This command only works with the cmd.exe, if the Powershell used, the command from 
 [Windows and Unix/Linux](#Windows-and-Unix/Linux) 
 should be used.
-
-Call the command *md Build & cd Build & cmake ../* from the project's root directory.
 
 #### CMake-GUI
 1. Open the CMake GUI (this can be done from the terminal [Windows and Unix/Linux](#Windows-and-Unix/Linux) 

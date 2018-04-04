@@ -1123,6 +1123,11 @@ namespace NOU::NOU_DAT_ALG
 		return  genericFloatToString(f);
 	}
 
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wuninitialized" 
+#endif
+
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(const StringView<CHAR_TYPE> &str) :
 		m_data(str.size()),
@@ -1136,6 +1141,15 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 	}
 
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
+
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wuninitialized" 
+#endif
+
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(CharType c) :
 		m_data(1),
@@ -1147,10 +1161,19 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 	}
 
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
+
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(ConstCharType *str) :
 		String(StringView<CHAR_TYPE>(str))
 	{}
+
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wuninitialized" 
+#endif
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(const String<CHAR_TYPE> &other) :
@@ -1158,11 +1181,24 @@ namespace NOU::NOU_DAT_ALG
 		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), other.size())
 	{}
 
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
+
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wuninitialized" 
+#endif
+
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(String<CHAR_TYPE> &&other) :
 		m_data(NOU_CORE::forward<decltype(m_data)>(other.m_data)),
 		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), other.size())
 	{}
+	
+#if NOU_COMPILER == NOU_COMPILER_CLANG
+#pragma clang diagnostic pop
+#endif
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(int32 i) :

@@ -628,18 +628,20 @@ static_cast<NOU::uint32> 									 \
 #endif
 
 /**
-\brief The macro which is used for getting the function name.
+\brief Expands to a string literal with the function signature of the function that this macro was placed in.
 
-\todo Verify!
+\note
+Although this macro is platform independent, it is not guaranteed that using this macro in the same function
+on different platforms also produces the same result.
 */
 #ifndef NOU_FUNC_NAME
 
 #	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
 #	define NOU_FUNC_NAME __FUNCSIG__
 #	elif NOU_COMPILER == NOU_COMPILER_GCC
-#	define NOU_FUNC_NAME __PRETTY_FUNCTION__
+#	define NOU_FUNC_NAME NOU_STRINGIFY(__PRETTY_FUNCTION__)
 #	elif NOU_COMPILER == NOU_COMPILER_CLANG
-#	define NOU_FUNC_NAME __func__ ///\Todo check
+#	define NOU_FUNC_NAME NOU_STRINGIFY(__PRETTY_FUNCTION__)
 #	elif NOU_COMPILER == NOU_COMPILER_INTEL_CPP
 #	define NOU_FUNC_NAME __func__ ///\Todo check
 #	elif NOU_COMPILER == NOU_COMPILER_MIN_GW
