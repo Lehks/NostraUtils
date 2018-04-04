@@ -168,6 +168,8 @@ namespace NOU::NOU_DAT_ALG
 	{
 		byte r = input;
 		const byte b = 0b10000000;
+
+		rotations = rotations % 8;
 		byte c;
 		for (sizeType i = 0; i < rotations; i++)
 		{

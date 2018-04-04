@@ -6,12 +6,26 @@
 #include <iostream>
 #include <ctime>
 
+using namespace std;
+using namespace NOU;
+using namespace NOU_DAT_ALG;
 
 int main()
 {
-	const char *msg = "Text";
+	NOU::byte b0[] = { 55, 245, 987, 14, 7634 };
+	NOU::byte b1[] = { 55, 245, 987, 14, 7634 };
 
-	NOU::NOU_DAT_ALG::md5(reinterpret_cast<const NOU::byte*>(msg), NOU::NOU_DAT_ALG::stringlen<char>(msg));
+	MD5Hash h0 = md5(b0, 5);
+	MD5Hash h1 = md5(b1, 5);
+
+	int i1 = 0;
+
+	for (NOU::sizeType i = 0; i < 16; i++)
+	{
+		i1 = (h0[i] == h1[i]) ? i1 + 1 : i1;
+	}
+
+	cout << i1 << endl;
 
 	system("pause");
 }
