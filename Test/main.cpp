@@ -1,10 +1,4 @@
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\dat_alg\ObjectPool.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\file_mngt\File.hpp"
-#include "nostrautils\file_mngt\Path.hpp"
-#include "nostrautils/core/SystemInformation.hpp"
+#include "nostrautils/NostraUtils.hpp"
 #include <iostream>
 
 using namespace std;
