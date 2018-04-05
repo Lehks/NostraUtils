@@ -1,5 +1,6 @@
 #include "nostrautils\core\Logging.hpp"
 #include <iostream>
+#include <stdio.h>
 
 int main()
 {
