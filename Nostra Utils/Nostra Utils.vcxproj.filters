@@ -117,6 +117,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\String.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Quicksort.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -124,6 +126,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\Random.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -152,6 +156,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\dat_alg\LazyEvaluationProperty.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\nostrautils\core\SystemInformation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -190,6 +197,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\source\nostrautils\file_mngt\Path.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\dat_alg\Random.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\source\nostrautils\core\SystemInformation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

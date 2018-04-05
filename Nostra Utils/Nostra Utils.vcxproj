@@ -309,6 +309,7 @@
     <ClInclude Include="src\header\nostrautils\core\ErrorHandler.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Meta.hpp" />
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp" />
+    <ClInclude Include="src\header\nostrautils\core\SystemInformation.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\BinaryHeap.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Hashing.hpp" />
@@ -347,6 +348,7 @@
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
+    <ClCompile Include="src\source\nostrautils\core\SystemInformation.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Random.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp" />
