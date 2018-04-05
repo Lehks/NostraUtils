@@ -474,6 +474,16 @@ namespace NOU::NOU_CORE
 			MUTEX_ERROR,
 
 			/**
+			\brief Cannot open this file.
+			*/
+			CANNOT_OPEN_FILE,
+
+			/**
+			\brief Cannot close this file.
+			*/
+			CANNOT_CLOSE_FILE,
+
+			/**
 			\brief	Not an actual error, but always the last element in the enum. The error codes 0 - 
 					LAST_ELEMENT are always reserved for the default error pool.
 			*/

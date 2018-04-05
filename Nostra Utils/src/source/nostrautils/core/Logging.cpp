@@ -58,6 +58,15 @@ namespace NOU::NOU_CORE
 			return "Unknown";
 		}
 	}
+
+	//void FileLogger::callLoggingTarget(NOU::NOU_FILE_MNGT::File file, const NOU::NOU_DAT_ALG::String8 error)
+	//{
+	//	file.write(error);
+	//}
+	//
+	//NOU::NOU_THREAD::TaskQueue<void, decltype(&FileLogger::callLoggingTarget),
+	//	NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, NOU::NOU_FILE_MNGT::File, NOU::NOU_DAT_ALG::String8>
+	//	FileLogger::fileLoggerQueue;
 	
 	NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> Logger::s_allocator;
 	NOU::NOU_DAT_ALG::Vector<ILogger*> Logger::s_logger(1, s_allocator);
