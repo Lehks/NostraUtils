@@ -367,7 +367,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief returns a const pointer reference to the current data.
 		*/
-		const T* const & data() const;
+		const T* data() const;
 
 		/**
 		\brief Clears the Vector.
@@ -1122,7 +1122,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	const T* const & Vector<T>::data() const
+	const T* Vector<T>::data() const
 	{
 		return m_data;
 	}

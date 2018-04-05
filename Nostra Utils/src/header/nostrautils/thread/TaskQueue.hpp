@@ -282,7 +282,7 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief The type of task that can be processed by this task queue.
 		*/
-		using Task = Task<Result, I, ARGS...>;
+		using TaskType = Task<Result, I, ARGS...>;
 
 		static_assert(NOU_CORE::IsInvocableR<Result, I, ARGS...>::value);
 		static_assert(NOU_CORE::IsInvocableR<Result, Accumulator, Result&&, Result&&>::value);
@@ -334,23 +334,23 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief A state that is used to synchronize the method getResult() with the execution task.
 		*/
-		boolean                            m_isExecuting;
+		boolean                              m_isExecuting;
 
 		/**
 		\brief A condition variable that is used to synchronize the method getResult() with the execution 
 		       task.
 		*/
-		ConditionVariable                  m_getResultVariable;
+		ConditionVariable                    m_getResultVariable;
 
 		/**
 		\brief The accumulator that will be used to accumulate the results of the tasks.
 		*/
-		Accumulator                        m_accumulator;
+		Accumulator                          m_accumulator;
 
 		/**
 		\brief The queue that stores the tasks that will be executed.
 		*/
-		NOU_DAT_ALG::FastQueue<Task>       m_taskQueue;
+		NOU_DAT_ALG::FastQueue<TaskType>     m_taskQueue;
 
 		/**
 		\brief The task that is currently in execution (or will be executed next).
@@ -360,22 +360,22 @@ namespace NOU::NOU_THREAD
 		duration of the execution the task is not allowed to change it's position in the memory (which might 
 		happen if the task is still in the queue and the queue has to do reallocations).
 		*/
-		NOU_DAT_ALG::Uninitialized<Task>   m_currentTask;
+		NOU_DAT_ALG::Uninitialized<TaskType> m_currentTask;
 
 		/**
 		\brief The current result.
 		*/
-		NOU_DAT_ALG::Uninitialized<Result> m_result;
+		NOU_DAT_ALG::Uninitialized<Result>   m_result;
 
 		/**
 		\brief The error handler that will be used by this task queue.
 		*/
-		NOU_CORE::ErrorHandler             m_handler;
+		NOU_CORE::ErrorHandler               m_handler;
 
 		/**
 		\brief True if the queue is closed, false if not.
 		*/
-		boolean                            m_closed;
+		boolean                              m_closed;
 
 		/**
 		\brief True if the next tasks should still be executed in a different thread, false if not.
@@ -385,7 +385,7 @@ namespace NOU::NOU_THREAD
 		getResult() to stop the queue from pushing the tasks to the thread manager because it will execute the
 		tasks immediately in the thread that getResult() was called from.
 		*/
-		boolean                            m_stopParallelExecution;
+		boolean                              m_stopParallelExecution;
 
 		/**
 		\brief The task that will actually be pushed to the thread manager to execute the tasks that were 
@@ -395,7 +395,7 @@ namespace NOU::NOU_THREAD
 		The task that will actually be pushed to the thread manager to execute the tasks that were pushed to 
 		the queue. For details on why this is required, see the detailed section of executeTask().
 		*/
-		ExecutionTask                      m_executionTask;
+		ExecutionTask                        m_executionTask;
 
 		/**
 		\pre Lock m_currentTaskMutex and m_taskQueueMutex.
@@ -430,7 +430,7 @@ namespace NOU::NOU_THREAD
 
 		\brief Pushes a new task to the queue.
 		*/
-		TaskQueue& pushTask(Task &&task);
+		TaskQueue& pushTask(TaskType &&task);
 
 		/**
 		\return The current, temporary result.
@@ -539,7 +539,7 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief The type of task that can be processed by this task queue.
 		*/
-		using Task = Task<Result, I, ARGS...>;
+		using TaskType = Task<Result, I, ARGS...>;
 
 		static_assert(NOU_CORE::IsInvocableR<Result, I, ARGS...>::value);
 
@@ -584,18 +584,18 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief A state that is used to synchronize the method getResult() with the execution task.
 		*/
-		boolean                            m_isExecuting;
+		boolean                              m_isExecuting;
 
 		/**
 		\brief A condition variable that is used to synchronize the method getResult() with the execution 
 		       task.
 		*/
-		ConditionVariable                  m_getResultVariable;
+		ConditionVariable                    m_getResultVariable;
 
 		/**
 		\brief The queue that stores the tasks that will be executed.
 		*/
-		NOU_DAT_ALG::FastQueue<Task>       m_taskQueue;
+		NOU_DAT_ALG::FastQueue<TaskType>     m_taskQueue;
 
 		/**
 		\brief The task that is currently in execution (or will be executed next).
@@ -605,17 +605,17 @@ namespace NOU::NOU_THREAD
 		duration of the execution the task is not allowed to change it's position in the memory (which might
 		happen if the task is still in the queue and the queue has to do reallocations).
 		*/
-		NOU_DAT_ALG::Uninitialized<Task>   m_currentTask;
+		NOU_DAT_ALG::Uninitialized<TaskType> m_currentTask;
 
 		/**
 		\brief The error handler that will be used by this task queue.
 		*/
-		NOU_CORE::ErrorHandler             m_handler;
+		NOU_CORE::ErrorHandler               m_handler;
 
 		/**
 		\brief True if the queue is closed, false if not.
 		*/
-		boolean                            m_closed;
+		boolean                              m_closed;
 
 		/**
 		\brief True if the next tasks should still be executed in a different thread, false if not.
@@ -625,7 +625,7 @@ namespace NOU::NOU_THREAD
 		getResult() to stop the queue from pushing the tasks to the thread manager because it will execute the
 		tasks immediately in the thread that getResult() was called from.
 		*/
-		boolean                            m_stopParallelExecution;
+		boolean                              m_stopParallelExecution;
 
 		/**
 		\brief The task that will actually be pushed to the thread manager to execute the tasks that were
@@ -635,7 +635,7 @@ namespace NOU::NOU_THREAD
 		The task that will actually be pushed to the thread manager to execute the tasks that were pushed to
 		the queue. For details on why this is required, see the detailed section of executeTask().
 		*/
-		ExecutionTask                      m_executionTask;
+		ExecutionTask                        m_executionTask;
 
 		/**
 		\pre Lock m_currentTaskMutex and m_taskQueueMutex.
@@ -666,7 +666,7 @@ namespace NOU::NOU_THREAD
 		*/
 		TaskQueue(sizeType initialCapacity = DEFAULT_INITIAL_CAPACITY);
 
-		TaskQueue& pushTask(Task &&task);
+		TaskQueue& pushTask(TaskType &&task);
 
 		/**
 		\brief Since there is no result being produced, this method has no effect and only server 
@@ -780,7 +780,7 @@ namespace NOU::NOU_THREAD
 	{
 		taskQueue->m_isExecuting = true;
 
-		NOU_DAT_ALG::Uninitialized<Task> tempTask;
+		NOU_DAT_ALG::Uninitialized<TaskType> tempTask;
 
 		{
 			/*
@@ -867,7 +867,7 @@ namespace NOU::NOU_THREAD
 	}
 
 	template<typename R, typename I, typename ACCUM, typename... ARGS>
-	TaskQueue<R, I, ACCUM, ARGS...>& TaskQueue<R, I, ACCUM, ARGS...>::pushTask(Task &&task)
+	TaskQueue<R, I, ACCUM, ARGS...>& TaskQueue<R, I, ACCUM, ARGS...>::pushTask(TaskType &&task)
 	{
 		if (m_closed)
 		{
@@ -919,7 +919,7 @@ namespace NOU::NOU_THREAD
 
 			while (m_taskQueue.size() != 0)
 			{
-				Task task = m_taskQueue.popFront();
+				TaskType task = m_taskQueue.popFront();
 				task.execute();
 
 				accumulate(task.moveResult());
@@ -948,7 +948,7 @@ namespace NOU::NOU_THREAD
 	{
 		taskQueue->m_isExecuting = true;
 
-		NOU_DAT_ALG::Uninitialized<Task> tempTask;
+		NOU_DAT_ALG::Uninitialized<TaskType> tempTask;
 
 		{
 			/*
@@ -1014,7 +1014,7 @@ namespace NOU::NOU_THREAD
 	}
 
 	template<typename I, typename ACCUM, typename... ARGS>
-	TaskQueue<void, I, ACCUM, ARGS...>& TaskQueue<void, I, ACCUM, ARGS...>::pushTask(Task &&task)
+	TaskQueue<void, I, ACCUM, ARGS...>& TaskQueue<void, I, ACCUM, ARGS...>::pushTask(TaskType &&task)
 	{
 		if (m_closed)
 		{
@@ -1059,7 +1059,7 @@ namespace NOU::NOU_THREAD
 
 			while (m_taskQueue.size() != 0)
 			{
-				Task task = m_taskQueue.popFront();
+				TaskType task = m_taskQueue.popFront();
 				task.execute();
 			}
 		}
