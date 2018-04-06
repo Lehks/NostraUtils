@@ -81,7 +81,7 @@ namespace NOU::NOU_FILE_MNGT
 		\param mode how the file will be interpreted(Read/Write)
 		\param path Path object containing the path to the file
 		*/
-		File(const Path &path, AccessMode mode = AccessMode::READ_WRITE);
+		File(const Path &path);
 		
 		/**
 		\brief Copy-constructor of the File class
@@ -132,7 +132,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\return true if successfully opened, false if otherwise
 		*/
-		boolean open();
+		boolean open(AccessMode mode = AccessMode::READ_WRITE);
 
 		/**
 		\brief Closes the internal filestream

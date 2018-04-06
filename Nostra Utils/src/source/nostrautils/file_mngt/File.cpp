@@ -13,9 +13,8 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	File::File(const Path &path, AccessMode mode) :
-		m_path(path),
-		m_mode(mode)
+	File::File(const Path &path) :
+		m_path(path)
 	{
 		m_data == nullptr;
 	}
@@ -87,8 +86,9 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean File::open()
+	boolean File::open(AccessMode mode)
 	{
+		setMode(mode);
 		if (!isCurrentlyOpen())
 		{
 			switch (m_mode)
