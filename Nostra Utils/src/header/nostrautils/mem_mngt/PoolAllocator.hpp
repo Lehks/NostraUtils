@@ -10,7 +10,7 @@
 \file mem_mngt/PoolAllocator.hpp
 
 \author	 Lukas Gross
-\version 0.0.1
+\version 1.0.0
 \since	 1.0.0
 
 \brief A file that contains the nostra::utils::mem_mngt::PoolAllocator class.

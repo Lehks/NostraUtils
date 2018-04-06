@@ -12,8 +12,8 @@
 
 /** \file Hashing.hpp
 \author  Leslie Marxen
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides some Hashing implementations.
 */
 

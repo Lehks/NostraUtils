@@ -5,8 +5,8 @@
 \file NostraUtils.hpp
 
 \author  Lukas Reichmann
-\version 0.0.1
-\since   0.0.1
+\version 1.0.0
+\since   1.0.0
 
 \brief A single file that includes all other files of the Nostra Utils library.
 */
