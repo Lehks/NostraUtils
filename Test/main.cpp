@@ -1,12 +1,12 @@
 #include "nostrautils/NostraUtils.hpp"
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 using namespace NOU;
 using namespace NOU_CORE;
 //using namespace NOU_CORE;
 using namespace NOU_DAT_ALG;
-using namespace NOU_FILE_MNGT;
 
 int main()
 {
