@@ -81,9 +81,6 @@ namespace NOU::NOU_DAT_ALG
 		return hashObj(str->rawStr(), max);
 	}
 
-	template<sizeType N>
-	using Hash = std::array<byte, N>;
-	using MD5Hash = Hash<16>;
 
 	
 	NOU_FUNC byte leftRotation(const byte input, int32 rotations);

@@ -15,7 +15,7 @@ namespace NOU::NOU_DAT_ALG
 
 		return r;
 	}
-
+	/*
 	NOU_FUNC MD5Hash md5(const NOU::byte *input, sizeType size)
 	{
 		Vector<byte> bytes(10);
@@ -162,7 +162,7 @@ namespace NOU::NOU_DAT_ALG
 		*reinterpret_cast<uint32*>(ret.data() + 8)  = c0;
 		*reinterpret_cast<uint32*>(ret.data() + 12) = d0;
 		return ret;
-	}
+	}*/
 
 	NOU_FUNC byte leftRotation(const byte input, int32 rotations)
 	{
