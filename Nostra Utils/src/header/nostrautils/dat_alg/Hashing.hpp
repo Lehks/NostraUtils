@@ -85,50 +85,7 @@ namespace NOU::NOU_DAT_ALG
 	using Hash = std::array<byte, N>;
 	using MD5Hash = Hash<16>;
 
-	/**
-	\param input beginning of a byte array that will be hashed
-	\param size length of the given byte array
-
-	\return hash as a 128bit byte array
-	\brief Hashes a given input similar to the md5 hash algorithm
-	*/
-
-	NOU_FUNC MD5Hash md5(const NOU::byte *input, sizeType size);
-
-	/**
-	\param input a StringView that will be hashed
-
-	\return Hash as a 128bit byte Array
-	\brief Hashes a given input similar to the md5 hash algorithm
-	*/
-
-	template<typename T>
-	NOU_FUNC MD5Hash md5(const NOU_DAT_ALG::StringView<T> *str)
-	{
-		return md5(reinterpret_cast<const byte*>(str->rawStr()), NOU::NOU_DAT_ALG::stringlen<char>(str->rawStr()));
-	}
-
-	/**
-	\param input a string that will be hashed
-
-	\return Hashed input as a 128bit byte array
-	\brief Hashes a given input similar to the md5 hash
-	*/
-
-	template<typename T>
-	NOU_FUNC MD5Hash md5(const NOU_DAT_ALG::String<T> *str)
-	{
-		return md5(reinterpret_cast<const byte*>(str->rawStr()), NOU::NOU_DAT_ALG::stringlen<char>(str->rawStr()));
-	}
-
-	/**
-	\param input an input byte that will be rotated
-	\param rotations how often the byte will be rotated
-
-	\return the byte after the rotation
-
-	\brief Performs a leftRotation to a given input
-	*/
+	
 	NOU_FUNC byte leftRotation(const byte input, int32 rotations);
 }
 #endif
