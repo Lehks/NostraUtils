@@ -1224,7 +1224,10 @@ namespace UnitTests
 			str1.copySubstringHere("Hallo",0,5,0);
 			Assert::IsTrue(str1 == "HalloUser");
 
-			NOU_CHECK_ERROR_HANDLER;
+			str2 = str1.replace(0, 5, 'a');
+			Assert::IsTrue(str2 == "aaaaaUser");
+
+			//NOU_CHECK_ERROR_HANDLER;
 		}
 
 		TEST_METHOD(BinaryHeap)

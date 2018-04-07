@@ -1342,7 +1342,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = m_data.size();
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
+		NOU_COND_PUSH_ERROR((start > m_data.size() || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
@@ -1362,14 +1362,14 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = m_data.size();
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
+		NOU_COND_PUSH_ERROR((start > m_data.size() || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
 		{
 			if (target == m_data.at(i))
 			{
-				m_data.replace(replacement, i);
+				m_data.replace(i, replacement);
 			}
 		}
 
@@ -1379,12 +1379,18 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(sizeType start, sizeType end, const StringView<CHAR_TYPE>& replacement)
 	{
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+		{
+			end = m_data.size();
+		}
+			
+
+		NOU_COND_PUSH_ERROR((start > m_data.size() || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		for (sizeType i = start; i <end; i++)
+		for (sizeType i = start; i < end; i++)
 		{
-			m_data.replace(replacement, i);
+			replace(i, replacement);
 		}
 
 		return *this;
