@@ -5,7 +5,12 @@
 #include "nostrautils/dat_alg/StringView.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
 #include "nostrautils/file_mngt/Path.hpp"
+
 #include <stdio.h>
+#include <io.h>
+
+
+
 
 
 /** \file File.hpp
@@ -173,6 +178,12 @@ namespace NOU::NOU_FILE_MNGT
 		\return datastream
 		*/
 		FILE* getData(); 
+
+		/**
+		\brief checks if a File is allready existing according to the set Path
+		\return true if File exists, false otherwise
+		*/
+		boolean exists();
 
 	private:
 

@@ -159,4 +159,13 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		return m_data;
 	}
+
+	boolean File::exists()
+	{
+		if (_access(m_path.getAbsolutePath().rawStr(), 0) == -1)
+		{
+			return false;
+		}
+		return true;
+	}
 }

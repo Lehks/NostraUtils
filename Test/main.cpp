@@ -14,21 +14,11 @@ using namespace NOU_FILE_MNGT;
 
 int main()
 {
-	/*Path curr("Test.txt");
-	
-	File f(curr, AccessMode::READ);
-	f.open();
-
-	char8 c[20] = "";
-	sizeType s = 20;
-	f.read(s, c);
-	cout << c << endl;
-
-
-	//for (int i = 0; i < 25; i++)
-	//{
-	//	cout << f.read();
-	//}
-	cout << endl;
-	system("pause");*/
+	File f("abc.txt");
+	cout << (f.exists() ? "Datei existsiert" : "Datei existiert nicht") << endl;
+	f.open(AccessMode::WRITE);
+	f.write("asdfasdfasdfasdfasdf");
+	cout << (f.exists() ? "Datei existsiert" : "Datei existiert nicht") << endl;
+	f.close();
+	system("pause");
 }
