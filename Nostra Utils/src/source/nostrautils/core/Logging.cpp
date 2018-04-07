@@ -2,7 +2,7 @@
 
 namespace NOU::NOU_CORE
 {
-	Event::Event(EventLevelCodes eventLevel, StringType eventMsg) :
+	Event::Event(EventLevelCodes eventLevel, const StringType& eventMsg) :
 		m_eventLevel(eventLevel),
 		m_eventMsg(eventMsg),
 		m_timestamp(getTime())
@@ -17,7 +17,7 @@ namespace NOU::NOU_CORE
 		return localTime;
 	}
 
-	const Event::StringType Event::getEventLevel() const
+	const Event::StringType& Event::getEventLevel() const
 	{
 		return enumToString(m_eventLevel);
 	}

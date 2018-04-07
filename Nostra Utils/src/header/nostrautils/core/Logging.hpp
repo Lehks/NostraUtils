@@ -99,14 +99,14 @@ namespace NOU::NOU_CORE
 
 		\brief				Constructs a new event.
 		*/
-		Event(EventLevelCodes eventLevel, StringType eventMsg);
+		Event(EventLevelCodes eventLevel, const StringType& eventMsg);
 
 		/**
 		\return The event level.
 
 		\brief	Returns the event level of the event object.
 		*/
-		const StringType getEventLevel() const;
+		const StringType& getEventLevel() const;
 
 		/**
 		\return A reference to the event message.
@@ -197,19 +197,6 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS FileLogger : public ILogger
 	{
 	private:
-
-		/**
-		\param logger	The logger to write the event to.
-		\param event	The event to write.
-
-		\brief			Calls <tt>logger->write(event)</tt>. This is required for the task queue.
-		*/
-		//static void callLoggingTarget(NOU::NOU_FILE_MNGT::File file, const NOU::NOU_DAT_ALG::String8 error);
-		//
-		//static NOU::NOU_THREAD::TaskQueue<void, decltype(&FileLogger::callLoggingTarget),
-		//	NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, NOU::NOU_FILE_MNGT::File,
-		//	NOU::NOU_DAT_ALG::String8> fileLoggerQueue;
-
 
 		/**
 		\param event	A const reference to an event object.
