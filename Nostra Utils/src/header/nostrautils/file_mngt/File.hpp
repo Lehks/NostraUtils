@@ -10,8 +10,8 @@
 
 /** \file File.hpp
 \author  Leslie Marxen
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides very basic file i/o implementations
 */
 
@@ -107,12 +107,15 @@ namespace NOU::NOU_FILE_MNGT
 		byte read();
 
 		/**
+		\param size   The size of the buffer.
+		\param buffer The buffer to store the output in.
+
 		\brief reads a string of given size
-		\param size size of the string in byte 
 		*/
 		void read(sizeType size, char8 *buffer);
 
 		/**
+		\param b The byte to write
 		\brief writes a single byte into a file according to the i/o mode that is set
 
 		\return true if successfully written, false if otherwise

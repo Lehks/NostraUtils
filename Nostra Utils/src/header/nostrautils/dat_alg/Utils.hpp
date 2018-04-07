@@ -9,10 +9,14 @@
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \author	 Lukas Gross
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides useful utility functions for dat_alg.
 */
+
+#ifndef NOU_XOR
+#define NOU_XOR(a,b) ((!a & b) | (a & !b))
+#endif
 
 namespace NOU::NOU_DAT_ALG
 {
