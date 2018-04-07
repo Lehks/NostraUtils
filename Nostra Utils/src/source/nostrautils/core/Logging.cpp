@@ -24,6 +24,7 @@ namespace NOU::NOU_CORE
 		strftime(date_string, 20, "%Y/%m/%d %T", &curr_tm);
 
 		NOU::NOU_DAT_ALG::String8 localTime = date_string;
+
 #elif NOU_OS_LIBRARY_POSIX
 		time_t curr_time;
 		tm * curr_tm;
@@ -36,8 +37,6 @@ namespace NOU::NOU_CORE
 		NOU::NOU_DAT_ALG::String8 localTime = date_string;
 #endif
 
-
-		
 		return localTime.rawStr();
 	}
 
