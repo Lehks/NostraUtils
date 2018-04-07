@@ -1,9 +1,6 @@
 #ifndef NOU_CORE_LOGGING_HPP
 #define NOU_CORE_LOGGING_HPP
 
-#define _CRT_SECURE_NO_WARNINGS //Only because compiler warnings by the chrono header because a warning
-								//about ctime.
-
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/Meta.hpp"
 #include "nostrautils/dat_alg/StringView.hpp"
@@ -14,7 +11,6 @@
 
 #include <chrono>
 #include <iostream>
-#undef _CRT_SECURE_NO_WARNINGS
 
 /**
 \file core/Logging.hpp
@@ -83,12 +79,12 @@ namespace NOU::NOU_CORE
 		/**
 		\brief The attribute, which stores the time the event happened / The event object was created.
 		*/
-		StringType m_timestamp;
+		NOU::NOU_DAT_ALG::String8 m_timestamp;
 
 		/**
 		\brief Returns the current local time.
 		*/
-		static StringType getTime();
+		static NOU::NOU_DAT_ALG::String8 getTime();
 
 	public:
 
@@ -120,7 +116,7 @@ namespace NOU::NOU_CORE
 
 		\brief	Returns the timestamp when the event happened.
 		*/
-		const StringType& getTimestamp() const;
+		const NOU::NOU_DAT_ALG::String8& getTimestamp() const;
 	};
 
 	///\cond
@@ -138,10 +134,6 @@ namespace NOU::NOU_CORE
 		friend class Logger;
 
 	public:
-
-
-
-		bool logExists = false;
 
 		/**
 		\brief The destructor of the ILogger interface. It is defined as default.
@@ -186,7 +178,7 @@ namespace NOU::NOU_CORE
 		*/
 		void write(const Event& event) override
 		{
-			std::cout << event.getTimestamp().rawStr() << event.getEventLevel().rawStr() << ": "
+			std::cout << "[" <<event.getTimestamp().rawStr() << "] " << event.getEventLevel().rawStr() << ": "
 				<< event.getEventMsg().rawStr() << "\n" << std::endl;
 		}
 	};
@@ -202,53 +194,29 @@ namespace NOU::NOU_CORE
 		\param event	A const reference to an event object.
 
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
-						to the console.
+						to a log file.
 		*/
 		void write(const Event& event) override
 		{
-			NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
-			NOU::NOU_DAT_ALG::String8 absPath = cwd.getAbsolutePath();
-			 
-			if (logExists == false)
+			NOU::NOU_DAT_ALG::String8 absPath = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory().getAbsolutePath();
+			absPath.append("/log.txt");
+			
+			NOU::NOU_FILE_MNGT::File file(absPath);
+
+			if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
 			{
-				NOU::NOU_FILE_MNGT::File file("Log", absPath, NOU::NOU_FILE_MNGT::AccessMode::WRITE);
-				if (file.open() == true)
-				{
-					file.open();
-					NOU::NOU_DAT_ALG::String8 error = event.getTimestamp().rawStr();
-						error.append(event.getEventLevel().rawStr()).append(": ")
-						.append(event.getEventMsg().rawStr()).append("\n");
-						std::cout << "write" << std::endl;
-					//fileLoggerQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, file, error));
-					file.write(error);
-					file.close();
-				}
-				else
-				{
-					NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
-						"Could not open log file.");
-					std::cout << "error" << std::endl;
-				}
+				NOU::NOU_DAT_ALG::String8 error;
+				error.append("[").append(event.getTimestamp().rawStr()),
+				error.append("] ").append(event.getEventLevel().rawStr()).append(": "),
+				error.append(event.getEventMsg().rawStr()).append("\n");
+
+				file.write(error);
+				file.close();
 			}
 			else
 			{
-				NOU::NOU_FILE_MNGT::File file("Log", absPath, NOU::NOU_FILE_MNGT::AccessMode::APPEND);
-				if (file.open() == true)
-				{
-					NOU::NOU_DAT_ALG::String8 error = event.getTimestamp().rawStr();
-					error.append(event.getEventLevel().rawStr()).append(": ")
-						.append(event.getEventMsg().rawStr()).append("\n");
-					std::cout << "write" << std::endl;
-					//fileLoggerQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, file, error));
-					file.write(error);
-					file.close();
-				}
-				else
-				{
-					NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
-						"Could not open log file.");
-					std::cout << "error" << std::endl;
-				}
+				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+					"Could not open log file.");
 			}
 		}
 	};
@@ -292,6 +260,11 @@ namespace NOU::NOU_CORE
 		*/
 		static void callLoggingTarget(ILogger *logger, const Event event);
 
+		/**
+		\brief		A TaskQueue for all multi-threaded tasks.
+		\details	A task in the TaskQueue logs an error to one of the logging targets. Those tasks are
+					executed in parallel.
+		*/
 		static NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
 			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
 			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, const Event>

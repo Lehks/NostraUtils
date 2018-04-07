@@ -1,6 +1,7 @@
 #include "nostrautils\core\Logging.hpp"
 #include <iostream>
 #include <stdio.h>
+#include <ctime>
 
 int main()
 {
@@ -12,7 +13,7 @@ int main()
 	NOU::NOU_CORE::FileLogger flog;
 	log.pushLogger(clog);
 	log.pushLogger(flog);
-	
+
 	log.write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid value in fn()");
 
 	using namespace std::chrono_literals;

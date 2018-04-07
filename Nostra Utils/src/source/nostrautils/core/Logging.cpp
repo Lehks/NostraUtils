@@ -1,4 +1,6 @@
 #include "nostrautils/core/Logging.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
 
 namespace NOU::NOU_CORE
 {
@@ -8,13 +10,35 @@ namespace NOU::NOU_CORE
 		m_timestamp(getTime())
 	{}
 
-	Event::StringType Event::getTime()
+	NOU::NOU_DAT_ALG::String8 Event::getTime()
 	{
-		time_t now = time(0);
 
-		StringType localTime = ctime(&now);
+#ifdef NOU_OS_LIBRARY_WIN_H
+		time_t curr_time;
+		tm  curr_tm;
+		char date_string[20];
+		struct tm buff;
 
-		return localTime;
+		time(&curr_time);
+		localtime_s(&curr_tm, &curr_time);
+		strftime(date_string, 20, "%Y/%m/%d %T", &curr_tm);
+
+		NOU::NOU_DAT_ALG::String8 localTime = date_string;
+#elif NOU_OS_LIBRARY_POSIX
+		time_t curr_time;
+		tm * curr_tm;
+		char date_string[20];
+
+		time(&curr_time);
+		curr_tm = localtime(&curr_time);
+		strftime(date_string, 20, "%Y/%m/%d %T", curr_tm);
+
+		NOU::NOU_DAT_ALG::String8 localTime = date_string;
+#endif
+
+
+		
+		return localTime.rawStr();
 	}
 
 	const Event::StringType& Event::getEventLevel() const
@@ -27,7 +51,7 @@ namespace NOU::NOU_CORE
 		return m_eventMsg;
 	}
 
-	const Event::StringType& Event::getTimestamp() const
+	const NOU::NOU_DAT_ALG::String8& Event::getTimestamp() const
 	{
 		return m_timestamp;
 	}
@@ -58,15 +82,6 @@ namespace NOU::NOU_CORE
 			return "Unknown";
 		}
 	}
-
-	//void FileLogger::callLoggingTarget(NOU::NOU_FILE_MNGT::File file, const NOU::NOU_DAT_ALG::String8 error)
-	//{
-	//	file.write(error);
-	//}
-	//
-	//NOU::NOU_THREAD::TaskQueue<void, decltype(&FileLogger::callLoggingTarget),
-	//	NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, NOU::NOU_FILE_MNGT::File, NOU::NOU_DAT_ALG::String8>
-	//	FileLogger::fileLoggerQueue;
 	
 	NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> Logger::s_allocator;
 	NOU::NOU_DAT_ALG::Vector<ILogger*> Logger::s_logger(1, s_allocator);
