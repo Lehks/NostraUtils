@@ -1224,6 +1224,9 @@ namespace UnitTests
 			str1.copySubstringHere("Hallo",0,5,0);
 			Assert::IsTrue(str1 == "HalloUser");
 
+			str1.replace(0, 9, "wasgeht");
+			Assert::IsTrue(str1 == "wasgeht");
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
