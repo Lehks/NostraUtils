@@ -14,7 +14,7 @@ using namespace NOU_FILE_MNGT;
 
 int main()
 {
-	Path curr("Test.txt");
+	/*Path curr("Test.txt");
 	
 	File f(curr, AccessMode::READ);
 	f.open();
@@ -30,5 +30,5 @@ int main()
 	//	cout << f.read();
 	//}
 	cout << endl;
-	system("pause");
+	system("pause");*/
 }

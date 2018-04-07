@@ -160,11 +160,7 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		const AccessMode& getMode();
 
-		/**
-		\brief Setter for AccessMode
-		\param mode AccessMode of the file
-		*/
-		void setMode(AccessMode mode);
+
 
 		/**
 		\brief Getter for Path
@@ -177,6 +173,14 @@ namespace NOU::NOU_FILE_MNGT
 		\return datastream
 		*/
 		FILE* getData(); 
+
+	private:
+
+		/**
+		\brief Setter for AccessMode
+		\param mode AccessMode of the file
+		*/
+		void setMode(AccessMode mode);
 
 	};
 }
