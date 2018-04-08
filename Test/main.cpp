@@ -15,13 +15,12 @@
 
 int main()
 {
-	NOU::NOU_DAT_ALG::String8 str = "HalloDennis";
-	NOU::NOU_DAT_ALG::String8 str2 = "Dennis";
+	NOU::NOU_DAT_ALG::String8 str = "ThisIsAString";
+	NOU::NOU_DAT_ALG::String8 str2;
 
-	str = str2;
+	str2 = str.replace("Is", "Integer", 0, 13);
 
-	std::cout << str.rawStr() << std::endl;
-	std::cout << str.size() << std::endl;
+	std::cout << str2.rawStr() << std::endl;
 
 	system("pause");
 }

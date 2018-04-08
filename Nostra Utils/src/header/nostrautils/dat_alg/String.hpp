@@ -1360,15 +1360,14 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(const StringView<CHAR_TYPE>& target, const StringView<CHAR_TYPE>& replacement, sizeType start, sizeType end)
 	{
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
-			end = m_data.size() - 1;
+			end = m_data.size();
 
 		NOU_COND_PUSH_ERROR((start > m_data.size() || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
 		{
-
-			if (end - i <= target.size())
+			if (end - i < target.size())
 				break;
 
 			if (target == substring(i, target.size() + 1))
