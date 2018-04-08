@@ -212,7 +212,7 @@ namespace NOU::NOU_MATH
 		return R;
 	}
 
-	template<uint32 N, uint32 M, typename T>
+/*	template<uint32 N, uint32 M, typename T>
 	Matrix<N, M, T> Matrix<N, M, T>::add(const Matrix<N, M, T> &matrix)
 	{
 		Matrix<N, M, T> m Matrix<N, M, T>();
@@ -220,9 +220,10 @@ namespace NOU::NOU_MATH
 		
 		return m;
 	}
-
+	*/
 
 }
+
 
 #endif
 
