@@ -213,15 +213,25 @@ namespace NOU::NOU_FILE_MNGT
 		\brief Simple override of the not equals operator between path's.
 		*/
 		boolean operator != (const Path &other) const;
-
+		/**
+		\brief Copy the other path into this path.
+		*/
 		Path& operator = (const Path &other);
-
+		/**
+		\brief Appends m_absolutePath from the other Path to this one.
+		*/
 		Path& operator + (const Path &other);
-
+		/**
+		\brief Appends an StringView8 to the current path's m_absolutePath.
+		*/
 		Path& operator + (const NOU::NOU_DAT_ALG::StringView8 &other);
-
+		/**
+		\brief Appends m_absolutePath from the other Path to this one.
+		*/
 		Path& operator += (const Path &other);
-
+		/**
+		\brief Appends an StringView8 to the current path's m_absolutePath.
+		*/
 		Path& operator += (const NOU::NOU_DAT_ALG::StringView8 &other);
 	};
 }
