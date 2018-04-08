@@ -1367,9 +1367,18 @@ namespace NOU::NOU_DAT_ALG
 
 		for (sizeType i = start; i < end; i++)
 		{
-			if (target == m_data.at(i))
+
+			if (end - i <= target.size())
+				break;
+
+			if (target == substring(i, target.size() + 1))
 			{
-				m_data.replace(i, replacement);
+				for (sizeType j = 0; j < target.size(); j++)
+				{
+					remove(i);
+				}
+
+				insert(i, replacement);
 			}
 		}
 
