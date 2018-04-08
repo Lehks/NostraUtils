@@ -1182,6 +1182,47 @@ namespace UnitTests
 			substr.append("AAAAA");
 			str.append("Hallo");
 		
+			NOU::NOU_DAT_ALG::String<NOU::char8> str1;
+			NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "Hallo";
+
+			str1 = str2;
+			Assert::IsTrue(str1 == "Hallo");
+
+			str1 = "User";
+			Assert::IsTrue(str1 == "User");
+
+			NOU::NOU_DAT_ALG::String<NOU::char8> str3 = str1.substring(0, 2);
+			Assert::IsTrue(str3 == "Us");
+
+			str1 = str3.fillRange('a', 0, 2);
+			Assert::IsTrue(str1 == "aa");
+
+			str1 = "NostraUtils";
+
+			str3 = str1.preserve(6, 11);
+			Assert::IsTrue(str3 == "Utils");
+
+			str1 = "";
+
+			str2 = str1.concat("Hallo");
+			Assert::IsTrue(str2 == "Hallo");
+			str1 = str2.concat(1);
+			Assert::IsTrue(str1 == "Hallo1");
+			str2 = str1.concat('a');
+			Assert::IsTrue(str2 == "Hallo1a");
+			str1 = str2.concat(1.3);
+			Assert::IsTrue(str1 == "Hallo1a1.3");
+
+			str1 = "User";
+			str2 = "Hallo";
+
+			str1.copySubstringTo(str2, 0,4,5);
+			Assert::IsTrue(str2 == "HalloUser");
+
+			str1 = "User";
+			str1.copySubstringHere("Hallo",0,5,0);
+			Assert::IsTrue(str1 == "HalloUser");
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
