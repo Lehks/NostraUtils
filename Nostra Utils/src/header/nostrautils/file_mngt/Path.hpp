@@ -213,6 +213,16 @@ namespace NOU::NOU_FILE_MNGT
 		\brief Simple override of the not equals operator between path's.
 		*/
 		boolean operator != (const Path &other) const;
+
+		Path& operator = (const Path &other);
+
+		Path& operator + (const Path &other);
+
+		Path& operator + (const NOU::NOU_DAT_ALG::StringView8 &other);
+
+		Path& operator += (const Path &other);
+
+		Path& operator += (const NOU::NOU_DAT_ALG::StringView8 &other);
 	};
 }
 

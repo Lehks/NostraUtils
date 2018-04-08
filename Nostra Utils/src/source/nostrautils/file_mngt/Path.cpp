@@ -254,4 +254,52 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		return !(*this == other);
 	}
+	Path & Path::operator=(const Path & other)
+	{
+		m_absolutePath = other.m_absolutePath;
+
+		m_name = other.m_name;
+		m_extension = other.m_extension;
+		m_nameAndExtension = other.m_nameAndExtension;
+		m_parentPath = other.m_parentPath;
+		m_relativePath = other.m_relativePath;
+
+		return *this;
+	}
+	Path & Path::operator+(const Path & other)
+	{
+		m_absolutePath = other.m_absolutePath;
+
+		m_name = other.m_name;
+		m_extension = other.m_extension;
+		m_nameAndExtension = other.m_nameAndExtension;
+		m_parentPath = other.m_parentPath;
+		m_relativePath = other.m_relativePath;
+
+		return *this;
+	}
+	Path & Path::operator+(const NOU::NOU_DAT_ALG::StringView8 & other)
+	{
+		m_absolutePath.append(other);
+
+		return *this;
+	}
+	Path & Path::operator+=(const Path & other)
+	{
+		m_absolutePath = other.m_absolutePath;
+
+		m_name = other.m_name;
+		m_extension = other.m_extension;
+		m_nameAndExtension = other.m_nameAndExtension;
+		m_parentPath = other.m_parentPath;
+		m_relativePath = other.m_relativePath;
+
+		return *this;
+	}
+	Path & Path::operator+=(const NOU::NOU_DAT_ALG::StringView8 & other)
+	{
+		m_absolutePath.append(other);
+
+		return *this;
+	}
 }
