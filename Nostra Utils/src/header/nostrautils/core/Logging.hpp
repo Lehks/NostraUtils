@@ -64,6 +64,98 @@ namespace NOU::NOU_CORE
 		*/
 		using StringType = NOU::NOU_DAT_ALG::StringView8;
 
+		/**
+		\brief A class that provides custom time functionality. It is used for displaying date and time.
+		*/
+		class NOU_CLASS TimeStamp
+		{
+			friend class Event;
+
+		public:
+
+			/**
+			\brief Defines the type as a uint32.
+
+			\details uint32 is defines as a uint32_t.
+			*/
+			using TimeType = uint32;
+
+		private:
+			/**
+			\brief Attribute that stores the second.
+			*/
+			TimeType m_seconds;
+
+			/**
+			\brief Attribute that stores the minute.
+			*/
+			TimeType m_minutes;
+
+			/**
+			\brief Attribute that stores the hour.
+			*/
+			TimeType m_hours;
+
+			/**
+			\brief Attribute that stores the day.
+			*/
+			TimeType m_day;
+
+			/**
+			\brief Attribute that stores the month.
+			*/
+			TimeType m_month;
+
+			/**
+			\brief Attribute that stores the year.
+			*/
+			TimeType m_year;
+
+		public:
+
+			/**
+			\return The second.
+
+			\brief Returns the second.
+			*/
+			TimeType getSeconds() const;
+
+			/**
+			\return The minute.
+
+			\brief Returns the minute.
+			*/
+			TimeType getMinutes() const;
+
+			/**
+			\return The hour.
+
+			\brief Returns the hour.
+			*/
+			TimeType getHours() const;
+
+			/**
+			\return The day.
+
+			\brief Returns the day.
+			*/
+			TimeType getDay() const;
+
+			/**
+			\return The month.
+
+			\brief Returns the month.
+			*/
+			TimeType getMonth() const;
+
+			/**
+			\return The years.
+
+			\brief Returns the year.
+			*/
+			TimeType getYear() const;
+		};
+
 	private:
 
 		/**
@@ -79,12 +171,12 @@ namespace NOU::NOU_CORE
 		/**
 		\brief The attribute, which stores the time the event happened / The event object was created.
 		*/
-		NOU::NOU_DAT_ALG::String8 m_timestamp;
+		TimeStamp m_timeStamp;
 
 		/**
-		\brief Returns the current local time.
+		\brief Returns the current time.
 		*/
-		static NOU::NOU_DAT_ALG::String8 getTime();
+		static TimeStamp getTime();
 
 	public:
 
@@ -112,11 +204,11 @@ namespace NOU::NOU_CORE
 		const StringType& getEventMsg() const;
 
 		/**
-		\return	A reference to the timestamp.
+		\return	A reference to the time stamp.
 
-		\brief	Returns the timestamp when the event happened.
+		\brief	Returns the time stamp when the event happened.
 		*/
-		const NOU::NOU_DAT_ALG::String8& getTimestamp() const;
+		const TimeStamp& getTimeStamp() const;
 	};
 
 	///\cond
@@ -178,7 +270,12 @@ namespace NOU::NOU_CORE
 		*/
 		void write(const Event& event) override
 		{
-			std::cout << "[" <<event.getTimestamp().rawStr() << "] " << event.getEventLevel().rawStr() << ": "
+			std::cout 
+				<< "[" << event.getTimeStamp().getYear() << "/" << event.getTimeStamp().getMonth() << "/" 
+				<< event.getTimeStamp().getDay() << " " << event.getTimeStamp().getHours() << ":" 
+				<< event.getTimeStamp().getMinutes() << ":" << event.getTimeStamp().getSeconds() << "] " 
+			
+				<< event.getEventLevel().rawStr() << ": "
 				<< event.getEventMsg().rawStr() << "\n" << std::endl;
 		}
 	};
@@ -206,9 +303,13 @@ namespace NOU::NOU_CORE
 			if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
 			{
 				NOU::NOU_DAT_ALG::String8 error;
-				error.append("[").append(event.getTimestamp().rawStr()),
-				error.append("] ").append(event.getEventLevel().rawStr()).append(": "),
-				error.append(event.getEventMsg().rawStr()).append("\n");
+				error.append("[").append(event.getTimeStamp().getYear()).append("/").
+					append(event.getTimeStamp().getMonth()).append("/").append(event.getTimeStamp().getDay()).
+					append(" ").append(event.getTimeStamp().getHours()).append(":").
+					append(event.getTimeStamp().getMinutes()).append(":").
+					append(event.getTimeStamp().getSeconds()).append("] ").
+					append(event.getEventLevel().rawStr()).append(": ").
+					append(event.getEventMsg().rawStr()).append("\n");
 
 				file.write(error);
 				file.close();
@@ -238,19 +339,19 @@ namespace NOU::NOU_CORE
 		/**
 		\brief Creates a new allocation callback for ILogger pointer.
 		*/
-		static NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> s_allocator;
+		NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> s_allocator;
 
 		/**
 		\brief Creates a new vector from ILogger pointers.
 		*/
-		static NOU::NOU_DAT_ALG::Vector<ILogger*> s_logger;
+		NOU::NOU_DAT_ALG::Vector<ILogger*> s_logger;
 
 		/**
 		\param event	A const reference to an event object.
 
 		\brief			Calls the write function for every objects in s_logger.
 		*/
-		static void logAll(const Event& events);
+		void logAll(Event &&events);
 
 		/**
 		\param logger	The logger to write the event to.
@@ -258,16 +359,16 @@ namespace NOU::NOU_CORE
 
 		\brief			Calls <tt>logger->write(event)</tt>. This is required for the task queue.
 		*/
-		static void callLoggingTarget(ILogger *logger, const Event event);
+		static void callLoggingTarget(ILogger *logger, Event event);
 
 		/**
 		\brief		A TaskQueue for all multi-threaded tasks.
 		\details	A task in the TaskQueue logs an error to one of the logging targets. Those tasks are
 					executed in parallel.
 		*/
-		static NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
+		NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
 			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
-			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, const Event>
+			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event>
 			taskQueue;
 
 	public:
@@ -277,7 +378,7 @@ namespace NOU::NOU_CORE
 
 		\brief		Pushes an logger to s_logger.
 		*/
-		static void pushLogger(ILogger &log);
+		void pushLogger(ILogger &log);
 
 		/**
 		\param level	A enum value, which represents the level of the event.
@@ -286,7 +387,7 @@ namespace NOU::NOU_CORE
 		\brief			Creates a new event object from the level and msg parameters and calls the logAll() 
 						with this event object.
 		*/
-		static void write(EventLevelCodes level, const StringType &msg);
+		void write(EventLevelCodes level, const StringType &msg);
 	};
 /**
 \brief This macro is a convenience macro for writing logs to the logger. This macro automatically

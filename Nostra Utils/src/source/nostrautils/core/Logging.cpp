@@ -4,40 +4,74 @@
 
 namespace NOU::NOU_CORE
 {
+	typename Event::TimeStamp::TimeType Event::TimeStamp::getSeconds() const
+	{
+		return m_seconds;
+	}
+
+	typename Event::TimeStamp::TimeType Event::TimeStamp::getMinutes() const
+	{
+		return m_minutes;
+	}
+
+	typename Event::TimeStamp::TimeType Event::TimeStamp::getHours() const
+	{
+		return m_hours;
+	}
+
+	typename Event::TimeStamp::TimeType Event::TimeStamp::getDay() const
+	{
+		return m_day;
+	}
+
+	typename Event::TimeStamp::TimeType Event::TimeStamp::getMonth() const
+	{
+		return m_month + 1; //Months would otherwise start at 0 and end at 11
+	}
+
+	typename Event::TimeStamp::TimeType Event::TimeStamp::getYear() const
+	{
+		return m_year + 1900; //the struct tm provides the years after the year 1900
+	}
+
 	Event::Event(EventLevelCodes eventLevel, const StringType& eventMsg) :
 		m_eventLevel(eventLevel),
 		m_eventMsg(eventMsg),
-		m_timestamp(getTime())
+		m_timeStamp(getTime())
 	{}
 
-	NOU::NOU_DAT_ALG::String8 Event::getTime()
+	typename Event::TimeStamp Event::getTime()
 	{
-
 #ifdef NOU_OS_LIBRARY_WIN_H
-		time_t curr_time;
-		tm  curr_tm;
-		char date_string[20];
-		struct tm buff;
-
-		time(&curr_time);
-		localtime_s(&curr_tm, &curr_time);
-		strftime(date_string, 20, "%Y/%m/%d %T", &curr_tm);
-
-		NOU::NOU_DAT_ALG::String8 localTime = date_string;
-
+		using tmType = tm;
 #elif NOU_OS_LIBRARY_POSIX
-		time_t curr_time;
-		tm * curr_tm;
-		char date_string[20];
-
-		time(&curr_time);
-		curr_tm = localtime(&curr_time);
-		strftime(date_string, 20, "%Y/%m/%d %T", curr_tm);
-
-		NOU::NOU_DAT_ALG::String8 localTime = date_string;
+		using tm_type = tm*;
 #endif
 
-		return localTime.rawStr();
+		time_t  currTime;
+		tmType  currTm;
+		tm     *tmPtr;
+
+		time(&currTime);
+
+#ifdef NOU_OS_LIBRARY_WIN_H
+		gmtime_s(&currTm, &currTime);
+		tmPtr = &currTm;
+#elif NOU_OS_LIBRARY_POSIX
+		currTm = gmtime(&currTime);
+		tmPtr = currTm;
+#endif
+
+		TimeStamp ret;
+
+		ret.m_seconds = tmPtr->tm_sec;
+		ret.m_minutes = tmPtr->tm_min;
+		ret.m_hours   = tmPtr->tm_hour;
+		ret.m_day     = tmPtr->tm_mday;
+		ret.m_month   = tmPtr->tm_mon;
+		ret.m_year    = tmPtr->tm_year;
+
+		return ret;
 	}
 
 	const Event::StringType& Event::getEventLevel() const
@@ -50,9 +84,9 @@ namespace NOU::NOU_CORE
 		return m_eventMsg;
 	}
 
-	const NOU::NOU_DAT_ALG::String8& Event::getTimestamp() const
+	const typename Event::TimeStamp& Event::getTimeStamp() const
 	{
-		return m_timestamp;
+		return m_timeStamp;
 	}
 
 	Event::StringType enumToString(EventLevelCodes eventLevel)
@@ -81,37 +115,27 @@ namespace NOU::NOU_CORE
 			return "Unknown";
 		}
 	}
-	
-	NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> Logger::s_allocator;
-	NOU::NOU_DAT_ALG::Vector<ILogger*> Logger::s_logger(1, s_allocator);
 
 	void Logger::pushLogger(ILogger &log)
 	{
 		s_logger.pushBack(&log);
 	}
 
-	NOU::NOU_THREAD::TaskQueue<void, decltype(&Logger::callLoggingTarget),
-		NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, const Event>
-		Logger::taskQueue;
-
-
-	void Logger::logAll(const Event& events)
+	void Logger::logAll(Event&& events)
 	{
 		for (sizeType i = 0; i < s_logger.size(); i++)
 		{
-			taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, s_logger[i], events));
+			taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, s_logger[i], NOU_CORE::move(events)));
 		}
 	}
 
-	void Logger::callLoggingTarget(ILogger *logger, const Event event)
+	void Logger::callLoggingTarget(ILogger *logger, Event event)
 	{
 		logger->write(event);
 	}
 
 	void Logger::write(EventLevelCodes level, const StringType &msg)
 	{
-		Event event(level, msg);
-
-		logAll(event);
+		logAll(Event(level, msg));
 	}
 }
