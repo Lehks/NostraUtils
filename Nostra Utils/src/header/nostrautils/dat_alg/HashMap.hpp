@@ -49,7 +49,6 @@ namespace NOU::NOU_DAT_ALG
 		\param allocator the internally used mem allocator, defaults to NOU generic alloc
 		*/
 		HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>::getInstance());
-,
 		/**
 		\param			key the key where the value will be mapped to
 		\param		    value the value that will be mapped
