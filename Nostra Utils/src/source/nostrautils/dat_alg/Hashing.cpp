@@ -15,7 +15,7 @@ namespace NOU::NOU_DAT_ALG
 
 		return r;
 	}
-
+	/*
 	NOU_FUNC MD5Hash md5(const NOU::byte *input, sizeType size)
 	{
 		Vector<byte> bytes(10);
@@ -59,7 +59,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			bytes.emplaceBack(input[len]);
 		}
-
+		//appended 0b10000000
 		bytes.emplaceBack(128);
 
 		//bitlength of input appended by 0b00000000 and appended until newLength congruent 56 % 64
@@ -85,8 +85,8 @@ namespace NOU::NOU_DAT_ALG
 
 		//64-byte blockwise operations
 		// Vector<byte64> blocks;
-		sizeType bnp;		//Block null position
-		sizeType cp;		//chunk position
+		sizeType bnp;		//Block zero position
+		sizeType cp;		//chunk zero position
 		int32 chunk[16];
 
 		uint32 a;
@@ -157,17 +157,19 @@ namespace NOU::NOU_DAT_ALG
 
 		MD5Hash ret;
 
-		*reinterpret_cast<uint32*>(ret.data() + 0) = a0;
-		*reinterpret_cast<uint32*>(ret.data() + 4) = b0;
-		*reinterpret_cast<uint32*>(ret.data() + 8) = c0;
+		*reinterpret_cast<uint32*>(ret.data() + 0)  = a0;
+		*reinterpret_cast<uint32*>(ret.data() + 4)  = b0;
+		*reinterpret_cast<uint32*>(ret.data() + 8)  = c0;
 		*reinterpret_cast<uint32*>(ret.data() + 12) = d0;
 		return ret;
-	}
+	}*/
 
 	NOU_FUNC byte leftRotation(const byte input, int32 rotations)
 	{
 		byte r = input;
 		const byte b = 0b10000000;
+
+		rotations = rotations % 8;
 		byte c;
 		for (sizeType i = 0; i < rotations; i++)
 		{
