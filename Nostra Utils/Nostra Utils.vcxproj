@@ -325,7 +325,6 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp" />
-    <ClInclude Include="src\header\nostrautils\file_mngt\FileManager.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\Folder.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\Path.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
@@ -352,7 +351,6 @@
     <ClCompile Include="src\source\nostrautils\dat_alg\Random.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp" />
-    <ClCompile Include="src\source\nostrautils\file_mngt\FileManager.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\Folder.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\Path.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />

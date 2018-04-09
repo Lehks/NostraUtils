@@ -1,3 +1,4 @@
+/*
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 
@@ -161,3 +162,4 @@ namespace NOU::NOU_FILE_MNGT
 		return m_data;
 	}
 }
+*/

@@ -1,9 +1,6 @@
 #ifndef NOU_FILE_MNGT_FOLDER_HPP
 #define NOU_FILE_MNGT_FOLDER_HPP
 
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\file_mngt\File.hpp"
 #include "nostrautils\file_mngt\Path.hpp"
 
@@ -11,7 +8,7 @@
 \author  Mahan Karimi
 \since   0.0.1
 \version 0.0.1
-\brief   Folder for File Managment.
+\brief    This class provides an implementation for a simple folder system.
 */
 
 
@@ -22,38 +19,54 @@ namespace NOU::NOU_FILE_MNGT
 	class NOU_CLASS Folder 
 	{
 	private :
-			NOU::NOU_DAT_ALG::StringView8  m_path; 
-			NOU::NOU_DAT_ALG::StringView8  m_name; 
+		Path m_path;
 
-			NOU::NOU_DAT_ALG::String8	   m_absolutePath;
 	public :
 		/*
 		\brief Constructor of the class 
-		\param m_name (name of you folder)
-		\param m_path (location of you folder)
+		\param m_path (location of you folder )
 		*/
 
-		Folder(const NOU::NOU_DAT_ALG::StringView<char8> &m_name, const NOU::NOU_DAT_ALG::StringView<char8> &m_path);
-
-		NOU::NOU_DAT_ALG::Vector<Folder> listFolders() const; // "ls" kommando (Nur alle Ordner anzeigen)
-
-		NOU::NOU_DAT_ALG::Vector<File> listFiles() const; // ls kommando (Alle datein anzeigen und in nem Vector speicher)
+		Folder(const Path &path);
 
 		/*
-		\ brief A function that gives you the currently path of you folder.
-		\ param an object of type Folder .
-		\ return current path of you folder.
+		\brief A function that lists you all folders in a directory and safes the result in a vector { ls commando }  
+		\return all folders and safes in a vector  
 		*/
-		void create(const char * m_path);
 
-		bool exists(const NOU::NOU_FILE_MNGT::Path &p);
-
-		void read_directory(const NOU::NOU_DAT_ALG::String8& name, NOU::NOU_DAT_ALG::Vector<NOU::NOU_DAT_ALG::String8> & v);
+		NOU::NOU_DAT_ALG::Vector<Folder> listFolders() const;
 
 		/*
-		\brief A function that allows you to change the groups of a folder .
+		\ brief A function that lists you all files in a directory and safes the result in a vector 
+		\ return all files and safes in a vector
+		*/
+												
+		NOU::NOU_DAT_ALG::Vector<File> listFiles() const;
+		
+		/*
+		\brief  A function that returns you the current path 
+		\return the path which you give you constructor as parameter
 		*/
 
+		const Path & getPath() const;
+
+		/*
+		\ brief A function that creates you a folder with an object
+		\ return a folder in the path you give the constructor as parameter 
+		*/
+
+		boolean create();
+
+		/*
+		\ brief A function that creates you a folder without an object
+		\ param a path where you folder will be create
+		\ return a folder in the path you give the constructor as parameter
+		*/
+		
+		static boolean create(const Path &path);
+
+ 
+		
 		
 	};
 }
