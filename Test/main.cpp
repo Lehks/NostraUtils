@@ -18,7 +18,7 @@ int main()
 	NOU::NOU_DAT_ALG::String8 str = "ThisIsAString";
 	NOU::NOU_DAT_ALG::String8 str2;
 
-	str2 = str.replace("Is", "Integer", 0, 13);
+	str2 = str.replace("String", "Integer");
 
 	std::cout << str2.rawStr() << std::endl;
 

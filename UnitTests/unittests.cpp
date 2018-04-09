@@ -1228,8 +1228,7 @@ namespace UnitTests
 			Assert::IsTrue(str1 == "wasgeht");
 
 			str1 = "ThisIsAString";
-			str2 = "Integer";
-			str1.replace("String", "Integer", 0, 13);
+			str1.replace("String", "Integer");
 
 			Assert::IsTrue(str1 == "ThisIsAInteger");
 

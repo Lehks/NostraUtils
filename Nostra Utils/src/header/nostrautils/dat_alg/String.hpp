@@ -1365,12 +1365,9 @@ namespace NOU::NOU_DAT_ALG
 		NOU_COND_PUSH_ERROR((start > m_data.size() || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		for (sizeType i = start; i < end; i++)
+		for (sizeType i = start; i < end - target.size(); i++)
 		{
-			if (end - i < target.size())
-				break;
-
-			if (target == substring(i, target.size() + 1))
+			if (target == substring(i, i + target.size() + 1))
 			{
 				for (sizeType j = 0; j < target.size(); j++)
 				{
