@@ -49,17 +49,7 @@ namespace NOU::NOU_DAT_ALG
 		\param allocator the internally used mem allocator, defaults to NOU generic alloc
 		*/
 		HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>::getInstance());
-		/**
-		\brief Copy-constructor
-		\param other the HasMap from where this one will copy
-		*/
-		HashMap(const HashMap &other);
-		/**
-		\brief Move-constructor
-		\param other the HashMap from where this one will move
-		*/
-		HashMap(HashMap &&other);
-
+,
 		/**
 		\param			key the key where the value will be mapped to
 		\param		    value the value that will be mapped
@@ -112,7 +102,6 @@ namespace NOU::NOU_DAT_ALG
 
 	};
 
-	///\cond
 
 	template <typename K, typename V>
 	HashMap<K,V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
@@ -125,23 +114,6 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 	 
-	template<typename K, typename V>
-	HashMap<K, V>::HashMap(const HashMap<K,V> & other) :
-		m_data(other.m_data),
-		m_size(other.m_size)
-	{
-		other.m_data.clear();
-		other.m_data = NULL;
-	}
-
-	template<typename K, typename V>
-	HashMap<K, V>::HashMap(HashMap<K,V> && other) :
-		m_data(other.m_data),
-		m_size(other.m_size)
-	{
-		other.m_data.clear();
-		other.m_data = NULL;
-	}
 
 	template <typename K, typename V>
 	boolean HashMap<K, V>::map(const K &key,const V &value) 
