@@ -1,11 +1,11 @@
 #ifndef NOU_DAT_ALG_STRING_HPP
 #define	NOU_DAT_ALG_STRING_HPP
 
-#include "nostrautils/core/StdIncludes.hpp"
-#include "nostrautils/core/ErrorHandler.hpp"
-#include "nostrautils/mem_mngt/AllocationCallback.hpp"
-#include "nostrautils/dat_alg/StringView.hpp"
-#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils\mem_mngt\AllocationCallback.hpp"
+#include "nostrautils\dat_alg\StringView.hpp"
+#include "nostrautils\dat_alg\Vector.hpp"
 
 #include <iostream>
 #include <stdlib.h>
@@ -153,13 +153,13 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		String(CharType c);
 		/**
-		\param other Another String.
+		\param c Another String.
 
 		\brief Copy Constructor.
 		*/
 		String(const String &other);
 		/**
-		\param other Another String.
+		\param c Another String.
 
 		\brief Move Constructor.
 		*/
@@ -1123,11 +1123,6 @@ namespace NOU::NOU_DAT_ALG
 		return  genericFloatToString(f);
 	}
 
-#if NOU_COMPILER == NOU_COMPILER_CLANG
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wuninitialized" 
-#endif
-
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(const StringView<CHAR_TYPE> &str) :
 		m_data(str.size()),
@@ -1141,15 +1136,6 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 	}
 
-#if NOU_COMPILER == NOU_COMPILER_CLANG
-#pragma clang diagnostic pop
-#endif
-
-#if NOU_COMPILER == NOU_COMPILER_CLANG
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wuninitialized" 
-#endif
-
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(CharType c) :
 		m_data(1),
@@ -1161,19 +1147,10 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 	}
 
-#if NOU_COMPILER == NOU_COMPILER_CLANG
-#pragma clang diagnostic pop
-#endif
-
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(ConstCharType *str) :
 		String(StringView<CHAR_TYPE>(str))
 	{}
-
-#if NOU_COMPILER == NOU_COMPILER_CLANG
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wuninitialized" 
-#endif
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(const String<CHAR_TYPE> &other) :
@@ -1181,24 +1158,11 @@ namespace NOU::NOU_DAT_ALG
 		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), other.size())
 	{}
 
-#if NOU_COMPILER == NOU_COMPILER_CLANG
-#pragma clang diagnostic pop
-#endif
-
-#if NOU_COMPILER == NOU_COMPILER_CLANG
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wuninitialized" 
-#endif
-
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(String<CHAR_TYPE> &&other) :
 		m_data(NOU_CORE::forward<decltype(m_data)>(other.m_data)),
 		StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), other.size())
 	{}
-	
-#if NOU_COMPILER == NOU_COMPILER_CLANG
-#pragma clang diagnostic pop
-#endif
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>::String(int32 i) :
@@ -1367,25 +1331,25 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	void String<CHAR_TYPE>::replace(sizeType i, CharType replacement)
+	void String<CHAR_TYPE>::replace(sizeType index, CharType replacement)
 	{
-		m_data.replace(i, replacement);
+		m_data.replace(index, replacement);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(CharType target, CharType replacement, sizeType start, sizeType end)
 	{
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
-			end = m_data.size();
+			end = m_data.size() - 1;
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1), 
+		NOU_COND_PUSH_ERROR((start > m_data.size() || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
 		{
 			if (target == m_data.at(i))
 			{
-				m_data.replace(i, replacement);
+				replace(i, replacement);
 			}
 		}
 
@@ -1398,14 +1362,22 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = m_data.size();
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
+		NOU_COND_PUSH_ERROR((start > m_data.size() || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
 		{
-			if (target == m_data.at(i))
+			if (end - i < target.size())
+				break;
+
+			if (target == substring(i, target.size() + 1))
 			{
-				m_data.replace(replacement, i);
+				for (sizeType j = 0; j < target.size(); j++)
+				{
+					remove(i);
+				}
+
+				insert(i, replacement);
 			}
 		}
 
@@ -1415,13 +1387,20 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(sizeType start, sizeType end, const StringView<CHAR_TYPE>& replacement)
 	{
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size() - 1;
+
 		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		for (sizeType i = start; i <end; i++)
+		sizeType range = end - start;
+
+		for (sizeType i = start; i < range; i++)
 		{
-			m_data.replace(replacement, i);
+			remove(start);
 		}
+
+		insert(start, replacement);
 
 		return *this;
 	}
@@ -1484,7 +1463,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float32 nr)
 	{
 		if (b)
-			append(floatToString(nr));
+			append(FloatToString(nr));
 
 		return *this;
 	}
@@ -1493,7 +1472,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, float64 nr)
 	{
 		if (b)
-			append(floatToString(nr));
+			append(FloatToString(nr));
 
 		return *this;
 	}
