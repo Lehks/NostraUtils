@@ -58,11 +58,45 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS Event
 	{
 	public:
-
 		/**
 		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
 		*/
 		using StringType = NOU::NOU_DAT_ALG::StringView8;
+
+		/**
+		\brief A constant string that stores one of the event level codes.
+		*/
+		const static StringType FATAL;
+
+		/**
+		\brief A constant string that stores one of the event level codes.
+		*/
+		const static StringType ERROR;
+
+		/**
+		\brief A constant string that stores one of the event level codes.
+		*/
+		const static StringType WARNING;
+
+		/**
+		\brief A constant string that stores one of the event level codes.
+		*/
+		const static StringType INFO;
+
+		/**
+		\brief A constant string that stores one of the event level codes.
+		*/
+		const static StringType DEBUG;
+
+		/**
+		\brief A constant string that stores one of the event level codes.
+		*/
+		const static StringType TRACE;
+
+		/**
+		\brief A constant string that stores one of the event level codes.
+		*/
+		const static StringType UNKNOWN;
 
 		/**
 		\brief A class that provides custom time functionality. It is used for displaying date and time.
@@ -194,7 +228,7 @@ namespace NOU::NOU_CORE
 
 		\brief	Returns the event level of the event object.
 		*/
-		const StringType& getEventLevel() const;
+		const StringType getEventLevel() const;
 
 		/**
 		\return A reference to the event message.
@@ -276,7 +310,9 @@ namespace NOU::NOU_CORE
 				<< event.getTimeStamp().getMinutes() << ":" << event.getTimeStamp().getSeconds() << "] " 
 			
 				<< event.getEventLevel().rawStr() << ": "
-				<< event.getEventMsg().rawStr() << "\n" << std::endl;
+				<< event.getEventMsg().rawStr() << "\n" 
+				<< 
+			std::endl;
 		}
 	};
 
@@ -307,10 +343,15 @@ namespace NOU::NOU_CORE
 					append(event.getTimeStamp().getMonth()).append("/").append(event.getTimeStamp().getDay()).
 					append(" ").append(event.getTimeStamp().getHours()).append(":").
 					append(event.getTimeStamp().getMinutes()).append(":").
-					append(event.getTimeStamp().getSeconds()).append("] ").
-					append(event.getEventLevel().rawStr()).append(": ").
-					append(event.getEventMsg().rawStr()).append("\n");
+					append(event.getTimeStamp().getSeconds());
 
+				if (event.getTimeStamp().getSeconds() == 0)
+					error.append("0");
+#
+				error.append("] ").
+					append(event.getEventLevel()).append(": ").
+					append(event.getEventMsg()).append("\n");
+				
 				file.write(error);
 				file.close();
 			}

@@ -24,18 +24,13 @@ int main()
 	log.pushLogger(flog);
 
 	std::cout << "Main thread " << std::this_thread::get_id() << std::endl;
-
+	
 	using namespace std::chrono_literals;
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 60; i++)
 	{
 		log.write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid value in fn()");
-		log.write(NOU::NOU_CORE::EventLevelCodes::FATAL, "Dennis");
+		std::this_thread::sleep_for(1s);
 	}
-	
-	std::this_thread::sleep_for(1s);
-	std::cout << "Errors: " << getErrorHandler().getErrorCount() << std::endl;
-
-	std::cout << "Done" << std::endl;
 
 	std::cin.get();
 }							

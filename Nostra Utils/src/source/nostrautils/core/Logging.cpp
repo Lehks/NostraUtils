@@ -4,6 +4,15 @@
 
 namespace NOU::NOU_CORE
 {
+
+	const Event::StringType Event::FATAL	= "Fatal";
+	const Event::StringType Event::ERROR	= "Error";
+	const Event::StringType Event::WARNING	= "Warning";
+	const Event::StringType Event::INFO		= "Info";
+	const Event::StringType Event::DEBUG	= "Debug";
+	const Event::StringType Event::TRACE	= "Trace";
+	const Event::StringType Event::UNKNOWN	= "Unknown";
+
 	typename Event::TimeStamp::TimeType Event::TimeStamp::getSeconds() const
 	{
 		return m_seconds;
@@ -74,7 +83,7 @@ namespace NOU::NOU_CORE
 		return ret;
 	}
 
-	const Event::StringType& Event::getEventLevel() const
+	const Event::StringType Event::getEventLevel() const
 	{
 		return enumToString(m_eventLevel);
 	}
@@ -94,25 +103,25 @@ namespace NOU::NOU_CORE
 		switch (eventLevel)
 		{
 		case EventLevelCodes::FATAL:
-			return "Fatal";
+			return Event::FATAL;
 			break;
 		case EventLevelCodes::ERROR:
-			return "Error";
+			return Event::ERROR;
 			break;
 		case EventLevelCodes::WARNING:
-			return "Warning";
+			return Event::WARNING;
 			break;
 		case EventLevelCodes::INFO:
-			return "Info";
+			return Event::INFO;
 			break;
 		case EventLevelCodes::DEBUG:
-			return "Debug";
+			return Event::DEBUG;
 			break;
 		case EventLevelCodes::TRACE:
-			return "Debug";
+			return Event::TRACE;
 			break;
 		default:
-			return "Unknown";
+			return Event::UNKNOWN;
 		}
 	}
 
