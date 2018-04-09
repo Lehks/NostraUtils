@@ -1786,6 +1786,9 @@ namespace UnitTests
 				NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
 				Assert::IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
 			}
+
+			p15 = "Hallo";
+			Assert::IsTrue("\\Test\\TestUser\\TestDir2\\Hallo");
 		}
 	};	
 }

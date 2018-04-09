@@ -268,24 +268,40 @@ namespace NOU::NOU_FILE_MNGT
 	}
 	Path & Path::operator+(const Path & other)
 	{
+		if (!m_absolutePath.endsWith("\\"))
+		{
+			m_absolutePath.append("\\");
+		}
 		m_absolutePath.append(other.m_absolutePath);
 
 		return *this;
 	}
 	Path & Path::operator+(const NOU::NOU_DAT_ALG::StringView8 & other)
 	{
+		if (!m_absolutePath.endsWith("\\"))
+		{
+			m_absolutePath.append("\\");
+		}
 		m_absolutePath.append(other);
 
 		return *this;
 	}
 	Path & Path::operator+=(const Path & other)
 	{
+		if (!m_absolutePath.endsWith("\\"))
+		{
+			m_absolutePath.append("\\");
+		}
 		m_absolutePath.append(other.m_absolutePath);
 
 		return *this;
 	}
 	Path & Path::operator+=(const NOU::NOU_DAT_ALG::StringView8 & other)
 	{
+		if (!m_absolutePath.endsWith("\\"))
+		{
+			m_absolutePath.append("\\");
+		}
 		m_absolutePath.append(other);
 
 		return *this;
