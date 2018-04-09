@@ -14,6 +14,10 @@
 \brief   This file provides useful utility functions for dat_alg.
 */
 
+#ifndef NOU_XOR
+#define NOU_XOR(a,b) ((!a & b) | (a & !b))
+#endif
+
 namespace NOU::NOU_DAT_ALG
 {
 	/**
