@@ -3,6 +3,12 @@
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 #include <Windows.h>
 #include <Psapi.h>
+#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/sysinfo.h>
+#include <stdlib.h>
+#include <unistd.h>
 #endif
 
 namespace NOU::NOU_CORE
@@ -45,7 +51,8 @@ namespace NOU::NOU_CORE
 
 			fclose(fp);
 
-			return (uint64)rss * (uint64)sysconf(_SC_PAGESIZE);
+			//return (uint64)rss * (uint64)sysconf(_SC_PAGESIZE); ///TODO find rss include file
+			return 0;
 #   elif NOU_OS == NOU_OS_MAC
 			///\todo Verify.
 			struct mach_task_basic_info info;
