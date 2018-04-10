@@ -51,9 +51,9 @@ namespace NOU::NOU_CORE
 
 	typename Event::TimeStamp Event::getTime()
 	{
-#ifdef NOU_OS_LIBRARY_WIN_H
+#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		using tmType = tm;
-#elif NOU_OS_LIBRARY_POSIX
+#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 		using tm_type = tm*;
 #endif
 
@@ -63,10 +63,10 @@ namespace NOU::NOU_CORE
 
 		time(&currTime);
 
-#ifdef NOU_OS_LIBRARY_WIN_H
+#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		gmtime_s(&currTm, &currTime);
 		tmPtr = &currTm;
-#elif NOU_OS_LIBRARY_POSIX
+#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 		currTm = gmtime(&currTime);
 		tmPtr = currTm;
 #endif
