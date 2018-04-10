@@ -93,7 +93,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief Hashes a given input similar to the md5 hash algorithm
 	*/
 
-	NOU_FUNC MD5Hash md5(const NOU::byte *input, sizeType size);
+	NOU_FUNC MD5Hash md5(const NOU::byte * const input, sizeType size);
 
 	/**
 	\param input a StringView that will be hashed
