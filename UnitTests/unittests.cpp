@@ -1223,6 +1223,14 @@ namespace UnitTests
 			str1.copySubstringHere("Hallo",0,5,0);
 			Assert::IsTrue(str1 == "HalloUser");
 
+			str1.replace(0, 9, "wasgeht");
+			Assert::IsTrue(str1 == "wasgeht");
+
+			str1 = "ThisIsAString";
+			str1.replace("String", "Integer");
+
+			Assert::IsTrue(str1 == "ThisIsAInteger");
+
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
@@ -1778,6 +1786,9 @@ namespace UnitTests
 				NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
 				Assert::IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
 			}
+
+			p15 = "Hallo";
+			Assert::IsTrue("\\Test\\TestUser\\TestDir2\\Hallo");
 		}
 	};	
 }
