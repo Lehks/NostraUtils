@@ -5,7 +5,7 @@
 #include "nostrautils\dat_alg\String.hpp"
 
 #include <iostream>
-//#include <ctime>
+#include <ctime>
 
 using namespace std;
 using namespace NOU;
@@ -16,12 +16,20 @@ int main()
 	NOU::NOU_DAT_ALG::String8 s0 = "asdfghjkl";
 	NOU::NOU_DAT_ALG::String8 s1 = "asdfghjkk";
 
-	NOU::byte b0[] = {123,34,87,45};
-	NOU::byte b1[] = {123,34,87,46};
+	NOU::byte *b0 = new NOU::byte[5];
+	NOU::byte *b1 = new NOU::byte[5];
+
+	for (int i = 0; i < 4; i++) {
+		b0[i] = i;
+		b1[i] = i;
+	}
+
+	b0[5] = 200;
+	b0[5] = 201;
 
 
-	MD5Hash h0 = md5(s0);
-	MD5Hash h1 = md5(s1);
+	MD5Hash h0 = md5(b0, 5);
+	MD5Hash h1 = md5(b1, 5);
 
 	int i1 = 0;
 
@@ -31,6 +39,8 @@ int main()
 	}
 
 	cout << i1 << endl;
+
+	
 
 	system("pause");
 }
