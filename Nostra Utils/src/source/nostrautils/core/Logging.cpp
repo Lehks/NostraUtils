@@ -54,7 +54,7 @@ namespace NOU::NOU_CORE
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		using tmType = tm;
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-		using tm_type = tm*;
+		using tmType = tm*;
 #endif
 
 		time_t  currTime;

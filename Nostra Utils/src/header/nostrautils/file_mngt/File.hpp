@@ -7,7 +7,6 @@
 #include "nostrautils/file_mngt/Path.hpp"
 
 #include <stdio.h>
-#include <io.h>
 
 
 
