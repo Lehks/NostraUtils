@@ -103,9 +103,9 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template<typename T>
-	NOU_FUNC MD5Hash md5(const NOU_DAT_ALG::StringView<T> *str)
+	NOU_FUNC MD5Hash md5(const NOU_DAT_ALG::StringView<T> &str)
 	{
-		return md5(reinterpret_cast<const byte*>(str->rawStr()), NOU::NOU_DAT_ALG::stringlen<char>(str->rawStr()));
+		return md5(reinterpret_cast<const byte*>(str.rawStr()), str.size());
 	}
 
 	/**
@@ -116,9 +116,9 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template<typename T>
-	NOU_FUNC MD5Hash md5(const NOU_DAT_ALG::String<T> *str)
+	NOU_FUNC MD5Hash md5(const NOU_DAT_ALG::String<T> &str)
 	{
-		return md5(reinterpret_cast<const byte*>(str->rawStr()), NOU::NOU_DAT_ALG::stringlen<char>(str->rawStr()));
+		return md5(reinterpret_cast<const byte*>(str.rawStr()), str.size());
 	}
 
 	/**

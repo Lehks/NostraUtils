@@ -16,7 +16,7 @@ namespace NOU::NOU_DAT_ALG
 		return r;
 	}
 
-	NOU_FUNC MD5Hash md5(const NOU::byte *input, sizeType size)
+	NOU_FUNC MD5Hash md5(const NOU::byte * const input, sizeType size)
 	{
 		Vector<byte> bytes(10);
 

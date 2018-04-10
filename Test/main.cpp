@@ -2,9 +2,10 @@
 #include "nostrautils\mem_mngt\AllocationCallback.hpp"
 #include "nostrautils\dat_alg\Vector.hpp"
 #include "nostrautils\dat_alg\Hashing.hpp"
+#include "nostrautils\dat_alg\String.hpp"
 
 #include <iostream>
-#include <ctime>
+//#include <ctime>
 
 using namespace std;
 using namespace NOU;
@@ -12,11 +13,15 @@ using namespace NOU_DAT_ALG;
 
 int main()
 {
-	NOU::byte b0[] = { 55, 245, 987, 14, 7634 };
-	NOU::byte b1[] = { 55, 245, 987, 14, 7634 };
+	NOU::NOU_DAT_ALG::String8 s0 = "asdfghjkl";
+	NOU::NOU_DAT_ALG::String8 s1 = "asdfghjkk";
 
-	MD5Hash h0 = md5(b0, 5);
-	MD5Hash h1 = md5(b1, 5);
+	NOU::byte b0[] = {123,34,87,45};
+	NOU::byte b1[] = {123,34,87,46};
+
+
+	MD5Hash h0 = md5(s0);
+	MD5Hash h1 = md5(s1);
 
 	int i1 = 0;
 
