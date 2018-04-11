@@ -1,5 +1,7 @@
 
 #include<iostream>
+
+double const pi = 3.1415;
 int fak(int x)
 {
 	int i = 1, fak = 1;
@@ -12,23 +14,30 @@ int fak(int x)
 	return fak;
 }
 
-int cos(int x)
+double cos(double x)
 {
-	int result = 1;
+	double x_rad = (x*pi) / 180;
+	double ans = 1;
+	double temp = 1;
+	int acc = 1;
+	for (int i = 1; i <= 2; i += 2)
+	{
+		temp = temp * (-1) * x_rad * x_rad / (i * (i + 1));
+		ans = ans + temp;
+	}
 
-	result = 1 - (pow(x, 2) / fak(2)) + (pow(x, 4) / fak(4)) - (pow(x, 6) / fak(6) + (pow(x, 8) / fak(8)));
-
-	return result;
+	return ans;
 }
 
-int sin(int x)
+double sin(double x)
 {
-
-	return - 1;
+	double temp = 1 - cos(x) * cos(x);
+	double ans = sqrt(temp);
+	return ans;
 }
 
-int tan(int x)
+double tan(double x)
 {
-
-	return -1;
+	
+	return (cos(x)/sin(x));
 }

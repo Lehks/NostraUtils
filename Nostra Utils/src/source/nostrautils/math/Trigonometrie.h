@@ -1,5 +1,5 @@
 #pragma once
 int fak(int);
-int cos(int);
-int sin(int);
-int tan(int);
+double cos(double);
+double sin(double);
+double tan(double);
