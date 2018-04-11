@@ -3,6 +3,12 @@
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 #include <Windows.h>
 #include <Psapi.h>
+#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/sysinfo.h>
+#include <stdlib.h>
+#include <unistd.h>
 #endif
 
 namespace NOU::NOU_CORE
