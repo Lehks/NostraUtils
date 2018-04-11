@@ -6,7 +6,10 @@
 #include "nostrautils/dat_alg/Vector.hpp"
 #include "nostrautils/file_mngt/Path.hpp"
 
-#include <stdio.h>
+//#include <stdio.h>
+//#include <io.h>
+
+#include <sys/stat.h>
 
 
 
