@@ -22,8 +22,8 @@ namespace NOU::NOU_MATH
 		return basis;
 	}
 
-	template<typename T>
-	constexpr T sqrt(const T &number) 
+	//template<typename T>
+	/*constexpr T sqrt(const T &number) 
 	{
 		T i = 3;
 		T n;
@@ -35,6 +35,15 @@ namespace NOU::NOU_MATH
 			i--;
 		}
 		return number;
+	}
+	*/
+	template<typename T>
+	constexpr T sqrt(const T &number)
+	{
+		T basis;
+		NOU::uint64 b = 0.5;
+		number = pow(basis, b);
+		return nuumber;
 	}
 
 	template<typename T>

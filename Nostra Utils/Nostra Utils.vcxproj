@@ -324,11 +324,13 @@
     <ClInclude Include="src\header\nostrautils\mem_mngt\Utils.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Bubblesort.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\Vector.hpp" />
+    <ClInclude Include="src\source\nostrautils\math\Trigonometrie.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
     <ClCompile Include="src\source\nostrautils\math\Matrix3.cpp" />
+    <ClCompile Include="src\source\nostrautils\math\Trigonometrie.cpp" />
     <ClCompile Include="src\source\nostrautils\math\Vec3.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
   </ItemGroup>
