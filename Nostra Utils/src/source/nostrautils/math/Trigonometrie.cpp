@@ -2,17 +2,7 @@
 #include<iostream>
 
 double const pi = 3.1415;
-int fak(int x)
-{
-	int i = 1, fak = 1;
 
-	while (i <= x)
-	{
-		fak = i * fak;
-		i++;
-	}
-	return fak;
-}
 
 double cos(double x)
 {

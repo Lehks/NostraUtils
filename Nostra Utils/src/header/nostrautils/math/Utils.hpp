@@ -21,22 +21,20 @@ namespace NOU::NOU_MATH
 		}
 		return basis;
 	}
-
-	//template<typename T>
-	/*constexpr T sqrt(const T &number) 
+    
+	template<typename T>
+	constexpr T fak(const T &number)
 	{
-		T i = 3;
-		T n;
-		T a;
-		n = (a + (a / a)) / 2;
-		while (i != 0)
+		T i = 1, fak = 1;
+
+		while (i <= x)
 		{
-			number = (n + (a / n)) / 2;
-			i--;
+			fak = i * fak;
+			i++;
 		}
-		return number;
+		return fak;
 	}
-	*/
+
 	template<typename T>
 	constexpr T sqrt(const T &number)
 	{
