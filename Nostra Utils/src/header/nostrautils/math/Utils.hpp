@@ -10,7 +10,6 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	constexpr T pow(T A, NOU::uint64 B)
 	{
-
 		T basis = A;
 		NOU::uint64 i = 1;
 
