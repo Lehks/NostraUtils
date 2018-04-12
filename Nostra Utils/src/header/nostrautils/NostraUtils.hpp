@@ -18,6 +18,7 @@
 #include "nostrautils/core/SystemInformation.hpp"
 #include "nostrautils/core/Utils.hpp"
 #include "nostrautils/core/Version.hpp"
+#include "nostrautils/core/Time.hpp"
 
 #include "nostrautils/dat_alg/BinaryHeap.hpp"
 #include "nostrautils/dat_alg/BinarySearch.hpp"
