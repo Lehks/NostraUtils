@@ -13,6 +13,7 @@
 
 #include "nostrautils/core/Assertions.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/core/Logging.hpp"
 #include "nostrautils/core/Meta.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/SystemInformation.hpp"
