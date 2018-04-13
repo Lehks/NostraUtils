@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
-file(GLOB cpp_files "src/source/nostrautils/*/*.cpp")
+file(GLOB_RECURSE NOU_SOURCE_FILES "src/source/nostrautils/*.cpp")
 
-include_directories("${PROJECT_SOURCE_DIR}/Nostra Utils/src/header")
+include_directories("${NOU_INCLUDE_DIR}")
 
-add_library(NostraUtils_STATIC STATIC "${cpp_files}")
-add_library(NostraUtils_SHARED SHARED "${cpp_files}")
+add_library("${NOU_LIB_NAME}" SHARED "${NOU_SOURCE_FILES}")
