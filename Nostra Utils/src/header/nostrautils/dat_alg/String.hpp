@@ -14,8 +14,8 @@
 /** \file Vector.hpp
 \author  Dennis Franz
 \author	 Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a String implementation.
 */
 
@@ -787,7 +787,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief copy assignment operator.
 		*/
-		String operator = (const String& str);
+		String& operator = (const String& str);
 
 		/**
 		\param str The string to replace the actual string.
@@ -795,7 +795,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief move assignment operator.
 		*/
-		String operator = (String&& str);
+		String& operator = (String&& str);
 
 		/**
 		\param c The character to concatenate.
@@ -1367,16 +1367,16 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	void String<CHAR_TYPE>::replace(sizeType i, CharType replacement)
+	void String<CHAR_TYPE>::replace(sizeType index, CharType replacement)
 	{
-		m_data.replace(i, replacement);
+		m_data.replace(index, replacement);
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(CharType target, CharType replacement, sizeType start, sizeType end)
 	{
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
-			end = m_data.size();
+			end = m_data.size() - 1;
 
 		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1), 
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
@@ -1385,7 +1385,7 @@ namespace NOU::NOU_DAT_ALG
 		{
 			if (target == m_data.at(i))
 			{
-				m_data.replace(i, replacement);
+				replace(i, replacement);
 			}
 		}
 
@@ -1398,14 +1398,19 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = m_data.size();
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
+		NOU_COND_PUSH_ERROR((start > m_data.size() || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		for (sizeType i = start; i < end; i++)
+		for (sizeType i = start; i < end - target.size(); i++)
 		{
-			if (target == m_data.at(i))
+			if (target == substring(i, i + target.size() + 1))
 			{
-				m_data.replace(replacement, i);
+				for (sizeType j = 0; j < target.size(); j++)
+				{
+					remove(i);
+				}
+
+				insert(i, replacement);
 			}
 		}
 
@@ -1415,13 +1420,20 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(sizeType start, sizeType end, const StringView<CHAR_TYPE>& replacement)
 	{
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
+			end = m_data.size() - 1;
+
 		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		for (sizeType i = start; i <end; i++)
+		sizeType range = end - start;
+
+		for (sizeType i = start; i < range; i++)
 		{
-			m_data.replace(replacement, i);
+			remove(start);
 		}
+
+		insert(start, replacement);
 
 		return *this;
 	}
@@ -1827,7 +1839,7 @@ namespace NOU::NOU_DAT_ALG
 		return m_data.rend();
 	}
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::operator=(const String & str)
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator=(const String & str)
 	{
 		m_data = str.m_data;
 		StringView<CHAR_TYPE>::m_dataPtr = const_cast<ConstCharType**>(&m_data.data());
@@ -1836,7 +1848,7 @@ namespace NOU::NOU_DAT_ALG
 		return *this;
 	}
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::operator=(String && str)
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator=(String && str)
 	{
 
 		m_data = NOU_CORE::move(str.m_data);

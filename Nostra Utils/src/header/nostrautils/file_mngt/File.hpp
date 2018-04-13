@@ -4,13 +4,21 @@
 #include "nostrautils/dat_alg/String.hpp"
 #include "nostrautils/dat_alg/StringView.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
-#include <stdio.h>
+#include "nostrautils/file_mngt/Path.hpp"
+
+//#include <stdio.h>
+//#include <io.h>
+
+#include <sys/stat.h>
+
+
+
 
 
 /** \file File.hpp
 \author  Leslie Marxen
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides very basic file i/o implementations
 */
 
@@ -51,7 +59,6 @@ namespace NOU::NOU_FILE_MNGT
 		 \param filename The name of the file to open.
 		 \param mode     The mode to open the file with.
 
-		 \return A handle to the opened file.
 
 		 \brief Wraps around either fopen() on POSIX systems or fopen_s() on a Windows system.
 		*/
@@ -70,26 +77,18 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief Path to the folder containing the file
 		*/
-		NOU::NOU_DAT_ALG::StringView8							m_path;
-		/**
-		\brief Absolute path to the corresponding File
-		*/
-		NOU::NOU_DAT_ALG::String8								m_absolutePath;
-		/**
-		\brief Name of the File
-		*/
-		NOU::NOU_DAT_ALG::StringView8							m_name;
+		//NOU::NOU_DAT_ALG::StringView8							m_path
+		Path															m_path;
 
 	public:
 
 		/**
 		\brief Constructor of the File class
-		0
-		\param name name of the file
+
 		\param mode how the file will be interpreted(Read/Write)
-		\param path absolute path to the file
+		\param path Path object containing the path to the file
 		*/
-		File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode = AccessMode::READ_WRITE);
+		File(const Path &path);
 		
 		/**
 		\brief Copy-constructor of the File class
@@ -115,17 +114,20 @@ namespace NOU::NOU_FILE_MNGT
 		byte read();
 
 		/**
+		\param size   The size of the buffer.
+		\param buffer The buffer to store the output in.
+
 		\brief reads a string of given size
-		\param size size of the string in byte 
 		*/
-		void read(sizeType size, char8 &buffer);
+		void read(sizeType size, char8 *buffer);
 
 		/**
+		\param b The byte to write
 		\brief writes a single byte into a file according to the i/o mode that is set
 
 		\return true if successfully written, false if otherwise
 		*/
-		bool write(byte b);
+		boolean write(byte b);
 
 
 		/**
@@ -133,21 +135,21 @@ namespace NOU::NOU_FILE_MNGT
 		\param s the given string
 		\return true if successfully written, false if otherwise
 		*/
-		bool write(const NOU::NOU_DAT_ALG::StringView8 &s);
+		boolean write(const NOU::NOU_DAT_ALG::StringView8 &s);
 
 		/**
 		\brief Opens the internal filestream
 
 		\return true if successfully opened, false if otherwise
 		*/
-		bool open();
+		boolean open(AccessMode mode = AccessMode::READ_WRITE);
 
 		/**
 		\brief Closes the internal filestream
 
 		\return true if successfully closed, false if otherwise
 		*/
-		bool close();
+		boolean close();
 
 		/**
 		\brief Creates the file if not allready existing
@@ -160,20 +162,7 @@ namespace NOU::NOU_FILE_MNGT
 		\return true if currently opened, false if not
 		*/
 
-		bool isCurrentlyOpen();
-
-		
-		/**
-		\brief Getter for name
-		\return name
-		*/
-		const NOU::NOU_DAT_ALG::StringView8& getName();
-
-		/**
-		\brief Setter for name
-		\param name name of the File
-		*/
-		void setName(const NOU::NOU_DAT_ALG::StringView8 &name);
+		boolean isCurrentlyOpen();
 
 		/**
 		\brief Getter for AccessMode
@@ -181,28 +170,13 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		const AccessMode& getMode();
 
-		/**
-		\brief Setter for AccessMode
-		\param mode AccessMode of the file
-		*/
-		void setMode(AccessMode mode);
+
 
 		/**
 		\brief Getter for Path
 		\return path
 		*/
-		const NOU::NOU_DAT_ALG::StringView8& getPath();
-		/**
-		\brief Setter for the Path
-		\param path Path of the file
-		*/
-		void setPath(const NOU::NOU_DAT_ALG::StringView8 &path);
-
-		/**
-		\brief Getter for absolutepath
-		\return absolutepath
-		*/
-		const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath();
+		const Path& getPath();
 
 		/**
 		\brief Getter for datastream
@@ -210,12 +184,19 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		FILE* getData(); 
 
+		/**
+		\brief checks if a File is allready existing according to the set Path
+		\return true if File exists, false otherwise
+		*/
+		boolean exists();
+
 	private:
 
 		/**
-		\brief Calculates the internal stored absulute path from the name and path
+		\brief Setter for AccessMode
+		\param mode AccessMode of the file
 		*/
-		void calcAbsolutePath();
+		void setMode(AccessMode mode);
 
 	};
 }

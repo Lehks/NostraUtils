@@ -1,19 +1,19 @@
 #ifndef NOU_DAT_ALG_HASHFUNCTION_HPP
 #define	NOU_DAT_ALG_HASHFUNCTION_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 #include <array>
 //#include <limits>
 
 
 /** \file Hashing.hpp
 \author  Leslie Marxen
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides some Hashing implementations.
 */
 

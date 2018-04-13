@@ -158,6 +158,9 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\LazyEvaluationProperty.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\header\nostrautils\core\Logging.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\header\nostrautils\core\SystemInformation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -212,5 +215,8 @@
   <ItemGroup>
     <Text Include="Doc\output\Warnings.txt" />
     <Text Include="CMakeLists.txt" />
+    <ClCompile Include="src\source\nostrautils\core\Logging.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
