@@ -231,7 +231,7 @@ namespace NOU::NOU_CORE
 		TrueType, FalseType> {};
 
 	/**
-	\tparam The invocable to check the result of.
+	\tparam T The invocable to check the result of.
 
 	\return The result type of the passed invocable.
 
@@ -245,6 +245,17 @@ namespace NOU::NOU_CORE
 	*/
 	template<typename T, typename...ARGS>
 	using InvokeResult_t = typename InvokeResult<T, ARGS...>::type;
+
+	/**
+	\tparam B The type to check.
+	\tparam D The class that \p B is supposed to derive from.
+
+	\return True, if \p B is a parent of \p D, false if not.
+
+	\brief Checks whether \p B is a base class of \p D.
+	*/
+	template<typename B, typename D>
+	struct IsBaseOf : BooleanConstant<std::is_base_of_v<B, D>> {};
 }
 
 #endif

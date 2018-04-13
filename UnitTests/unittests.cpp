@@ -1779,5 +1779,21 @@ namespace UnitTests
 				Assert::IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
 			}
 		}
+
+		TEST_METHOD(IsBaseOf)
+		{
+			class Base
+			{
+
+			};
+
+			class Derived : public Base
+			{
+
+			};
+
+			Assert::IsTrue(NOU::NOU_CORE::IsBaseOf<Base, Derived>::value);
+			Assert::IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
+		}
 	};	
 }
