@@ -45,6 +45,10 @@ if(NOT DEFINED NOU_LIB_NAME)
 endif()
 #=== 
 
+#=== Set name of the Unit Test executable
+	set(NOU_UNIT_TEST_NAME "UnitTests")
+#=== 
+
 
 #Build NostraUtils library
 add_subdirectory("Nostra Utils")
@@ -77,5 +81,11 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 	add_dependencies("${NOU_TEST_EXECUTABLE}" "${NOU_LIB_NAME}")
 else()
 	message(STATUS "NOU:  Building in Release mode, Test-executable will not be generated.")
+endif()
+#=== 
+
+#=== Build Unit Tests
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+	add_subdirectory("Unittests")
 endif()
 #=== 
