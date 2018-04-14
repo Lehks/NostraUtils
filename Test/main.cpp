@@ -2,7 +2,6 @@
 #include "nostrautils/NostraUtils.hpp"
 
 #include <iostream>
-#include <stdio.h>
 
 using namespace std;
 using namespace NOU;
@@ -14,7 +13,7 @@ int main()
 	uint32 begin, end;
 
 	begin = currentTimeMillis();
-	for (int i = 0; i < 100000000; i++);
+	for (int i = 0; i < 1000000000; i++);
 	end = currentTimeMillis();
 	cout << "Time in ms: " << end - begin << endl;
 	system("pause");
