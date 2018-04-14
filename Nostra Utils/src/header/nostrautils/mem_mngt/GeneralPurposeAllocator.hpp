@@ -12,7 +12,7 @@
 \file mem_mngt/GeneralPurposeAllocator.hpp
 
 \author  Lukas Gross
-\version 0.0.1
+\version 1.0.0
 \since   1.0.0
 
 \brief A file that contains the nostra::utils::dat_alg::GeneralPurposeAllocator class.

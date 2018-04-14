@@ -7,8 +7,8 @@
 
 /** \file Quicksort.hpp
 \author  Mahan Karimi
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a quicksort.
 */
 namespace NOU::NOU_DAT_ALG
@@ -16,36 +16,27 @@ namespace NOU::NOU_DAT_ALG
 	
 
 	/**
-	\ a function that Partitioning an Array with a given pivots.
-	\tparam a Array .
-	\tparam l for the left range limit.
-	\tparam r for the right range limit.
-	\tparam p the Index of the pivots.
+	\brief A function that Partitioning an Array with a given pivots.
+	\tparam T The type.
+	\param array Array .
+	\param leftrangelimit for the left range limit.
+	\param rightrangelimit for the right range limit.
+	\param pivot the Index of the pivots.
 	\return the pivots
 	*/
 	template <typename T>
 	NOU_FUNC T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot);
 
 	/**
-	\Quickort
-	\tparam a that Array will sorted.
-	\tparam l for the left range limit.
-	\tparam r for the right range limit.
-	\return sorted array.
+	\brief An implementation of the quicksort algorithm.
+	\tparam T The type.
+	\param a The array to sort.
+	\param leftrangelimit for the left range limit.
+	\param rightrangelimit for the right range limit.
+	\return The sorted array.
 	*/
 	template<typename T >
 	NOU_FUNC T* qsort(T *a, NOU::int64 leftrangelimit, NOU::int64 rightrangelimit);
-
-	/**
-	\Quicksort
-	\tparam a that array what will be sort
-	\return sorted array
-	*/
-	
-
-
-	
-
 
 	template<typename T>
 	NOU_FUNC T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot)

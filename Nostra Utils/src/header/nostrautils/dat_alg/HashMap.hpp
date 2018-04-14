@@ -10,8 +10,8 @@
 /** \file Vector.hpp
 \author  Leslie Marxen
 \author  Dennis Franz
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a HashMap implementation.
 */
 
@@ -50,17 +50,6 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>::getInstance());
 		/**
-		\brief Copy-constructor
-		\param other the HasMap from where this one will copy
-		*/
-		HashMap(const HashMap &other);
-		/**
-		\brief Move-constructor
-		\param other the HashMap from where this one will move
-		*/
-		HashMap(HashMap &&other);
-
-		/**
 		\param			key the key where the value will be mapped to
 		\param		    value the value that will be mapped
 		\return			true if successfully mapped, false if otherwise
@@ -85,12 +74,14 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		sizeType size();
 		/**
-		\return			a vector containing all currently used keys
+		\return			A vector containing all currently used keys
 		\brief Returns an Vector of the keys which are stored in the map.
 		*/
 		Vector<K> keySet();
 		/**
-		\input		key the key of the value that will be deleted;
+		\param		key The key of the value that will be deleted
+		\param		out An optional output parameter. If this is not \p nullptr, the object that was removed 
+		                will be stored in it.
 		\brief Removes an Object which the specific key.
 		*/
 		boolean remove(K key, V *out = nullptr);
@@ -100,7 +91,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		Vector<V> entrySet();
 		/**
-		\input			K key that will be checked;
+		\param			key The key that will be checked;
 		\return			true if the key is contained inside the map;
 		\brief Checks if the key is contained in the map.
 		*/
@@ -112,7 +103,6 @@ namespace NOU::NOU_DAT_ALG
 
 	};
 
-	///\cond
 
 	template <typename K, typename V>
 	HashMap<K,V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
@@ -125,23 +115,6 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 	 
-	template<typename K, typename V>
-	HashMap<K, V>::HashMap(const HashMap<K,V> & other) :
-		m_data(other.m_data),
-		m_size(other.m_size)
-	{
-		other.m_data.clear();
-		other.m_data = NULL;
-	}
-
-	template<typename K, typename V>
-	HashMap<K, V>::HashMap(HashMap<K,V> && other) :
-		m_data(other.m_data),
-		m_size(other.m_size)
-	{
-		other.m_data.clear();
-		other.m_data = NULL;
-	}
 
 	template <typename K, typename V>
 	boolean HashMap<K, V>::map(const K &key,const V &value) 

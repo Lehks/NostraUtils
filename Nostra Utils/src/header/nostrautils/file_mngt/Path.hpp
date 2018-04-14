@@ -8,8 +8,8 @@
 
 /** \file Vector.hpp
 \author  Dennis Franz
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a Path implementation.
 */
 
@@ -49,7 +49,7 @@ namespace NOU::NOU_FILE_MNGT
 
 	private:
 		/**
-		\param const path		a constant path.
+		\param path		a constant path.
 
 		\return String8			the absolutePath of the file.
 
@@ -59,7 +59,7 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		static NOU_DAT_ALG::String8 makeAbsolutePath(const NOU_DAT_ALG::StringView8 &path);
 		/**
-		\param const path		a constant path.
+		\param path		a constant path.
 
 		\return String8			the name of the file.
 
@@ -70,7 +70,7 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		static NOU_DAT_ALG::String8 evaluateName(const NOU_DAT_ALG::StringView8 &path);
 		/**
-		\param const path		a constant path.
+		\param path		a constant path.
 
 		\return String8			the file extension of the file.
 
@@ -81,7 +81,7 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		static NOU_DAT_ALG::String8 evaluateExtension(const NOU_DAT_ALG::StringView8 &path);
 		/**
-		\param const path		a constant path.
+		\param path		a constant path.
 
 		\return String8			the name and the extension of the file.
 
@@ -92,7 +92,7 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		static NOU_DAT_ALG::String8 evaluateNameAndExtension(const NOU_DAT_ALG::StringView8 &path);
 		/**
-		\param const path		a constant path.
+		\param path		A constant path.
 
 		\return String8			the relative path of the file.
 
@@ -108,7 +108,7 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		static NOU_DAT_ALG::String8 evaluateRelativePath(const NOU_DAT_ALG::StringView8 &path);
 		/**
-		\param const path		a constant path.
+		\param path		a constant path.
 
 		\return String8			the parent path of the file.
 

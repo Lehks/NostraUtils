@@ -166,6 +166,14 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			return false;
 		}*/
+		//return true;
+
+		//#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+		struct stat   buffer;
+		return (stat(m_path.getAbsolutePath().rawStr(), &buffer) == 0);
+		//#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+			
+		//#endif
 		return true;
 	}
 }
