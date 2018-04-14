@@ -284,8 +284,10 @@ namespace NOU::NOU_THREAD
 		*/
 		using TaskType = Task<Result, I, ARGS...>;
 
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<Result, I, ARGS...>::value);
 		static_assert(NOU_CORE::IsInvocableR<Result, Accumulator, Result&&, Result&&>::value);
+#endif
 
 		/**
 		\brief The capacity that the queue has by default.
@@ -541,7 +543,9 @@ namespace NOU::NOU_THREAD
 		*/
 		using TaskType = Task<Result, I, ARGS...>;
 
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<Result, I, ARGS...>::value);
+#endif
 
 		/**
 		\brief The capacity that the queue has by default.

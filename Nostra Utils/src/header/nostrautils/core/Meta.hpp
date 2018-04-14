@@ -5,6 +5,7 @@
 
 #include <type_traits>
 #include <functional>
+#include <utility>
 
 /** \file Meta.hpp
 \author	 Lukas Reichmann
@@ -52,13 +53,13 @@ namespace NOU::NOU_CORE
 	int&& | int
 	*/
 	template<typename T>
-	struct remove_reference : public IdentityType<std::remove_reference_t<T>> {};
+	struct RemoveReference : public IdentityType<std::remove_reference_t<T>> {};
 
 	/**
-	\brief The result of a call to remove_reference.
+	\brief The result of a call to RemoveReference.
 	*/
 	template<typename T>
-	using remove_reference_t = typename remove_reference<T>::type;
+	using RemoveReference_t = typename RemoveReference<T>::type;
 
 	/**
 	\tparam t The type of the returned value.
@@ -201,26 +202,35 @@ namespace NOU::NOU_CORE
 	\return The result type of the passed invocable.
 
 	\brief Returns the result type of the passed invocable.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_INVOKE_RESULT
+	is defined.
 	*/
 #if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
 	template<typename T, typename...ARGS>
 	struct InvokeResult : IdentityType<std::invoke_result_t<T, ARGS...>> {};
+	#define NOU_EXISTS_FEATURE_INVOKE_RESULT
 #else
 	namespace internal
 	{
-		template<boolean isFnPtr, typename T, typename...ARGS>
-		struct InvokeResultImpl : IdentityType<std::result_of_t<T>> {};
+		template<boolean IS_PTR, typename T, typename...ARGS>
+		struct InvokeResultImpl : IdentityType<std::result_of_t<T(ARGS...)>> {};
 
 		template<typename T, typename...ARGS>
-		struct InvokeResultImpl<false, T, ARGS...> : IdentityType<std::result_of_t<T(ARGS...)>> {};
+		struct InvokeResultImpl<false, T, ARGS...> : IdentityType<std::result_of_t<std::add_pointer_t<T>(ARGS...)>> {};
 	}
 
 	template<typename T, typename...ARGS>
-	struct InvokeResult : internal::InvokeResultImpl<std::is_function<T>::value, T, ARGS...> {};
+	struct InvokeResult : internal::InvokeResultImpl<std::is_pointer<T>::value, T, ARGS...> {};
 #endif
 
 	/**
 	\brief The result of a call to InvokeResult.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_INVOKE_RESULT
+	is defined.
 	*/
 	template<typename T, typename...ARGS>
 	using InvokeResult_t = typename InvokeResult<T, ARGS...>::type;
@@ -232,12 +242,15 @@ namespace NOU::NOU_CORE
 	\return TrueType, if the type \p T is invocable with the parameters \p ARGS, FalseType if not.
 
 	\brief Checks if a type is invocable using the passed parameter types.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_IS_INVOCABLE
+	is defined.
 	*/
-	template<typename T, typename... ARGS>
 #if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
+	template<typename T, typename... ARGS>
 	struct IsInvocable : typeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
-#else
-	struct IsInvocable : typeIf_t<std::is_assignable<std::function<InvokeResult_t<T, ARGS...>(ARGS...)>, T>::value, TrueType, FalseType> {};
+	#define NOU_EXISTS_FEATURE_IS_INVOCABLE
 #endif
 	/**
 	\tparam R    The return type.
@@ -249,12 +262,15 @@ namespace NOU::NOU_CORE
 
 	\brief Checks if a type is invocable using the passed parameter types and it's return type is convertible 
 	       to \p R.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_IS_INVOCABLE_R
+	is defined.
 	*/
-	template<typename R, typename T, typename... ARGS>
 #if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
+	template<typename R, typename T, typename... ARGS>
 	struct IsInvocableR : typeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
-#else
-	struct IsInvocableR : typeIf_t<std::is_assignable<std::function<R(ARGS...)>, T>::value, TrueType, FalseType> {};
+	#define NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 #endif
 
 	/**

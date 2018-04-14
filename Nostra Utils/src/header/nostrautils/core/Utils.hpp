@@ -41,7 +41,7 @@ namespace NOU::NOU_CORE
 	\brief "Simple" Function that triggers the move constructor.
 	*/
 	template<typename T>
-	NOU_FUNC typename remove_reference<T>::type&& move(T&& t);
+	NOU_FUNC typename RemoveReference<T>::type&& move(T&& t);
 	/**
 	\tparam The type of the parameters.
 
@@ -142,7 +142,7 @@ namespace NOU::NOU_CORE
 	\brief Forwards the argument as an l-value if it is an l-value, and as an r-value if it is an r-value.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC auto forward(remove_reference_t<T>& arg);
+	constexpr NOU_FUNC auto forward(RemoveReference_t<T>& arg);
 
 	/**
 	\param arg The argument to forward.
@@ -152,13 +152,13 @@ namespace NOU::NOU_CORE
 	\brief Forwards the argument as an l-value if it is an l-value, and as an r-value if it is an r-value.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC auto forward(remove_reference_t<T>&& arg);
+	constexpr NOU_FUNC auto forward(RemoveReference_t<T>&& arg);
 
 	template<typename I, typename T>
 	constexpr NOU_FUNC decltype(auto) apply(I &&invocable, T &&tuple);
 
 	template<typename T>
-	typename remove_reference<T>::type&& move(T&& t)
+	typename RemoveReference<T>::type&& move(T&& t)
 	{
 		return std::move(t);
 	}
@@ -253,7 +253,7 @@ namespace NOU::NOU_CORE
 		std::apply(forward<I>(invocable), forward<T>(tuple));
 #else
 		return internal::applyImpl(forward<I>(invocable), std::forward<T>(tuple), 
-			std::make_index_sequence<std::tuple_size<std::remove_reference_t<T>>::value>{});
+			std::make_index_sequence<std::tuple_size<RemoveReference_t<T>>::value>{});
 #endif
 	}
 
@@ -367,13 +367,13 @@ namespace NOU::NOU_CORE
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC auto forward(remove_reference_t<T>& arg)
+	constexpr NOU_FUNC auto forward(RemoveReference_t<T>& arg)
 	{
 		return std::forward<T>(arg);
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC auto forward(remove_reference_t<T>&& arg)
+	constexpr NOU_FUNC auto forward(RemoveReference_t<T>&& arg)
 	{
 		return std::forward<T>(arg);
 	}

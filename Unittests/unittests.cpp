@@ -571,6 +571,7 @@ TEST_METHOD(AreSame)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 TEST_METHOD(IsInvocable)
 {
 	IsTrue(NOU::NOU_CORE::IsInvocable<decltype(dummyFunc0), int>::value);
@@ -585,6 +586,7 @@ TEST_METHOD(IsInvocable)
 
 	NOU_CHECK_ERROR_HANDLER;
 }
+#endif
 
 TEST_METHOD(DebugAllocationCallback)
 {
