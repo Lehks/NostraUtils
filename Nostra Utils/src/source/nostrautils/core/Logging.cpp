@@ -130,21 +130,21 @@ namespace NOU::NOU_CORE
 		s_logger.pushBack(&log);
 	}
 
-	void Logger::logAll(Event&& events)
+	void Logger::logAll(Event&& events, StringType filename)
 	{
 		for (sizeType i = 0; i < s_logger.size(); i++)
 		{
-			taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, s_logger[i], NOU_CORE::move(events)));
+			taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, s_logger[i], NOU_CORE::move(events), filename));
 		}
 	}
 
-	void Logger::callLoggingTarget(ILogger *logger, Event event)
+	void Logger::callLoggingTarget(ILogger *logger, Event event, StringType filename)
 	{
-		logger->write(event);
+		logger->write(event, filename);
 	}
 
-	void Logger::write(EventLevelCodes level, const StringType &msg)
+	void Logger::write(EventLevelCodes level, const StringType &msg, StringType filename)
 	{
-		logAll(Event(level, msg));
+		logAll(Event(level, msg), filename);
 	}
 }

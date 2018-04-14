@@ -28,8 +28,11 @@ int main()
 	using namespace std::chrono_literals;
 	for (int i = 0; i < 60; i++)
 	{
-		log.write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid value in fn()");
-		std::this_thread::sleep_for(1s);
+		log.write(NOU::NOU_CORE::EventLevelCodes::ERROR, "log.txt error");
+		log.write(NOU::NOU_CORE::EventLevelCodes::ERROR, "log2.txt error", "log2.txt");
+		log.write(NOU::NOU_CORE::EventLevelCodes::ERROR, "log3.txt error", "log3.txt");
+		NOU_WRITE_LOG(log, NOU::NOU_CORE::EventLevelCodes::ERROR, "log4.txt error", "log4.txt");
+		std::this_thread::sleep_for(4s);
 	}
 
 	std::cin.get();

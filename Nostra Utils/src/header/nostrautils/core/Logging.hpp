@@ -274,10 +274,11 @@ namespace NOU::NOU_CORE
 	private:
 		/**
 		\param event	A const referenced object of the event class.
+		\param filename	The name of the file where the log will be written to.
 		
 		\brief			A pure virtual class whose behavior will be overridden in derived classes.
 		*/
-		virtual void write(const Event& event) = 0;
+		virtual void write(const Event& event, StringType filename) = 0;
 	};
 
 	/**
@@ -298,11 +299,12 @@ namespace NOU::NOU_CORE
 
 		/**
 		\param event	A const reference to an event object.
+		\param filename	The name of the file where the log will be written to.
 
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry 
 						to the console.
 		*/
-		void write(const Event& event) override
+		void write(const Event& event, StringType filename) override
 		{
 			std::cout 
 				<< "[" << event.getTimeStamp().getYear() << "/" << event.getTimeStamp().getMonth() << "/" 
@@ -325,14 +327,15 @@ namespace NOU::NOU_CORE
 
 		/**
 		\param event	A const reference to an event object.
+		\param filename	The name of the file where the log will be written to.
 
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
 						to a log file.
 		*/
-		void write(const Event& event) override
+		void write(const Event& event, StringType filename) override
 		{
 			NOU::NOU_DAT_ALG::String8 absPath = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory().getAbsolutePath();
-			absPath.append("/log.txt");
+			absPath.append("/").append(filename);
 			
 			NOU::NOU_FILE_MNGT::File file(absPath);
 
@@ -389,18 +392,20 @@ namespace NOU::NOU_CORE
 
 		/**
 		\param event	A const reference to an event object.
+		\param filename	The name of the file where the log will be written to.
 
 		\brief			Calls the write function for every objects in s_logger.
 		*/
-		void logAll(Event &&events);
+		void logAll(Event &&events, StringType filename);
 
 		/**
 		\param logger	The logger to write the event to.
 		\param event	The event to write.
+		\param filename	The name of the file where the log will be written to.
 
 		\brief			Calls <tt>logger->write(event)</tt>. This is required for the task queue.
 		*/
-		static void callLoggingTarget(ILogger *logger, Event event);
+		static void callLoggingTarget(ILogger *logger, Event event, StringType filename);
 
 		/**
 		\brief		A TaskQueue for all multi-threaded tasks.
@@ -409,7 +414,7 @@ namespace NOU::NOU_CORE
 		*/
 		NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
 			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
-			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event>
+			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event, StringType>
 			taskQueue;
 
 	public:
@@ -424,18 +429,19 @@ namespace NOU::NOU_CORE
 		/**
 		\param level	A enum value, which represents the level of the event.
 		\param msg		A const reference to the message, which specifies the event.
+		\param filename	The name of the file where the log will be written to. The default value is log.txt.
 
 		\brief			Creates a new event object from the level and msg parameters and calls the logAll() 
 						with this event object.
 		*/
-		void write(EventLevelCodes level, const StringType &msg);
+		void write(EventLevelCodes level, const StringType &msg, StringType filename = "log.txt");
 	};
 /**
 \brief This macro is a convenience macro for writing logs to the logger. This macro automatically
 passes the level and message.
 */
 #ifndef NOU_WRITE_LOG
-#define NOU_WRITE_LOG(logger, level, msg) logger.write(level, msg)
+#define NOU_WRITE_LOG(logger, level, msg, filename) logger.write(level, msg, filename)
 #endif
 
 /**
@@ -444,9 +450,9 @@ defined. Otherwise, it will do nothing.
 */
 #ifndef NOU_WRITE_DEBUG_LOG
 #    ifdef  NOU_DEBUG
-#        define NOU_WRITE_DEBUG_LOG(logger, level, msg) NOU_WRITE_LOG(logger, level, msg)
+#        define NOU_WRITE_DEBUG_LOG(logger, level, msg, filename) NOU_WRITE_LOG(logger, level, msg, filename)
 #    else
-#        define NOU_WRITE_DEBUG_LOG(logger, level, msg)
+#        define NOU_WRITE_DEBUG_LOG(logger, level, msg, filename)
 #    endif
 #endif
 }
