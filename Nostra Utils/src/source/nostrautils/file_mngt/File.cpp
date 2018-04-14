@@ -162,10 +162,10 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean File::exists()
 	{
-		if (_access(m_path.getAbsolutePath().rawStr(), 0) == -1)
+		/*if (_access(m_path.getAbsolutePath().rawStr(), 0) == -1)
 		{
 			return false;
-		}
+		}*/
 		return true;
 	}
 }
