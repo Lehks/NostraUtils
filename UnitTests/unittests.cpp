@@ -1,4 +1,4 @@
-#define CATCH_CONFIG_MAIN  
+#define CATCH_CONFIG_RUNNER
 #include "Catch/catch.hpp"
 
 #define NOU_DEBUG
@@ -1770,4 +1770,14 @@ TEST_METHOD(IsBaseOf)
 
 	IsTrue(NOU::NOU_CORE::IsBaseOf<Base, Derived>::value);
 	IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
+}
+
+int main(int argc, char** argv)
+{
+	int result = Catch::Session().run(argc, argv);
+
+	std::cout << "Test run has finished. Press ENTER to return." << std::endl;
+	std::cin.get();
+
+	return result;
 }
