@@ -220,7 +220,7 @@ namespace NOU::NOU_THREAD
 	template<typename R, typename I, typename... ARGS>
 	void Task<R, I, ARGS...>::execute()
 	{
-		m_result = std::apply(m_invocable, m_args);
+		m_result = NOU_CORE::apply(m_invocable, m_args);
 	}
 
 	template<typename R, typename I, typename... ARGS>
@@ -252,7 +252,7 @@ namespace NOU::NOU_THREAD
 	template<typename I, typename... ARGS>
 	void Task<void, I, ARGS...>::execute()
 	{
-		std::apply(m_invocable, m_args);
+		NOU_CORE::apply(m_invocable, m_args);
 	}
 
 	template<typename I, typename... ARGS>

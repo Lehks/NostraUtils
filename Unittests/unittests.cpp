@@ -363,11 +363,11 @@ TEST_METHOD(Vector)
 TEST_METHOD(Comparator)
 {
 	//int as dummy type
-	IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>,
-		decltype(&NOU::NOU_DAT_ALG::genericComparator<int>)>);
+	IsTrue(std::is_same<NOU::NOU_DAT_ALG::Comparator<int>,
+		decltype(&NOU::NOU_DAT_ALG::genericComparator<int>)>::value);
 
-	IsTrue(std::is_same_v<NOU::NOU_DAT_ALG::Comparator<int>,
-		decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>);
+	IsTrue(std::is_same<NOU::NOU_DAT_ALG::Comparator<int>,
+		decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>::value);
 
 	IsTrue(NOU::NOU_DAT_ALG::invert(-1) == 1);
 	IsTrue(NOU::NOU_DAT_ALG::invert(0) == 0);

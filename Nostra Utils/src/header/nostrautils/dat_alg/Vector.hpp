@@ -819,6 +819,11 @@ namespace NOU::NOU_DAT_ALG
 		constexpr VectorReverseIterator& operator -= (sizeType value);
 	};
 
+//C++ required definition of constexpr static members outside class
+#if NOU_CPP_VERSION < NOU_CPP_VERSION_17
+	template<typename T>
+	constexpr sizeType Vector<T>::MIN_CAPACITY;
+#endif
 
 	template<typename T>
 	T* Vector<T>::alloc(sizeType amount)

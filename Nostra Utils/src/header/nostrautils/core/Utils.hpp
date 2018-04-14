@@ -6,6 +6,7 @@
 #include "nostrautils/dat_alg/Comparator.hpp"
 
 #include <utility>
+#include <tuple>
 
 /**
 \file core/Utils.hpp
@@ -153,6 +154,9 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	constexpr NOU_FUNC auto forward(remove_reference_t<T>&& arg);
 
+	template<typename I, typename T>
+	constexpr NOU_FUNC decltype(auto) apply(I &&invocable, T &&tuple);
+
 	template<typename T>
 	typename remove_reference<T>::type&& move(T&& t)
 	{
@@ -207,6 +211,52 @@ namespace NOU::NOU_CORE
 	{
 		return (comp(a, b) > 0) ? a : b;
 	}
+
+///\cond
+#if NOU_CPP_VERSION < NOU_CPP_VERSION_17
+	namespace internal
+	{
+		template<typename I, boolean isMemFuncPtr, typename... ARGS>
+		struct Invoker
+		{
+			static decltype(auto) call(I &&invocable, ARGS&&... args)
+			{
+				return forward<I>(invocable)(forward<ARGS>(args)...);
+			}
+		};
+
+		template<typename I, typename T, typename... ARGS>
+		struct Invoker<I, true, T, ARGS...>
+		{
+			static decltype(auto) call(I &&invocable, T &&object, ARGS&&... args)
+			{
+				return forward<T>(object).*invocable(forward<ARGS>(args)...);
+			}
+		};
+
+		//Implementation of apply() as supplied by http://en.cppreference.com/w/cpp/utility/apply
+		template<typename I, typename T, sizeType... INDICES>
+		constexpr decltype(auto) applyImpl(I &&invocable, T &&tuple, std::index_sequence<INDICES...>)
+		{
+			constexpr boolean isMemFunc = std::is_member_function_pointer<decltype(std::get<0>(tuple))>::value;
+
+			return Invoker<I, isMemFunc, decltype(std::get<INDICES>(std::forward<T>(tuple)))...>::call(std::forward<I>(invocable), std::get<INDICES>(std::forward<T>(tuple))...);
+		}
+	}
+#endif
+///\endcond
+
+	template<typename I, typename T>
+	constexpr NOU_FUNC decltype(auto) apply(I &&invocable, T &&tuple)
+	{
+#if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
+		std::apply(forward<I>(invocable), forward<T>(tuple));
+#else
+		return internal::applyImpl(forward<I>(invocable), std::forward<T>(tuple), 
+			std::make_index_sequence<std::tuple_size<std::remove_reference_t<T>>::value>{});
+#endif
+	}
+
 	/**
 	\tparam The type of the values to clamp.
 

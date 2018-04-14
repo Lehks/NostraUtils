@@ -4,6 +4,7 @@
 #include "nostrautils/core/StdIncludes.hpp"
 
 #include <type_traits>
+#include <functional>
 
 /** \file Meta.hpp
 \author	 Lukas Reichmann
@@ -195,6 +196,36 @@ namespace NOU::NOU_CORE
 	///\endcond
 
 	/**
+	\tparam T The invocable to check the result of.
+
+	\return The result type of the passed invocable.
+
+	\brief Returns the result type of the passed invocable.
+	*/
+#if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
+	template<typename T, typename...ARGS>
+	struct InvokeResult : IdentityType<std::invoke_result_t<T, ARGS...>> {};
+#else
+	namespace internal
+	{
+		template<boolean isFnPtr, typename T, typename...ARGS>
+		struct InvokeResultImpl : IdentityType<std::result_of_t<T>> {};
+
+		template<typename T, typename...ARGS>
+		struct InvokeResultImpl<false, T, ARGS...> : IdentityType<std::result_of_t<T(ARGS...)>> {};
+	}
+
+	template<typename T, typename...ARGS>
+	struct InvokeResult : internal::InvokeResultImpl<std::is_function<T>::value, T, ARGS...> {};
+#endif
+
+	/**
+	\brief The result of a call to InvokeResult.
+	*/
+	template<typename T, typename...ARGS>
+	using InvokeResult_t = typename InvokeResult<T, ARGS...>::type;
+
+	/**
 	\tparam T    The type to check if it is invocable.
 	\tparam ARGS The types that \p T needs to be invoked with.
 
@@ -203,8 +234,11 @@ namespace NOU::NOU_CORE
 	\brief Checks if a type is invocable using the passed parameter types.
 	*/
 	template<typename T, typename... ARGS>
+#if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
 	struct IsInvocable : typeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
-
+#else
+	struct IsInvocable : typeIf_t<std::is_assignable<std::function<InvokeResult_t<T, ARGS...>(ARGS...)>, T>::value, TrueType, FalseType> {};
+#endif
 	/**
 	\tparam R    The return type.
 	\tparam T    The type to check if it is invocable.
@@ -217,7 +251,11 @@ namespace NOU::NOU_CORE
 	       to \p R.
 	*/
 	template<typename R, typename T, typename... ARGS>
+#if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
 	struct IsInvocableR : typeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
+#else
+	struct IsInvocableR : typeIf_t<std::is_assignable<std::function<R(ARGS...)>, T>::value, TrueType, FalseType> {};
+#endif
 
 	/**
 	\tparam T    The type to check.
@@ -231,22 +269,6 @@ namespace NOU::NOU_CORE
 		TrueType, FalseType> {};
 
 	/**
-	\tparam T The invocable to check the result of.
-
-	\return The result type of the passed invocable.
-
-	\brief Returns the result type of the passed invocable.
-	*/
-	template<typename T, typename...ARGS>
-	struct InvokeResult : IdentityType<std::invoke_result_t<T, ARGS...>> {};
-
-	/**
-	\brief The result of a call to InvokeResult.
-	*/
-	template<typename T, typename...ARGS>
-	using InvokeResult_t = typename InvokeResult<T, ARGS...>::type;
-
-	/**
 	\tparam B The type to check.
 	\tparam D The class that \p B is supposed to derive from.
 
@@ -255,7 +277,7 @@ namespace NOU::NOU_CORE
 	\brief Checks whether \p B is a base class of \p D.
 	*/
 	template<typename B, typename D>
-	struct IsBaseOf : BooleanConstant<std::is_base_of_v<B, D>> {};
+	struct IsBaseOf : BooleanConstant<std::is_base_of<B, D>::value> {};
 }
 
 #endif
