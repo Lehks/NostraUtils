@@ -35,6 +35,7 @@ namespace NOU::NOU_CORE
 		   Debug:	Information about the application execution. Usually only used during development or
 					debugging errors.
 		   Trace:	Detailed tracing of the application during runtime, especially for tracking errors.
+		   Unknown:	All errors that do not fall under one of the other categories are unknown errors.
 	*/
 	enum class EventLevelCodes
 	{
@@ -49,7 +50,9 @@ namespace NOU::NOU_CORE
 
 		DEBUG		= 4,
 
-		TRACE		= 5
+		TRACE		= 5,
+
+		UNKNWON		= 6
 	};
 
 	/**
