@@ -1,4 +1,4 @@
-#include "nostrautils\core\Time.hpp"
+#include "nostrautils/core/Time.hpp"
 #include <chrono>
 
 namespace NOU::NOU_CORE {
