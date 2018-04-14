@@ -21,6 +21,14 @@ if (${COMPILE_AS_DEBUG})
 endif()
 #===
 
+
+#=== Set RPATH
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/bin")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+#===
+
 #=== Prevent Clang from defining GCC and MSVC identification macros
 set (NOU_GCC_IDENTIFICATION_MACRO_REM "-U__GNUC__")
 set (NOU_MSVC_IDENTIFICATION_MACRO_REM "-U_MSC_VER")
@@ -62,7 +70,6 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 	
 	# The name of The test executable
 	set(NOU_TEST_EXECUTABLE "Test")
-
 
 	#Create testmain.cpp if it does not exist
 	if(NOT EXISTS "${CMAKE_SOURCE_DIR}/${NOU_TEST_EXECUTABLE_SOURCE}")
