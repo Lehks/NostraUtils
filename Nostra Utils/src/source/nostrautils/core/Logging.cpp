@@ -171,6 +171,22 @@ namespace NOU::NOU_CORE
 		}
 	}
 
+	Logger* Logger::instance()
+	{
+		if (uniqueInstance == nullptr)
+		{
+			uniqueInstance = new Logger();
+		}
+		return uniqueInstance;
+	}
+
+	Logger::~Logger()
+	{
+		uniqueInstance = nullptr;
+	}
+
+	Logger* Logger::uniqueInstance = 0;
+
 	void Logger::pushLogger(ILogger &log)
 	{
 		s_logger.pushBack(&log);

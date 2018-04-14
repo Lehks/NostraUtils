@@ -325,7 +325,26 @@ namespace NOU::NOU_CORE
 	};
 
 	/**
-	\brief A class for storing the different logger and writing logs to all of them.
+	\brief		A class for storing the different logger and writing logs to all of them.
+	
+	\details	To create a new Logger you need to call the instance() and store the result in a Logger*.
+				e.g.:	Logger* log = Logger::instance();
+
+				The instance() will create a new Logger object. If there is already a Logger object it won't 
+				create one and will return a pointer to the existing one.
+
+				This ensures that there is only one Logger object at all time.
+
+				After that you need to push a logging target to the logger you created.
+				e.g.:	NOU::NOU_CORE::ConsoleLogger clog;	//Creating a logging target.
+						log->pushLogger(clog);				//Pushing it to the logger.
+
+				And at end you can tell the logger to write a log.
+				e.g.:	log->write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid object type.");
+
+				This will write an error of the ERROR level with its error message to the log file.
+				You can change the file where you want to print. 
+				e.g.:	log->write(NOU::NOU_CORE::EventLevelCodes::ERROR, "log.txt error", "ErrorLog.txt");
 	*/
 	class NOU_CLASS Logger
 	{
@@ -336,12 +355,38 @@ namespace NOU::NOU_CORE
 		*/
 		using StringType = Event::StringType;
 
+		/**
+		\return	A pointer to the Logger.
+
+		\brief Creates a new Logger object and returns it.
+
+		\details This is the function that is called for creating a new Logger object. It checks if a Logger
+					Object already exists and if so it returns it. If not it will create a new one and
+					save it in the uniqueInstance pointer.
+		*/
+		static Logger* instance();
+
+		/**
+		\brief Destructor of the Logger. Sets the uniqueInstance to null-pointer.
+		*/
+		~Logger();
+
 	private:
 
 		/**
-		\brief Creates a new allocation callback for ILogger pointer.
+		\brief Default constructor of the Logger.
 		*/
-		NOU::NOU_MEM_MNGT::GenericAllocationCallback<ILogger*> s_allocator;
+		Logger() = default;
+
+		/**
+		\brief A static pointer to the Logger object.
+		*/
+		static Logger* uniqueInstance;
+
+		/**
+		\brief Deleted copy constructor of the Logger.
+		*/
+		Logger(const Logger& other) = delete;
 
 		/**
 		\brief Creates a new vector from ILogger pointers.
@@ -399,7 +444,7 @@ namespace NOU::NOU_CORE
 passes the level and message.
 */
 #ifndef NOU_WRITE_LOG
-#define NOU_WRITE_LOG(logger, level, msg, filename) logger.write(level, msg, filename)
+#define NOU_WRITE_LOG(logger, level, msg, filename) logger->write(level, msg, filename)
 #endif
 
 /**
