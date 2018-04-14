@@ -304,18 +304,7 @@ namespace NOU::NOU_CORE
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry 
 						to the console.
 		*/
-		void write(const Event& event, StringType filename) override
-		{
-			std::cout 
-				<< "[" << event.getTimeStamp().getYear() << "/" << event.getTimeStamp().getMonth() << "/" 
-				<< event.getTimeStamp().getDay() << " " << event.getTimeStamp().getHours() << ":" 
-				<< event.getTimeStamp().getMinutes() << ":" << event.getTimeStamp().getSeconds() << "] " 
-			
-				<< event.getEventLevel().rawStr() << ": "
-				<< event.getEventMsg().rawStr() << "\n" 
-				<< 
-			std::endl;
-		}
+		void write(const Event& event, StringType filename) override;
 	};
 
 	/**
@@ -332,38 +321,7 @@ namespace NOU::NOU_CORE
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
 						to a log file.
 		*/
-		void write(const Event& event, StringType filename) override
-		{
-			NOU::NOU_DAT_ALG::String8 absPath = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory().getAbsolutePath();
-			absPath.append("/").append(filename);
-			
-			NOU::NOU_FILE_MNGT::File file(absPath);
-
-			if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
-			{
-				NOU::NOU_DAT_ALG::String8 error;
-				error.append("[").append(event.getTimeStamp().getYear()).append("/").
-					append(event.getTimeStamp().getMonth()).append("/").append(event.getTimeStamp().getDay()).
-					append(" ").append(event.getTimeStamp().getHours()).append(":").
-					append(event.getTimeStamp().getMinutes()).append(":").
-					append(event.getTimeStamp().getSeconds());
-
-				if (event.getTimeStamp().getSeconds() == 0)
-					error.append("0");
-#
-				error.append("] ").
-					append(event.getEventLevel()).append(": ").
-					append(event.getEventMsg()).append("\n");
-				
-				file.write(error);
-				file.close();
-			}
-			else
-			{
-				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
-					"Could not open log file.");
-			}
-		}
+		void write(const Event& event, StringType filename) override;
 	};
 
 	/**
@@ -434,7 +392,7 @@ namespace NOU::NOU_CORE
 		\brief			Creates a new event object from the level and msg parameters and calls the logAll() 
 						with this event object.
 		*/
-		void write(EventLevelCodes level, const StringType &msg, StringType filename = "log.txt");
+		void write(EventLevelCodes level, const StringType &msg, const StringType &filename = "log.txt");
 	};
 /**
 \brief This macro is a convenience macro for writing logs to the logger. This macro automatically
