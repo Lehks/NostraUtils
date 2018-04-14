@@ -87,3 +87,6 @@ chosen are Makefile on Unix/Linux and VisualStudio on Windows.
    The Debug configuration is still fine, but may be sower.
 4. Optionally, it is also possible to only build the Project "NostraUtils_SHARED" or "NostraUtils_STATIC" if 
    only a shared (DLL) or only a static (LIB) library is required.
+   
+## Dependencies
+This Library uses Catch (https://github.com/catchorg/Catch2) as Unit-Test framework. The source file of Catch (Unittests/Catch/catch.hpp) has not been altered.

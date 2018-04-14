@@ -5,17 +5,15 @@ project("NostraUtils" CXX)
 # Set C++17 as language standard
 set (CMAKE_CXX_STANDARD 17)
 
-#=== Set bin/ as output directory
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-#===
+message(STATUS "dbg: ${NOU_IS_IN_DEBUG}")
 
-#=== If NOU_COMPILE_AS_DEBUG is True, NOU_DEBUG will be defined during the compilation
+#=== If NOU_COMPILE_AS_DEBUG is True, NOU_DEBUG will be defined during the compilation by default
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-	set (NOU_COMPILE_AS_DEBUG False CACHE BOOL "If true, the project will be compiled with the macro NOU_DEBUG.")
-else()
 	set (NOU_COMPILE_AS_DEBUG True CACHE BOOL "If true, the project will be compiled with the macro NOU_DEBUG.")
+	option(NOU_GENERATE_TESTS "If true, an executable that runs the UnitTests will be installed." ON)
+else()
+	set (NOU_COMPILE_AS_DEBUG False CACHE BOOL "If true, the project will be compiled with the macro NOU_DEBUG.")
+	option(NOU_GENERATE_TESTS "If true, an executable that runs the UnitTests will be installed." OFF)
 endif()
 
 if (${COMPILE_AS_DEBUG})
@@ -43,6 +41,10 @@ endif()
 if(NOT DEFINED NOU_LIB_NAME)
 	set(NOU_LIB_NAME "NostraUtils")
 endif()
+#=== 
+
+#=== Set name of the Unit Test executable
+	set(NOU_UNIT_TEST_NAME "UnitTests")
 #=== 
 
 
@@ -75,7 +77,25 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 	target_link_libraries("${NOU_TEST_EXECUTABLE}" "${NOU_LIB_NAME}")
 
 	add_dependencies("${NOU_TEST_EXECUTABLE}" "${NOU_LIB_NAME}")
+
+
 else()
 	message(STATUS "NOU:  Building in Release mode, Test-executable will not be generated.")
 endif()
 #=== 
+
+#=== Build Unit Tests only when explicitly enabled
+if("${NOU_GENERATE_TESTS}")
+	add_subdirectory("Unittests")
+endif()
+#=== 
+
+# Installation only from here on
+message(STATUS "NOU:  The files will be installed to: ${CMAKE_INSTALL_PREFIX}")
+
+# Have the README.md in the install directory
+install(FILES "README.md" DESTINATION ".")
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+	install(TARGETS "${NOU_TEST_EXECUTABLE}" DESTINATION "bin")
+endif()
