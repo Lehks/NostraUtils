@@ -1,4 +1,4 @@
-#include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/NostraUtils.hpp"
 
 #include <iostream>
