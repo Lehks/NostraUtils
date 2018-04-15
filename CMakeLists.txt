@@ -2,8 +2,14 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project("NostraUtils" CXX)
 
-# Set C++17 as language standard
-set (CMAKE_CXX_STANDARD 14)
+option(NOU_CPP14_COMPATIBLILTY_MODE "Disables some C++17-only features." OFF)
+
+# Setlanguage standard
+if ("${NOU_CPP14}")
+	set (CMAKE_CXX_STANDARD 14)
+else()
+	set (CMAKE_CXX_STANDARD 17)
+endif()
 
 message(STATUS "dbg: ${NOU_IS_IN_DEBUG}")
 
@@ -28,16 +34,6 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/bin")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #===
-
-#=== Prevent Clang from defining GCC and MSVC identification macros
-set (NOU_GCC_IDENTIFICATION_MACRO_REM "-U__GNUC__")
-set (NOU_MSVC_IDENTIFICATION_MACRO_REM "-U_MSC_VER")
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	add_definitions(${GCC_IDENTIFICATION_MACRO_REM})
-	add_definitions(${MSVC_IDENTIFICATION_MACRO_REM})
-endif()
-#=== 
 
 #=== Set name of the NostraUtils include file location
 if(NOT DEFINED NOU_INCLUDE_DIR)
