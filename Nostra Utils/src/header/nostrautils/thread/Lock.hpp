@@ -16,7 +16,7 @@
 \brief A file that contains the several locks that are provided by NOU.
 */
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	/**
 	\brief A class that stores a reference to a mutex. Upon construction, the mutex will be locked and upon 
@@ -113,6 +113,7 @@ namespace NOU::NOU_THREAD
 		*/
 		const UnderlyingType& getUnderlying() const;
 	};
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

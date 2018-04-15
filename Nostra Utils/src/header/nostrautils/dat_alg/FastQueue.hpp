@@ -17,10 +17,10 @@
 \version 1.0.0
 \since   1.0.0
 
-\brief A file that contains the nostra::utils::core::FastQueue class.
+\brief A file that contains the nostrautils::core::FastQueue class.
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	/**
 	\tparam T The type of the stored elements.
@@ -490,5 +490,6 @@ namespace NOU::NOU_DAT_ALG
 	{
 		return at(index);
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 #endif

@@ -26,7 +26,7 @@
 
 
 
-namespace NOU::NOU_FILE_MNGT
+namespace NOU { namespace NOU_FILE_MNGT
 {
 	/*
 	\brief Enum that stores all different AccessModes of a file
@@ -199,6 +199,7 @@ namespace NOU::NOU_FILE_MNGT
 		void setMode(AccessMode mode);
 
 	};
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

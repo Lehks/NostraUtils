@@ -14,7 +14,7 @@
 \version 1.0.0
 \brief   This file generates you a Random number between an interval.
 */
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	class NOU_CLASS Random
 	{
@@ -51,5 +51,6 @@ namespace NOU::NOU_DAT_ALG
 		Value rand(Value a, Value b);
 	};
 
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 #endif

@@ -15,9 +15,9 @@
 \version 1.0.0
 \since   1.0.0
 
-\brief A file that contains the nostra::utils::dat_alg::GeneralPurposeAllocator class.
+\brief A file that contains the nostrautils::dat_alg::GeneralPurposeAllocator class.
 */
-namespace NOU::NOU_MEM_MNGT
+namespace NOU { namespace NOU_MEM_MNGT
 {
 	namespace internal
 	{
@@ -141,7 +141,7 @@ namespace NOU::NOU_MEM_MNGT
 			\brief					Allocates a new Object with all passed elements.
 			*/
 			template <typename T, typename... ARGS>
-			T* allocateObject(sizeType amountOfObjects = 1, ARGS&&... args);
+			T* allocateObject(sizeType amountOfObjects, ARGS&&... args);
 		};
 	}
 
@@ -322,7 +322,7 @@ namespace NOU::NOU_MEM_MNGT
 								passed object multiple times.
 		*/
 		template <typename T, typename... ARGS>
-		GeneralPurposeAllocatorPointer<T> allocateObjects(sizeType amountOfObjects = 1, ARGS&&... args);
+		GeneralPurposeAllocatorPointer<T> allocateObjects(sizeType amountOfObjects, ARGS&&... args);
 
 		/**
 		\tparam T			The type of the object which will be allocated.
@@ -649,6 +649,7 @@ namespace NOU::NOU_MEM_MNGT
 		left = reinterpret_cast<T*>(m_freeChunks.data() + insertionIndex - 1);
 		right = reinterpret_cast<T*>(m_freeChunks.data() + insertionIndex);
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

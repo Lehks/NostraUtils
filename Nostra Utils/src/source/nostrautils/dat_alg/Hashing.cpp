@@ -1,6 +1,6 @@
 #include "nostrautils/dat_alg/Hashing.hpp"
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 
 	NOU_FUNC NOU::sizeType hashValue(NOU::sizeType value, NOU::sizeType max)
@@ -184,4 +184,5 @@ namespace NOU::NOU_DAT_ALG
 		}
 		return r;
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

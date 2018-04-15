@@ -11,7 +11,7 @@
 \version 1.0.0
 \brief   This file provides a quicksort.
 */
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	
 
@@ -81,5 +81,6 @@ namespace NOU::NOU_DAT_ALG
 
 
 	
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 #endif

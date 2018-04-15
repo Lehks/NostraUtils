@@ -22,7 +22,7 @@
 \see TaskQueue
 */
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	/**
 	\brief A namespace that contains a collection of several accumulators that are meant to be used with 
@@ -251,7 +251,7 @@ namespace NOU::NOU_THREAD
 	execution) and the second parameter being the result of the task that has just finished execution. The 
 	returned value will be the next "old" result. 
 	The accumulator is always executed after a task has finished execution. 
-	The namespace nostra::utils::thread::TaskQueueAccumulators has a variety of predefined accumulators. If 
+	The namespace nostrautils::thread::TaskQueueAccumulators has a variety of predefined accumulators. If 
 	no accumulator is needed, TaskQueueAccumulators::forward is a good choice as it always passes down the 
 	latest result (the result of the task that just finished execution). It is not possible to have no 
 	accumulator at all.
@@ -1081,6 +1081,7 @@ namespace NOU::NOU_THREAD
 	}
 
 ///\endcond
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

@@ -4,39 +4,39 @@
 */
 
 /** 
-\namespace nostra::utils
+\namespace nostrautils
 \brief The namespace that contains all components of the Nostra Utils library.
 */
 
 /** 
-\namespace nostra::utils::core
+\namespace nostrautils::core
 \brief The namespace that contains all core components of the Nostra Utils library.
 */
 
 /** 
-\namespace nostra::utils::dat_alg
+\namespace nostrautils::dat_alg
 \brief The namespace that contains all components of the Nostra Utils library that are related to 
 	   data structures and/or algorithms.
 */
 
 /** 
-\namespace nostra::utils::file_mngt
+\namespace nostrautils::file_mngt
 \brief The namespace that contains all components of the Nostra Utils library that are related to file 
 	   management.
 */
 
 /** 
-\namespace nostra::utils::math
+\namespace nostrautils::math
 \brief The namespace that contains all components of the Nostra Utils library that are related to math.
 */
 
 /** 
-\namespace nostra::utils::mem_mngt
+\namespace nostrautils::mem_mngt
 \brief The namespace that contains all components of the Nostra Utils library that are related to memory 
 	   management.
 */
 
 /** 
-\namespace nostra::utils::thread
+\namespace nostrautils::thread
 \brief The namespace that contains all components of the Nostra Utils library that are related to threading.
 */

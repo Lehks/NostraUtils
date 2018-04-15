@@ -11,7 +11,7 @@
 #include <unistd.h>
 #endif
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	namespace SystemInformation
 	{
@@ -71,4 +71,5 @@ namespace NOU::NOU_CORE
 #endif
 		}
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

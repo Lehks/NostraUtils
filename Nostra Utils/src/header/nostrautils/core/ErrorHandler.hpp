@@ -12,16 +12,17 @@
 \version 1.0.0
 \since	 1.0.0
 
-\brief A file that contains the nostra::utils::core::ErrorHandler class.
+\brief A file that contains the nostrautils::core::ErrorHandler class.
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	template<typename T>
 	class FastQueue;
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	/**
 	\brief Defines an error location object with its attributes and functions.
@@ -545,7 +546,7 @@ namespace NOU::NOU_CORE
 	template<typename T>
 	void ErrorHandler::ErrorPoolContainerWrapper::pushPool()
 	{
-		static_assert(IsDefaultConstructible<T>::value);
+		static_assert(IsDefaultConstructible<T>::value, "T is not default constructible.");
 
 		_pushPool(new T());
 	}
@@ -555,5 +556,6 @@ namespace NOU::NOU_CORE
 	{
 		getPools().pushPool<T>();
 	}
-}
+} //Namespace NOU_CORE
+} //Namespace NOU
 #endif

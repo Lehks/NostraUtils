@@ -1,7 +1,7 @@
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 
-namespace NOU::NOU_FILE_MNGT
+namespace NOU { namespace NOU_FILE_MNGT
 {
 	void File::fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode)
 	{
@@ -176,4 +176,5 @@ namespace NOU::NOU_FILE_MNGT
 		//#endif
 		return true;
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

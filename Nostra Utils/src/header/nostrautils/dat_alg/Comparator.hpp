@@ -11,7 +11,7 @@
 \brief   This file provides mechanics to compare objects without relying on operators.
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	/**
 	\brief A type that can always be used a a result type for any comparator.
@@ -145,6 +145,7 @@ namespace NOU::NOU_DAT_ALG
 
 		return genericComparator<int32, CompareResult>(lowerCaseCharA, lowerCaseCharB);
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

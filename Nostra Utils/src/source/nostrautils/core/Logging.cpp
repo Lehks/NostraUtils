@@ -2,7 +2,7 @@
 #include "nostrautils/dat_alg/Utils.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 
 	const Event::StringType Event::FATAL	= "Fatal";
@@ -147,4 +147,5 @@ namespace NOU::NOU_CORE
 	{
 		logAll(Event(level, msg));
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

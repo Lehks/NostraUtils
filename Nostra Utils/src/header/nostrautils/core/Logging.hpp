@@ -28,9 +28,9 @@
 \version 0.0.1
 \since	 1.0.0
 
-\brief A file that contains the nostra::utils::core::Logging class.
+\brief A file that contains the nostrautils::core::Logging class.
 */
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 
 	/**
@@ -458,7 +458,8 @@ defined. Otherwise, it will do nothing.
 #        define NOU_WRITE_DEBUG_LOG(logger, level, msg)
 #    endif
 #endif
-}
+} //Namespace NOU_CORE
+} //Namespace NOU
 
 #define NOU_TMP_MACRO_RENAME_ERROR ERROR
 #undef NOU_TMP_MACRO_RENAME_ERROR

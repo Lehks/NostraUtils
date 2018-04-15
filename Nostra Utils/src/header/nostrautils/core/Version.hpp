@@ -11,12 +11,12 @@
 \version 1.0.0
 \since   1.0.0
 
-\brief A file that contains the nostra::utils::core::Version struct.
-\see   nostra::utils::core::Version
+\brief A file that contains the nostrautils::core::Version struct.
+\see   nostrautils::core::Version
 */
 
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	/**
 	\brief A class that wraps around the macros from the StdIncludes.hpp that generate versions
@@ -200,6 +200,7 @@ namespace NOU::NOU_CORE
 	{
 		return getRaw() != other.getRaw();
 	}
-}
+} //Namespace NOU_CORE
+} //Namespace NOU
 
 #endif

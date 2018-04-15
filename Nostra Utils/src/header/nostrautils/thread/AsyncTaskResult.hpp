@@ -15,7 +15,7 @@
 \see AsyncTaskResult
 */
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	/**
 	\brief An enumeration that stores that states that a AsyncTaskResult can have.
@@ -365,6 +365,7 @@ namespace NOU::NOU_THREAD
 	{
 		makeResult();
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

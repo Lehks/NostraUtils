@@ -11,12 +11,12 @@
 \since   1.0.0
 \version 1.0.0
 \brief   This file provides smart pointer classes (which is currently only \link 
-         nostra::utils::mem_mngt::UniquePtr UniquePtr \endlink).
+         nostrautils::mem_mngt::UniquePtr UniquePtr \endlink).
 
-\see nostra::utils::mem_mngt::UniquePtr
+\see nostrautils::mem_mngt::UniquePtr
 */
 
-namespace NOU::NOU_MEM_MNGT
+namespace NOU { namespace NOU_MEM_MNGT
 {
 	/**
 	\tparam T The type of object to delete.
@@ -37,7 +37,7 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A deleter that calls nostra::utils::mem_mngt::deallocateUninitialized.
+	\brief A deleter that calls nostrautils::mem_mngt::deallocateUninitialized.
 	*/
 	template<typename T>
 	NOU_FUNC void uninitializedDeleter(T *t);
@@ -54,11 +54,11 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A Deleter for Smart Pointers that wraps nostra::utils::mem_mngt::AllocationCallback::deallocate.
+	\brief A Deleter for Smart Pointers that wraps nostrautils::mem_mngt::AllocationCallback::deallocate.
 	This version does store it's Callback, so the Callback will be stored in the class itself.
 
 	\details
-	All tough this class is designed to work with child classes of nostra::utils::mem_mngt::AllocationCallback,
+	All tough this class is designed to work with child classes of nostrautils::mem_mngt::AllocationCallback,
 	it works with all classes that have a <tt>.deallocate()</tt> member function.
 	*/
 	template<typename T, typename ALLOCATOR>
@@ -97,7 +97,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\param data A pointer to the data that will be deallocated.
 
-		\brief Calls nostra::utils::mem_mngt::AllocationCallback::deallocate.
+		\brief Calls nostrautils::mem_mngt::AllocationCallback::deallocate.
 		*/
 		void operator () (T *data);
 	};
@@ -105,7 +105,7 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A Deleter for Smart Pointers that wraps nostra::utils::mem_mngt::AllocationCallback::deallocate.
+	\brief A Deleter for Smart Pointers that wraps nostrautils::mem_mngt::AllocationCallback::deallocate.
 	This version does not store it's Callback, so the Callback that was passed to the constructor must
 	be alive for the entire time that this Deleter is used.
 	*/
@@ -145,7 +145,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\param data A pointer to the data that will be deallocated.
 
-		\brief Calls nostra::utils::mem_mngt::AllocationCallback::deallocate.
+		\brief Calls nostrautils::mem_mngt::AllocationCallback::deallocate.
 		*/
 		void operator () (T *data);
 	};
@@ -345,7 +345,7 @@ namespace NOU::NOU_MEM_MNGT
 
 	/**
 	\tparam T       The type of the object that this smart pointer should point to.
-	\tparam DELETER The type of the deleter. See nostra::utils::mem_mngt::ManagedPtrTemplate for the
+	\tparam DELETER The type of the deleter. See nostrautils::mem_mngt::ManagedPtrTemplate for the
 	requirements that such a deleter must obey.
 
 	\brief A smart pointer that does not allow any other smart pointers to point to it's own pointer.
@@ -629,6 +629,7 @@ namespace NOU::NOU_MEM_MNGT
 	}
 
 	///\endcond
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

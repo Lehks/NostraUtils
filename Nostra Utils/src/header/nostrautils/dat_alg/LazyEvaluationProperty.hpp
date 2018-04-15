@@ -12,7 +12,7 @@
 \brief   This file contains a container that stores a value that is lazily evaluated.
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	/**
 	\tparam T              The type of the value that will be evaluated.
@@ -217,6 +217,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		return get();
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string.h>
 
-namespace NOU::NOU_MEM_MNGT
+namespace NOU { namespace NOU_MEM_MNGT
 {
 	//Local function that calculates the next power of 2.
 	sizeType nextPowerOfTwo(sizeType nr)
@@ -59,4 +59,5 @@ namespace NOU::NOU_MEM_MNGT
 	{
 		alignedFree(data);
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

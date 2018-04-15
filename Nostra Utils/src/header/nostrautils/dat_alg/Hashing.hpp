@@ -17,7 +17,7 @@
 \brief   This file provides some Hashing implementations.
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 
 
@@ -84,5 +84,6 @@ namespace NOU::NOU_DAT_ALG
 
 	
 	NOU_FUNC byte leftRotation(const byte input, int32 rotations);
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 #endif

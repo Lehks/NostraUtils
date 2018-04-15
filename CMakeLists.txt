@@ -2,10 +2,14 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project("NostraUtils" CXX)
 
-# Set C++17 as language standard
-set (CMAKE_CXX_STANDARD 14)
+option(NOU_CXX_14_COMPATIBILITY "If the library should be compiled for C++14, this needs to be enabled." OFF)
 
-message(STATUS "dbg: ${NOU_IS_IN_DEBUG}")
+# Set C++ language standard (either C++14 or C++17)
+if("${NOU_CXX_14_COMPATIBILITY}")
+	set (CMAKE_CXX_STANDARD 14)
+else()
+	set (CMAKE_CXX_STANDARD 17)
+endif()
 
 #=== If NOU_COMPILE_AS_DEBUG is True, NOU_DEBUG will be defined during the compilation by default
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")

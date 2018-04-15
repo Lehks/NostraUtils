@@ -1,6 +1,6 @@
 #include "nostrautils/thread/AsyncTaskResult.hpp"
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	void internal::AbstractAsyncTaskResult::executeTask(AbstractTask *task, 
 		AbstractAsyncTaskResult *taskResult, Mutex *mutex)
@@ -68,4 +68,5 @@ namespace NOU::NOU_THREAD
 			setState(State::DONE);
 		}
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

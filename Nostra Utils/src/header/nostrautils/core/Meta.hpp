@@ -14,7 +14,7 @@
 \brief   This file provides a collection of meta functions.
 */
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	/**
 	\tparam T The type that will be returned by the function.
@@ -294,6 +294,7 @@ namespace NOU::NOU_CORE
 	*/
 	template<typename B, typename D>
 	struct IsBaseOf : BooleanConstant<std::is_base_of<B, D>::value> {};
-}
+} //Namespace NOU_CORE
+} //Namespace NOU
 
 #endif

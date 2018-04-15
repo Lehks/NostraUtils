@@ -13,7 +13,7 @@
 \brief   This file provides a Path implementation.
 */
 
-namespace NOU::NOU_FILE_MNGT
+namespace NOU { namespace NOU_FILE_MNGT
 {
 	/**
 	\brief A path class for different path operations on different operating systems.
@@ -234,6 +234,7 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		Path& operator += (const NOU::NOU_DAT_ALG::StringView8 &other);
 	};
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

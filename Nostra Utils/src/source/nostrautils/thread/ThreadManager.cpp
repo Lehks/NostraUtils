@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	ThreadManager::TaskInformation::TaskInformation(Priority id) :
 		m_id(id)
@@ -194,7 +194,7 @@ namespace NOU::NOU_THREAD
 		m_handlersMap(makeHandlersMap())
 	{
 		static_assert(NOU_CORE::AreSame<typename 
-			NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>::PriorityTypePart, Priority>::value);
+			NOU_DAT_ALG::BinaryHeap<TaskErrorHandlerPair>::PriorityTypePart, Priority>::value, "The Priority is not the right type.");
 	}
 
 	ThreadManager::~ThreadManager()
@@ -351,4 +351,5 @@ namespace NOU::NOU_THREAD
 
 		return ret;
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

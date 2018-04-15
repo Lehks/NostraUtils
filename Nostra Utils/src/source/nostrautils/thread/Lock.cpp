@@ -1,7 +1,7 @@
 #include "nostrautils/thread/Lock.hpp"
 #include "nostrautils/core/Utils.hpp"
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	Lock::Lock(Mutex &mutex, boolean lock) :
 		m_mutex(&mutex)
@@ -28,4 +28,5 @@ namespace NOU::NOU_THREAD
 	{
 		return m_lock;
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

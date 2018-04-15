@@ -23,7 +23,7 @@
 */
 
 ///\cond
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	namespace internal
 	{
@@ -39,10 +39,11 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename K, typename V>
 	class HashMap;
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 ///\endcond
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	///\cond
 	class ThreadManager;
@@ -479,6 +480,7 @@ namespace NOU::NOU_THREAD
 		*/
 		sizeType prepareThread(sizeType count = 1);
 	};
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

@@ -1,6 +1,6 @@
 #include "nostrautils/thread/ConditionVariable.hpp"
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	void ConditionVariable::notifyOne()
 	{
@@ -16,4 +16,5 @@ namespace NOU::NOU_THREAD
 	{
 		m_variable.wait(lock.getUnderlying());
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

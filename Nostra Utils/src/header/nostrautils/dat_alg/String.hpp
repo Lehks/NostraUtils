@@ -19,7 +19,7 @@
 \brief   This file provides a String implementation.
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 
 
@@ -934,15 +934,15 @@ namespace NOU::NOU_DAT_ALG
 		CharType& operator [] (sizeType index);
 	};
 	/**
-	\brief An alias name for a String that uses a nostra::utils::char8;
+	\brief An alias name for a String that uses a nostrautils::char8;
 	*/
 	using String8 = String<char8>;
 	/**
-	\brief An alias name for a String that uses a nostra::utils::char16;
+	\brief An alias name for a String that uses a nostrautils::char16;
 	*/
 	using String16 = String<char16>;
 	/**
-	\brief An alias name for a String that uses a nostra::utils::char32;
+	\brief An alias name for a String that uses a nostrautils::char32;
 	*/
 	using String32 = String<char32>;
 
@@ -1951,7 +1951,8 @@ namespace NOU::NOU_DAT_ALG
 	{
 		return m_data.at(index);
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 
 #endif

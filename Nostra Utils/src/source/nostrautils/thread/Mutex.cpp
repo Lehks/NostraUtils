@@ -1,6 +1,6 @@
 #include "nostrautils/thread/Mutex.hpp"
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	void Mutex::lock()
 	{
@@ -26,4 +26,5 @@ namespace NOU::NOU_THREAD
 	{
 		return m_mutex;
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

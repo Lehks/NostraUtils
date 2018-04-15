@@ -21,7 +21,7 @@
        namespace.
 */
 #ifndef NOU
-#define NOU           nostra::utils
+#define NOU           nostrautils
 #endif
 
 /**
@@ -707,7 +707,7 @@ remaining operators for comparison (like <=, >= etc).
 #error C++ Version is to low.
 #endif
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	/**
 	\return (In the member type "type") The type that was chosen.
@@ -741,7 +741,8 @@ namespace NOU::NOU_CORE
 		>
 		> {};
 
-}
+} //Namespace NOU_CORE
+} //Namespace NOU
 
 namespace NOU
 {

@@ -15,7 +15,7 @@
 */
 
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 
 	/**
@@ -35,7 +35,7 @@ namespace NOU::NOU_DAT_ALG
 
 		using PriorityType = NOU::uint64;
 
-		static_assert(sizeof(PriorityType) == sizeof(PriorityTypePart) * 2);
+		static_assert(sizeof(PriorityType) == sizeof(PriorityTypePart) * 2, "Priority Type must be twice as big as PriorityType");
 
 	private:
 		/**
@@ -506,7 +506,8 @@ namespace NOU::NOU_DAT_ALG
 		return at(index);
 	}
 
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 
 

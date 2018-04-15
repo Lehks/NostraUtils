@@ -13,7 +13,7 @@
 \brief   This file contains a container that can store an object that is meant to be initialized later.
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	/**
 	\tparam T The type of object that will be stored in the class.
@@ -386,6 +386,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	///\endcond
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

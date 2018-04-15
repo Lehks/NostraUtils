@@ -31,7 +31,7 @@
 #define NOU_OFFSET_OF(Type, member) NOU::sizeType(&((Type*)nullptr)->member)
 #endif
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	/**
 	\brief A dummy function that does not do anything, but it forces the generation of a <tt>.lib</tt> file
@@ -378,6 +378,7 @@ namespace NOU::NOU_CORE
 		return std::forward<T>(arg);
 	}
 
-}
+} //Namespace NOU_CORE
+} //Namespace NOU
 
 #endif

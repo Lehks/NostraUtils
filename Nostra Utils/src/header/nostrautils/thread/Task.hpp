@@ -18,11 +18,11 @@
 
 \brief This file contains the task class(es).
 
-\see nostra::utils::thread::AbstractTask
-\see nostra::utils::thread::Task
+\see nostrautils::thread::AbstractTask
+\see nostrautils::thread::Task
 */
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	namespace internal
 	{
@@ -69,7 +69,7 @@ namespace NOU::NOU_THREAD
 	std::reference_wrapper) on its own. Instead, pointers should be used instead of references.
 	
 	\note 
-	\p I must be an invocable according to nostra::utils::core::IsInvocableR<R, I, ARGS...>.
+	\p I must be an invocable according to nostrautils::core::IsInvocableR<R, I, ARGS...>.
 	*/
 	template<typename R, typename I, typename... ARGS>
 	class NOU_CLASS Task final : public internal::AbstractTask
@@ -278,6 +278,7 @@ namespace NOU::NOU_THREAD
 			NOU_CORE::forward<NOU_CORE::RemoveReference_t<ARGS>>(args)...);
 	}
 	///\endcond
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

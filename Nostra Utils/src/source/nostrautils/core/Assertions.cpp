@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	void assertImpl(boolean b, const char *msg, const char *fnName, sizeType line, const char *file)
 	{
@@ -12,4 +12,5 @@ namespace NOU::NOU_CORE
 			getErrorHandler().pushError(fnName, line, file, ErrorCodes::ASSERT_ERROR, msg);
 		}
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

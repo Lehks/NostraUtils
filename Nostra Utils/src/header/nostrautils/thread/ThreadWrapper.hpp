@@ -14,10 +14,10 @@
 
 \brief This file contains an platform independent wrapper class for a thread. 
 
-\see nostra::utils::thread::ThreadWrapper
+\see nostrautils::thread::ThreadWrapper
 */
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	/**
 	\brief A platform independent wrapper for a thread. Currently, std::thread is used.
@@ -115,6 +115,7 @@ namespace NOU::NOU_THREAD
 	ThreadWrapper::ThreadWrapper(F &&function, ARGS&&... args) :
 		m_thread(NOU_CORE::forward<F>(function), NOU_CORE::forward<ARGS>(args)...)
 	{}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

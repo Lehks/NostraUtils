@@ -2,7 +2,7 @@
 #include "nostrautils/dat_alg/FastQueue.hpp"
 #include "nostrautils/thread/ThreadManager.hpp"
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	ErrorLocation::ErrorLocation(const StringType &fnName, sizeType line, const StringType &file, 
 		ErrorType id, const StringType &msg) :
@@ -197,4 +197,5 @@ namespace NOU::NOU_CORE
 	{
 		return NOU_THREAD::getThreadManager().getErrorHandlerByThreadId(std::this_thread::get_id());
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

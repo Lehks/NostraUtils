@@ -18,7 +18,7 @@
 #define NOU_XOR(a,b) ((!a & b) | (a & !b))
 #endif
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	/**
 	\param CLASSNAME The name of the pair class.
@@ -120,6 +120,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

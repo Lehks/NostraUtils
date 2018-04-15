@@ -12,10 +12,10 @@
 \version 1.0.0
 \brief   This file provides a mutex class.
 
-\see nostra::utils::thread::Mutex
+\see nostrautils::thread::Mutex
 */
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	/**
 	\brief A mutex with very little overhead, but also limited capabilities. This mutex can only be locked and
@@ -67,6 +67,7 @@ namespace NOU::NOU_THREAD
 		*/
 		const UnderlyingType& getUnderlying() const;
 	};
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

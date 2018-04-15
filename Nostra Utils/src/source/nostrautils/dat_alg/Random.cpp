@@ -1,7 +1,7 @@
 
 #include "nostrautils/dat_alg/Random.hpp"
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	Random::Random(Seed seed)
 	{
@@ -39,4 +39,5 @@ namespace NOU::NOU_DAT_ALG
 		
 		return r;
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

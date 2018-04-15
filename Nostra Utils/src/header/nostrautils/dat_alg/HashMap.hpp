@@ -15,7 +15,7 @@
 \brief   This file provides a HashMap implementation.
 */
 
-namespace NOU::NOU_DAT_ALG 
+namespace NOU { namespace NOU_DAT_ALG 
 {
 	/**
 	\brief   This class provides a HashMap implementation using the bucket method.
@@ -270,5 +270,6 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	///\endcond
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 #endif

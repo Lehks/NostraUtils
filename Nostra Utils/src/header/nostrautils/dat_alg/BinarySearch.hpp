@@ -12,7 +12,7 @@
 
 \brief   This file provides a binary search algorithm.
 */
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	/**
 	\tparam T				The type of the array.
@@ -33,7 +33,7 @@ namespace NOU::NOU_DAT_ALG
 
 	/**
 	\tparam T				The type of the array.
-	\param vec				A reference to a nostra::utils::dat_alg::Vector.
+	\param vec				A reference to a nostrautils::dat_alg::Vector.
 	\param key				A reference to the value, you want to search for.
 	\param start			The start index of your search.
 	\param end				The end index of your search. If the parameter is -1 the binarySearch() will 
@@ -45,7 +45,7 @@ namespace NOU::NOU_DAT_ALG
 
 	\brief					Makes a binary search for the key in a passed array.
 
-	\details				Performs a binary search for the nostra::utils::dat_alg::Vector.
+	\details				Performs a binary search for the nostrautils::dat_alg::Vector.
 	*/
 	template<typename T>
 	NOU_FUNC sizeType binarySearch(const NOU::NOU_DAT_ALG::Vector<T> &vec, const T &key, 
@@ -82,5 +82,6 @@ namespace NOU::NOU_DAT_ALG
 	{
 		return binarySearch(vec.data(), key, start, (end == -1) ? vec.size() - 1 : end, insertionIndex);
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 #endif

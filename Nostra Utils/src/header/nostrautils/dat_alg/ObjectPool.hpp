@@ -10,18 +10,18 @@
 \author  Lukas Reichmann
 \since   1.0.0
 \version 1.0.0
-\brief   This file provides the nostra::utils::dat_alg::ObjectPool container.
+\brief   This file provides the nostrautils::dat_alg::ObjectPool container.
 
-\see nostra::utils::dat_alg::ObjectPool
+\see nostrautils::dat_alg::ObjectPool
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	namespace internal
 	{
 		/**
 		\brief A struct that will be used to store the data and pointer to build a double linked list. This is
-		only public to allow a custom nostra::utils::mem_mngt::AllocationCallback.
+		only public to allow a custom nostrautils::mem_mngt::AllocationCallback.
 		*/
 		template<typename T>
 		struct ObjectPoolChunk
@@ -59,7 +59,7 @@ namespace NOU::NOU_DAT_ALG
 	not grow larger that size.
 
 	\details
-	This class is somewhat similar to nostra::utils::mem_mngt::PoolAllocator, but instead of constructing a
+	This class is somewhat similar to nostrautils::mem_mngt::PoolAllocator, but instead of constructing a
 	new object each time, the objects in this container stay constructed for the entire lifetime. This is
 	useful if a class does a lot of dynamic allocations during its construction.
 	After the construction of this object,
@@ -428,4 +428,5 @@ namespace NOU::NOU_DAT_ALG
 			predicate(m_data[i].m_data);
 		}
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

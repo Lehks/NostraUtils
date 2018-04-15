@@ -13,23 +13,23 @@
 \author	 Lukas Reichmann
 \since   1.0.0
 \version 1.0.0
-\brief   This file provides the StringView which is an interface between \link nostra::utils::dat_alg::String 
+\brief   This file provides the StringView which is an interface between \link nostrautils::dat_alg::String 
          String\endlink and C-Strings.
 
-\see nostra::utils::dat_alg::StringView
+\see nostrautils::dat_alg::StringView
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	/**
 	\tparam CHAR_TYPE The type of the single characters that are stored in a string (this type will not 
 	directly be used internally, but a version of this type that is always \c const).
 
-	\brief A read-only representation of a string literal or nostra::utils::data_alg::String that is used to provide a 
+	\brief A read-only representation of a string literal or nostrautils::data_alg::String that is used to provide a 
 	unified interface to work with either type.
 
 	\details
-	A read-only representation of a string literal or nostra::utils::data_alg::String that is used to provide a unified
+	A read-only representation of a string literal or nostrautils::data_alg::String that is used to provide a unified
 	interface to work with either type.
 
 	This class is supposed to be very lightweight, so converting from a string literal to a string view is 
@@ -38,21 +38,21 @@ namespace NOU::NOU_DAT_ALG
 	Since a string view is truly read-only, the content of the represented string can not be changed, nor can 
 	a new string be assigned to an existing instance of this class.
 
-	\note Despite nostra::utils::data_alg::String being a child class of nostra::utils::data_alg::StringView, from a logical point of
-	view, they are not related any more than nostra::utils::data_alg::StringView is related to a string literal. The only reason
+	\note Despite nostrautils::data_alg::String being a child class of nostrautils::data_alg::StringView, from a logical point of
+	view, they are not related any more than nostrautils::data_alg::StringView is related to a string literal. The only reason
 	for this inheritance to exists, is that both classes share some functionality and not having this inheritance would
 	lead to the same code existing twice.
 
 	\par Lifetime
 	The lifetime of an instance of string view is limited by the source of the underlying string.
 	- If the source is a string literal, the lifetime is unlimited, since those have a static storage duration.
-	- If the source is a nostra::utils::data_alg::String, the string view is only usable as long as the source instance exists
+	- If the source is a nostrautils::data_alg::String, the string view is only usable as long as the source instance exists
 	(since the buffer of the string is deallocated when the string is destructed).
 
 	\par Why are there the two attributes m_string and m_dataPtr?
-	Since a string view needs to be able to work with both a string literal and a nostra::utils::data_alg::String, both of these
+	Since a string view needs to be able to work with both a string literal and a nostrautils::data_alg::String, both of these
 	attributes are required for the string view to be "up to date" at any time (in the lifetime of the underlying
-	string). The attribute m_dataPtr is required because nostra::utils::data_alg::String may reallocate its buffer to
+	string). The attribute m_dataPtr is required because nostrautils::data_alg::String may reallocate its buffer to
 	store more characters, which invalidates the pointer to the now old buffer. A pointer to a pointer is always up to
 	date, since it points to the variable that points to the buffer (and the address of that variable never changes).
 	*/
@@ -62,7 +62,7 @@ namespace NOU::NOU_DAT_ALG
 	public:
 
 		/**
-		\brief The same as ConstCharType, but without the const. This type is used by nostra::utils::data_alg::String.
+		\brief The same as ConstCharType, but without the const. This type is used by nostrautils::data_alg::String.
 		*/
 		using CharType = NOU_CORE::removeConst_t<CHAR_TYPE>;
 
@@ -72,7 +72,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		using ConstCharType = const CharType;
 
-		using StringConstIterator = VectorConstIterator<ConstCharType>;
+		using StringConstIterator = NOU::NOU_DAT_ALG::VectorConstIterator<ConstCharType>;
 		using StringReverseConstIterator = VectorReverseConstIterator<ConstCharType>;
 
 		/**
@@ -183,7 +183,7 @@ namespace NOU::NOU_DAT_ALG
 		\param size    The size of the string.
 
 		\brief Constructs a new instance using a pointer to a pointer to the actual string and the passed size. This
-		constructor is used by nostra::utils::data_alg::String.
+		constructor is used by nostrautils::data_alg::String.
 		*/
 		StringView(ConstCharType ** dataPtr, sizeType size);
 
@@ -194,7 +194,7 @@ namespace NOU::NOU_DAT_ALG
 		\return     A result according to alphabetical order.
 
 		\brief Compares the two passed strings in alphabetical order. The single characters are compared using
-		nostra::utils::data_alg::genericComparator.
+		nostrautils::data_alg::genericComparator.
 		*/
 		static CompareResult basicComparator(const StringView &str0, const StringView &str1);
 
@@ -424,9 +424,9 @@ namespace NOU::NOU_DAT_ALG
 		This method exists mainly for compatibility with functions or methods that take in pointers to a string.
 
 		\note
-		If the source of the string is nostra::utils::data_alg::String, the lifetime of the returned string
+		If the source of the string is nostrautils::data_alg::String, the lifetime of the returned string
 		is even more limited than the lifetime of a string view, since the raw string will be invalidated
-		as soon as the original instance of nostra::utils::data_alg::String reallocates its buffer.
+		as soon as the original instance of nostrautils::data_alg::String reallocates its buffer.
 		The lifetime of the string if the string view was created from a string literal remains unchanged.
 		*/
 		ConstCharType* rawStr() const;
@@ -452,7 +452,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns a string view that contains a substring of this instance with the characters in the interval
 		\f$\left[start, end\right[\f$. <b>Important:</b> See detailed section before first usage! This method is
-		not exactly the same as nostra::utils::data_alg::String::substring().
+		not exactly the same as nostrautils::data_alg::String::substring().
 
 		\details
 		Returns a string view that contains a substring of this instance with the characters in the interval
@@ -573,17 +573,17 @@ namespace NOU::NOU_DAT_ALG
 	};
 
 	/**
-	\brief An alias name for a StringView that uses a nostra::utils::char8;
+	\brief An alias name for a StringView that uses a nostrautils::char8;
 	*/
 	using StringView8 = StringView<char8>;
 
 	/**
-	\brief An alias name for a StringView that uses a nostra::utils::char16;
+	\brief An alias name for a StringView that uses a nostrautils::char16;
 	*/
 	using StringView16 = StringView<char16>;
 
 	/**
-	\brief An alias name for a StringView that uses a nostra::utils::char32;
+	\brief An alias name for a StringView that uses a nostrautils::char32;
 	*/
 	using StringView32 = StringView<char32>;
 
@@ -1129,6 +1129,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		return at(index);
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

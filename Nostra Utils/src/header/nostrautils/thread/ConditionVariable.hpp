@@ -12,10 +12,10 @@
 \version 1.0.0
 \brief   This file provides a condition variable class.
 
-\see nostra::utils::thread::CondtionVariable
+\see nostrautils::thread::CondtionVariable
 */
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	/**
 	\brief A condition variable to synchronize threads using a variable. 
@@ -90,6 +90,7 @@ namespace NOU::NOU_THREAD
 	{
 		m_variable.wait(lock.getUnderlying(), predicate);
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

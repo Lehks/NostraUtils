@@ -14,7 +14,7 @@
        runs on.
 */
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	namespace SystemInformation
 	{
@@ -32,6 +32,7 @@ namespace NOU::NOU_CORE
 		*/
 		uint64 NOU_FUNC currentlyUsedMemory();
 	}
-}
+} //Namespace NOU_CORE
+} //Namespace NOU
 
 #endif

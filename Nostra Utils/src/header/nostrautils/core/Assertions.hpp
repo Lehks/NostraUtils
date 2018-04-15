@@ -27,7 +27,7 @@
 #    endif
 #endif
 
-namespace NOU::NOU_CORE
+namespace NOU { namespace NOU_CORE
 {
 	/**
 	\param b      The evaluated expression.
@@ -40,6 +40,7 @@ namespace NOU::NOU_CORE
 	       NOU_ASSERT.
 	*/
 	NOU_FUNC void assertImpl(boolean b, const char *msg, const char *fnName, sizeType line, const char *file);
-}
+} //Namespace NOU_CORE
+} //Namespace NOU
 
 #endif

@@ -8,7 +8,7 @@
 #include <unistd.h>
 #endif
 
-namespace NOU::NOU_FILE_MNGT
+namespace NOU { namespace NOU_FILE_MNGT
 {
 	NOU_DAT_ALG::String8 Path::makeAbsolutePath(const NOU_DAT_ALG::StringView8 &path)
 	{
@@ -306,4 +306,5 @@ namespace NOU::NOU_FILE_MNGT
 
 		return *this;
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

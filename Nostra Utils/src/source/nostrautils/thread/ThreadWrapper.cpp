@@ -1,6 +1,6 @@
 #include "nostrautils/thread/ThreadWrapper.hpp"
 
-namespace NOU::NOU_THREAD
+namespace NOU { namespace NOU_THREAD
 {
 	uint32 ThreadWrapper::maxThreads()
 	{
@@ -40,4 +40,5 @@ namespace NOU::NOU_THREAD
 	{
 		return m_thread.get_id();
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU

@@ -17,7 +17,7 @@
 \brief   This file provides a Vector implementation.
 */
 
-namespace NOU::NOU_DAT_ALG
+namespace NOU { namespace NOU_DAT_ALG
 {
 	///\cond
 	template<typename T>
@@ -76,14 +76,14 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief Allocates an memory amount for the vector.
 
-		\see nostra::utils::mem_mngt::AllocationCallback
+		\see nostrautils::mem_mngt::AllocationCallback
 		*/
 		T* alloc(sizeType amount);
 
 		/**
 		\brief Frees the amount of the Vector.
 
-		\see nostra::utils::mem_mngt::AllocationCallback
+		\see nostrautils::mem_mngt::AllocationCallback
 		*/
 		void free(T *data);
 
@@ -114,11 +114,11 @@ namespace NOU::NOU_DAT_ALG
 		\brief Standard constructor with the size.
 		\details 
 		The size is initialized by default with 1 (if no size is given or size < 1). The allocator is initialized by default 
-		with a GenericAllocation (nostra::utils::mem_mngt::GenericAllocationCallback).
-		If there is need for a custom allocator you can create one from the interface nostra::utils::mem_mngt::AllocationCallback.
+		with a GenericAllocation (nostrautils::mem_mngt::GenericAllocationCallback).
+		If there is need for a custom allocator you can create one from the interface nostrautils::mem_mngt::AllocationCallback.
 
-		\see   nostra::utils::mem_mngt::AllocationCallback
-		\see   nostra::utils::mem_mngt::GenericAllocationCallback
+		\see   nostrautils::mem_mngt::AllocationCallback
+		\see   nostrautils::mem_mngt::GenericAllocationCallback
 		*/
 		Vector<T>(sizeType size = MIN_CAPACITY, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = 
 			NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance());
@@ -308,9 +308,9 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Swaps the elements at the corresponding index.
 		\details 
-		This method calls the swap function in nostra::utils::dat_alg::utils.
+		This method calls the swap function in nostrautils::dat_alg::utils.
 
-		\see nostra::utils::dat_alg::utils
+		\see nostrautils::dat_alg::utils
 		*/
 		void swap(sizeType index0, sizeType index1);
 
@@ -396,18 +396,18 @@ namespace NOU::NOU_DAT_ALG
 		Vector& replace(sizeType index, const T &replacement);
 
 		/**
-		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
+		\return A nostrautils::dat_alg::VectorIterator that points to the first element in the vector.
 
-		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the first element in the
+		\brief Returns a nostrautils::dat_alg::VectorIterator that points to the first element in the
 		vector.
 		*/
 		VectorIterator<T> begin();
 
 		/**
-		\return A nostra::utils::dat_alg::VectorIterator that points to the element after the last element
+		\return A nostrautils::dat_alg::VectorIterator that points to the element after the last element
 		in the vector.
 
-		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element after the last element
+		\brief Returns a nostrautils::dat_alg::VectorIterator that points to the element after the last element
 		in the vector.
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
@@ -415,25 +415,25 @@ namespace NOU::NOU_DAT_ALG
 		VectorIterator<T> end();
 
 		/**
-		\return A nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
+		\return A nostrautils::dat_alg::VectorIterator that points to the element at the specified index.
 
-		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
+		\brief Returns a nostrautils::dat_alg::VectorIterator that points to the element at the specified index.
 		*/
 		VectorIterator<T> indexIterator(sizeType index);
 
 		/**
-		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
+		\return A nostrautils::dat_alg::VectorIterator that points to the first element in the vector.
 
-		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the first element in the
+		\brief Returns a nostrautils::dat_alg::VectorIterator that points to the first element in the
 		vector.
 		*/
 		VectorConstIterator<T> begin() const;
 
 		/**
-		\return A nostra::utils::dat_alg::VectorIterator that points to the element after the last element
+		\return A nostrautils::dat_alg::VectorIterator that points to the element after the last element
 		in the vector.
 
-		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element after the last element
+		\brief Returns a nostrautils::dat_alg::VectorIterator that points to the element after the last element
 		in the vector.
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
@@ -441,25 +441,25 @@ namespace NOU::NOU_DAT_ALG
 		VectorConstIterator<T> end() const;
 
 		/**
-		\return A nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
+		\return A nostrautils::dat_alg::VectorIterator that points to the element at the specified index.
 
-		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
+		\brief Returns a nostrautils::dat_alg::VectorIterator that points to the element at the specified index.
 		*/
 		VectorConstIterator<T> indexIterator(sizeType index) const;
 
 		/**
-		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the vector.
+		\return A nostrautils::dat_alg::VectorReverseIterator that points to the last element in the vector.
 
-		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the
+		\brief Returns a nostrautils::dat_alg::VectorReverseIterator that points to the last element in the
 		vector.
 		*/
 		VectorReverseIterator<T> rbegin();
 
 		/**
-		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
+		\return A nostrautils::dat_alg::VectorReverseIterator that points to the element before the first
 		element in the vector.
 
-		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
+		\brief Returns a nostrautils::dat_alg::VectorReverseIterator that points to the element before the first
 		element in the vector.
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
@@ -467,26 +467,26 @@ namespace NOU::NOU_DAT_ALG
 		VectorReverseIterator<T> rend();
 
 		/**
-		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified index.
+		\return A nostrautils::dat_alg::VectorReverseIterator that points to the element at the specified index.
 
-		\brief Returns nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified
+		\brief Returns nostrautils::dat_alg::VectorReverseIterator that points to the element at the specified
 		index.
 		*/
 		VectorReverseIterator<T> rindexIterator(sizeType index);
 
 		/**
-		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the vector.
+		\return A nostrautils::dat_alg::VectorReverseIterator that points to the last element in the vector.
 
-		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the
+		\brief Returns a nostrautils::dat_alg::VectorReverseIterator that points to the last element in the
 		vector.
 		*/
 		VectorReverseConstIterator<T> rbegin() const;
 
 		/**
-		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
+		\return A nostrautils::dat_alg::VectorReverseIterator that points to the element before the first
 		element in the vector.
 
-		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
+		\brief Returns a nostrautils::dat_alg::VectorReverseIterator that points to the element before the first
 		element in the vector.
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
@@ -494,9 +494,9 @@ namespace NOU::NOU_DAT_ALG
 		VectorReverseConstIterator<T> rend() const;
 
 		/**
-		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified index.
+		\return A nostrautils::dat_alg::VectorReverseIterator that points to the element at the specified index.
 
-		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified
+		\brief Returns a nostrautils::dat_alg::VectorReverseIterator that points to the element at the specified
 		index.
 		*/
 		VectorReverseConstIterator<T> rindexIterator(sizeType index) const;
@@ -550,7 +550,7 @@ namespace NOU::NOU_DAT_ALG
 	};
 
 	/**
-	\brief An iterator that is used to iterate over a nostra::utils::dat_alg::Vector (this iterator supports
+	\brief An iterator that is used to iterate over a nostrautils::dat_alg::Vector (this iterator supports
 	both const and non-const iterating). This iterator is a forward iterator.
 	*/
 	template<typename T>
@@ -685,7 +685,7 @@ namespace NOU::NOU_DAT_ALG
 	};
 
 	/**
-	\brief An iterator that is used to iterate over a nostra::utils::dat_alg::Vector (this iterator supports
+	\brief An iterator that is used to iterate over a nostrautils::dat_alg::Vector (this iterator supports
 	both const and non-const iterating). This iterator is a reverse iterator.
 	*/
 	template<typename T>

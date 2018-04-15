@@ -13,12 +13,12 @@
 \version 1.0.0
 \since   1.0.0
 
-\brief A file that contains the nostra::utils::mem_mngt::AllocationCallback interface. 
-\see   nostra::utils::mem_mngt::AllocationCallback
-\see   nostra::utils::mem_mngt::GenericAllocationCallback
+\brief A file that contains the nostrautils::mem_mngt::AllocationCallback interface. 
+\see   nostrautils::mem_mngt::AllocationCallback
+\see   nostrautils::mem_mngt::GenericAllocationCallback
 */
 
-namespace NOU::NOU_MEM_MNGT
+namespace NOU { namespace NOU_MEM_MNGT
 {
 	/**
 	\tparam T The type of objects to allocate.
@@ -212,6 +212,7 @@ namespace NOU::NOU_MEM_MNGT
 	{
 		return m_counter;
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

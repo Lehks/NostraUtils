@@ -13,9 +13,9 @@
 \version 1.0.0
 \since	 1.0.0
 
-\brief A file that contains the nostra::utils::mem_mngt::PoolAllocator class.
+\brief A file that contains the nostrautils::mem_mngt::PoolAllocator class.
 */
-namespace NOU::NOU_MEM_MNGT
+namespace NOU { namespace NOU_MEM_MNGT
 {
 
 	/**
@@ -234,6 +234,7 @@ namespace NOU::NOU_MEM_MNGT
 		m_head = poolBlock;
 		m_usedSize--;
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif

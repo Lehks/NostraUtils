@@ -15,7 +15,7 @@
 \brief A file that contains utility functions that revolve around memory allocation.
 */
 
-namespace NOU::NOU_MEM_MNGT
+namespace NOU { namespace NOU_MEM_MNGT
 {
 	/**
 	\param bytes     The amount of bytes to allocate.
@@ -102,6 +102,7 @@ namespace NOU::NOU_MEM_MNGT
 	{
 		return std::addressof(data);
 	}
-}
+} //Namespace NOU_DAT_ALG
+} //Namespace NOU
 
 #endif
