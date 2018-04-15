@@ -238,9 +238,11 @@ namespace NOU::NOU_CORE
 		template<typename I, typename T, sizeType... INDICES>
 		constexpr decltype(auto) applyImpl(I &&invocable, T &&tuple, std::index_sequence<INDICES...>)
 		{
-			constexpr boolean isMemFunc = std::is_member_function_pointer<decltype(std::get<0>(tuple))>::value;
+			constexpr boolean isMemFunc = 
+				std::is_member_function_pointer<decltype(std::get<0>(tuple))>::value;
 
-			return Invoker<I, isMemFunc, decltype(std::get<INDICES>(std::forward<T>(tuple)))...>::call(std::forward<I>(invocable), std::get<INDICES>(std::forward<T>(tuple))...);
+			return Invoker<I, isMemFunc, decltype(std::get<INDICES>(std::forward<T>(tuple)))...>::
+				call(std::forward<I>(invocable), std::get<INDICES>(std::forward<T>(tuple))...);
 		}
 	}
 #endif
@@ -303,7 +305,8 @@ namespace NOU::NOU_CORE
 	min is returned and if \f$t > max\f$, max is returned. This function uses the operators > and <.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& clamp(const T &t, const T &min, const T &max, NOU::NOU_DAT_ALG::Comparator<T> comp);
+	constexpr NOU_FUNC const T& clamp(const T &t, const T &min, const T &max, 
+		NOU::NOU_DAT_ALG::Comparator<T> comp);
 
 	/**
 	\tparam The type of the values to clamp.
