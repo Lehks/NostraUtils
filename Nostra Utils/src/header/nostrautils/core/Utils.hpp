@@ -213,7 +213,7 @@ namespace NOU::NOU_CORE
 	}
 
 ///\cond
-#if NOU_CPP_VERSION < NOU_CPP_VERSION_17
+#ifdef NOU_CPP14_COMPATIBILITY
 	namespace internal
 	{
 		template<typename I, boolean isMemFuncPtr, typename... ARGS>
@@ -249,8 +249,8 @@ namespace NOU::NOU_CORE
 	template<typename I, typename T>
 	constexpr NOU_FUNC decltype(auto) apply(I &&invocable, T &&tuple)
 	{
-#if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
-		std::apply(forward<I>(invocable), forward<T>(tuple));
+#ifndef NOU_CPP14_COMPATIBILITY
+		return std::apply(std::forward<I>(invocable), std::forward<T>(tuple));
 #else
 		return internal::applyImpl(forward<I>(invocable), std::forward<T>(tuple), 
 			std::make_index_sequence<std::tuple_size<RemoveReference_t<T>>::value>{});

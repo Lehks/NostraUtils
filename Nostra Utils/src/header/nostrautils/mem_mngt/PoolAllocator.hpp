@@ -147,6 +147,12 @@ namespace NOU::NOU_MEM_MNGT
 	};
 
 	template <typename T>
+	constexpr sizeType PoolAllocator<T>::POOL_ALLOCATOR_DEFAULT_SIZE;
+
+	template <typename T>
+	constexpr sizeType PoolAllocator<T>::BLOCK_BUFFER_DEFAULT_SIZE;
+
+	template <typename T>
 	PoolAllocator<T>::PoolAllocator(sizeType size, AllocationCallback<PoolBlock<T>*> &allocator) :
 		m_size(size),
 		m_blocks(BLOCK_BUFFER_DEFAULT_SIZE, allocator)

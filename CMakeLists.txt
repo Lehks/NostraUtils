@@ -4,14 +4,15 @@ project("NostraUtils" CXX)
 
 option(NOU_CPP14_COMPATIBLILTY_MODE "Disables some C++17-only features." OFF)
 
-# Setlanguage standard
-if ("${NOU_CPP14}")
+# Set language standard
+if ("${NOU_CPP14_COMPATIBLILTY_MODE}")
 	set (CMAKE_CXX_STANDARD 14)
+	message(STATUS "NOU:  Generting for C++14 compatibility mode.")
+	add_definitions(-DNOU_CPP14_COMPATIBILITY)
 else()
 	set (CMAKE_CXX_STANDARD 17)
+	message(STATUS "NOU:  Generting without C++14 compatibility mode.")
 endif()
-
-message(STATUS "dbg: ${NOU_IS_IN_DEBUG}")
 
 #=== If NOU_COMPILE_AS_DEBUG is True, NOU_DEBUG will be defined during the compilation by default
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")

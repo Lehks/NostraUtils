@@ -587,8 +587,6 @@ namespace NOU::NOU_DAT_ALG
 	*/
 	using StringView32 = StringView<char32>;
 
-//C++ required definition of constexpr static members outside class
-#if NOU_CPP_VERSION < NOU_CPP_VERSION_17
 	template<typename CHAR_TYPE>
 	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::DECIMAL_PLACE_SEPARATOR;
 
@@ -600,7 +598,6 @@ namespace NOU::NOU_DAT_ALG
 	
 	template<typename CHAR_TYPE>
 	constexpr sizeType StringView<CHAR_TYPE>::NULL_INDEX;
-#endif
 
 	///\todo Re-enable and exchange error handling
 	template<typename CHAR_TYPE>

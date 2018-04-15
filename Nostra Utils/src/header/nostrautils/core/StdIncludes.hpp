@@ -651,57 +651,17 @@ on different platforms also produces the same result.
 #endif
 
 /**
-\brief The identification macro for C++14.
+\brief A macro that is only defined if the library should be compiled in C++14 compatiblity mode.
 
-\see NOU_CPP_VERSION
+\details 
+A macro that is only defined if the library should be compiled in C++14 compatiblity mode.
+
+Usually, this is defined by CMake.
 */
-#ifndef NOU_CPP_VERSION
-#define NOU_CPP_VERSION_14 201402L
+#if NOU_COMPILER == NOU_COMPILER_DOXYGEN //Only present for Doxygen
+#define NOU_CPP14_COMPATIBILITY
 #endif
 
-/**
-\brief The identification macro for C++17.
-
-\see NOU_CPP_VERSION
-*/
-#ifndef NOU_CPP_VERSION
-#define NOU_CPP_VERSION_17 201703L
-#endif
-
-/**
-\brief The identification macro for the minimum C++ version that is required by NOU.
-
-\see NOU_CPP_VERSION
-*/
-#ifndef NOU_CPP_VERSION
-#define NOU_CPP_VERSION_MIN NOU_CPP_VERSION_14
-#endif
-
-/**
-\brief The identification macro for the current C++ version.
-
-\details
-The identification macro for the current C++ version. This macro can be used to identify the current C++ version.
-
-The usage is like this:
-
-\code{.cpp}
-#if NOU_CPP_VERSION == NOU_CPP_VERSION_17
-\endcode
-
-This piece of code would check if the current C++ version is C++17. It is also possible to compare versions using the
-remaining operators for comparison (like <=, >= etc).
-*/
-#ifndef NOU_CPP_VERSION
-#define NOU_CPP_VERSION __cplusplus
-#endif
-
-/**
-\brief Check if the current C++ version is hight enough.
-*/
-#if NOU_CPP_VERSION < NOU_CPP_VERSION_MIN
-#error C++ Version is to low.
-#endif
 
 namespace NOU::NOU_CORE
 {

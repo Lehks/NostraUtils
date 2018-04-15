@@ -4,7 +4,6 @@
 #include "nostrautils/core/StdIncludes.hpp"
 
 #include <type_traits>
-#include <functional>
 #include <utility>
 
 /** \file Meta.hpp
@@ -80,6 +79,9 @@ namespace NOU::NOU_CORE
 		*/
 		static constexpr T value = v;
 	};
+
+	template<typename T, T v>
+	constexpr T Constant<T, v>::value;
 
 	/**
 	\tparam B The value of the boolean.
@@ -207,7 +209,7 @@ namespace NOU::NOU_CORE
 	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_INVOKE_RESULT
 	is defined.
 	*/
-#if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
+#ifndef NOU_CPP14_COMPATIBILITY
 	template<typename T, typename...ARGS>
 	struct InvokeResult : IdentityType<std::invoke_result_t<T, ARGS...>> {};
 	#define NOU_EXISTS_FEATURE_INVOKE_RESULT
@@ -247,7 +249,7 @@ namespace NOU::NOU_CORE
 	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_IS_INVOCABLE
 	is defined.
 	*/
-#if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
+#ifndef NOU_CPP14_COMPATIBILITY
 	template<typename T, typename... ARGS>
 	struct IsInvocable : typeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
 	#define NOU_EXISTS_FEATURE_IS_INVOCABLE
@@ -267,7 +269,7 @@ namespace NOU::NOU_CORE
 	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 	is defined.
 	*/
-#if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
+#ifndef NOU_CPP14_COMPATIBILITY
 	template<typename R, typename T, typename... ARGS>
 	struct IsInvocableR : typeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
 	#define NOU_EXISTS_FEATURE_IS_INVOCABLE_R

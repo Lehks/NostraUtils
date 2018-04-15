@@ -9,6 +9,8 @@
 
 namespace NOU::NOU_THREAD
 {
+	constexpr typename ThreadManager::Priority ThreadManager::TaskInformation::INVALID_ID;
+
 	ThreadManager::TaskInformation::TaskInformation(Priority id) :
 		m_id(id)
 	{}
@@ -218,35 +220,29 @@ namespace NOU::NOU_THREAD
 
 	void ThreadManager::giveBackThread(ThreadDataBundle &thread)
 	{
-		//if there is a task left, execute it immediately with the thread, otherwise put it back in the pool
-#if NOU_CPP_VERSION >= NOU_CPP_VERSION_17
-		if (Lock taskLock(m_taskHeapAccessMutex);  m_tasks->size() > 0)
-#else
-		{ Lock taskLock(m_taskHeapAccessMutex); //open scope of Lock taskLock
-		if (  m_tasks->size() > 0)
-#endif
-		{
-			//give back handler b/c the task may have it's own handler & executeTaskWithThread() 
-			//will get a new one from the pool.
-			giveBackHandler(*thread.m_taskHandlerPair.handler);
+		{ 
+			Lock taskLock(m_taskHeapAccessMutex); //open scope of Lock taskLock
+			
+			if (  m_tasks->size() > 0)
+			{
+				//give back handler b/c the task may have it's own handler & executeTaskWithThread() 
+				//will get a new one from the pool.
+				giveBackHandler(*thread.m_taskHandlerPair.handler);
 
-			TaskErrorHandlerPair &task = m_tasks->get();
-			m_tasks->dequeue();
+				TaskErrorHandlerPair &task = m_tasks->get();
+				m_tasks->dequeue();
 
-			executeTaskWithThread(task, thread);
+				executeTaskWithThread(task, thread);
+			}
+			else
+			{
+				Lock threadLock(m_threadPoolAccessMutex);
+
+				m_threads->giveBack(thread);
+
+				giveBackHandler(*thread.m_taskHandlerPair.handler);
+			}
 		}
-		else
-		{
-			Lock threadLock(m_threadPoolAccessMutex);
-
-			m_threads->giveBack(thread);
-
-			giveBackHandler(*thread.m_taskHandlerPair.handler);
-		}
-
-#if NOU_CPP_VERSION < NOU_CPP_VERSION_17
-		} //end scope of Lock taskLock
-#endif
 	}
 
 	void ThreadManager::giveBackHandler(NOU_CORE::ErrorHandler &handler)

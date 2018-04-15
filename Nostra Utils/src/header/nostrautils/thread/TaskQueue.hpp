@@ -780,6 +780,9 @@ namespace NOU::NOU_THREAD
 	}
 
 	template<typename R, typename I, typename ACCUM, typename... ARGS>
+	constexpr sizeType TaskQueue<R, I, ACCUM, ARGS...>::DEFAULT_INITIAL_CAPACITY;
+
+	template<typename R, typename I, typename ACCUM, typename... ARGS>
 	void TaskQueue<R, I, ACCUM, ARGS...>::executeTask(TaskQueue<R, I, ACCUM, ARGS...> *taskQueue)
 	{
 		taskQueue->m_isExecuting = true;
@@ -946,6 +949,8 @@ namespace NOU::NOU_THREAD
 
 
 
+	template<typename I, typename ACCUM, typename... ARGS>
+	constexpr sizeType TaskQueue<void, I, ACCUM, ARGS...>::DEFAULT_INITIAL_CAPACITY;
 
 	template<typename I, typename ACCUM, typename... ARGS>
 	void TaskQueue<void, I, ACCUM, ARGS...>::executeTask(TaskQueue<void, I, ACCUM, ARGS...> *taskQueue)
