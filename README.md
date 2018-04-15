@@ -46,9 +46,19 @@ CMake executable must be given instead of just *cmake*.
 ##### Unix/Linux
 Call the command 
 ```bash
-mkdir Build/ ; cd Build/ ; cmake ../
+mkdir Build/ ; cd Build/ ; cmake ../ ; cmake --build . --target --install
 ``` 
 from the project's root directory.
+
+This will compile and install the binaries in the default install location (which is "/usr/local" on Linux/Unix and "C:/Program Files" on Windows)
+
+To change the installation directory, the above command needs to be changed to: 
+
+```bash
+mkdir Build/ ; cd Build/ ; cmake -DCMAKE_INSTALL_PREFIX=/path/to/install/directory ../ ; cmake --build . --target --install
+``` 
+
+**Note:** If more CMake options need to be changed, it is generally easier to use cmake-gui or ccmake.
 
 **Note:** If any other compiler than GCC should be used, it is necessary to call these commands before:  
 
@@ -60,16 +70,16 @@ export CXX=/absolute/path/to/the/c++/compiler/executable
 ##### Windows
 Call the command 
 ```bash
-md Build & cd Build & cmake ../
+md Build & cd Build & cmake ../ & 
 ``` 
 from the project's root directory.
 
 **Note:** This command only works with the cmd.exe, if the Powershell used, the command from 
-[Windows and Unix/Linux](#Windows-and-Unix/Linux) 
+[Unix/Linux](#Unix/Linux) 
 should be used.
 
 #### CMake-GUI
-1. Open the CMake GUI (this can be done from the terminal [Windows and Unix/Linux](#Windows-and-Unix/Linux) 
+1. Open the CMake GUI (this can be done from the terminal
    using the command *cmake-gui*).
 2. In the GUI, for the folder that is labeled "Where the source code:" choose the root directory of the 
    project.
@@ -81,25 +91,15 @@ should be used.
 5. After CMake is done configuring, click the button "Generate".
 
 ### Building the binaries
-This is very platform and generator dependent. At this point, it is assumed that the generators that were 
-chosen are Makefile on Unix/Linux and VisualStudio on Windows.
+**Note:** For the sake of generality, the binaries will only be built from the terminal using CMake commands. Otherwise, the process would be very platform- and generator dependent.
 
-#### Unix/Linux
-1. Navigate to the folder "Build/" in the project root folder. If in the previous step, CMake was called using 
-   the terminal, this should still be the case.
-2. Call the command *make*. This will build the project and place the output files in the folder "Build/bin/".
-   These output files are a shared library (libNostraUtils_SHARED.so) and a static library 
-   (libNostraUtils_STATIC.a).
+Building the binaries is rather simple and can be done using the command
 
-#### Windows
-1. Open the file "Build/NostraUtils.sln" using Visual Studio.
-2. In the toolbar at the top, choose "Release" as configuration (the default value is "Debug").
-3. In the solution explorer, right click the project "ALL_BUILD" and from the context menu select "Build". 
-   This will build the project and place the output files in the folder "Build/bin/Release". If there is a 
-   Folder "Debug" instead of "Release" in "Build/bin/", the wrong configuration was chosen in Visual Studio. 
-   The Debug configuration is still fine, but may be sower.
-4. Optionally, it is also possible to only build the Project "NostraUtils_SHARED" or "NostraUtils_STATIC" if 
-   only a shared (DLL) or only a static (LIB) library is required.
-   
+```
+cmake --build . --target install
+```
+
+**Note:** It is assumed that the previous command was called from the directory that CMake has build in (which was Build/ in the source's root directory).
+
 ## Dependencies
 This Library uses Catch (https://github.com/catchorg/Catch2) as Unit-Test framework. The source file of Catch (Unittests/Catch/catch.hpp) has not been altered.
