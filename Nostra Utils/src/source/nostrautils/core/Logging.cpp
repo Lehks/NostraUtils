@@ -127,7 +127,7 @@ namespace NOU::NOU_CORE
 
 	void ConsoleLogger::write(const Event& event, StringType filename)
 	{
-		NOU::NOU_DAT_ALG::String8 error = print(event);
+		NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
 		std::cout << error.rawStr() << std::endl;
 	}
 
@@ -140,7 +140,7 @@ namespace NOU::NOU_CORE
 
 		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
 		{
-			NOU::NOU_DAT_ALG::String8 error = print(event);
+			NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
 
 			file.write(error);
 			file.close();
@@ -152,66 +152,73 @@ namespace NOU::NOU_CORE
 		}
 	}
 
-	NOU::NOU_DAT_ALG::String8 print(const Event& event)
+
+	Logger* Logger::instance()
+	{
+		if (s_uniqueInstance == nullptr)
+		{
+			s_uniqueInstance = new Logger();
+		}
+		return s_uniqueInstance;
+	}
+
+	Logger::~Logger()
+	{
+		s_uniqueInstance = nullptr;
+
+		for (ILogger* element : m_logger)
+		{
+			delete element;
+		}
+	}
+
+	NOU::NOU_DAT_ALG::String8 Logger::print(const Event& event)
 	{
 		NOU::NOU_DAT_ALG::String8 error;
+
 		error.append("[").append(event.getTimeStamp().getYear());
 		error.append("/");
+
 		if (event.getTimeStamp().getMonth() < 10)
 			error.append("0");
 		error.append(event.getTimeStamp().getMonth());
 		error.append("/");
+
 		if (event.getTimeStamp().getDay() < 10)
 			error.append("0");
 		error.append(event.getTimeStamp().getDay());
 		error.append(" ");
+
 		if (event.getTimeStamp().getHours() < 10)
 			error.append("0");
 		error.append(event.getTimeStamp().getHours());
 		error.append(":");
+
 		if (event.getTimeStamp().getMinutes() < 10)
 			error.append("0");
 		error.append(event.getTimeStamp().getMinutes());
 		error.append(":");
+
 		if (event.getTimeStamp().getSeconds() < 10)
 			error.append("0");
 		if (event.getTimeStamp().getSeconds() == 0)
 			error.append("0");
 		error.append(event.getTimeStamp().getSeconds());
 
-		error.append("] ").
-			append(event.getEventLevel()).append(": ").
-			append(event.getEventMsg()).append("\n");
+		error.append("] ");
+		error.append(event.getEventLevel()).append(": ");
+		error.append(event.getEventMsg()).append("\n");
 
 		return error;
 	}
 
-	Logger* Logger::instance()
-	{
-		if (uniqueInstance == nullptr)
-		{
-			uniqueInstance = new Logger();
-		}
-		return uniqueInstance;
-	}
-
-	Logger::~Logger()
-	{
-		uniqueInstance = nullptr;
-	}
-
-	Logger* Logger::uniqueInstance = 0;
-
-	void Logger::pushLogger(ILogger &log)
-	{
-		s_logger.pushBack(&log);
-	}
+	Logger* Logger::s_uniqueInstance = nullptr;
 
 	void Logger::logAll(Event&& events, StringType filename)
 	{
-		for (sizeType i = 0; i < s_logger.size(); i++)
+		for (sizeType i = 0; i < m_logger.size(); i++)
 		{
-			taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, s_logger[i], NOU_CORE::move(events), filename));
+			taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i], NOU_CORE::move(events), filename));
 		}
 	}
 

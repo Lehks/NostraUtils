@@ -3,11 +3,15 @@
 
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/Meta.hpp"
+
 #include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/String.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
-#include "nostrautils/thread/Threads.hpp"
+
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/file_mngt/Path.hpp"
+
+#include "nostrautils/thread/Threads.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -327,14 +331,6 @@ namespace NOU::NOU_CORE
 		void write(const Event& event, StringType filename) override;
 	};
 
-	/**
-	\param event	A const reference to an event.
-
-	\return			Returns the error string.
-
-	\brief			Returns a custom formated error string.
-	*/
-	NOU_FUNC NOU::NOU_DAT_ALG::String8 print(const Event& event);
 
 	/**
 	\brief		A class for storing the different logger and writing logs to all of them.
@@ -348,15 +344,14 @@ namespace NOU::NOU_CORE
 				This ensures that there is only one Logger object at all time.
 
 				After that you need to push a logging target to the logger you created.
-				e.g.:	NOU::NOU_CORE::ConsoleLogger clog;	//Creating a logging target.
-						log->pushLogger(clog);				//Pushing it to the logger.
+				e.g.:	log->pushLogger<ConsoleLogger>(); //This will push a ConsoleLogger
 
 				And at end you can tell the logger to write a log.
 				e.g.:	log->write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid object type.");
 
 				This will write an error of the ERROR level with its error message to the log file.
 				You can change the file where you want to print. 
-				e.g.:	log->write(NOU::NOU_CORE::EventLevelCodes::ERROR, "log.txt error", "ErrorLog.txt");
+				e.g.:	log->write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid object type.", "ErrorLog.txt");
 	*/
 	class NOU_CLASS Logger
 	{
@@ -383,6 +378,15 @@ namespace NOU::NOU_CORE
 		*/
 		~Logger();
 
+		/**
+		\param event	A const reference to an event.
+
+		\return			Returns the error string.
+
+		\brief			Returns a custom formated error string.
+		*/
+		static NOU::NOU_DAT_ALG::String8 print(const Event& event);
+
 	private:
 
 		/**
@@ -393,7 +397,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief A static pointer to the Logger object.
 		*/
-		static Logger* uniqueInstance;
+		static Logger* s_uniqueInstance;
 
 		/**
 		\brief Deleted copy constructor of the Logger.
@@ -403,13 +407,13 @@ namespace NOU::NOU_CORE
 		/**
 		\brief Creates a new vector from ILogger pointers.
 		*/
-		NOU::NOU_DAT_ALG::Vector<ILogger*> s_logger;
+		NOU::NOU_DAT_ALG::Vector<ILogger*> m_logger;
 
 		/**
 		\param event	A const reference to an event object.
 		\param filename	The name of the file where the log will be written to.
 
-		\brief			Calls the write function for every objects in s_logger.
+		\brief			Calls the write function for every objects in m_logger.
 		*/
 		void logAll(Event &&events, StringType filename);
 
@@ -435,11 +439,14 @@ namespace NOU::NOU_CORE
 	public:
 
 		/**
-		\param log	A reference to an ILogger object.
+		\tparam T		The type of the Logger.
+		\tparam ARGS	The arguments.
+		\param log		A reference to an ILogger object.
 
-		\brief		Pushes an logger to s_logger.
+		\brief			Pushes an logger to m_logger.
 		*/
-		void pushLogger(ILogger &log);
+		template<typename T, typename ...ARGS>
+		void pushLogger(ARGS&&... log);
 
 		/**
 		\param level	A enum value, which represents the level of the event.
@@ -451,6 +458,13 @@ namespace NOU::NOU_CORE
 		*/
 		void write(EventLevelCodes level, const StringType &msg, const StringType &filename = "log.txt");
 	};
+
+	template<typename T, typename ...ARGS>
+	void Logger::pushLogger(ARGS&&... args)
+	{
+		m_logger.pushBack(new T(NOU_CORE::forward<ARGS>(args)...));
+	}
+
 /**
 \brief This macro is a convenience macro for writing logs to the logger. This macro automatically
 passes the level and message.

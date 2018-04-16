@@ -10,12 +10,8 @@ int main()
 	Logger* log = Logger::instance();
 	Logger* log2 = Logger::instance();
 
-
-	NOU::NOU_CORE::ConsoleLogger clog;
-	NOU::NOU_CORE::FileLogger flog;
-
-	log->pushLogger(clog);
-	log2->pushLogger(flog);
+	log->pushLogger<ConsoleLogger>();
+	log2->pushLogger<FileLogger>();
 
 	std::cout << "Main thread " << std::this_thread::get_id() << std::endl;
 	
