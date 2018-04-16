@@ -1849,16 +1849,24 @@ TEST_METHOD(Logging)
 
 	NOU::NOU_CORE::Logger* log = NOU::NOU_CORE::Logger::instance();
 
+	static NOU::NOU_THREAD::Mutex mutex;
+	static NOU::NOU_THREAD::ConditionVariable variable;
+
 	class TestLogger : public NOU::NOU_CORE::ILogger
 	{
 		void write(const NOU::NOU_CORE::Event& event, StringType filename)
 		{
 			writeOutput = NOU::NOU_CORE::Logger::print(event);
+			variable.notifyAll();
 		}
 	};
 
 	log->pushLogger<TestLogger>();
 	log->write(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+
+	//Wait until the logger has actually printed the message
+	NOU::NOU_THREAD::UniqueLock lock(mutex);
+	variable.wait(lock);
 
 	if (testOutput.size() == writeOutput.size()) //For better error message
 	{
