@@ -1860,6 +1860,11 @@ TEST_METHOD(Logging)
 	log->pushLogger<TestLogger>();
 	log->write(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
 
+	using namespace std::chrono_literals;
+	std::this_thread::sleep_for(1s); //Thread is performing operation. Because of that it is necessary at 
+									 //this point to make a short sleep to let the thread perform the write
+									 //operation. ONLY IN THE UNITTESTS REQUIRED!
+
 	if (testOutput.size() == writeOutput.size()) //For better error message
 	{
 		for (int i = 0; i < testOutput.size(); i++)
