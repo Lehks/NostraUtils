@@ -8,8 +8,6 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	using NouString = NOU::NOU_DAT_ALG::String<char8>;
-
 	INIFile::INIFile(const NouString & filename)
 	{
 		m_filename.insert(0, filename);
@@ -24,7 +22,7 @@ namespace NOU::NOU_FILE_MNGT
 			return;
 		}
 
-		std::unordered_map<NouString, int32>::const_iterator i = m_dataSections.find(section);
+		std::unordered_map<NouString, int32, NouStringHash, NouStringHash>::const_iterator i = m_dataSections.find(section);
 		int32 value = i->second + 1;
 
 		m_dataSections.erase(section);
@@ -38,7 +36,7 @@ namespace NOU::NOU_FILE_MNGT
 			return;
 		}
 
-		std::unordered_map<NouString, int32>::const_iterator i = m_dataSections.find(section);
+		std::unordered_map<NouString, int32, NouStringHash>::const_iterator i = m_dataSections.find(section);
 		int32 value = i->second - 1;
 
 		m_dataSections.erase(section);
@@ -76,7 +74,7 @@ namespace NOU::NOU_FILE_MNGT
 		posQuoteFirst = line.firstIndexOf(quote) + 1;
 		posQuoteLast = line.lastIndexOf(quote);
 
-		value.clear().append(line.substring(posQuoteFirst, posQuoteLast - posQuoteFirst));
+		value = line.substring(posQuoteFirst, posQuoteLast - posQuoteFirst);
 
 		return value;
 	}
@@ -135,9 +133,8 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Split the string into a left and right part
-		lineLft.clear().append(line.substring(0, posEq));
-		lineRgt.clear().append(line.substring(posEq + 1));
-
+		lineLft   = line.substring(0, posEq);
+		lineRgt   = line.substring(posEq + 1);
 		quoteType = this->parseValueQuote(lineRgt);
 
 		if (quoteType == INI_QUOTE_NONE) {
@@ -171,16 +168,16 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Set the default section
-		section.append(INI_DEFAULT_SECTION);
+		section = INI_DEFAULT_SECTION;
 
 		// Parse file content line by line
 		while (std::getline(inifile, ln))
 		{
-			line.clear().append(NouString(ln.c_str()).trim());
+			line = NouString(ln.c_str()).trim();
 
 			// Check if we have a section
 			if (line.at(0) == '[' && line.at((line.size() - 1)) == ']') {
-				section.clear().append(line.substring(1, line.size() - 2));
+				section = line.substring(1, line.size() - 2);
 			}
 			else {
 				this->parseLine(line, section);
@@ -277,9 +274,9 @@ namespace NOU::NOU_FILE_MNGT
 		inifile.close();
 
 		return true;*/
-		std::unordered_map<NouString, NouString>::const_iterator istr;
-		std::unordered_map<NouString, int32>::const_iterator iint;
-		std::unordered_map<NouString, float32>::const_iterator ifloat;
+		std::unordered_map<NouString, NouString, NouStringHash>::const_iterator istr;
+		std::unordered_map<NouString, int32, NouStringHash>::const_iterator iint;
+		std::unordered_map<NouString, float32, NouStringHash>::const_iterator ifloat;
 		std::ofstream inifile;
 		NouString keySection;
 		int32 posDot;
@@ -367,6 +364,9 @@ namespace NOU::NOU_FILE_MNGT
 		else if (m_dataFloat.count(search) > 0) {
 			m_dataFloat.erase(search);
 		}
+		else {
+			return;
+		}
 
 		this->decSection(section);
 	}
@@ -377,7 +377,7 @@ namespace NOU::NOU_FILE_MNGT
 		this->remove(key, section);
 		this->incSection(section);
 
-		m_dataString.insert(std::make_pair(section + "." + key, value));
+		m_dataString.insert(std::make_pair(NouString(section + "." + key), value));
 	}
 
 
@@ -386,7 +386,7 @@ namespace NOU::NOU_FILE_MNGT
 		this->remove(key, section);
 		this->incSection(section);
 
-		m_dataInteger.insert(std::make_pair(section + "." + key, value));
+		m_dataInteger.insert(std::make_pair(NouString(section + "." + key), value));
 	}
 
 
@@ -402,7 +402,7 @@ namespace NOU::NOU_FILE_MNGT
 	NouString INIFile::getString(const NouString & key, const NouString & section)
 	{
 		NouString search = section + "." + key;
-		std::unordered_map<NouString, NouString>::const_iterator i = m_dataString.find(search);
+		std::unordered_map<NouString, NouString, NouStringHash>::const_iterator i = m_dataString.find(search);
 
 		if (i != m_dataString.end()) {
 			return i->second;
@@ -425,7 +425,7 @@ namespace NOU::NOU_FILE_MNGT
 	int32 INIFile::getInt(const NouString & key, const NouString & section)
 	{
 		NouString search = section + "." + key;
-		std::unordered_map<NouString, int32>::const_iterator i = m_dataInteger.find(search);
+		std::unordered_map<NouString, int32, NouStringHash>::const_iterator i = m_dataInteger.find(search);
 
 		if (i != m_dataInteger.end()) {
 			return i->second;
@@ -448,7 +448,7 @@ namespace NOU::NOU_FILE_MNGT
 	float32 INIFile::getFloat(const NouString & key, const NouString & section)
 	{
 		NouString search = section + "." + key;
-		std::unordered_map<NouString, float32>::const_iterator i = m_dataFloat.find(search);
+		std::unordered_map<NouString, float32, NouStringHash>::const_iterator i = m_dataFloat.find(search);
 
 		if (i != m_dataFloat.end()) {
 			return i->second;
