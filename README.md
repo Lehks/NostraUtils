@@ -30,8 +30,8 @@ Tests for the C\++14 compatibility mode were run and succeeded on:
     - Linux
         - Version 4.0.1 (with a lot of warnings because of the usage of C\++1z features)
 
-The mode did not with MSVC, because MSVC only allows nested namespaces in C\++17 and not C\++14. This problem
-will most likely not be fixed.
+The mode did not work with MSVC, because MSVC only allows nested namespaces in C\++17 and not C\++14. This 
+problem will most likely not be fixed.
 
 ## Building the Project
 To build this project, CMake is required. See this (https://cmake.org/install/) link for an explanation on how
@@ -92,6 +92,9 @@ cmake --build . --target install
 
 **Note:** It is assumed that the previous command was called from the directory that CMake has build in (which
 was Build/ in the source's root directory during the examples here).
+
+**Note:** In the case that building the library succeeds, but the installation fails, try checking whether
+the process has the rights to write into the installation directory.
 
 ## Dependencies
 This Library uses Catch (https://github.com/catchorg/Catch2) as Unit-Test framework. The source file of Catch 
