@@ -11,6 +11,10 @@ namespace NOU::NOU_THREAD
 {
 	constexpr typename ThreadManager::Priority ThreadManager::TaskInformation::INVALID_ID;
 
+	constexpr uint32 ThreadManager::DEFAULT_THREAD_COUNT;
+
+	constexpr sizeType ThreadManager::DEFAULT_TASK_CAPACITY;
+
 	ThreadManager::TaskInformation::TaskInformation(Priority id) :
 		m_id(id)
 	{}
@@ -88,6 +92,9 @@ namespace NOU::NOU_THREAD
 		// -1, b/c that is the main execution thread
 		sizeType threadPoolCapacity = ThreadWrapper::maxThreads() == 0 ? DEFAULT_THREAD_COUNT - 1 : 
 			ThreadWrapper::maxThreads() - 1;
+
+		//since DEFAULT_THREAD_COUNT is 2, the threadPoolCapacity will never be smaller than 2
+		threadPoolCapacity = NOU_CORE::max(threadPoolCapacity, DEFAULT_THREAD_COUNT);
 
 		return ObjectPoolPtr<ThreadDataBundle>(new NOU_DAT_ALG::ObjectPool<ThreadDataBundle>
 			(threadPoolCapacity, NOU_MEM_MNGT::GenericAllocationCallback<

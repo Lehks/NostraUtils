@@ -1667,8 +1667,14 @@ TEST_METHOD(ThreadManager)
 {
 	NOU::NOU_THREAD::ThreadManager &manager = NOU::NOU_THREAD::getThreadManager();
 
-	IsTrue(manager.maximumAvailableThreads() == 
-		NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
+	IsTrue(manager.maximumAvailableThreads() >= NOU::NOU_THREAD::ThreadManager::DEFAULT_THREAD_COUNT);
+
+	IsTrue(manager.maximumAvailableThreads() >= NOU::NOU_THREAD::ThreadManager::DEFAULT_THREAD_COUNT);
+
+	if (NOU::NOU_THREAD::ThreadWrapper::maxThreads() > NOU::NOU_THREAD::ThreadManager::DEFAULT_THREAD_COUNT)
+	{
+		IsTrue(manager.maximumAvailableThreads() == NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
+	}
 
 	NOU_CHECK_ERROR_HANDLER;
 }
