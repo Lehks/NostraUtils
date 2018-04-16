@@ -1697,71 +1697,130 @@ TEST_METHOD(OffsetOf)
 
 TEST_METHOD(Path)
 {
-	NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
-	NOU::NOU_FILE_MNGT::Path p1 = "testdir\\testfile.test";
-	NOU::NOU_FILE_MNGT::Path p2 = "\\test.dir\\testfile.test";
-	NOU::NOU_FILE_MNGT::Path p3 = "test.dir\\testfile";
-	NOU::NOU_FILE_MNGT::Path p4 = "testfile.test\\";
-	NOU::NOU_FILE_MNGT::Path p5 = "testfile";
-	NOU::NOU_FILE_MNGT::Path p6 = "test.tar.gz";
 
-	NOU::NOU_FILE_MNGT::Path p10 = "C:\\Users\\TestUser\\TestDir\\MyFile.exe";
-	NOU::NOU_FILE_MNGT::Path p11 = "C:\\Users\\TestUser\\TestDir\\MyFolder\\MyFile.txt";
-	NOU::NOU_FILE_MNGT::Path p12 = "C:\\Users\\TestUser\\TestDir";
-	NOU::NOU_FILE_MNGT::Path p13 = "D:\\Users\\";
-	NOU::NOU_FILE_MNGT::Path p14 = "D:\\Users\\SomeOtherDir";
+#if NOU_OS == NOU_OS_WINDOWS
+    NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
+    NOU::NOU_FILE_MNGT::Path p1 = "testdir\\testfile.test";
+    NOU::NOU_FILE_MNGT::Path p2 = "\\test.dir\\testfile.test";
+    NOU::NOU_FILE_MNGT::Path p3 = "test.dir\\testfile";
+    NOU::NOU_FILE_MNGT::Path p4 = "testfile.test\\";
+    NOU::NOU_FILE_MNGT::Path p5 = "testfile";
+    NOU::NOU_FILE_MNGT::Path p6 = "test.tar.gz";
 
-	NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+    NOU::NOU_FILE_MNGT::Path p10 = "C:\\Users\\TestUser\\TestDir\\MyFile.exe";
+    NOU::NOU_FILE_MNGT::Path p11 = "C:\\Users\\TestUser\\TestDir\\MyFolder\\MyFile.txt";
+    NOU::NOU_FILE_MNGT::Path p12 = "C:\\Users\\TestUser\\TestDir";
+    NOU::NOU_FILE_MNGT::Path p13 = "D:\\Users\\";
+    NOU::NOU_FILE_MNGT::Path p14 = "D:\\Users\\SomeOtherDir";
 
-	NOU::NOU_DAT_ALG::String8 str = cwd.getAbsolutePath();
-	str.append("\\Test\\TestUser\\TestDir2");
+    NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
 
-	// p15 == cwd\\Test\\Dennis\\WasGehtAb
-	NOU::NOU_FILE_MNGT::Path p15 = str;
+    NOU::NOU_DAT_ALG::String8 str = cwd.getAbsolutePath();
+    str.append("\\Test\\TestUser\\TestDir2");
 
-	IsTrue(p.getName() == "testfile");
-	IsTrue(p1.getName() == "testfile");
-	IsTrue(p2.getName() == "testfile");
-	IsTrue(p3.getName() == "testfile");
-	IsTrue(p4.getName() == "");
-	IsTrue(p5.getName() == "testfile");
-	IsTrue(p6.getName() == "test.tar");
+    // p15 == cwd\\Test\\Dennis\\WasGehtAb
+    NOU::NOU_FILE_MNGT::Path p15 = str;
 
-	IsTrue(p.getFileExtension() == "exe");
-	IsTrue(p1.getFileExtension() == "test");
-	IsTrue(p2.getFileExtension() == "test");
-	IsTrue(p3.getFileExtension() == ""); 
-	IsTrue(p4.getFileExtension() == ""); 
-	IsTrue(p5.getFileExtension() == ""); 
-	IsTrue(p6.getFileExtension() == "gz");
+    IsTrue(p.getName() == "testfile");
+    IsTrue(p1.getName() == "testfile");
+    IsTrue(p2.getName() == "testfile");
+    IsTrue(p3.getName() == "testfile");
+    IsTrue(p4.getName() == "");
+    IsTrue(p5.getName() == "testfile");
+    IsTrue(p6.getName() == "test.tar");
 
-	IsTrue(p.getNameAndExtension() == "testfile.exe");
-	IsTrue(p1.getNameAndExtension() == "testfile.test");
-	IsTrue(p2.getNameAndExtension() == "testfile.test");
-	IsTrue(p3.getNameAndExtension() == "testfile"); 
-	IsTrue(p4.getNameAndExtension() == ""); 
-	IsTrue(p5.getNameAndExtension() == "testfile");
-	IsTrue(p6.getNameAndExtension() == "test.tar.gz");
+    IsTrue(p.getFileExtension() == "exe");
+    IsTrue(p1.getFileExtension() == "test");
+    IsTrue(p2.getFileExtension() == "test");
+    IsTrue(p3.getFileExtension() == "");
+    IsTrue(p4.getFileExtension() == "");
+    IsTrue(p5.getFileExtension() == "");
+    IsTrue(p6.getFileExtension() == "gz");
 
-	IsTrue(p10.getParentPath() == "C:\\Users\\TestUser\\TestDir"); 
-	IsTrue(p11.getParentPath() == "C:\\Users\\TestUser\\TestDir\\MyFolder");
-	IsTrue(p12.getParentPath() == "C:\\Users\\TestUser");
-	IsTrue(p13.getParentPath() == "D:");
-	IsTrue(p14.getParentPath() == "D:\\Users");  
+    IsTrue(p.getNameAndExtension() == "testfile.exe");
+    IsTrue(p1.getNameAndExtension() == "testfile.test");
+    IsTrue(p2.getNameAndExtension() == "testfile.test");
+    IsTrue(p3.getNameAndExtension() == "testfile");
+    IsTrue(p4.getNameAndExtension() == "");
+    IsTrue(p5.getNameAndExtension() == "testfile");
+    IsTrue(p6.getNameAndExtension() == "test.tar.gz");
 
-	IsTrue(p15.getRelativePath() == "\\Test\\TestUser\\TestDir2");
-	if (str.startsWith('C'))
-	{
-		NOU::NOU_FILE_MNGT::Path p16 = "D:\\Users\\TestUser\\TestDir";
-		IsTrue(p16.getRelativePath() == "D:\\Users\\TestUser\\TestDir");
-	}
-	else {
-		NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
-		IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
-	}
+    IsTrue(p10.getParentPath() == "C:\\Users\\TestUser\\TestDir");
+    IsTrue(p11.getParentPath() == "C:\\Users\\TestUser\\TestDir\\MyFolder");
+    IsTrue(p12.getParentPath() == "C:\\Users\\TestUser");
+    IsTrue(p13.getParentPath() == "D:");
+    IsTrue(p14.getParentPath() == "D:\\Users");
 
-	p15 = "Hallo";
-	IsTrue("\\Test\\TestUser\\TestDir2\\Hallo");
+    IsTrue(p15.getRelativePath() == "\\Test\\TestUser\\TestDir2");
+    if (str.startsWith('C'))
+    {
+        NOU::NOU_FILE_MNGT::Path p16 = "D:\\Users\\TestUser\\TestDir";
+        IsTrue(p16.getRelativePath() == "D:\\Users\\TestUser\\TestDir");
+    }
+    else {
+        NOU::NOU_FILE_MNGT::Path p16 = "C:\\Users\\TestUser\\TestDir";
+        IsTrue(p16.getRelativePath() == "C:\\Users\\TestUser\\TestDir");
+    }
+
+    p15 = "Hallo";
+    IsTrue("\\Test\\TestUser\\TestDir2\\Hallo");
+
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+
+    NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
+    NOU::NOU_FILE_MNGT::Path p1 = "testdir\\testfile.test";
+    NOU::NOU_FILE_MNGT::Path p2 = "\\test.dir\\testfile.test";
+    NOU::NOU_FILE_MNGT::Path p3 = "test.dir\\testfile";
+    NOU::NOU_FILE_MNGT::Path p4 = "testfile.test\\";
+    NOU::NOU_FILE_MNGT::Path p5 = "testfile";
+    NOU::NOU_FILE_MNGT::Path p6 = "test.tar.gz";
+
+    NOU::NOU_FILE_MNGT::Path p10 = "/Users/TestUser/TestDir/MyFile.exe";
+    NOU::NOU_FILE_MNGT::Path p11 = "/Users/TestUser/TestDir/MyFolder/MyFile.txt";
+    NOU::NOU_FILE_MNGT::Path p12 = "/Users/TestUser/TestDir";
+    NOU::NOU_FILE_MNGT::Path p13 = "/Users/";
+    NOU::NOU_FILE_MNGT::Path p14 = "/Users/SomeOtherDir";
+
+    NOU::NOU_FILE_MNGT::Path cwd = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+
+    NOU::NOU_DAT_ALG::String8 str = cwd.getAbsolutePath();
+    str.append("/Test/TestUser/TestDir2");
+
+    NOU::NOU_FILE_MNGT::Path p15 = str;
+
+    IsTrue(p.getName() == "testfile");
+    IsTrue(p1.getName() == "testfile");
+    IsTrue(p2.getName() == "testfile");
+    IsTrue(p3.getName() == "testfile");
+    IsTrue(p4.getName() == "");
+    IsTrue(p5.getName() == "testfile");
+    IsTrue(p6.getName() == "test.tar");
+
+    IsTrue(p.getFileExtension() == "exe");
+    IsTrue(p1.getFileExtension() == "test");
+    IsTrue(p2.getFileExtension() == "test");
+    IsTrue(p3.getFileExtension() == "");
+    IsTrue(p4.getFileExtension() == "");
+    IsTrue(p5.getFileExtension() == "");
+    IsTrue(p6.getFileExtension() == "gz");
+
+    IsTrue(p.getNameAndExtension() == "testfile.exe");
+    IsTrue(p1.getNameAndExtension() == "testfile.test");
+    IsTrue(p2.getNameAndExtension() == "testfile.test");
+    IsTrue(p3.getNameAndExtension() == "testfile");
+    IsTrue(p4.getNameAndExtension() == "");
+    IsTrue(p5.getNameAndExtension() == "testfile");
+    IsTrue(p6.getNameAndExtension() == "test.tar.gz");
+
+    IsTrue(p10.getParentPath() == "/Users/TestUser/TestDir");
+    IsTrue(p11.getParentPath() == "/Users/TestUser/TestDir/MyFolder");
+    IsTrue(p12.getParentPath() == "/Users/TestUser");
+    IsTrue(p13.getParentPath() == "");
+    IsTrue(p14.getParentPath() == "/Users");
+
+    IsTrue(p15.getRelativePath() == "/Test/TestUser/TestDir2");
+
+#endif
 }
 
 TEST_METHOD(IsBaseOf)

@@ -186,7 +186,7 @@ value for NOU_OS_LIBRARY will not be set properly).
 #    elif defined __unix__
 #    define NOU_OS NOU_OS_UNIX
 
-#    elif defined macintosh
+#    elif defined __APPLE__
 #    define NOU_OS NOU_OS_MAC
 
 #    elif defined __DOXYGEN__ //__DOXYGEN__ is defined in the Doxyfile
