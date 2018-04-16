@@ -307,6 +307,7 @@
   <ItemGroup>
     <ClInclude Include="src\header\nostrautils\core\Assertions.hpp" />
     <ClInclude Include="src\header\nostrautils\core\ErrorHandler.hpp" />
+    <ClInclude Include="src\header\nostrautils\core\Time.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Logging.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Meta.hpp" />
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp" />
@@ -352,6 +353,7 @@
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
     <ClCompile Include="src\source\nostrautils\core\Logging.cpp" />
     <ClCompile Include="src\source\nostrautils\core\SystemInformation.cpp" />
+    <ClCompile Include="src\source\nostrautils\core\Time.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Random.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp" />

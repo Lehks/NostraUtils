@@ -1,5 +1,4 @@
 
-#include "stdafx.h"
 #include "CppUnitTest.h"
 
 #define NOU_DEBUG
@@ -1789,6 +1788,22 @@ namespace UnitTests
 
 			p15 = "Hallo";
 			Assert::IsTrue("\\Test\\TestUser\\TestDir2\\Hallo");
+		}
+
+		TEST_METHOD(IsBaseOf)
+		{
+			class Base
+			{
+
+			};
+
+			class Derived : public Base
+			{
+
+			};
+
+			Assert::IsTrue(NOU::NOU_CORE::IsBaseOf<Base, Derived>::value);
+			Assert::IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
 		}
 	};	
 }

@@ -27,5 +27,9 @@ int main()
 		//std::this_thread::sleep_for(1s);
 	}
 
-	std::cin.get();
-}							
+	begin = currentTimeMillis();
+	for (int i = 0; i < 1000000000; i++);
+	end = currentTimeMillis();
+	cout << "Time in ms: " << end - begin << endl;
+	system("pause");
+}
