@@ -659,7 +659,7 @@ IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
 IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
 IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
 IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!�$%&"));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!?$%&"));
 
 NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
@@ -1826,18 +1826,53 @@ NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 
 TEST_METHOD(IsBaseOf)
 {
-class Base
+	class Base
+	{
+	
+	};
+	
+	class Derived : public Base
+	{
+	
+	};
+	
+	IsTrue(NOU::NOU_CORE::IsBaseOf<Base, Derived>::value);
+	IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
+}
+
+TEST_METHOD(Logging)
 {
+	static NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
 
-};
+	static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+	static NOU::NOU_DAT_ALG::String8 writeOutput;
 
-class Derived : public Base
-{
+	NOU::NOU_CORE::Logger* log = NOU::NOU_CORE::Logger::instance();
 
-};
+	class TestLogger : public NOU::NOU_CORE::ILogger
+	{
+		void write(const NOU::NOU_CORE::Event& event, StringType filename)
+		{
+			writeOutput = NOU::NOU_CORE::Logger::print(event);
+		}
+	};
 
-IsTrue(NOU::NOU_CORE::IsBaseOf<Base, Derived>::value);
-IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
+	log->pushLogger<TestLogger>();
+	log->write(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+
+	if (testOutput.size() == writeOutput.size()) //For better error message
+	{
+		for (int i = 0; i < testOutput.size(); i++)
+		{
+			IsTrue(testOutput.at(i) == writeOutput.at(i));
+		}
+	}
+	else
+	{
+		IsTrue(false);
+	}
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(Logging)
