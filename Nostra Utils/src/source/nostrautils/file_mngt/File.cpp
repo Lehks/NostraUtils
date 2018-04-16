@@ -25,9 +25,9 @@ namespace NOU::NOU_FILE_MNGT
 		m_data(other.m_data)
 
 	{
-		other.close();
 		other.setMode(AccessMode::READ_WRITE);
-		other.m_path;
+		other.m_data = nullptr;
+		other.m_path = nullptr;
 	}
 
 	File::~File()
