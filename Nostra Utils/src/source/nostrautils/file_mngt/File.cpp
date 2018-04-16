@@ -12,12 +12,11 @@ namespace NOU::NOU_FILE_MNGT
 		#endif
 	}
 
-
 	File::File(const Path &path) :
-		m_path(path)
-	{
-		m_data == nullptr;
-	}
+		m_path(path),
+		m_data(nullptr)
+	{}
+	
 	//mv
 	File::File(File &&other) :
 		m_path(other.m_path),
@@ -25,9 +24,7 @@ namespace NOU::NOU_FILE_MNGT
 		m_data(other.m_data)
 
 	{
-		other.close();
-		other.setMode(AccessMode::READ_WRITE);
-		other.m_path;
+		other.m_data = nullptr;
 	}
 
 	File::~File()
@@ -62,7 +59,6 @@ namespace NOU::NOU_FILE_MNGT
 		fread(buffer, size, 1, m_data);
 	}
 
-
 	boolean File::write(byte b)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
@@ -84,7 +80,6 @@ namespace NOU::NOU_FILE_MNGT
 		}
 		return false;
 	}
-
 
 	boolean File::open(AccessMode mode)
 	{
@@ -115,6 +110,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 		return m_data != nullptr;
 	}
+
 	boolean File::close()
 	{
 		if (isCurrentlyOpen())
@@ -129,6 +125,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 	}
+
 	void File::createFile()
 	{
 		open();
@@ -144,6 +141,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		return m_mode;
 	}
+
 	void File::setMode(AccessMode mode)
 	{
 		close();
