@@ -1,9 +1,9 @@
 #ifndef	NOU_MEM_MNGT_INI_DOCUMENT_HPP
 #define	NOU_MEM_MNGT_INI_DOCUMENT_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\dat_alg\HashMap.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/HashMap.hpp"
 #include <unordered_map>
 
 

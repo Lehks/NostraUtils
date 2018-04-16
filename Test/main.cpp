@@ -1,9 +1,10 @@
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\file_mngt\INIFile.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/HashMap.hpp"
+#include "nostrautils/file_mngt/INIFile.hpp"
+
 #include <iostream>
 
-#include "nostrautils\dat_alg\HashMap.hpp"
 
 namespace NOU::NOU_FILE_MNGT
 {
@@ -14,7 +15,7 @@ namespace NOU::NOU_FILE_MNGT
 		int32 test_int;
 		float32 test_float;
 
-		INIFile p(NouString("C:\\Git\\NostraUtils\\Test\\Test.ini"));
+		INIFile p(NouString("C:/Git/NostraUtils/Test/Test.ini"));
 
 		if (!p.read()) {
 			std::cout << "Failed to read file.";
@@ -81,7 +82,7 @@ namespace NOU::NOU_FILE_MNGT
 		test_float = p.getFloat(NouString("FLOAT_X"));
 		std::cout << "New Float = " << test_float << std::endl;
 
-		p.write(NouString("C:\\Git\\NostraUtils\\Test\\Test2.ini"));*/
+		p.write(NouString("C:/Git/NostraUtils/Test/Test2.ini"));*/
 	}
 	
 }

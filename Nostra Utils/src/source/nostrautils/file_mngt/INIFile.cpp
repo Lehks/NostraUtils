@@ -1,6 +1,6 @@
-#include "nostrautils\file_mngt\INIFile.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/file_mngt/INIFile.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 #include <string>
 #include <fstream>
 #include <iostream>
