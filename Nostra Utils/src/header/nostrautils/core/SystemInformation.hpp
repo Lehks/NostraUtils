@@ -3,6 +3,17 @@
 
 #include "nostrautils/core/StdIncludes.hpp"
 
+/**
+\file core/SystemInformation.hpp
+
+\author  Lukas Reichmann
+\version 1.0.0
+\since   1.0.0
+
+\brief A file that provides functionality to query information about the system that the current executable 
+       runs on.
+*/
+
 namespace NOU::NOU_CORE
 {
 	namespace SystemInformation

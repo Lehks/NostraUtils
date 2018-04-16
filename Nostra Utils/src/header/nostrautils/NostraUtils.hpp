@@ -5,19 +5,21 @@
 \file NostraUtils.hpp
 
 \author  Lukas Reichmann
-\version 0.0.1
-\since   0.0.1
+\version 1.0.0
+\since   1.0.0
 
 \brief A single file that includes all other files of the Nostra Utils library.
 */
 
 #include "nostrautils/core/Assertions.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/core/Logging.hpp"
 #include "nostrautils/core/Meta.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/SystemInformation.hpp"
 #include "nostrautils/core/Utils.hpp"
 #include "nostrautils/core/Version.hpp"
+#include "nostrautils/core/Time.hpp"
 
 #include "nostrautils/dat_alg/BinaryHeap.hpp"
 #include "nostrautils/dat_alg/BinarySearch.hpp"
