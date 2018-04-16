@@ -4,11 +4,15 @@
 #include <Windows.h>
 #include <Psapi.h>
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/sysinfo.h>
-#include <stdlib.h>
-#include <unistd.h>
+#    if NOU_OS == NOU_OS_MAC
+//#        include <>
+#    else
+#        include <stdio.h>
+#        include <sys/types.h>
+#        include <sys/sysinfo.h>
+#        include <stdlib.h>
+#        include <unistd.h>
+#    endif
 #endif
 
 namespace NOU::NOU_CORE
@@ -55,16 +59,17 @@ namespace NOU::NOU_CORE
 			return 0;
 #   elif NOU_OS == NOU_OS_MAC
 			///\todo Verify.
-			struct mach_task_basic_info info;
-			mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
+		//	struct mach_task_basic_info info;
+		//	mach_msg_type_number_t infoCount = MACH_TASK_BASIC_INFO_COUNT;
+		//
+		//	if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO,
+		//		(task_info_t)&info, &infoCount) != KERN_SUCCESS)
+		//	{
+		//		return uint64(0); //Error reading
+		//	}
 
-			if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO,
-				(task_info_t)&info, &infoCount) != KERN_SUCCESS)
-			{
-				return uint64(0); //Error reading
-			}
-
-			return uint64(info.resident_size);
+		//	return uint64(info.resident_size);
+			return 0;
 #	else  //No generic implementation for Unix.
 			return uint64(0);
 #   endif
