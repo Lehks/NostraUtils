@@ -419,7 +419,7 @@ namespace NOU::NOU_CORE
 		NOU::NOU_DAT_ALG::Vector<ILogger*> m_logger;
 
 		/**
-		\param event	A const reference to an event object.
+		\param events	A const reference to an event object.
 		\param filename	The name of the file where the log will be written to.
 
 		\brief			Calls the write function for every objects in m_logger.
