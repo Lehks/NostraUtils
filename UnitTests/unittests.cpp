@@ -1860,9 +1860,6 @@ TEST_METHOD(Logging)
 	log->pushLogger<TestLogger>();
 	log->write(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
 
-	std::cout << "test: " << testOutput.rawStr() << std::endl;
-	std::cout << "write: " << writeOutput.rawStr() << std::endl;
-
 	if (testOutput.size() == writeOutput.size()) //For better error message
 	{
 		for (int i = 0; i < testOutput.size(); i++)
