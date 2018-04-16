@@ -7,11 +7,11 @@ option(NOU_CPP14_COMPATIBLILTY_MODE "Disables some C++17-only features." OFF)
 # Set language standard
 if ("${NOU_CPP14_COMPATIBLILTY_MODE}")
 	set (CMAKE_CXX_STANDARD 14)
-	message(STATUS "NOU:  Generting for C++14 compatibility mode.")
+	message(STATUS "NOU:  Generating for C++14 compatibility mode.")
 	add_definitions(-DNOU_CPP14_COMPATIBILITY)
 else()
 	set (CMAKE_CXX_STANDARD 17)
-	message(STATUS "NOU:  Generting without C++14 compatibility mode.")
+	message(STATUS "NOU:  Generating without C++14 compatibility mode.")
 endif()
 
 #=== If NOU_COMPILE_AS_DEBUG is True, NOU_DEBUG will be defined during the compilation by default
