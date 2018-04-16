@@ -85,7 +85,6 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief Constructor of the File class
 
-		\param mode how the file will be interpreted(Read/Write)
 		\param path Path object containing the path to the file
 		*/
 		File(const Path &path);

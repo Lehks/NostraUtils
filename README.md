@@ -55,7 +55,7 @@ the CMake executable must be given instead of just ```cmake```.
 2. ```cd Build``` Navigate into the build directory.
 3. ```cmake ..``` Configure CMake. See note below on how to customize that configuration.
 4. ```cmake --build . --target install``` Build the project and export the generated files to the default
-   installation path (with is /usr/local on Linux/Unix and C:\Program Files on Windows).
+   installation path (with is /usr/local on Linux/Unix and C:\\Program Files on Windows).
 
 **Note:** If the build of Nostra Utils should be customized, more parameters need to be passed to CMake (the 
 command from step 3.), but this is generally easier to do with cmake-gui or ccmake (configuring  the build 
