@@ -94,7 +94,7 @@ namespace NOU::NOU_THREAD
 			ThreadWrapper::maxThreads() - 1;
 
 		//since DEFAULT_THREAD_COUNT is 2, the threadPoolCapacity will never be smaller than 2
-		threadPoolCapacity = NOU_CORE::max(threadPoolCapacity, DEFAULT_THREAD_COUNT);
+		threadPoolCapacity = NOU_CORE::max<sizeType>(threadPoolCapacity, DEFAULT_THREAD_COUNT);
 
 		return ObjectPoolPtr<ThreadDataBundle>(new NOU_DAT_ALG::ObjectPool<ThreadDataBundle>
 			(threadPoolCapacity, NOU_MEM_MNGT::GenericAllocationCallback<
