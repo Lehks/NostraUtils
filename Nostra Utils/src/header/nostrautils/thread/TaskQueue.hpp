@@ -15,8 +15,8 @@
 
 /** \file thread\TaskQueue.hpp
 \author	 Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a the class TaskQueue
 
 \see TaskQueue

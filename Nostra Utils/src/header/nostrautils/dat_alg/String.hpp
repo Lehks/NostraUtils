@@ -14,8 +14,8 @@
 /** \file Vector.hpp
 \author  Dennis Franz
 \author	 Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a String implementation.
 */
 
@@ -787,7 +787,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief copy assignment operator.
 		*/
-		String operator = (const String& str);
+		String& operator = (const String& str);
 
 		/**
 		\param str The string to replace the actual string.
@@ -795,7 +795,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief move assignment operator.
 		*/
-		String operator = (String&& str);
+		String& operator = (String&& str);
 
 		/**
 		\param c The character to concatenate.
@@ -1839,7 +1839,7 @@ namespace NOU::NOU_DAT_ALG
 		return m_data.rend();
 	}
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::operator=(const String & str)
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator=(const String & str)
 	{
 		m_data = str.m_data;
 		StringView<CHAR_TYPE>::m_dataPtr = const_cast<ConstCharType**>(&m_data.data());
@@ -1848,7 +1848,7 @@ namespace NOU::NOU_DAT_ALG
 		return *this;
 	}
 	template<typename CHAR_TYPE>
-	String<CHAR_TYPE> String<CHAR_TYPE>::operator=(String && str)
+	String<CHAR_TYPE>& String<CHAR_TYPE>::operator=(String && str)
 	{
 
 		m_data = NOU_CORE::move(str.m_data);

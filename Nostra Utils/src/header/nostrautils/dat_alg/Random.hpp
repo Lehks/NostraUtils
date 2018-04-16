@@ -10,8 +10,8 @@
 
 /** \file Random.hpp
 \author  Mahan Karimi
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file generates you a Random number between an interval.
 */
 namespace NOU::NOU_DAT_ALG
@@ -32,7 +32,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\brief A function that sets a seed for the random function
-		\param s {s for seed }
+		\param seed The seed to use.
 		*/
 		void setSeed(Seed seed);
 
