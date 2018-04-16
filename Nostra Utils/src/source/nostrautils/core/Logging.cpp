@@ -127,15 +127,8 @@ namespace NOU::NOU_CORE
 
 	void ConsoleLogger::write(const Event& event, StringType filename)
 	{
-		std::cout
-			<< "[" << event.getTimeStamp().getYear() << "/" << event.getTimeStamp().getMonth() << "/"
-			<< event.getTimeStamp().getDay() << " " << event.getTimeStamp().getHours() << ":"
-			<< event.getTimeStamp().getMinutes() << ":" << event.getTimeStamp().getSeconds() << "] "
-
-			<< event.getEventLevel().rawStr() << ": "
-			<< event.getEventMsg().rawStr() << "\n"
-			<<
-			std::endl;
+		NOU::NOU_DAT_ALG::String8 error = print(event);
+		std::cout << error.rawStr() << std::endl;
 	}
 
 	void FileLogger::write(const Event& event, StringType filename)
@@ -147,19 +140,7 @@ namespace NOU::NOU_CORE
 
 		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
 		{
-			NOU::NOU_DAT_ALG::String8 error;
-			error.append("[").append(event.getTimeStamp().getYear()).append("/").
-				append(event.getTimeStamp().getMonth()).append("/").append(event.getTimeStamp().getDay()).
-				append(" ").append(event.getTimeStamp().getHours()).append(":").
-				append(event.getTimeStamp().getMinutes()).append(":").
-				append(event.getTimeStamp().getSeconds());
-
-			if (event.getTimeStamp().getSeconds() == 0)
-				error.append("0");
-#
-			error.append("] ").
-				append(event.getEventLevel()).append(": ").
-				append(event.getEventMsg()).append("\n");
+			NOU::NOU_DAT_ALG::String8 error = print(event);
 
 			file.write(error);
 			file.close();
@@ -169,6 +150,40 @@ namespace NOU::NOU_CORE
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
 				"Could not open log file.");
 		}
+	}
+
+	NOU::NOU_DAT_ALG::String8 print(const Event& event)
+	{
+		NOU::NOU_DAT_ALG::String8 error;
+		error.append("[").append(event.getTimeStamp().getYear());
+		error.append("/");
+		if (event.getTimeStamp().getMonth() < 10)
+			error.append("0");
+		error.append(event.getTimeStamp().getMonth());
+		error.append("/");
+		if (event.getTimeStamp().getDay() < 10)
+			error.append("0");
+		error.append(event.getTimeStamp().getDay());
+		error.append(" ");
+		if (event.getTimeStamp().getHours() < 10)
+			error.append("0");
+		error.append(event.getTimeStamp().getHours());
+		error.append(":");
+		if (event.getTimeStamp().getMinutes() < 10)
+			error.append("0");
+		error.append(event.getTimeStamp().getMinutes());
+		error.append(":");
+		if (event.getTimeStamp().getSeconds() < 10)
+			error.append("0");
+		if (event.getTimeStamp().getSeconds() == 0)
+			error.append("0");
+		error.append(event.getTimeStamp().getSeconds());
+
+		error.append("] ").
+			append(event.getEventLevel()).append(": ").
+			append(event.getEventMsg()).append("\n");
+
+		return error;
 	}
 
 	Logger* Logger::instance()

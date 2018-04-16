@@ -328,6 +328,15 @@ namespace NOU::NOU_CORE
 	};
 
 	/**
+	\param event	A const reference to an event.
+
+	\return			Returns the error string.
+
+	\brief			Returns a custom formated error string.
+	*/
+	NOU_FUNC NOU::NOU_DAT_ALG::String8 print(const Event& event);
+
+	/**
 	\brief		A class for storing the different logger and writing logs to all of them.
 	
 	\details	To create a new Logger you need to call the instance() and store the result in a Logger*.
