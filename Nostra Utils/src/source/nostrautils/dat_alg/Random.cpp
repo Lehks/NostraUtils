@@ -3,6 +3,8 @@
 
 namespace NOU::NOU_DAT_ALG
 {
+	constexpr typename Random::Seed Random::USE_TIME_AS_SEED;
+
 	Random::Random(Seed seed)
 	{
 		if (seed == USE_TIME_AS_SEED)

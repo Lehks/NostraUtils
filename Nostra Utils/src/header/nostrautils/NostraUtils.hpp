@@ -26,6 +26,7 @@
 #include "nostrautils/dat_alg/Comparator.hpp"
 #include "nostrautils/dat_alg/FastQueue.hpp"
 #include "nostrautils/dat_alg/Hashing.hpp"
+#include "nostrautils/dat_alg/HashMap.hpp"
 #include "nostrautils/dat_alg/LazyEvaluationProperty.hpp"
 #include "nostrautils/dat_alg/ObjectPool.hpp"
 #include "nostrautils/dat_alg/Quicksort.hpp"

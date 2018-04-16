@@ -74,7 +74,9 @@ namespace NOU::NOU_THREAD
 	template<typename R, typename I, typename... ARGS>
 	class NOU_CLASS Task final : public internal::AbstractTask
 	{
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<R, I, ARGS...>::value);
+#endif
 
 	public:
 		/**
@@ -167,7 +169,9 @@ namespace NOU::NOU_THREAD
 	template<typename I, typename... ARGS>
 	class NOU_CLASS Task<void, I, ARGS...> final : public internal::AbstractTask
 	{
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<void, I, ARGS...>::value);
+#endif
 
 	public:
 		using ReturnType = void;
@@ -207,8 +211,8 @@ namespace NOU::NOU_THREAD
 	after this object).
 	*/
 	template<typename I, typename... ARGS>
-	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I,
-		NOU_CORE::remove_reference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args);
+	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::RemoveReference_t<ARGS>...>, I,
+		NOU_CORE::RemoveReference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args);
 
 	///\cond
 	template<typename R, typename I, typename... ARGS>
@@ -220,7 +224,7 @@ namespace NOU::NOU_THREAD
 	template<typename R, typename I, typename... ARGS>
 	void Task<R, I, ARGS...>::execute()
 	{
-		m_result = std::apply(m_invocable, m_args);
+		m_result = NOU_CORE::apply(m_invocable, m_args);
 	}
 
 	template<typename R, typename I, typename... ARGS>
@@ -252,7 +256,7 @@ namespace NOU::NOU_THREAD
 	template<typename I, typename... ARGS>
 	void Task<void, I, ARGS...>::execute()
 	{
-		std::apply(m_invocable, m_args);
+		NOU_CORE::apply(m_invocable, m_args);
 	}
 
 	template<typename I, typename... ARGS>
@@ -264,14 +268,14 @@ namespace NOU::NOU_THREAD
 	{}
 
 	template<typename I, typename... ARGS>
-	Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I, 
-		NOU_CORE::remove_reference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args)
+	Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::RemoveReference_t<ARGS>...>, I, 
+		NOU_CORE::RemoveReference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args)
 	{
-		using TaskType = Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I,
-			NOU_CORE::remove_reference_t<ARGS>...>;
+		using TaskType = Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::RemoveReference_t<ARGS>...>, I,
+			NOU_CORE::RemoveReference_t<ARGS>...>;
 
 		return TaskType(NOU_CORE::forward<typename TaskType::InvocableType>(invocable),
-			NOU_CORE::forward<NOU_CORE::remove_reference_t<ARGS>>(args)...);
+			NOU_CORE::forward<NOU_CORE::RemoveReference_t<ARGS>>(args)...);
 	}
 	///\endcond
 }

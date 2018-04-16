@@ -16,6 +16,15 @@
 #include <chrono>
 #include <iostream>
 
+///\cond
+//Temporary macro rename from ERROR to NOU_TMP_MACRO_RENAME_ERROR. This caused problems when using Catch
+//The original name will be restored at the end of the file.
+#ifdef ERROR
+#define NOU_TMP_MACRO_RENAME_ERROR ERROR
+#undef ERROR
+#endif
+///\endcond
+
 /**
 \file core/Logging.hpp
 
@@ -485,4 +494,8 @@ defined. Otherwise, it will do nothing.
 #    endif
 #endif
 }
+
+#define NOU_TMP_MACRO_RENAME_ERROR ERROR
+#undef NOU_TMP_MACRO_RENAME_ERROR
+
 #endif

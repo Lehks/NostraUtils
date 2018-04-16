@@ -819,6 +819,8 @@ namespace NOU::NOU_DAT_ALG
 		constexpr VectorReverseIterator& operator -= (sizeType value);
 	};
 
+	template<typename T>
+	constexpr sizeType Vector<T>::MIN_CAPACITY;
 
 	template<typename T>
 	T* Vector<T>::alloc(sizeType amount)

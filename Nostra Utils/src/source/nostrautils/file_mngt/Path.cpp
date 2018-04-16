@@ -10,6 +10,11 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
+	constexpr char8 Path::PATH_SEPARATOR_WINDOWS;
+	constexpr char8 Path::PATH_SEPARATOR_UNIX_LINUX;
+	constexpr char8 Path::FILE_NAME_EXTENSION_SEPARATOR;
+	constexpr char8 Path::PATH_SEPARATOR;
+
 	NOU_DAT_ALG::String8 Path::makeAbsolutePath(const NOU_DAT_ALG::StringView8 &path)
 	{
 		NOU_DAT_ALG::String8 ret = path;

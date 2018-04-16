@@ -2,6 +2,8 @@
 
 namespace NOU::NOU_THREAD
 {
+	constexpr int32 internal::AbstractAsyncTaskResult::DEFAULT_PRIORITY;
+
 	void internal::AbstractAsyncTaskResult::executeTask(AbstractTask *task, 
 		AbstractAsyncTaskResult *taskResult, Mutex *mutex)
 	{
