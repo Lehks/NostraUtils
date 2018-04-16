@@ -26,22 +26,22 @@ namespace NOU::NOU_FILE_MNGT
 			/**
 			\brief Holds the parsed key value pairs, with the values being NouStrings.
 			*/
-			NOU::NOU_DAT_ALG::HashMap<NouString, NouString> m_data_string;
+			std::unordered_map<NouString, NouString> m_data_string;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being int32.
 			*/
-			NOU::NOU_DAT_ALG::HashMap<NouString, int32> m_data_integer;
+			std::unordered_map<NouString, int32> m_data_integer;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being float32.
 			*/
-			NOU::NOU_DAT_ALG::HashMap<NouString, float32> m_data_float;
+			std::unordered_map<NouString, float32> m_data_float;
 
 			/**
 			\brief Holds the parsed sections and the amount of keys within that section
 			*/
-			NOU::NOU_DAT_ALG::HashMap<NouString, int32> m_data_sections;
+			std::unordered_map<NouString, int32> m_data_sections;
 
 			/**
 			\brief The target file name to read from/write to.

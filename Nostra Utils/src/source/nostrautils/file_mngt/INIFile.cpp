@@ -13,34 +13,36 @@ namespace NOU::NOU_FILE_MNGT
 	INIFile::INIFile(const NouString & filename)
 	{
 		m_filename.insert(0, filename);
-		m_data_sections.map(INI_DEFAULT_SECTION, 0);
+		m_data_sections.insert(std::make_pair(INI_DEFAULT_SECTION, 0));
 	}
 
 
 	void INIFile::incSection(const NouString & section)
 	{
-		if (!m_data_sections.containsKey(section)) {
-			m_data_sections.map(section, 1);
+		if (m_data_sections.count(section) == 0) {
+			m_data_sections.insert(std::make_pair(section, 1));
 			return;
 		}
 
-		int32 value = m_data_sections.get(section) + 1;
+		std::unordered_map<NouString, int32>::const_iterator i = m_data_sections.find(section);
+		int32 value = i->second + 1;
 
-		m_data_sections.remove(section);
-		m_data_sections.map(section, value);
+		m_data_sections.erase(section);
+		m_data_sections.insert(std::make_pair(section, value));
 	}
 
 
 	void INIFile::decSection(const NouString & section)
 	{
-		int32 value = m_data_sections.get(section) - 1;
-
-		if (value < 0) {
+		if (m_data_sections.count(section) == 0) {
 			return;
 		}
 
-		m_data_sections.remove(section);
-		m_data_sections.map(section, value);
+		std::unordered_map<NouString, int32>::const_iterator i = m_data_sections.find(section);
+		int32 value = i->second - 1;
+
+		m_data_sections.erase(section);
+		m_data_sections.insert(std::make_pair(section, value));
 	}
 
 
@@ -193,6 +195,7 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean INIFile::write(const NouString & filename)
 	{
+		/*
 		NOU::NOU_DAT_ALG::Vector<NouString> section_keys = m_data_sections.keySet();
 		NOU::NOU_DAT_ALG::Vector<int32> section_values = m_data_sections.entrySet();
 		NOU::NOU_DAT_ALG::Vector<NouString> string_keys = m_data_string.keySet();
@@ -268,6 +271,81 @@ namespace NOU::NOU_FILE_MNGT
 				inifile << float_keys.at(ifloat).substring(pos_sec + 1).rawStr() << " = ";
 				inifile << float_values.at(ifloat) << std::endl;
 			}
+			
+		}
+
+		inifile.close();
+
+		return true;*/
+		std::unordered_map<NouString, NouString>::const_iterator istr;
+		std::unordered_map<NouString, int32>::const_iterator iint;
+		std::unordered_map<NouString, float32>::const_iterator ifloat;
+		std::ofstream inifile;
+		NouString key_section;
+		int32 pos_dot;
+		int32 pos_sec;
+
+		// Open file stream
+		if (!filename.size()) {
+			inifile.open(filename.rawStr());
+		}
+		else {
+			inifile.open(this->m_filename.rawStr());
+		}
+
+		if (!inifile) {
+			return false;
+		}
+
+		// Loop through all the sections
+		for (auto isec = m_data_sections.begin(); isec != m_data_sections.end(); ++isec)
+		{
+			// Write section
+			if (isec->first != INI_DEFAULT_SECTION && isec->second > 0) {
+				inifile << "[" << isec->first.rawStr() << "]" << std::endl;
+			}
+
+			// Save string size for later
+			pos_sec = isec->first.size();
+
+			// Write string data
+			for (istr = m_data_string.begin(); istr != m_data_string.end(); ++istr)
+			{
+				pos_dot = istr->first.firstIndexOf('.');
+				if (pos_dot == NouString::NULL_INDEX) continue;
+
+				key_section = istr->first.substring(0, pos_dot);
+				if (key_section != isec->first) continue;
+
+				inifile << istr->first.substring(pos_sec + 1).rawStr() << " = ";
+				inifile << "\"" << istr->second.rawStr() << "\"" << std::endl;
+			}
+
+			// Write int data
+			for (iint = m_data_integer.begin(); iint != m_data_integer.end(); ++iint)
+			{
+				pos_dot = iint->first.firstIndexOf('.');
+				if (pos_dot == NouString::NULL_INDEX) continue;
+
+				key_section = iint->first.substring(0, pos_dot);
+				if (key_section != isec->first) continue;
+
+				inifile << iint->first.substring(pos_sec + 1).rawStr() << " = ";
+				inifile << iint->second << std::endl;
+			}
+
+			// Write float data
+			for (ifloat = m_data_float.begin(); ifloat != m_data_float.end(); ++ifloat)
+			{
+				pos_dot = ifloat->first.firstIndexOf('.');
+				if (pos_dot == NouString::NULL_INDEX) continue;
+
+				key_section = ifloat->first.substring(0, pos_dot);
+				if (key_section != isec->first) continue;
+
+				inifile << ifloat->first.substring(pos_sec + 1).rawStr() << " = ";
+				inifile << ifloat->second << std::endl;
+			}
 		}
 
 		inifile.close();
@@ -280,14 +358,14 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		NouString search = section + "." + key;
 
-		if (m_data_string.containsKey(search)) {
-			m_data_string.remove(search);
+		if (m_data_string.count(search) > 0) {
+			m_data_string.erase(search);
 		}
-		else if (m_data_integer.containsKey(search)) {
-			m_data_integer.remove(search);
+		else if (m_data_integer.count(search) > 0) {
+			m_data_integer.erase(search);
 		}
-		else if (m_data_float.containsKey(search)) {
-			m_data_float.remove(search);
+		else if (m_data_float.count(search) > 0) {
+			m_data_float.erase(search);
 		}
 
 		this->decSection(section);
@@ -298,8 +376,8 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		this->remove(key, section);
 		this->incSection(section);
-		
-		m_data_string.map(section + "." + key, value);
+
+		m_data_string.insert(std::make_pair(section + "." + key, value));
 	}
 
 
@@ -308,7 +386,7 @@ namespace NOU::NOU_FILE_MNGT
 		this->remove(key, section);
 		this->incSection(section);
 
-		m_data_integer.map(section + "." + key, value);
+		m_data_integer.insert(std::make_pair(section + "." + key, value));
 	}
 
 
@@ -317,25 +395,26 @@ namespace NOU::NOU_FILE_MNGT
 		this->remove(key, section);
 		this->incSection(section);
 
-		m_data_float.map(section + "." + key, value);
+		m_data_float.insert(std::make_pair(NouString(section + "." + key), value));
 	}
 
 
 	NouString INIFile::getString(const NouString & key, const NouString & section)
 	{
 		NouString search = section + "." + key;
+		std::unordered_map<NouString, NouString>::const_iterator i = m_data_string.find(search);
 
-		if (m_data_string.containsKey(search)) {
-			return m_data_string.get(search);
+		if (i != m_data_string.end()) {
+			return i->second;
 		}
 
 		// Search in integer map and cast to string if found
-		if (m_data_integer.containsKey(search)) {
+		if (m_data_integer.count(search) > 0) {
 			return NouString(this->getInt(key, section));
 		}
 
 		// Search in float map and cast to string if found
-		if (m_data_float.containsKey(search)) {
+		if (m_data_float.count(search) > 0) {
 			return NouString(this->getFloat(key, section));
 		}
 
@@ -346,18 +425,19 @@ namespace NOU::NOU_FILE_MNGT
 	int32 INIFile::getInt(const NouString & key, const NouString & section)
 	{
 		NouString search = section + "." + key;
+		std::unordered_map<NouString, int32>::const_iterator i = m_data_integer.find(search);
 
-		if (m_data_integer.containsKey(search)) {
-			return m_data_integer.get(search);
+		if (i != m_data_integer.end()) {
+			return i->second;
 		}
 
 		// Search in string map and cast to int if found
-		if (m_data_string.containsKey(search)) {
+		if (m_data_string.count(search) > 0) {
 			return key.stringToInt32(this->getString(key, section));
 		}
 
 		// Search in float map and cast to int if found
-		if (m_data_float.containsKey(search)) {
+		if (m_data_float.count(search) > 0) {
 			return static_cast<int32>(this->getFloat(key, section));
 		}
 
@@ -368,29 +448,30 @@ namespace NOU::NOU_FILE_MNGT
 	float32 INIFile::getFloat(const NouString & key, const NouString & section)
 	{
 		NouString search = section + "." + key;
+		std::unordered_map<NouString, float32>::const_iterator i = m_data_float.find(search);
 
-		if (m_data_float.containsKey(search)) {
-			return m_data_float.get(search);
+		if (i != m_data_float.end()) {
+			return i->second;
 		}
 
 		// Search in string map and cast to float if found
-		if (m_data_string.containsKey(search)) {
+		if (m_data_string.count(search) > 0) {
 			return key.stringToFloat32(this->getString(key, section));
 		}
 
 		// Search in integer map and cast to float if found
-		if (m_data_integer.containsKey(search)) {
+		if (m_data_integer.count(search) > 0) {
 			return static_cast<float32>(this->getInt(key, section));
 		}
-		
+
 		return 0.0;
 	}
 
 
 	boolean INIFile::keyExists(const NouString & key, const NouString & section)
 	{
-		NouString search = section + "." + key;
+		NouString search = NouString(section + "." + key);
 
-		return (m_data_string.containsKey(search) || m_data_integer.containsKey(search) || m_data_float.containsKey(search));
+		return (m_data_string.count(search) > 0 || m_data_integer.count(search) > 0 || m_data_float.count(search) > 0);
 	}
 }
