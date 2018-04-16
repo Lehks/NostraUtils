@@ -26,22 +26,22 @@ namespace NOU::NOU_FILE_MNGT
 			/**
 			\brief Holds the parsed key value pairs, with the values being NouStrings.
 			*/
-			std::unordered_map<NouString, NouString> m_data_string;
+			std::unordered_map<NouString, NouString> m_dataString;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being int32.
 			*/
-			std::unordered_map<NouString, int32> m_data_integer;
+			std::unordered_map<NouString, int32> m_dataInteger;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being float32.
 			*/
-			std::unordered_map<NouString, float32> m_data_float;
+			std::unordered_map<NouString, float32> m_dataFloat;
 
 			/**
 			\brief Holds the parsed sections and the amount of keys within that section
 			*/
-			std::unordered_map<NouString, int32> m_data_sections;
+			std::unordered_map<NouString, int32> m_dataSections;
 
 			/**
 			\brief The target file name to read from/write to.
@@ -51,7 +51,7 @@ namespace NOU::NOU_FILE_MNGT
 			/**
 			\brief The name of the current section being parsed.
 			*/
-			NouString m_parser_section;
+			NouString m_parserSection;
 
 			/**
 			\param A single line of text.
