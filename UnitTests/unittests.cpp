@@ -659,7 +659,7 @@ IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
 IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
 IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
 IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!�$%&"));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!?$%&"));
 
 NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
@@ -1826,18 +1826,18 @@ NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 
 TEST_METHOD(IsBaseOf)
 {
-class Base
-{
-
-};
-
-class Derived : public Base
-{
-
-};
-
-IsTrue(NOU::NOU_CORE::IsBaseOf<Base, Derived>::value);
-IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
+	class Base
+	{
+	
+	};
+	
+	class Derived : public Base
+	{
+	
+	};
+	
+	IsTrue(NOU::NOU_CORE::IsBaseOf<Base, Derived>::value);
+	IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
 }
 
 TEST_METHOD(Logging)
