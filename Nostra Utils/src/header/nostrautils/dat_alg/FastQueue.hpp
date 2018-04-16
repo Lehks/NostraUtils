@@ -251,6 +251,9 @@ namespace NOU::NOU_DAT_ALG
 	};
 
 	template<typename T>
+	constexpr sizeType FastQueue<T>::MIN_CAPACITY;
+
+	template<typename T>
 	void FastQueue<T>::copyFromTo(Type *src, Type *dst, sizeType amount)
 	{
 		for (sizeType i = 0; i < amount; i++)

@@ -5,7 +5,7 @@
 
 namespace NOU::NOU_CORE
 {
-	void assert(boolean b, const char *msg, const char *fnName, sizeType line, const char *file)
+	void assertImpl(boolean b, const char *msg, const char *fnName, sizeType line, const char *file)
 	{
 		if (!b)
 		{
