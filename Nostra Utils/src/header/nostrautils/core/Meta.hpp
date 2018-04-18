@@ -4,11 +4,12 @@
 #include "nostrautils/core/StdIncludes.hpp"
 
 #include <type_traits>
+#include <utility>
 
 /** \file Meta.hpp
 \author	 Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a collection of meta functions.
 */
 
@@ -51,13 +52,13 @@ namespace NOU::NOU_CORE
 	int&& | int
 	*/
 	template<typename T>
-	struct remove_reference : public IdentityType<std::remove_reference_t<T>> {};
+	struct RemoveReference : public IdentityType<std::remove_reference_t<T>> {};
 
 	/**
-	\brief The result of a call to remove_reference.
+	\brief The result of a call to RemoveReference.
 	*/
 	template<typename T>
-	using remove_reference_t = typename remove_reference<T>::type;
+	using RemoveReference_t = typename RemoveReference<T>::type;
 
 	/**
 	\tparam t The type of the returned value.
@@ -78,6 +79,9 @@ namespace NOU::NOU_CORE
 		*/
 		static constexpr T value = v;
 	};
+
+	template<typename T, T v>
+	constexpr T Constant<T, v>::value;
 
 	/**
 	\tparam B The value of the boolean.
@@ -195,16 +199,61 @@ namespace NOU::NOU_CORE
 	///\endcond
 
 	/**
+	\tparam T The invocable to check the result of.
+
+	\return The result type of the passed invocable.
+
+	\brief Returns the result type of the passed invocable.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_INVOKE_RESULT
+	is defined.
+	*/
+#ifndef NOU_CPP14_COMPATIBILITY
+	template<typename T, typename...ARGS>
+	struct InvokeResult : IdentityType<std::invoke_result_t<T, ARGS...>> {};
+	#define NOU_EXISTS_FEATURE_INVOKE_RESULT
+#else
+	namespace internal
+	{
+		template<boolean IS_PTR, typename T, typename...ARGS>
+		struct InvokeResultImpl : IdentityType<std::result_of_t<T(ARGS...)>> {};
+
+		template<typename T, typename...ARGS>
+		struct InvokeResultImpl<false, T, ARGS...> : IdentityType<std::result_of_t<std::add_pointer_t<T>(ARGS...)>> {};
+	}
+
+	template<typename T, typename...ARGS>
+	struct InvokeResult : internal::InvokeResultImpl<std::is_pointer<T>::value, T, ARGS...> {};
+#endif
+
+	/**
+	\brief The result of a call to InvokeResult.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_INVOKE_RESULT
+	is defined.
+	*/
+	template<typename T, typename...ARGS>
+	using InvokeResult_t = typename InvokeResult<T, ARGS...>::type;
+
+	/**
 	\tparam T    The type to check if it is invocable.
 	\tparam ARGS The types that \p T needs to be invoked with.
 
 	\return TrueType, if the type \p T is invocable with the parameters \p ARGS, FalseType if not.
 
 	\brief Checks if a type is invocable using the passed parameter types.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_IS_INVOCABLE
+	is defined.
 	*/
+#ifndef NOU_CPP14_COMPATIBILITY
 	template<typename T, typename... ARGS>
 	struct IsInvocable : typeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
-
+	#define NOU_EXISTS_FEATURE_IS_INVOCABLE
+#endif
 	/**
 	\tparam R    The return type.
 	\tparam T    The type to check if it is invocable.
@@ -215,9 +264,16 @@ namespace NOU::NOU_CORE
 
 	\brief Checks if a type is invocable using the passed parameter types and it's return type is convertible 
 	       to \p R.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_IS_INVOCABLE_R
+	is defined.
 	*/
+#ifndef NOU_CPP14_COMPATIBILITY
 	template<typename R, typename T, typename... ARGS>
 	struct IsInvocableR : typeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
+	#define NOU_EXISTS_FEATURE_IS_INVOCABLE_R
+#endif
 
 	/**
 	\tparam T    The type to check.
@@ -231,20 +287,15 @@ namespace NOU::NOU_CORE
 		TrueType, FalseType> {};
 
 	/**
-	\tparam The invocable to check the result of.
+	\tparam B The type to check.
+	\tparam D The class that \p B is supposed to derive from.
 
-	\return The result type of the passed invocable.
+	\return True, if \p B is a parent of \p D, false if not.
 
-	\brief Returns the result type of the passed invocable.
+	\brief Checks whether \p B is a base class of \p D.
 	*/
-	template<typename T, typename...ARGS>
-	struct InvokeResult : IdentityType<std::invoke_result_t<T, ARGS...>> {};
-
-	/**
-	\brief The result of a call to InvokeResult.
-	*/
-	template<typename T, typename...ARGS>
-	using InvokeResult_t = typename InvokeResult<T, ARGS...>::type;
+	template<typename B, typename D>
+	struct IsBaseOf : BooleanConstant<std::is_base_of<B, D>::value> {};
 }
 
 #endif

@@ -9,6 +9,12 @@
 
 namespace NOU::NOU_THREAD
 {
+	constexpr typename ThreadManager::Priority ThreadManager::TaskInformation::INVALID_ID;
+
+	constexpr uint32 ThreadManager::DEFAULT_THREAD_COUNT;
+
+	constexpr sizeType ThreadManager::DEFAULT_TASK_CAPACITY;
+
 	ThreadManager::TaskInformation::TaskInformation(Priority id) :
 		m_id(id)
 	{}
@@ -86,6 +92,9 @@ namespace NOU::NOU_THREAD
 		// -1, b/c that is the main execution thread
 		sizeType threadPoolCapacity = ThreadWrapper::maxThreads() == 0 ? DEFAULT_THREAD_COUNT - 1 : 
 			ThreadWrapper::maxThreads() - 1;
+
+		//since DEFAULT_THREAD_COUNT is 2, the threadPoolCapacity will never be smaller than 2
+		threadPoolCapacity = NOU_CORE::max<sizeType>(threadPoolCapacity, DEFAULT_THREAD_COUNT);
 
 		return ObjectPoolPtr<ThreadDataBundle>(new NOU_DAT_ALG::ObjectPool<ThreadDataBundle>
 			(threadPoolCapacity, NOU_MEM_MNGT::GenericAllocationCallback<
@@ -218,25 +227,28 @@ namespace NOU::NOU_THREAD
 
 	void ThreadManager::giveBackThread(ThreadDataBundle &thread)
 	{
-		//if there is a task left, execute it immediately with the thread, otherwise put it back in the pool
-		if (Lock taskLock(m_taskHeapAccessMutex);  m_tasks->size() > 0)
-		{
-			//give back handler b/c the task may have it's own handler & executeTaskWithThread() 
-			//will get a new one from the pool.
-			giveBackHandler(*thread.m_taskHandlerPair.handler);
+		{ 
+			Lock taskLock(m_taskHeapAccessMutex); //open scope of Lock taskLock
+			
+			if (  m_tasks->size() > 0)
+			{
+				//give back handler b/c the task may have it's own handler & executeTaskWithThread() 
+				//will get a new one from the pool.
+				giveBackHandler(*thread.m_taskHandlerPair.handler);
 
-			TaskErrorHandlerPair &task = m_tasks->get();
-			m_tasks->dequeue();
+				TaskErrorHandlerPair &task = m_tasks->get();
+				m_tasks->dequeue();
 
-			executeTaskWithThread(task, thread);
-		}
-		else
-		{
-			Lock threadLock(m_threadPoolAccessMutex);
+				executeTaskWithThread(task, thread);
+			}
+			else
+			{
+				Lock threadLock(m_threadPoolAccessMutex);
 
-			m_threads->giveBack(thread);
+				m_threads->giveBack(thread);
 
-			giveBackHandler(*thread.m_taskHandlerPair.handler);
+				giveBackHandler(*thread.m_taskHandlerPair.handler);
+			}
 		}
 	}
 

@@ -10,7 +10,7 @@
 \file mem_mngt/PoolAllocator.hpp
 
 \author	 Lukas Gross
-\version 0.0.1
+\version 1.0.0
 \since	 1.0.0
 
 \brief A file that contains the nostra::utils::mem_mngt::PoolAllocator class.
@@ -145,6 +145,12 @@ namespace NOU::NOU_MEM_MNGT
 		*/
 		void deallocate(T* data);
 	};
+
+	template <typename T>
+	constexpr sizeType PoolAllocator<T>::POOL_ALLOCATOR_DEFAULT_SIZE;
+
+	template <typename T>
+	constexpr sizeType PoolAllocator<T>::BLOCK_BUFFER_DEFAULT_SIZE;
 
 	template <typename T>
 	PoolAllocator<T>::PoolAllocator(sizeType size, AllocationCallback<PoolBlock<T>*> &allocator) :

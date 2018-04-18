@@ -14,7 +14,7 @@
 
 \author  Lukas Gross
 \author  Lukas Reichmann
-\version 0.0.1
+\version 1.0.0
 \since   1.0.0
 
 \brief A file that contains the nostra::utils::core::FastQueue class.
@@ -249,6 +249,9 @@ namespace NOU::NOU_DAT_ALG
 		///\endcond
 
 	};
+
+	template<typename T>
+	constexpr sizeType FastQueue<T>::MIN_CAPACITY;
 
 	template<typename T>
 	void FastQueue<T>::copyFromTo(Type *src, Type *dst, sizeType amount)

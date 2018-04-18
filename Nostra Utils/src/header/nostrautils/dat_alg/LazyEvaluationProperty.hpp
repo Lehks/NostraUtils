@@ -7,8 +7,8 @@
 
 /** \file LazyEvaluationProperty.hpp
 \author  Lukas Reichmann
-\since   0.0.1
-\version 1.0
+\since   1.0.0
+\version 1.0.0
 \brief   This file contains a container that stores a value that is lazily evaluated.
 */
 

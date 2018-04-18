@@ -8,8 +8,8 @@
 
 /** \file ObjectPool.hpp
 \author  Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides the nostra::utils::dat_alg::ObjectPool container.
 
 \see nostra::utils::dat_alg::ObjectPool
@@ -405,7 +405,9 @@ namespace NOU::NOU_DAT_ALG
 	template<typename P>
 	void ObjectPool<T>::foreach(P predicate)
 	{
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<void, P, T&>::value);
+#endif
 		
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
@@ -417,7 +419,9 @@ namespace NOU::NOU_DAT_ALG
 	template<typename P>
 	void ObjectPool<T>::foreach(P predicate) const
 	{
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<void, P, const T&>::value);
+#endif
 
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{

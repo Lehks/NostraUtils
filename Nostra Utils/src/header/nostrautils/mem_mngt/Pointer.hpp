@@ -8,8 +8,8 @@
 
 /** \file Pointer.hpp
 \author	 Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides smart pointer classes (which is currently only \link 
          nostra::utils::mem_mngt::UniquePtr UniquePtr \endlink).
 
@@ -313,7 +313,9 @@ namespace NOU::NOU_MEM_MNGT
 		*/
 		using Type = typename SmartPtrTempl<T>::Type;
 
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE
 		static_assert(NOU_CORE::IsInvocable<DELETER, Type*>::value);
+#endif
 
 	protected:
 		/**

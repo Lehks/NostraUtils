@@ -11,8 +11,8 @@
 
 /** \file StringView.hpp
 \author	 Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides the StringView which is an interface between \link nostra::utils::dat_alg::String 
          String\endlink and C-Strings.
 
@@ -586,6 +586,18 @@ namespace NOU::NOU_DAT_ALG
 	\brief An alias name for a StringView that uses a nostra::utils::char32;
 	*/
 	using StringView32 = StringView<char32>;
+
+	template<typename CHAR_TYPE>
+	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::DECIMAL_PLACE_SEPARATOR;
+
+	template<typename CHAR_TYPE>
+	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::MINUS_CHAR;
+	
+	template<typename CHAR_TYPE>
+	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::NULL_TERMINATOR;
+	
+	template<typename CHAR_TYPE>
+	constexpr sizeType StringView<CHAR_TYPE>::NULL_INDEX;
 
 	///\todo Re-enable and exchange error handling
 	template<typename CHAR_TYPE>
