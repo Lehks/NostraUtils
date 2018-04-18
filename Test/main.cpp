@@ -24,7 +24,7 @@ namespace NOU::NOU_FILE_MNGT
 		else {
 			std::cout << "File read successfully." << std::endl;
 		}
-		/*
+		
 		// Get values
 		test_string = p.getString(NouString("STRING_A"), NouString("general"));
 		std::cout << "general::STRING_A = " << test_string.rawStr() << std::endl;
@@ -83,9 +83,7 @@ namespace NOU::NOU_FILE_MNGT
 		std::cout << "New Float = " << test_float << std::endl;
 
 		p.write(NouString("C:/Git/NostraUtils/Test/Test2.ini"));
-		*/
 	}
-	
 }
 
 int main()
