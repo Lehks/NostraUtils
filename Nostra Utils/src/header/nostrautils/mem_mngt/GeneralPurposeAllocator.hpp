@@ -46,7 +46,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\brief This class defines the free chunks of the allocator.
 		*/
-		class GeneralPurposeAllocatorFreeChunk
+		class NOU_CLASS GeneralPurposeAllocatorFreeChunk
 		{
 		public:
 
@@ -151,7 +151,7 @@ namespace NOU::NOU_MEM_MNGT
 	\details	The GeneralPurposeAllocator (GPA) cannot increase its size. If the GPA is constructed with the 
 				default size or a passed size it can only be increased by creating a new GPA with a bigger size.
 	*/
-	class GeneralPurposeAllocator
+	class NOU_CLASS GeneralPurposeAllocator
 	{
 	public:
 
@@ -162,7 +162,7 @@ namespace NOU::NOU_MEM_MNGT
 					allocator.
 		*/
 		template <typename T>
-		class GeneralPurposeAllocatorPointer
+		class NOU_CLASS GeneralPurposeAllocatorPointer
 		{
 			/**
 			\brief Defines the GeneralPurposeAllocator as a friend class.
@@ -364,59 +364,6 @@ namespace NOU::NOU_MEM_MNGT
 		void getNeigbors(T*& left, T*& right, sizeType insertionIndex);
 	};
 
-	internal::GeneralPurposeAllocatorFreeChunk::GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size) :
-		m_addr(addr),
-		m_size(size)
-	{
-		//do nothing
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::touches
-	(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		if (m_addr + m_size == other.m_addr)
-		{
-			return true;
-		}
-
-		if (other.m_addr + other.m_size == m_addr)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator>
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr > other.m_addr;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator<
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr < other.m_addr;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator>=
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr >= other.m_addr;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator<=
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr <= other.m_addr;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator==
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr == other.m_addr;
-	}
-
 	template <typename T, typename... ARGS>
 	T* internal::GeneralPurposeAllocatorFreeChunk::allocateObject
 	(sizeType amountOfObjects, ARGS&&... args)
@@ -511,22 +458,6 @@ namespace NOU::NOU_MEM_MNGT
 	boolean GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T>::operator!=(void* ptr) const
 	{
 		return m_pdata != ptr;
-	}
-
-	GeneralPurposeAllocator::GeneralPurposeAllocator(sizeType size) :
-		m_size(size)
-	{
-		m_data = new byte[m_size];
-		m_freeChunks.pushBack(internal::GeneralPurposeAllocatorFreeChunk(m_data, m_size));
-	}
-
-	GeneralPurposeAllocator::~GeneralPurposeAllocator()
-	{
-		if (m_data != nullptr)
-		{
-			delete[] m_data;
-			m_data = nullptr;
-		}
 	}
 
 	template <typename T, typename... ARGS>
