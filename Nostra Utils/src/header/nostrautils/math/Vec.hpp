@@ -42,6 +42,29 @@ namespace NOU::NOU_MATH
 	using Vec2f = Vec<2, int32>;
 	using Vec2i = Vec<2, int32>;
 
+	template<typpename T>
+	Vec Vector<T>::operator+(const Vec & vec)
+	{
+		return add(& vec);
+	}
+
+	template<typpename T>
+	Vec Vector<T>::operator-(const Vec & vec)
+	{
+		return sub(& vec);
+	}
+
+	template<typpename T>
+	Vec Vector<T>::operator*(const Vec & vec)
+	{
+		return mult(& vec);
+	}
+
+	template<typpename T> 
+	Vec Vector<T>::operator*(const Vec & vec)
+	{
+		return cross(& vec);
+	}
 
 	template<uint32 N, typename T>
 	Vec<N, T>::Vec(InitializerList list)
@@ -70,7 +93,7 @@ namespace NOU::NOU_MATH
 		}
 	}
 
-
+/*
 	template<uint32 N, typename T>
 	Vec<N, T>::Vec()
 	{
@@ -82,6 +105,7 @@ namespace NOU::NOU_MATH
 			m_data[i] = zero;
 		}
 	}
+	*/
 
 
 	/**

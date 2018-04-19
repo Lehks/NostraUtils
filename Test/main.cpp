@@ -27,7 +27,7 @@ void test()
 
 int main()
 {
-	test();
+	cos(3);
 
 
 }

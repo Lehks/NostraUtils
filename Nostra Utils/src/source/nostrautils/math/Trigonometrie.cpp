@@ -23,7 +23,7 @@ template<typename T>
 constexpr T sin(T x)
 {
 	T temp = 1 - cos(x) * cos(x);
-	NOU::uint64 ans = sqrt(temp);
+	T ans = sqrt(temp);
 	return ans;
 }
 
