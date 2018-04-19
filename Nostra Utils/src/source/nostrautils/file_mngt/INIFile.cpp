@@ -79,7 +79,7 @@ namespace NOU::NOU_FILE_MNGT
 		posQuoteFirst = line.firstIndexOf(quote) + 1;
 		posQuoteLast = line.lastIndexOf(quote);
 
-		value = line.substring(posQuoteFirst, posQuoteLast - posQuoteFirst);
+		value = line.substring(posQuoteFirst, posQuoteLast - (posQuoteFirst - 1));
 
 		return value;
 	}
@@ -182,7 +182,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			// Check if we have a section
 			if (line.at(0) == '[' && line.at((line.size() - 1)) == ']') {
-				section = line.substring(1, line.size() - 2);
+				section = line.substring(1, line.size() - 1).trim();
 			}
 			else {
 				this->parseLine(line, section);
@@ -407,7 +407,7 @@ namespace NOU::NOU_FILE_MNGT
 	NouString INIFile::getString(const NouString & key, const NouString & section)
 	{
 		NouString search = section + "." + key;
-		std::unordered_map<NouString, NouString>::const_iterator i = m_dataString.find(search);
+		std::unordered_map<NouString, NouString, INIFileHash>::const_iterator i = m_dataString.find(search);
 
 		if (i != m_dataString.end()) {
 			return i->second;

@@ -22,11 +22,11 @@ namespace NOU::NOU_FILE_MNGT
 	int32 const INI_TYPE_INT = 2;
 	int32 const INI_TYPE_FLOAT = 3;
 
-	struct NouStringHash 
+	struct INIFileHash 
 	{
-		size_t operator()(NouString str) const 
+		std::size_t operator()(const NouString &str) const 
 		{
-			return NOU::NOU_DAT_ALG::hashObj<NouString>( &str);
+			return std::hash<std::string>()(std::string(str.rawStr()));
 		}
 	};
 
@@ -36,22 +36,22 @@ namespace NOU::NOU_FILE_MNGT
 			/**
 			\brief Holds the parsed key value pairs, with the values being NouStrings.
 			*/
-			std::unordered_map<NouString, NouString, NouStringHash> m_dataString;
+			std::unordered_map<NouString, NouString, INIFileHash> m_dataString;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being int32.
 			*/
-			std::unordered_map<NouString, int32, NouStringHash> m_dataInteger;
+			std::unordered_map<NouString, int32, INIFileHash> m_dataInteger;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being float32.
 			*/
-			std::unordered_map<NouString, float32, NouStringHash> m_dataFloat;
+			std::unordered_map<NouString, float32, INIFileHash> m_dataFloat;
 
 			/**
 			\brief Holds the parsed sections and the amount of keys within that section
 			*/
-			std::unordered_map<NouString, int32, NouStringHash> m_dataSections;
+			std::unordered_map<NouString, int32, INIFileHash> m_dataSections;
 
 			/**
 			\brief The target file name to read from/write to.
