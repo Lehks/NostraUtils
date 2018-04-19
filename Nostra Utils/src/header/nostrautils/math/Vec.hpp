@@ -45,25 +45,25 @@ namespace NOU::NOU_MATH
 	template<typpename T>
 	Vec Vector<T>::operator+(const Vec & vec)
 	{
-		return add(& vec);
+		return add( vec);
 	}
 
 	template<typpename T>
 	Vec Vector<T>::operator-(const Vec & vec)
 	{
-		return sub(& vec);
+		return sub(vec);
 	}
 
 	template<typpename T>
 	Vec Vector<T>::operator*(const Vec & vec)
 	{
-		return mult(& vec);
+		return mult(vec);
 	}
 
 	template<typpename T> 
 	Vec Vector<T>::operator*(const Vec & vec)
 	{
-		return cross(& vec);
+		return cross( vec);
 	}
 
 	template<uint32 N, typename T>
