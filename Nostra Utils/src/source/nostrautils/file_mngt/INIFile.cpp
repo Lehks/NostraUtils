@@ -87,13 +87,13 @@ namespace NOU::NOU_FILE_MNGT
 
 	int32 INIFile::parseIntValue(const NouString &line)
 	{
-		return line.stringToInt32(line);
+		return std::stoi(line.rawStr());
 	}
 
 
 	float32 INIFile::parseFloatValue(const NouString &line)
 	{
-		return line.stringToFloat32(line);
+		return std::stof(line.rawStr());
 	}
 
 
@@ -147,9 +147,11 @@ namespace NOU::NOU_FILE_MNGT
 				// Add int
 				this->setInt(this->parseKey(lineLft), this->parseIntValue(lineRgt), section);
 			}
+			else {
+				// Add float
+				this->setFloat(this->parseKey(lineLft), this->parseFloatValue(lineRgt), section);
+			}
 
-			// Add float
-			this->setFloat(this->parseKey(lineLft), this->parseFloatValue(lineRgt), section);
 			return;
 		}
 
