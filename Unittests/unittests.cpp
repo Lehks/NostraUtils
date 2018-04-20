@@ -1883,6 +1883,37 @@ TEST_METHOD(Logging)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+
+TEST_METHOD(INIFile)
+{
+	NOU::NOU_FILE_MNGT::INIFile parser = NOU::NOU_FILE_MNGT::INIFile("unittest.ini");
+
+	parser.setString("TEST_STR", "Testing");
+	IsTrue(parser.getString("TEST_STR") == "Testing");
+
+	parser.setInt("TEST_INT", 42);
+	IsTrue(parser.getInt("TEST_INT") == 42);
+
+	parser.setFloat("TEST_FLOAT", 13.37);
+	IsTrue(parser.getFloat("TEST_FLOAT") > 13.369);
+	IsTrue(parser.getFloat("TEST_FLOAT") < 13.381);
+
+	parser.setString("TEST_STR", "Testing", "test");
+	IsTrue(parser.getString("TEST_STR").size() == 0);
+	IsTrue(parser.getString("TEST_STR", "test") == "Testing");
+
+	parser.setInt("TEST_INT", 42, "test");
+	IsTrue(parser.getInt("TEST_INT") == 0);
+	IsTrue(parser.getInt("TEST_INT", "test") == 42);
+
+	parser.setFloat("TEST_FLOAT", 13.37, "test");
+	IsTrue(parser.getFloat("TEST_FLOAT") < 0.1);
+	IsTrue(parser.getFloat("TEST_FLOAT", "test") > 13.369);
+	IsTrue(parser.getFloat("TEST_FLOAT", "test") < 13.381);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
 int main(int argc, char** argv)
 {
     int result = Catch::Session().run(argc, argv);
