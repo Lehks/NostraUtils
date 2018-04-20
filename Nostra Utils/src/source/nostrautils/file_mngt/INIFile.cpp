@@ -281,16 +281,16 @@ namespace NOU::NOU_FILE_MNGT
 		inifile.close();
 
 		return true;*/
-		std::unordered_map<NouString, NouString>::const_iterator istr;
-		std::unordered_map<NouString, int32>::const_iterator iint;
-		std::unordered_map<NouString, float32>::const_iterator ifloat;
+		std::unordered_map<NouString, NouString, INIFileHash>::const_iterator istr;
+		std::unordered_map<NouString, int32, INIFileHash>::const_iterator iint;
+		std::unordered_map<NouString, float32, INIFileHash>::const_iterator ifloat;
 		std::ofstream inifile;
 		NouString keySection;
 		int32 posDot;
 		int32 posSec;
 
 		// Open file stream
-		if (!filename.size()) {
+		if (filename.size() > 0) {
 			inifile.open(filename.rawStr());
 		}
 		else {
