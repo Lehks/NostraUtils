@@ -1,6 +1,8 @@
 #include "nostrautils/file_mngt/Folder.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
 
+#include <filesystem>
+
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 #include <Windows.h>
 #include <stdlib.h>
@@ -12,7 +14,11 @@ namespace NOU::NOU_FILE_MNGT
 {
 	Folder::Folder(const Path& path) :
 		m_path(path)
-	{}
+	{
+		DWORD lastError = GetLastError();
+		if (lastError == ERROR_PATH_NOT_FOUND)
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "The path to the folder was not found.");
+	}
 
 
 	boolean Folder::create()
@@ -59,11 +65,22 @@ namespace NOU::NOU_FILE_MNGT
 		pattern.append("\\*");
 		WIN32_FIND_DATA data;
 		HANDLE hFind;
+		NOU::boolean firstFolder = true;
+		
+
+
+
+
 		if ((hFind = FindFirstFile(pattern.rawStr(), &data)) != INVALID_HANDLE_VALUE) {
 			do 
-			{
-				v.emplaceBack(data.cFileName);
-				//file
+			{ 
+				if (data.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
+				{
+					
+					v.emplaceBack(data.cFileName);
+
+				}
+			
 			} 
 			while (FindNextFile(hFind, &data) != 0);
 			FindClose(hFind);
@@ -75,4 +92,56 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-}
+
+
+
+	NOU_DAT_ALG::Vector<Folder> Folder::listFiles() const
+	{
+
+
+		NOU_DAT_ALG::Vector<Folder> v;
+		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
+		pattern.append("\\*");
+		WIN32_FIND_DATA data;
+		HANDLE hFind;
+		NOU::boolean firstFolder = true;
+		
+
+		
+
+
+
+
+		if ((hFind = FindFirstFile(pattern.rawStr(), &data)) != INVALID_HANDLE_VALUE) {
+			do
+			{
+				if (data.dwFileAttributes != FILE_ATTRIBUTE_DIRECTORY)
+				{
+
+					v.emplaceBack(data.cFileName);
+
+				}
+
+			} while (FindNextFile(hFind, &data) != 0);
+			FindClose(hFind);
+
+		}
+
+		return v;
+
+	}
+
+	
+
+
+	
+
+	}
+
+
+
+	
+
+	
+
+

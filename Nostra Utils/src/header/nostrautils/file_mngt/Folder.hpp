@@ -3,7 +3,7 @@
 
 #include "nostrautils\file_mngt\File.hpp"
 #include "nostrautils\file_mngt\Path.hpp"
-
+#include "nostrautils/dat_alg/StringView.hpp"
 /** \file Folder.hpp
 \author  Mahan Karimi
 \since   0.0.1
@@ -19,7 +19,10 @@ namespace NOU::NOU_FILE_MNGT
 	class NOU_CLASS Folder 
 	{
 	private :
+
 		Path m_path;
+
+		NOU::NOU_DAT_ALG::String8 m_name = "."; 
 
 	public :
 		/*
@@ -41,7 +44,7 @@ namespace NOU::NOU_FILE_MNGT
 		\ return all files and safes in a vector
 		*/
 												
-		NOU::NOU_DAT_ALG::Vector<File> listFiles() const;
+		NOU::NOU_DAT_ALG::Vector<Folder> listFiles() const;
 		
 		/*
 		\brief  A function that returns you the current path 
@@ -66,7 +69,8 @@ namespace NOU::NOU_FILE_MNGT
 		static boolean create(const Path &path);
 
  
-		
+		//void read_directory(const NOU::NOU_DAT_ALG::String8 &name,  v);
+
 		
 	};
 }

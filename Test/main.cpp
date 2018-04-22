@@ -15,12 +15,14 @@ using namespace NOU;
 using namespace NOU_DAT_ALG;
 using namespace NOU_FILE_MNGT;
 
-void callback(const NOU_CORE::ErrorLocation&)
-{
+//void callback(const NOU_CORE::ErrorLocation&)
+//{
 	//__debugbreak();
-}
+//}
 
-int main()
+
+
+int main(int argc, TCHAR *argv[])
 {
 	//NOU_CORE::ErrorHandler::setCallback(callback);
 
@@ -28,19 +30,28 @@ int main()
 	//const NOU::NOU_DAT_ALG::String8 str;
 
 	NOU::NOU_FILE_MNGT::Folder f("C:\\Users\\Mahan\\Desktop");
-
+	//NOU::NOU_FILE_MNGT::File file("C:\\Users\\Mahan\\Desktop", AccessMode::READ);
+	
 
 	//f.read_directory("C:\\Users\\Mahan\\Desktop\\", vec);
 	//f.create("P:\\Users\\Mahan\\Desktop\\");
 
 	 
 	// f.create();
-	NOU_DAT_ALG::Vector<Folder> v = f.listFolders(); 
+     NOU_DAT_ALG::Vector<Folder> v = f.listFiles(); 
 
-	for (sizeType i = 0; i < v.size(); i++)
-	{
+     for (sizeType i = 0; i < v.size(); i++)
+	
 		std::cout << v[i].getPath().getAbsolutePath().rawStr() << std::endl;
-	}
+
+	
+
+	//NOU_DAT_ALG::Vector<Folder> v = f.listFolders();
+
+	//for (sizeType i = 0; i < v.size(); i++)
+	//{
+		//std::cout << v[i].getPath().getAbsolutePath().rawStr() << std::endl;
+	//}
 	
 	
 
