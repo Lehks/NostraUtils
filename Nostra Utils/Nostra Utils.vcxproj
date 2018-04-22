@@ -329,6 +329,7 @@
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
+    <ClCompile Include="src\source\nostrautils\math\New_Matrix.cpp" />
     <ClCompile Include="src\source\nostrautils\math\Matrix3.cpp" />
     <ClCompile Include="src\source\nostrautils\math\Trigonometrie.cpp" />
     <ClCompile Include="src\source\nostrautils\math\Vec3.cpp" />

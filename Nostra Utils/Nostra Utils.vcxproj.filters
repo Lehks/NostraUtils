@@ -123,5 +123,8 @@
     <ClCompile Include="src\source\nostrautils\math\Trigonometrie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\source\nostrautils\math\New_Matrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
