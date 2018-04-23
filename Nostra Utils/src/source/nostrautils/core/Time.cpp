@@ -1,5 +1,7 @@
-#include "nostrautils/core/Time.hpp"
 #include <chrono>
+
+#include "nostrautils/core/Time.hpp"
+
 
 namespace NOU::NOU_CORE
 {
@@ -10,6 +12,7 @@ namespace NOU::NOU_CORE
 
 	uint64 currentTimeNanos()
 	{
-		return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock.now().time_since_epoch()).count();
+		std::chrono::high_resolution_clock::time_point t = std::chrono::high_resolution_clock::now();
+		return std::chrono::duration_cast<std::chrono::nanoseconds>(t.time_since_epoch()).count();
 	}
 }
