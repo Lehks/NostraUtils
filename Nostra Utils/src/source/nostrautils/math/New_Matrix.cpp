@@ -57,7 +57,7 @@ namespace NOU::NOU_MATH {
 	}
 
 	template<typename T>
-	constexpr T** subMatrix(const T** matA, const T** matB, const T &rows, const T &cols) {
+	constexpr T** subMatrix(T** matA, T** matB, T &rows, T &cols) {
 		T** resultMat = generateMatrix(rows, cols);
 
 		for (int i = 0; i < rows; ++i) {
