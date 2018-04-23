@@ -14,11 +14,10 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	File::File(const Path &path, AccessMode mode) :
-		m_path(path),
-		m_mode(mode)
+	File::File(const Path &path) :
+		m_path(path)
 	{
-		setMode(mode);
+		m_data == nullptr;
 	}
 	//mv
 	File::File(File &&other) :
@@ -27,9 +26,9 @@ namespace NOU::NOU_FILE_MNGT
 		m_data(other.m_data)
 
 	{
-		other.close();
 		other.setMode(AccessMode::READ_WRITE);
-		other.m_path;
+		other.m_data = nullptr;
+		other.m_path = nullptr;
 	}
 
 	File::~File()
@@ -51,7 +50,7 @@ namespace NOU::NOU_FILE_MNGT
 		return fgetc(m_data);
 	}
 
-	void File::read(sizeType size, char8 &buffer)
+	void File::read(sizeType size, char8 *buffer)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
@@ -61,11 +60,11 @@ namespace NOU::NOU_FILE_MNGT
 			return;
 		}
 		open();
-		fread(&buffer, size, 1, m_data);
+		fread(buffer, size, 1, m_data);
 	}
 
 
-	bool File::write(byte b)
+	boolean File::write(byte b)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
 		if (m_mode != AccessMode::READ)
@@ -76,22 +75,21 @@ namespace NOU::NOU_FILE_MNGT
 		return false;
 	}
 
-	bool File::write(const NOU::NOU_DAT_ALG::StringView8 &s)
+	boolean File::write(const NOU::NOU_DAT_ALG::StringView8 &s)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
 		if (m_mode != AccessMode::READ)
 		{
-			void *p;
-			p = &(s.rawStr()[0]);
-			fread(p, s.size(), 1, m_data);
+			fwrite(s.rawStr(), sizeof(s.rawStr()[0]), s.size(), m_data);
 			return true;
 		}
 		return false;
 	}
 
 
-	bool File::open()
+	boolean File::open(AccessMode mode)
 	{
+		setMode(mode);
 		if (!isCurrentlyOpen())
 		{
 			switch (m_mode)
@@ -116,9 +114,9 @@ namespace NOU::NOU_FILE_MNGT
 					break;
 			}
 		}
-		return getData() != nullptr;
+		return m_data != nullptr;
 	}
-	bool File::close()
+	boolean File::close()
 	{
 		if (isCurrentlyOpen())
 		{
@@ -138,7 +136,7 @@ namespace NOU::NOU_FILE_MNGT
 		close();
 	}
 
-	bool File::isCurrentlyOpen()
+	boolean File::isCurrentlyOpen()
 	{
 		return m_data != nullptr;
 	}	
@@ -149,6 +147,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 	void File::setMode(AccessMode mode)
 	{
+		close();
 		m_mode = mode;
 	}
 
@@ -161,5 +160,21 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		return m_data;
 	}
+
+	boolean File::exists()
+	{
+		/*if (_access(m_path.getAbsolutePath().rawStr(), 0) == -1)
+		{
+			return false;
+		}*/
+		//return true;
+
+		//#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+		struct stat   buffer;
+		return (stat(m_path.getAbsolutePath().rawStr(), &buffer) == 0);
+		//#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+			
+		//#endif
+		return true;
+	}
 }
-*/

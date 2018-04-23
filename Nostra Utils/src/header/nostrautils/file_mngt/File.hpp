@@ -1,11 +1,18 @@
 #ifndef NOU_FILE_MNGT_FILE_HPP
 #define NOU_FILE_MNGT_FILE_HPP
 
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\dat_alg\StringView.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\file_mngt\Path.hpp"
-#include <stdio.h>
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/StringView.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/file_mngt/Path.hpp"
+
+//#include <stdio.h>
+//#include <io.h>
+
+#include <sys/stat.h>
+
+
+
 
 
 /** \file File.hpp
@@ -81,7 +88,7 @@ namespace NOU::NOU_FILE_MNGT
 		\param mode how the file will be interpreted(Read/Write)
 		\param path Path object containing the path to the file
 		*/
-		File(const Path &path, AccessMode mode = AccessMode::READ_WRITE);
+		File(const Path &path);
 		
 		/**
 		\brief Copy-constructor of the File class
@@ -110,14 +117,14 @@ namespace NOU::NOU_FILE_MNGT
 		\brief reads a string of given size
 		\param size size of the string in byte 
 		*/
-		void read(sizeType size, char8 &buffer);
+		void read(sizeType size, char8 *buffer);
 
 		/**
 		\brief writes a single byte into a file according to the i/o mode that is set
 
 		\return true if successfully written, false if otherwise
 		*/
-		bool write(byte b);
+		boolean write(byte b);
 
 
 		/**
@@ -125,21 +132,21 @@ namespace NOU::NOU_FILE_MNGT
 		\param s the given string
 		\return true if successfully written, false if otherwise
 		*/
-		bool write(const NOU::NOU_DAT_ALG::StringView8 &s);
+		boolean write(const NOU::NOU_DAT_ALG::StringView8 &s);
 
 		/**
 		\brief Opens the internal filestream
 
 		\return true if successfully opened, false if otherwise
 		*/
-		bool open();
+		boolean open(AccessMode mode = AccessMode::READ_WRITE);
 
 		/**
 		\brief Closes the internal filestream
 
 		\return true if successfully closed, false if otherwise
 		*/
-		bool close();
+		boolean close();
 
 		/**
 		\brief Creates the file if not allready existing
@@ -152,7 +159,7 @@ namespace NOU::NOU_FILE_MNGT
 		\return true if currently opened, false if not
 		*/
 
-		bool isCurrentlyOpen();
+		boolean isCurrentlyOpen();
 
 		/**
 		\brief Getter for AccessMode
@@ -160,11 +167,7 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		const AccessMode& getMode();
 
-		/**
-		\brief Setter for AccessMode
-		\param mode AccessMode of the file
-		*/
-		void setMode(AccessMode mode);
+
 
 		/**
 		\brief Getter for Path
@@ -177,6 +180,20 @@ namespace NOU::NOU_FILE_MNGT
 		\return datastream
 		*/
 		FILE* getData(); 
+
+		/**
+		\brief checks if a File is allready existing according to the set Path
+		\return true if File exists, false otherwise
+		*/
+		boolean exists();
+
+	private:
+
+		/**
+		\brief Setter for AccessMode
+		\param mode AccessMode of the file
+		*/
+		void setMode(AccessMode mode);
 
 	};
 }
