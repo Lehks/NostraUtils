@@ -1,6 +1,8 @@
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 
+#include <fstream>
+
 namespace NOU::NOU_FILE_MNGT
 {
 	void File::fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode)
@@ -156,6 +158,12 @@ namespace NOU::NOU_FILE_MNGT
 	FILE* File::getData()
 	{
 		return m_data;
+	}
+
+	sizeType File::size()
+	{
+		std::ifstream in(m_path.getAbsolutePath().rawStr(), std::ifstream::ate | std::ifstream::binary);
+		return in.tellg();
 	}
 
 	boolean File::exists()
