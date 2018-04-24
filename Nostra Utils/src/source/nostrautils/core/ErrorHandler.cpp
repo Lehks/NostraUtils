@@ -93,6 +93,7 @@ namespace NOU::NOU_CORE
 		NOU_ADD_ERROR(s_defaultErrorPool, INVALID_STATE);
 		NOU_ADD_ERROR(s_defaultErrorPool, MUTEX_ERROR);
 		NOU_ADD_ERROR(s_defaultErrorPool, PATH_NOT_FOUND);
+		NOU_ADD_ERROR(s_defaultErrorPool, CANNOT_OPEN_FILE);
 		NOU_ADD_ERROR(s_defaultErrorPool, ALREADY_EXISTS);
 	}
 

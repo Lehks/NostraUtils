@@ -1,4 +1,4 @@
-/*
+
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 
