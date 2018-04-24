@@ -189,6 +189,11 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		boolean exists();
 
+		/**
+		\brief returns the file size in bytes, pushes an error if the file is not existant
+		\return returns the file size in bytes
+		*/
+
 	private:
 
 		/**
