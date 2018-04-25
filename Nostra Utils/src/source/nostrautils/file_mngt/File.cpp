@@ -42,7 +42,7 @@ namespace NOU::NOU_FILE_MNGT
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not Exist");
 		if(!exists())
 		{
-			return;
+			return 0;
 		}
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
@@ -191,5 +191,11 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		struct stat   buffer;
 		return (stat(m_path.getAbsolutePath().rawStr(), &buffer) == 0);
+	}
+
+	boolean File::deleteFile()
+	{
+		int err = remove(m_path.getAbsolutePath().rawStr());
+		return err == 0;
 	}
 }

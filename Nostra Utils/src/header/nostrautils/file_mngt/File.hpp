@@ -195,6 +195,12 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		sizeType size();
 
+		/**
+		\brief deletes the corresponding file from the permanent memory
+		\return true if successfully deleted, false if otherwise
+		*/
+		boolean deleteFile();
+
 	private:
 
 		/**
