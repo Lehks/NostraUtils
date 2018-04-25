@@ -147,8 +147,8 @@ namespace NOU::NOU_CORE
 		}
 		else
 		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
-				"Could not open log file.");
+			//NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+			//	"Could not open log file.");
 		}
 	}
 
