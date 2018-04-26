@@ -1883,6 +1883,43 @@ TEST_METHOD(Logging)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+
+TEST_METHOD(INIFile)
+{
+	NOU::NOU_FILE_MNGT::INIFile parser = NOU::NOU_FILE_MNGT::INIFile("unittest.ini");
+
+	parser.setString("TEST_STR", "Testing");
+	IsTrue(parser.getString("TEST_STR") == "Testing");
+
+	parser.setInt("TEST_INT", 42);
+	IsTrue(parser.getInt("TEST_INT") == 42);
+
+	parser.setFloat("TEST_FLOAT", 13.37);
+	IsTrue(parser.getFloat("TEST_FLOAT") > 13.369);
+	IsTrue(parser.getFloat("TEST_FLOAT") < 13.381);
+
+	parser.remove("TEST_STR");
+	IsTrue(parser.getString("TEST_STR").size() == 0);
+
+	parser.remove("TEST_INT");
+	IsTrue(parser.getInt("TEST_INT") == 0);
+
+	parser.remove("TEST_FLOAT");
+	IsTrue(parser.getFloat("TEST_FLOAT") < 0.1);
+
+	parser.setString("TEST_STR", "Testing", "section");
+	IsTrue(parser.getString("TEST_STR", "section") == "Testing");
+
+	parser.setInt("TEST_INT", 42, "section");
+	IsTrue(parser.getInt("TEST_INT", "section") == 42);
+
+	parser.setFloat("TEST_FLOAT", 13.37, "section");
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369);
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
 int main(int argc, char** argv)
 {
     int result = Catch::Session().run(argc, argv);
