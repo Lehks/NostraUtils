@@ -190,7 +190,8 @@ namespace NOU::NOU_FILE_MNGT
 	boolean File::exists()
 	{
 		struct stat   buffer;
-		return (stat(m_path.getAbsolutePath().rawStr(), &buffer) == 0);
+		boolean r = (stat(m_path.getAbsolutePath().rawStr(), &buffer) == 0);
+		return r;
 	}
 
 	boolean File::deleteFile()

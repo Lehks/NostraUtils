@@ -1883,6 +1883,38 @@ TEST_METHOD(Logging)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+TEST_METHOD(File)
+{
+	NOU::NOU_FILE_MNGT::File f("UnitTestFile");
+	NOU::NOU_DAT_ALG::StringView8 testString = "Nostra";
+	NOU::char8 *buff;
+	NOU::char8 firstIn[6];
+
+
+
+	// Creating file and testing if it exists
+	IsTrue(!f.exists());
+	f.createFile();
+	IsTrue(f.exists());
+
+	// Read/Write
+	buff = firstIn;
+
+	f.write(testString);
+	f.read(6, buff);
+
+	for(int i = 0; i < 8; i++)
+	{
+		IsTrue(buff[i] == testString[i]);
+	}
+
+
+
+	// Deleting File
+	IsTrue(f.deleteFile());
+	IsTrue(!f.exists());
+}
+
 int main(int argc, char** argv)
 {
     int result = Catch::Session().run(argc, argv);
