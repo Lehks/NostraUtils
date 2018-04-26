@@ -1,8 +1,9 @@
+/*
 #ifndef NOU_FILE_MNGT_FOLDER_HPP
 #define NOU_FILE_MNGT_FOLDER_HPP
 
-#include "nostrautils\file_mngt\File.hpp"
-#include "nostrautils\file_mngt\Path.hpp"
+#include "nostrautils/file_mngt/File.hpp"
+#include "nostrautils/file_mngt/Path.hpp"
 #include "nostrautils/dat_alg/StringView.hpp"
 /** \file Folder.hpp
 \author  Mahan Karimi
@@ -74,4 +75,5 @@ namespace NOU::NOU_FILE_MNGT
 		
 	};
 }
+*/
 #endif

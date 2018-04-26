@@ -197,13 +197,6 @@ namespace NOU::NOU_FILE_MNGT
 	boolean File::deleteFile()
 	{
 		int err = remove(m_path.getAbsolutePath().rawStr());
-		if(err == 0)
-		{
-			return true;
-		}else
-		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Could not delete File");
-			return false;
-		}
+		return err == 0;
 	}
 }
