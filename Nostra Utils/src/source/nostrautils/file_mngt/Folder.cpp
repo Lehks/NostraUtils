@@ -1,3 +1,4 @@
+/*
 #include "nostrautils/file_mngt/Folder.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
 
@@ -91,7 +92,7 @@ namespace NOU::NOU_FILE_MNGT
 		return v;
 	}
 }
-
+*/
 
 
 	

@@ -1,3 +1,4 @@
+/*
 #ifndef NOU_FILE_MNGT_FOLDER_HPP
 #define NOU_FILE_MNGT_FOLDER_HPP
 
@@ -74,4 +75,5 @@ namespace NOU::NOU_FILE_MNGT
 		
 	};
 }
+*/
 #endif
