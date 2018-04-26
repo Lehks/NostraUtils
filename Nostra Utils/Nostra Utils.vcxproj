@@ -307,8 +307,6 @@
   <ItemGroup>
     <ClInclude Include="src\header\nostrautils\core\Assertions.hpp" />
     <ClInclude Include="src\header\nostrautils\core\ErrorHandler.hpp" />
-    <ClInclude Include="src\header\nostrautils\core\Time.hpp" />
-    <ClInclude Include="src\header\nostrautils\core\Logging.hpp" />
     <ClInclude Include="src\header\nostrautils\core\Meta.hpp" />
     <ClInclude Include="src\header\nostrautils\core\StdIncludes.hpp" />
     <ClInclude Include="src\header\nostrautils\core\SystemInformation.hpp" />
@@ -328,6 +326,7 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\StringView.hpp" />
     <ClInclude Include="src\header\nostrautils\dat_alg\FastQueue.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\File.hpp" />
+    <ClInclude Include="src\header\nostrautils\file_mngt\Folder.hpp" />
     <ClInclude Include="src\header\nostrautils\file_mngt\Path.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\AllocationCallback.hpp" />
     <ClInclude Include="src\header\nostrautils\mem_mngt\GeneralPurposeAllocator.hpp" />
@@ -351,12 +350,11 @@
   <ItemGroup>
     <ClCompile Include="src\source\nostrautils\core\Assertions.cpp" />
     <ClCompile Include="src\source\nostrautils\core\ErrorHandler.cpp" />
-    <ClCompile Include="src\source\nostrautils\core\Logging.cpp" />
     <ClCompile Include="src\source\nostrautils\core\SystemInformation.cpp" />
-    <ClCompile Include="src\source\nostrautils\core\Time.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Random.cpp" />
     <ClCompile Include="src\source\nostrautils\dat_alg\Hashing.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\File.cpp" />
+    <ClCompile Include="src\source\nostrautils\file_mngt\Folder.cpp" />
     <ClCompile Include="src\source\nostrautils\file_mngt\Path.cpp" />
     <ClCompile Include="src\source\nostrautils\mem_mngt\Utils.cpp" />
     <ClCompile Include="src\source\nostrautils\thread\AsyncTaskResult.cpp" />

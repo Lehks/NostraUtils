@@ -313,7 +313,9 @@ namespace NOU::NOU_MEM_MNGT
 		*/
 		using Type = typename SmartPtrTempl<T>::Type;
 
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE
 		static_assert(NOU_CORE::IsInvocable<DELETER, Type*>::value);
+#endif
 
 	protected:
 		/**

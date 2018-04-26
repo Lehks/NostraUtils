@@ -158,16 +158,13 @@
     <ClInclude Include="src\header\nostrautils\dat_alg\LazyEvaluationProperty.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\core\Logging.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\header\nostrautils\core\SystemInformation.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\header\nostrautils\NostraUtils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\nostrautils\core\Time.hpp">
+    <ClInclude Include="src\header\nostrautils\file_mngt\Folder.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -214,15 +211,12 @@
     <ClCompile Include="src\source\nostrautils\core\SystemInformation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\source\nostrautils\core\Time.cpp">
+    <ClCompile Include="src\source\nostrautils\file_mngt\Folder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Doc\output\Warnings.txt" />
     <Text Include="CMakeLists.txt" />
-    <ClCompile Include="src\source\nostrautils\core\Logging.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

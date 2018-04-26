@@ -587,6 +587,18 @@ namespace NOU::NOU_DAT_ALG
 	*/
 	using StringView32 = StringView<char32>;
 
+	template<typename CHAR_TYPE>
+	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::DECIMAL_PLACE_SEPARATOR;
+
+	template<typename CHAR_TYPE>
+	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::MINUS_CHAR;
+	
+	template<typename CHAR_TYPE>
+	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::NULL_TERMINATOR;
+	
+	template<typename CHAR_TYPE>
+	constexpr sizeType StringView<CHAR_TYPE>::NULL_INDEX;
+
 	///\todo Re-enable and exchange error handling
 	template<typename CHAR_TYPE>
 	template<typename OT>

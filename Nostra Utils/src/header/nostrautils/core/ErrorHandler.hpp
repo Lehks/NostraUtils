@@ -459,9 +459,15 @@ namespace NOU::NOU_CORE
 			INVALID_STRING_CONVERSION,
 
 			/**
-			\brief An object of some kind is invalid.
+			\brief The path to a file was not found.
 			*/
-			INVALID_OBJECT,
+			PATH_NOT_FOUND,
+
+			/**
+			\brief The file is already exists 
+			*/
+
+			ALREADY_EXISTS ,
 
 			/**
 			\brief An object was in an invalid state.
@@ -474,14 +480,9 @@ namespace NOU::NOU_CORE
 			MUTEX_ERROR,
 
 			/**
-			\brief Cannot open this file.
+			\brief An object of some kind is invalid.
 			*/
-			CANNOT_OPEN_FILE,
-
-			/**
-			\brief Cannot close this file.
-			*/
-			CANNOT_CLOSE_FILE,
+			INVALID_OBJECT,
 
 			/**
 			\brief	Not an actual error, but always the last element in the enum. The error codes 0 - 

@@ -1,5 +1,10 @@
+<<<<<<< HEAD:UnitTests/unittests.cpp
 
 #include "CppUnitTest.h"
+=======
+#define CATCH_CONFIG_RUNNER
+#include "Catch/catch.hpp"
+>>>>>>> 048457ea8462165428f1582a4c0091e1f8048f43:Unittests/unittests.cpp
 
 #define NOU_DEBUG
 
@@ -416,7 +421,173 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 1) > 0);
 
 
+<<<<<<< HEAD:UnitTests/unittests.cpp
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(1, 5) < 0);
+=======
+TEST_METHOD(StringView)
+{
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('A'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('Z'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('a'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('z'));
+
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter(' '));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter('3'));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter('%'));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter('-'));
+
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('1'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('2'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('3'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('4'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('5'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('6'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('7'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('8'));
+IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('9'));
+
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit(' '));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit('A'));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit('%'));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit('-'));
+
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
+
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
+IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!?$%&"));
+
+NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
+
+IsTrue(sv[0] == 'H');
+IsTrue(sv[1] == 'e');
+IsTrue(sv[2] == 'l');
+IsTrue(sv[3] == 'l');
+IsTrue(sv[4] == 'o');
+IsTrue(sv[5] == ' ');
+IsTrue(sv[6] == 'W');
+IsTrue(sv[7] == 'o');
+IsTrue(sv[8] == 'r');
+IsTrue(sv[9] == 'l');
+IsTrue(sv[10] == 'd');
+IsTrue(sv[11] == '!');
+
+IsTrue(sv.size() == 12);
+
+IsTrue(*sv.indexIterator(0) == 'H');
+IsTrue(*sv.indexIterator(1) == 'e');
+IsTrue(*sv.indexIterator(2) == 'l');
+IsTrue(*sv.indexIterator(3) == 'l');
+IsTrue(*sv.indexIterator(4) == 'o');
+IsTrue(*sv.indexIterator(5) == ' ');
+IsTrue(*sv.indexIterator(6) == 'W');
+IsTrue(*sv.indexIterator(7) == 'o');
+IsTrue(*sv.indexIterator(8) == 'r');
+IsTrue(*sv.indexIterator(9) == 'l');
+IsTrue(*sv.indexIterator(10) == 'd');
+IsTrue(*sv.indexIterator(11) == '!');
+
+IsTrue(sv == "Hello World!");
+
+IsTrue(sv.find('e') == 1);
+IsTrue(sv.find('e', 1) == 1);
+
+IsTrue(sv.find('o') == 4);
+IsTrue(sv.find('o', 5) == 7);
+IsTrue(sv.find('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+IsTrue(sv.find("ello") == 1);
+IsTrue(sv.find("o") == 4);
+IsTrue(sv.find("o", 5) == 7);
+IsTrue(sv.find("test") == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+IsTrue(sv.firstIndexOf('H') == 0);
+IsTrue(sv.firstIndexOf('o') == 4);
+IsTrue(sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+IsTrue(sv.lastIndexOf('H') == 0);
+IsTrue(sv.lastIndexOf('o') == 7);
+IsTrue(sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+
+IsTrue(sv.firstIndexOfNot('H') == 1);
+IsTrue(sv.firstIndexOfNot('o') == 0);
+IsTrue(sv.firstIndexOfNot('z') == 0);
+
+IsTrue(sv.lastIndexOfNot('H') == 11);
+IsTrue(sv.lastIndexOfNot('o') == 11);
+IsTrue(sv.lastIndexOfNot('z') == 11);
+
+IsTrue(sv.startsWith('H'));
+IsTrue(!sv.startsWith('g'));
+
+IsTrue(sv.startsWith("Hell"));
+IsTrue(!sv.startsWith("World"));
+
+IsTrue(sv.endsWith("rld!") == true);
+IsTrue(!sv.endsWith("World") == true);
+
+IsTrue((sv.compareTo("Abc") > 0));
+IsTrue((sv.compareTo("Hello World!") == 0));
+IsTrue((sv.compareTo("Xyz") < 0));
+
+NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
+
+IsTrue(subStr.size() == 6);
+
+IsTrue(subStr[0] == 'W');
+IsTrue(subStr[1] == 'o');
+IsTrue(subStr[2] == 'r');
+IsTrue(subStr[3] == 'l');
+IsTrue(subStr[4] == 'd');
+IsTrue(subStr[5] == '!');
+
+IsTrue(sv == "Hello World!");
+IsTrue(sv != "Hello z World!");
+IsTrue(sv < "xyz");
+IsTrue((sv > "abc"));
+
+NOU::NOU_DAT_ALG::StringView8 sv1 = "Hello World!";
+NOU::NOU_DAT_ALG::StringView8 sv2 = "Bye World!";
+
+sv1 = sv2;
+
+IsTrue(sv1 == sv2);
+
+
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("123") == 123);
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("9999999") == 9999999);
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("0") == 0);
+
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("123") == 123);
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("9999999") == 9999999);
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("0") == 0);
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-123") == -123);
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-9999999") == -9999999);
+IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-0") == -0);
+
+IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123"), 123.0f, 0.001f) == 0);
+IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999"), 9999999.0f, 0.001f) == 0);
+IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0"), 0.0f, 0.001f) == 0);
+IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456"), 123.456f, 0.001f) == 0);
+IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99"), 5.99f, 0.001f) == 0);
+IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5"), 14.5f, 0.001f) == 0);
+IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
+IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
+IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
+
+NOU_CHECK_ERROR_HANDLER;
+}
+>>>>>>> 048457ea8462165428f1582a4c0091e1f8048f43:Unittests/unittests.cpp
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(5, 5) == 0);
 
@@ -1692,6 +1863,7 @@ namespace UnitTests
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
+<<<<<<< HEAD:UnitTests/unittests.cpp
 		//no more tests are possible, since the remaining methods of thread manager are either not reliable 
 		//(like currentlyAvailableThreads(), which may change any moment) or there are no observable values 
 		//produced (like pushTask())
@@ -1865,4 +2037,73 @@ namespace UnitTests
 			Assert::IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
 		}
 	};	
+=======
+TEST_METHOD(IsBaseOf)
+{
+	class Base
+	{
+	
+	};
+	
+	class Derived : public Base
+	{
+	
+	};
+	
+	IsTrue(NOU::NOU_CORE::IsBaseOf<Base, Derived>::value);
+	IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
+}
+
+TEST_METHOD(Logging)
+{
+	static NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+
+	static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+	static NOU::NOU_DAT_ALG::String8 writeOutput;
+
+	NOU::NOU_CORE::Logger* log = NOU::NOU_CORE::Logger::instance();
+
+	static NOU::NOU_THREAD::Mutex mutex;
+	static NOU::NOU_THREAD::ConditionVariable variable;
+
+	class TestLogger : public NOU::NOU_CORE::ILogger
+	{
+		void write(const NOU::NOU_CORE::Event& event, StringType filename)
+		{
+			writeOutput = NOU::NOU_CORE::Logger::print(event);
+			variable.notifyAll();
+		}
+	};
+
+	log->pushLogger<TestLogger>();
+	log->write(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+
+	//Wait until the logger has actually printed the message
+	NOU::NOU_THREAD::UniqueLock lock(mutex);
+	variable.wait(lock);
+
+	if (testOutput.size() == writeOutput.size()) //For better error message
+	{
+		for (int i = 0; i < testOutput.size(); i++)
+		{
+			IsTrue(testOutput.at(i) == writeOutput.at(i));
+		}
+	}
+	else
+	{
+		IsTrue(false);
+	}
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+int main(int argc, char** argv)
+{
+    int result = Catch::Session().run(argc, argv);
+
+    std::cout << "Test run has finished. Press ENTER to return." << std::endl;
+    std::cin.get();
+
+    return result;
+>>>>>>> 048457ea8462165428f1582a4c0091e1f8048f43:Unittests/unittests.cpp
 }

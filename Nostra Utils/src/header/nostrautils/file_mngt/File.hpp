@@ -85,7 +85,6 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief Constructor of the File class
 
-		\param mode how the file will be interpreted(Read/Write)
 		\param path Path object containing the path to the file
 		*/
 		File(const Path &path);
@@ -189,6 +188,18 @@ namespace NOU::NOU_FILE_MNGT
 		\return true if File exists, false otherwise
 		*/
 		boolean exists();
+
+		/**
+		\brief returns the file size in bytes, pushes an error if the file is not existant
+		\return returns the file size in bytes
+		*/
+		sizeType size();
+
+		/**
+		\brief deletes the corresponding file from the permanent memory
+		\return true if successfully deleted, false if otherwise
+		*/
+		boolean deleteFile();
 
 	private:
 

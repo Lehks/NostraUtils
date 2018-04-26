@@ -1,5 +1,8 @@
+
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
+
+#include <fstream>
 
 namespace NOU::NOU_FILE_MNGT
 {
@@ -12,12 +15,11 @@ namespace NOU::NOU_FILE_MNGT
 		#endif
 	}
 
-
 	File::File(const Path &path) :
-		m_path(path)
-	{
-		m_data == nullptr;
-	}
+		m_path(path),
+		m_data(nullptr)
+	{}
+	
 	//mv
 	File::File(File &&other) :
 		m_path(other.m_path),
@@ -25,9 +27,7 @@ namespace NOU::NOU_FILE_MNGT
 		m_data(other.m_data)
 
 	{
-		other.setMode(AccessMode::READ_WRITE);
 		other.m_data = nullptr;
-		other.m_path = nullptr;
 	}
 
 	File::~File()
@@ -39,7 +39,11 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
-
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not Exist");
+		if(!exists())
+		{
+			return 0;
+		}
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
 			return 0;
@@ -53,7 +57,11 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
-
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
+		if(!exists())
+		{
+			return;
+		}
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
 			return;
@@ -61,7 +69,6 @@ namespace NOU::NOU_FILE_MNGT
 		open();
 		fread(buffer, size, 1, m_data);
 	}
-
 
 	boolean File::write(byte b)
 	{
@@ -84,7 +91,6 @@ namespace NOU::NOU_FILE_MNGT
 		}
 		return false;
 	}
-
 
 	boolean File::open(AccessMode mode)
 	{
@@ -115,6 +121,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 		return m_data != nullptr;
 	}
+
 	boolean File::close()
 	{
 		if (isCurrentlyOpen())
@@ -129,10 +136,17 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 	}
+
 	void File::createFile()
 	{
-		open();
-		close();
+		if(!exists())
+		{
+			open(AccessMode::WRITE);
+			close();
+		}else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Fille allready exists");
+		}
 	}
 
 	boolean File::isCurrentlyOpen()
@@ -144,6 +158,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		return m_mode;
 	}
+
 	void File::setMode(AccessMode mode)
 	{
 		close();
@@ -160,20 +175,34 @@ namespace NOU::NOU_FILE_MNGT
 		return m_data;
 	}
 
+	sizeType File::size()
+	{
+		if(exists()){
+			std::ifstream in(m_path.getAbsolutePath().rawStr(), std::ifstream::ate | std::ifstream::binary);
+			return in.tellg();
+		} else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "File does not exist"); //PATH_NOT_FOUND
+			return 0;
+		}
+	}
+
 	boolean File::exists()
 	{
-		/*if (_access(m_path.getAbsolutePath().rawStr(), 0) == -1)
-		{
-			return false;
-		}*/
-		//return true;
-
-		//#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		struct stat   buffer;
 		return (stat(m_path.getAbsolutePath().rawStr(), &buffer) == 0);
-		//#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-			
-		//#endif
-		return true;
+	}
+
+	boolean File::deleteFile()
+	{
+		int err = remove(m_path.getAbsolutePath().rawStr());
+		if(err == 0)
+		{
+			return true;
+		}else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Could not delete File");
+			return false;
+		}
 	}
 }

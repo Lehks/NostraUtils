@@ -19,7 +19,7 @@
 */
 #ifndef NOU_ASSERT
 #    ifdef NOU_DEBUG
-#        define NOU_ASSERT(b) NOU::NOU_CORE::assert(b, "Assertion failed: " NOU_STRINGIFY(b) "; Function: "\
+#        define NOU_ASSERT(b) NOU::NOU_CORE::assertImpl(b, "Assertion failed: " NOU_STRINGIFY(b) "; Function: "\
 				 NOU_FUNC_NAME "; Line: " NOU_LINE_STRING "; File: " __FILE__, NOU_FUNC_NAME, __LINE__, \
 				__FILE__)
 #    else
@@ -39,7 +39,7 @@ namespace NOU::NOU_CORE
 	\brief The function that is called by NOU_ASSERT. This function should never called directly, always use
 	       NOU_ASSERT.
 	*/
-	NOU_FUNC void assert(boolean b, const char *msg, const char *fnName, sizeType line, const char *file);
+	NOU_FUNC void assertImpl(boolean b, const char *msg, const char *fnName, sizeType line, const char *file);
 }
 
 #endif

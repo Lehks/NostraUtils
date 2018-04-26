@@ -13,6 +13,26 @@ git clone https://github.com/Lehks/NostraUtils.git
 ```` 
 or download the ZIP-compressed directly from GitHub using the link above.
 
+## Requirements
+
+Nostra Utils was written for the C\++17 standard and uses a lot of C\++17 features. **Officially, C\++17 is the 
+minimum required C\++ standard.** There is however a so-called C\++14 compatibility mode which disables or 
+modifies some features in the library to try to enable C\++14 support. There are still a lot of C\++14 features 
+left (like static_assert without a message or nested namespace definitions) so it is not guaranteed that the 
+compiler actually supports those features.
+
+Tests for the C\++14 compatibility mode were run and succeeded on:
+- GCC
+    - Linux
+        - Version 7.2.0
+        - Version 6.3.1
+- Clang
+    - Linux
+        - Version 4.0.1 (with a lot of warnings because of the usage of C\++1z features)
+
+The mode did not work with MSVC, because MSVC only allows nested namespaces in C\++17 and not C\++14. This 
+problem will most likely not be fixed.
+
 ## Building the Project
 To build this project, CMake is required. See this (https://cmake.org/install/) link for an explanation on how
 to install CMake.
@@ -24,66 +44,58 @@ Building the project is done in two steps:
 2. Compiling the code from those configurations (Chapter [Building the Binaries](#Building-the-Binaries)).
 
 ### Calling CMake
-Calling CMake can be done using the terminal or CMake's graphical user interface CMake-GUI.
+Calling CMake can be done using the terminal or CMake\'s graphical user interface CMake-GUI.
 
 #### Terminal 
-It is assumed, that the command *cmake* is in the system's PATH variable. Otherwise the entire path to the
-CMake executable must be given instead of just *cmake*.
+It is assumed, that the command ```cmake``` is in the system\'s PATH variable. Otherwise the entire path to 
+the CMake executable must be given instead of just ```cmake```.
 
-##### Unix/Linux
-Call the command 
-```bash
-mkdir Build/ ; cd Build/ ; cmake ../
-``` 
-from the project's root directory.
+0. Navigate to the root directory of the source code.
+1. ```mkdir Build``` Create the directory to build in.
+2. ```cd Build``` Navigate into the build directory.
+3. ```cmake ..``` Configure CMake. See note below on how to customize that configuration.
+4. ```cmake --build . --target install``` Build the project and export the generated files to the default
+   installation path (with is /usr/local on Linux/Unix and C:\\Program Files on Windows).
 
-**Note:** If any other compiler than GCC should be used, it is necessary to call these commands before:  
+**Note:** If the build of Nostra Utils should be customized, more parameters need to be passed to CMake (the 
+command from step 3.), but this is generally easier to do with cmake-gui or ccmake (configuring  the build 
+with cmake-gui will be explained in a later chapter).
 
-```bash
-export CC=/absolute/path/to/the/c/compiler/executable
-export CXX=/absolute/path/to/the/c++/compiler/executable
+To change the installation directory, the third command needs to be changed to: 
+
 ```
-
-##### Windows
-Call the command 
-```bash
-md Build & cd Build & cmake ../
+cmake -DCMAKE_INSTALL_PREFIX=/path/to/install/directory ..
 ``` 
-from the project's root directory.
 
-**Note:** This command only works with the cmd.exe, if the Powershell used, the command from 
-[Windows and Unix/Linux](#Windows-and-Unix/Linux) 
-should be used.
+This will change the install directory to the passed one (/path/to/install/directory in this example).
 
 #### CMake-GUI
-1. Open the CMake GUI (this can be done from the terminal [Windows and Unix/Linux](#Windows-and-Unix/Linux) 
+1. Open the CMake GUI (this can be done from the terminal
    using the command *cmake-gui*).
-2. In the GUI, for the folder that is labeled "Where the source code:" choose the root directory of the 
+2. In the GUI, for the folder that is labeled "Where is the source code:" choose the root directory of the 
    project.
-3. For the folder that is labeled "Where to build the binaries:" choose "/Path/To/Project/Root/Build/" 
-   (/Path/To/Project/Root/ is the path to the root directory of the project; this is the directory that 
-   contains the file NostraUtils.sln)
+3. For the folder that is labeled "Where to build the binaries:" choose the folder "Build" in the root 
+   directory of Nostra Utils.
 4. Click the button "Configure". When prompted to choose a generator, the default generator is usually a good 
    choice.
 5. After CMake is done configuring, click the button "Generate".
 
 ### Building the binaries
-This is very platform and generator dependent. At this point, it is assumed that the generators that were 
-chosen are Makefile on Unix/Linux and VisualStudio on Windows.
+**Note:** For the sake of generality, the binaries will only be built from the terminal using CMake commands. 
+Otherwise, the process would be very platform- and generator dependent.
 
-#### Unix/Linux
-1. Navigate to the folder "Build/" in the project root folder. If in the previous step, CMake was called using 
-   the terminal, this should still be the case.
-2. Call the command *make*. This will build the project and place the output files in the folder "Build/bin/".
-   These output files are a shared library (libNostraUtils_SHARED.so) and a static library 
-   (libNostraUtils_STATIC.a).
+Building the binaries is rather simple and can be done using the command
 
-#### Windows
-1. Open the file "Build/NostraUtils.sln" using Visual Studio.
-2. In the toolbar at the top, choose "Release" as configuration (the default value is "Debug").
-3. In the solution explorer, right click the project "ALL_BUILD" and from the context menu select "Build". 
-   This will build the project and place the output files in the folder "Build/bin/Release". If there is a 
-   Folder "Debug" instead of "Release" in "Build/bin/", the wrong configuration was chosen in Visual Studio. 
-   The Debug configuration is still fine, but may be sower.
-4. Optionally, it is also possible to only build the Project "NostraUtils_SHARED" or "NostraUtils_STATIC" if 
-   only a shared (DLL) or only a static (LIB) library is required.
+```
+cmake --build . --target install
+```
+
+**Note:** It is assumed that the previous command was called from the directory that CMake has build in (which
+was Build/ in the source's root directory during the examples here).
+
+**Note:** In the case that building the library succeeds, but the installation fails, try checking whether
+the process has the rights to write into the installation directory.
+
+## Dependencies
+This Library uses Catch (https://github.com/catchorg/Catch2) as Unit-Test framework. The source file of Catch 
+(Unittests/Catch/catch.hpp) has not been altered.
