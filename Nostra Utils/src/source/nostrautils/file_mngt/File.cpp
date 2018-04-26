@@ -73,6 +73,11 @@ namespace NOU::NOU_FILE_MNGT
 	boolean File::write(byte b)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
+		if(!isCurrentlyOpen())
+		{
+			NOU_PUSH_ERROR((NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is not opened"));
+			return false;
+		}
 		if (m_mode != AccessMode::READ)
 		{
 			fputc(b, getData());
@@ -84,6 +89,11 @@ namespace NOU::NOU_FILE_MNGT
 	boolean File::write(const NOU::NOU_DAT_ALG::StringView8 &s)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
+		if(!isCurrentlyOpen())
+		{
+			NOU_PUSH_ERROR((NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is not opened"));
+			return false;
+		}
 		if (m_mode != AccessMode::READ)
 		{
 			fwrite(s.rawStr(), sizeof(s.rawStr()[0]), s.size(), m_data);
