@@ -1,10 +1,6 @@
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\dat_alg\ObjectPool.hpp"
-#include "nostrautils\file_mngt\Path.hpp"
-#include "nostrautils\file_mngt\Folder.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
 #include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/file_mngt/Path.hpp"
 #include <iostream>
 #include <stdio.h>
 
@@ -24,11 +20,9 @@ using namespace NOU_FILE_MNGT;
 
 int main(int argc, TCHAR *argv[])
 {
-	File f("abc.txt");
-	cout << (f.exists() ? "Datei existsiert" : "Datei existiert nicht") << endl;
-	f.open(AccessMode::WRITE);
-	f.write("asdfasdfasdfasdfasdf");
-	cout << (f.exists() ? "Datei existsiert" : "Datei existiert nicht") << endl;
-	f.close();
-	system("pause");
+	std::cout "HAKHDDH" std::endl;
+
+	std::cin.get();
+
+	return 0;
 }

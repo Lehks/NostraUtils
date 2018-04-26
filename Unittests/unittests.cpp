@@ -1,10 +1,10 @@
-<<<<<<< HEAD:UnitTests/unittests.cpp
+
 
 #include "CppUnitTest.h"
-=======
+
 #define CATCH_CONFIG_RUNNER
 #include "Catch/catch.hpp"
->>>>>>> 048457ea8462165428f1582a4c0091e1f8048f43:Unittests/unittests.cpp
+
 
 #define NOU_DEBUG
 
@@ -421,9 +421,8 @@ namespace UnitTests
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 1) > 0);
 
 
-<<<<<<< HEAD:UnitTests/unittests.cpp
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(1, 5) < 0);
-=======
+
 TEST_METHOD(StringView)
 {
 IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('A'));
@@ -587,7 +586,6 @@ IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
 
 NOU_CHECK_ERROR_HANDLER;
 }
->>>>>>> 048457ea8462165428f1582a4c0091e1f8048f43:Unittests/unittests.cpp
 
 			Assert::IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(5, 5) == 0);
 
@@ -1863,7 +1861,6 @@ NOU_CHECK_ERROR_HANDLER;
 			NOU_CHECK_ERROR_HANDLER;
 		}
 
-<<<<<<< HEAD:UnitTests/unittests.cpp
 		//no more tests are possible, since the remaining methods of thread manager are either not reliable 
 		//(like currentlyAvailableThreads(), which may change any moment) or there are no observable values 
 		//produced (like pushTask())
@@ -2037,7 +2034,6 @@ NOU_CHECK_ERROR_HANDLER;
 			Assert::IsTrue(!NOU::NOU_CORE::IsBaseOf<Derived, Base>::value);
 		}
 	};	
-=======
 TEST_METHOD(IsBaseOf)
 {
 	class Base
@@ -2105,5 +2101,4 @@ int main(int argc, char** argv)
     std::cin.get();
 
     return result;
->>>>>>> 048457ea8462165428f1582a4c0091e1f8048f43:Unittests/unittests.cpp
 }
