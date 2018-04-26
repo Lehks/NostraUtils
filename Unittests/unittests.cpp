@@ -1818,7 +1818,7 @@ NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 	IsTrue(p13.getParentPath() == "");
 	IsTrue(p14.getParentPath() == "/Users");
 
-	IsTrue(p15.getRelativePath() == "/Test/TestUser/TestDir2");
+	IsTrue(p15.getRelativePath() == "Test/TestUser/TestDir2");
 
 #endif
 

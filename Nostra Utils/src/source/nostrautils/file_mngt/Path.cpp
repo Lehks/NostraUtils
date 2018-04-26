@@ -122,7 +122,7 @@ namespace NOU::NOU_FILE_MNGT
 		if (str.substring(0, cwd.getAbsolutePath().size()) == cwd.getAbsolutePath())
 		{
 			sizeType lastPathSeparator = cwd.getAbsolutePath().size();
-			return NOU_DAT_ALG::String8(path.logicalSubstring(lastPathSeparator, path.size()));
+			return NOU_DAT_ALG::String8(path.logicalSubstring(lastPathSeparator + 1, path.size()));
 		}
 
 
