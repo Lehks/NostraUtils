@@ -1889,6 +1889,7 @@ TEST_METHOD(File)
 	NOU::NOU_DAT_ALG::StringView8 testString = "Nostra";
 	NOU::char8 *buff;
 	NOU::char8 firstIn[6];
+	NOU::boolean errBit;
 
 
 
@@ -1896,14 +1897,19 @@ TEST_METHOD(File)
 	IsTrue(!f.exists());
 	f.createFile();
 	IsTrue(f.exists());
+	NOU::sizeType s;
 
 	// Read/Write
+	f.open();
 	buff = firstIn;
+	errBit = f.write(testString);
+	IsTrue(errBit);
+	f.close();
+	s = f.size();
+	f.open(NOU::NOU_FILE_MNGT::AccessMode::READ);
+	f.read(s, buff);
 
-	f.write(testString);
-	f.read(6, buff);
-
-	for(int i = 0; i < 8; i++)
+	for(NOU::sizeType i = 0; i < s; i++)
 	{
 		IsTrue(buff[i] == testString[i]);
 	}
@@ -1911,6 +1917,7 @@ TEST_METHOD(File)
 
 
 	// Deleting File
+	f.close();
 	IsTrue(f.deleteFile());
 	IsTrue(!f.exists());
 }

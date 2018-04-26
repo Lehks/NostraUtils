@@ -72,16 +72,19 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean File::write(byte b)
 	{
+		NOU::boolean err;
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
 		if(!isCurrentlyOpen())
 		{
-			NOU_PUSH_ERROR((NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is not opened"));
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is not opened");
 			return false;
 		}
 		if (m_mode != AccessMode::READ)
 		{
 			fputc(b, getData());
-			return true;
+			err = (ferror(m_data) == 0);
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Unknown Error");
+			return err;
 		}
 		return false;
 	}
@@ -91,13 +94,13 @@ namespace NOU::NOU_FILE_MNGT
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
 		if(!isCurrentlyOpen())
 		{
-			NOU_PUSH_ERROR((NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is not opened"));
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is not opened");
 			return false;
 		}
 		if (m_mode != AccessMode::READ)
 		{
 			fwrite(s.rawStr(), sizeof(s.rawStr()[0]), s.size(), m_data);
-			return true;
+			return (ferror(m_data)) == 0;
 		}
 		return false;
 	}
@@ -187,6 +190,10 @@ namespace NOU::NOU_FILE_MNGT
 
 	sizeType File::size()
 	{
+		if(isCurrentlyOpen()){
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Cannot read size of currently opened file");
+			return 0;
+		}
 		if(exists()){
 			std::ifstream in(m_path.getAbsolutePath().rawStr(), std::ifstream::ate | std::ifstream::binary);
 			return in.tellg();
