@@ -8,6 +8,14 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
+	constexpr NOU::char8 *INIFile::INI_DEFAULT_SECTION;
+	const int32 INIFile::INI_QUOTE_NONE = 0;
+	const int32 INIFile::INI_QUOTE_DOUBLE = 1;
+	const int32 INIFile::INI_QUOTE_SINGLE = 2;
+	const int32 INIFile::INI_TYPE_NouString = 1;
+	const int32 INIFile::INI_TYPE_INT = 2;
+	const int32 INIFile::INI_TYPE_FLOAT = 3;
+
 	INIFile::INIFile(const NouString & filename)
 	{
 		m_filename.insert(0, filename);
@@ -49,20 +57,20 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	NouString INIFile::parseKey(NouString &line) const
+	INIFile::NouString INIFile::parseKey(const NouString &line) const
 	{
-		return line.trim();
+		return line.copy().trim();
 	}
 
 
-	NouString INIFile::parseStringValue(NouString & line, const int32 quoteType)
+	INIFile::NouString INIFile::parseStringValue(const NouString & line, const int32 quoteType) const
 	{
 		int32 posQuoteFirst;
 		int32 posQuoteLast;
 		char quote;
 
 		// Clean line
-		NouString value = line.trim();
+		NouString value = line.copy().trim();
 
 		// If there are no quotes, we are done here.
 		if (quoteType == INI_QUOTE_NONE) {
@@ -85,13 +93,13 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	int32 INIFile::parseIntValue(const NouString &line)
+	int32 INIFile::parseIntValue(const NouString &line) const
 	{
 		return std::stoi(line.rawStr());
 	}
 
 
-	float32 INIFile::parseFloatValue(const NouString &line)
+	float32 INIFile::parseFloatValue(const NouString &line) const
 	{
 		return std::stof(line.rawStr());
 	}
@@ -117,7 +125,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	void INIFile::parseLine(NouString & line, const NouString & section)
+	void INIFile::parseLine(const NouString & line, const NouString & section)
 	{
 		NouString lineLft;
 		NouString lineRgt;
@@ -133,7 +141,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Check if first char indicates comment
-		if (line.at(0) == ';') {
+		if (line.copy().at(0) == ';') {
 			return;
 		}
 
@@ -197,7 +205,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean INIFile::write(const NouString & filename)
+	boolean INIFile::write(const NouString & filename) const
 	{
 		/*
 		NOU::NOU_DAT_ALG::Vector<NouString> section_keys = m_data_sections.keySet();
@@ -406,7 +414,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	NouString INIFile::getString(const NouString & key, const NouString & section)
+	INIFile::NouString INIFile::getString(const NouString & key, const NouString & section) const
 	{
 		NouString search = section + "." + key;
 		std::unordered_map<NouString, NouString, INIFileHash>::const_iterator i = m_dataString.find(search);
@@ -429,7 +437,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	int32 INIFile::getInt(const NouString & key, const NouString & section)
+	int32 INIFile::getInt(const NouString & key, const NouString & section) const
 	{
 		NouString search = section + "." + key;
 		std::unordered_map<NouString, int32>::const_iterator i = m_dataInteger.find(search);
@@ -452,7 +460,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	float32 INIFile::getFloat(const NouString & key, const NouString & section)
+	float32 INIFile::getFloat(const NouString & key, const NouString & section) const
 	{
 		NouString search = section + "." + key;
 		std::unordered_map<NouString, float32>::const_iterator i = m_dataFloat.find(search);
@@ -475,7 +483,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean INIFile::keyExists(const NouString & key, const NouString & section)
+	boolean INIFile::keyExists(const NouString & key, const NouString & section) const
 	{
 		NouString search = NouString(section + "." + key);
 

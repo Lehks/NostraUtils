@@ -12,19 +12,9 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	using NouString = NOU::NOU_DAT_ALG::String<char8>;
-
-	const NouString INI_DEFAULT_SECTION("undefined");
-	int32 const INI_QUOTE_NONE = 0;
-	int32 const INI_QUOTE_DOUBLE = 1;
-	int32 const INI_QUOTE_SINGLE = 2;
-	int32 const INI_TYPE_NouString = 1;
-	int32 const INI_TYPE_INT = 2;
-	int32 const INI_TYPE_FLOAT = 3;
-
 	struct INIFileHash 
 	{
-		std::size_t operator()(const NouString &str) const 
+		std::size_t operator()(const NOU::NOU_DAT_ALG::String<char8> &str) const
 		{
 			return std::hash<std::string>()(std::string(str.rawStr()));
 		}
@@ -32,6 +22,17 @@ namespace NOU::NOU_FILE_MNGT
 
 	class NOU_CLASS INIFile
 	{
+		public:
+			using NouString = NOU::NOU_DAT_ALG::String<char8>;
+
+			static constexpr NOU::char8 *INI_DEFAULT_SECTION = "undefined";
+			static const int32 INI_QUOTE_NONE;
+			static const int32 INI_QUOTE_DOUBLE;
+			static const int32 INI_QUOTE_SINGLE;
+			static const int32 INI_TYPE_NouString;
+			static const int32 INI_TYPE_INT;
+			static const int32 INI_TYPE_FLOAT;
+
 		private:
 			/**
 			\brief Holds the parsed key value pairs, with the values being NouStrings.
@@ -64,144 +65,161 @@ namespace NOU::NOU_FILE_MNGT
 			NouString m_parserSection;
 
 			/**
-			\param A single line of text.
+			\param line    A single line of text that should be parsed.
+			\param section The section to which this line belongs.
 
 			\brief Parses a single line from the file.
 			*/
-			void parseLine(NouString &, const NouString &);
+			void parseLine(const NouString & line, const NouString & section);
 
 			/**
-			\param A single line of text.
+			\param line A single line of text.
+			\return The parsed ini key.
 
 			\brief Parses the key from a given line.
 			*/
-			NouString parseKey(NouString &) const;
+			NouString parseKey(const NouString & line) const;
 
 			/**
-			\param A single line of text.
+			\param line      A single line of text to parse.
+			\param quoteType The string value quotation style (single or double).
+			\return The parsed ini value.
 
 			\brief Parses the value from a given line as a NouString.
 			*/
-			NouString parseStringValue(NouString &, const int32);
+			NouString parseStringValue(const NouString & line, const int32 quoteType) const;
 
 			/**
-			\param A single line of text.
+			\param line A single line of text.
+			\return A parsed integer value.
 
 			\brief Parses the value from a given line as an integer.
 			*/
-			int32 parseIntValue(const NouString &);
+			int32 parseIntValue(const NouString & line) const;
 
 			/**
-			\param A single line of text.
+			\param line A single line of text.
+			\return A parsed float value.
 
 			\brief Parses the value from a given line as a float.
 			*/
-			float32 parseFloatValue(const NouString &);
+			float32 parseFloatValue(const NouString &line) const;
 
 			/**
-			\param A single line of text
+			\param line A single line of text
+			\return Quotation type flag.
 
 			\brief Detects the value quotation style.
 				   Returns 0 if no quotes were detected.
 				   Returns 1 if double quotes were detected.
 				   Returns 2 if single quotes were detected.
 			*/
-			int32 parseValueQuote(const NouString &) const;
+			int32 parseValueQuote(const NouString &line) const;
 
 			/**
-			\param The section name.
-
+			\param section The section name.
+			
 			\brief Registers a section in m_data_sections, and increases the counter by 1.
 			*/
-			void incSection(const NouString &);
+			void incSection(const NouString & section);
 
 			/**
-			\param The section name.
+			\param section The section name.
 
 			\brief Decreases the value counter of a section by 1.
 			*/
-			void decSection(const NouString &);
-
+			void decSection(const NouString & section);
 
 		public:
-			INIFile(const NouString &);
+			/**
+			\param filename The full to the ini file that should be loaded.
+			*/
+			INIFile(const NouString & filename);
 
 			/**
+			\return True on success, False on error.
+
 			\brief Parses the INI file
 			*/
 			boolean read();
 
 			/**
+			\return True on success, False on error.
+
 			\brief Writes the INI file
 			*/
-			boolean write(const NouString & = NouString(""));
+			boolean write(const NouString & = NouString("")) const;
 
 			/**
-			\param The key to remove
-			\param The target section (Optional)
+			\param key     The key to remove
+			\param section The target section (Optional)
 
 			\brief Removes a key-value pair from the ini
 			*/
-			void remove(const NouString &, const NouString & = INI_DEFAULT_SECTION);
+			void remove(const NouString & key, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
-			\param The key to set
-			\param The NouString to set
-			\param The section to set
+			\param key     The key to set
+			\param value   The NouString to set
+			\param section The section to set
 
 			\brief Sets a key-value NouString pair, overriding any existing key.
 			*/
-			void setString(const NouString &, const NouString &, const NouString & = INI_DEFAULT_SECTION);
+			void setString(const NouString & key, const NouString & value, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
-			\param The key to set
-			\param The NouString to set
-			\param The section to set
+			\param key     The key to set
+			\param value   The NouString to set
+			\param section The section to set
 
 			\brief Sets a key-value integer pair, overriding any existing key.
 			*/
-			void setInt(const NouString &, int32, const NouString & = INI_DEFAULT_SECTION);
+			void setInt(const NouString & key, int32 value, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
-			\param The key to set
-			\param The NouString to set
-			\param The section to set
+			\param key     The key to set
+			\param value   The NouString to set
+			\param section The section to set
 
 			\brief Sets a key-value float pair, overriding any existing key.
 			*/
-			void setFloat(const NouString &, float32, const NouString & = INI_DEFAULT_SECTION);
+			void setFloat(const NouString & key, float32 value, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
-			\param The key to search
-			\param The section to search in
+			\param key     The key to search
+			\param section The section to search in
+			\return        The value of the given key if found, or an empty string if not.
 
 			\brief Retrieves a value of a given key as NouString.
 			*/
-			NouString getString(const NouString &, const NouString & = INI_DEFAULT_SECTION);
+			NouString getString(const NouString & key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
-			\param The key to search
-			\param The section to search in
+			\param  key     The key to search
+			\param  section The section to search in
+			\return         The value of the given key if found, or an empty string if not.
 
 			\brief Retrieves a value of a given key as integer.
 			*/
-			int32 getInt(const NouString &, const NouString & = INI_DEFAULT_SECTION);
+			int32 getInt(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
-			\param The key to search
-			\param The section to search in
+			\param key     The key to search
+			\param section The section to search in
+			\return        The value of the given key if found, or an empty string if not.
 
 			\brief Retrieves a value of a given key as float.
 			*/
-			float32 getFloat(const NouString &, const NouString & = INI_DEFAULT_SECTION);
+			float32 getFloat(const NouString &, const NouString & = INI_DEFAULT_SECTION) const;
 
 			/**
-			\param The key to search
-			\param The section to search in
+			\param key     The key to search
+			\param section The section to search in
+			\return        TTrue if found, False if not.
 
 			\brief Checks if a given key exists in the given section.
 			*/
-			boolean keyExists(const NouString &, const NouString & = INI_DEFAULT_SECTION);
+			boolean keyExists(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
 	};
 }
 #endif
