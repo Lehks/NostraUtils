@@ -1920,6 +1920,757 @@ TEST_METHOD(INIFile)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+TEST_METHOD(MathVec2)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec2::nullVector().value(0) == 0.0f);
+	IsTrue(Vec2::nullVector().value(1) == 0.0f);
+
+	Vec2 vec0 = { 1.0f, 2.0f }; //check both ways of constructing
+	Vec2 vec1(1.0f, 2.0f);
+	Vec2 vec2(-1.0f, -2.0f);
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec2 vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2.0f);
+	IsTrue(vec0.value(1) == 4.0f);
+
+	Vec2 vec3(2.0f, 4.0f);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -5.0f);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec2(2.0f, 4.0f));
+
+	Vec2 vec4 = Vec2::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec2(0.0f, 0.0f));
+
+	Vec2 vec10 = Vec2::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec2 vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec2 vec6(5.0f, 10.0f);
+	Vec2 vec7(2.0f, 2.0f);
+
+	IsTrue(vec6.divideElements(vec7) == Vec2(5.0f / 2.0f, 10.0f / 2.0f));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec2(5.0f / 2.0f, 10.0f / 2.0f));
+
+	//multiplyElements
+	Vec2 vec8(5.0f, 10.0f);
+	Vec2 vec9(2.0f, 2.0f);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
+
+	Vec2 vec11(2.0f, 0.0f);
+	IsTrue(vec11.length() == 2.0);
+
+	Vec2 vec12(3.0f, 5.0f);
+	IsTrue(vec12.normalize().length() == 1.0f);
+}
+
+TEST_METHOD(MathVec2i)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec2i::nullVector().value(0) == 0);
+	IsTrue(Vec2i::nullVector().value(1) == 0);
+
+	Vec2i vec0 = { 1, 2 }; //check both ways of constructing
+	Vec2i vec1(1, 2);
+	Vec2i vec2(-1, -2);
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec2i vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2);
+	IsTrue(vec0.value(1) == 4);
+
+	Vec2i vec3(2, 4);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -5);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec2i(2, 4));
+
+	Vec2i vec4 = Vec2i::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec2i(0, 0));
+
+	Vec2i vec10 = Vec2i::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec2i vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec2i vec6(5, 10);
+	Vec2i vec7(2, 2);
+
+	IsTrue(vec6.divideElements(vec7) == Vec2i(5 / 2, 10 / 2));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec2i(5 / 2, 10 / 2));
+
+	//multiplyElements
+	Vec2i vec8(5, 10);
+	Vec2i vec9(2, 2);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec2i(5 * 2, 10 * 2));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec2i(5 * 2, 10 * 2));
+
+	Vec2i vec11(2, 0);
+	IsTrue(vec11.length() == 2.0);
+
+	//Not precise enough
+	//Vec2i vec12(3, 5);
+	//IsTrue(vec12.normalize().length() == 1.0);
+}
+
+TEST_METHOD(MathVec3)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec3::nullVector().value(0) == 0.0f);
+	IsTrue(Vec3::nullVector().value(1) == 0.0f);
+	IsTrue(Vec3::nullVector().value(2) == 0.0f);
+
+	Vec3 vec0 = { 1.0f, 2.0f, 3.0f}; //check both ways of constructing
+	Vec3 vec1(1.0f, 2.0f, 3.0f);
+	Vec3 vec2(-1.0f, -2.0f, -3.0f);
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+	IsTrue(vec0.value(2) == 3.0f);
+
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+	IsTrue(vec0.value(2) == 3.0f);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec3 vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2.0f);
+	IsTrue(vec0.value(1) == 4.0f);
+	IsTrue(vec0.value(2) == 6.0f);
+
+	Vec3 vec3(2.0f, 4.0f, 6.0f);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -14.0f);
+
+	//cross product
+	IsTrue((vec1.crossProduct(vec2)) == Vec3::nullVector());
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec3(2.0f, 4.0f, 6.0f));
+
+	Vec3 vec4 = Vec3::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec3(0.0f, 0.0f, 0.0f));
+
+	Vec3 vec10 = Vec3::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec3 vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec3 vec6(5.0f, 10.0f, 20.0f);
+	Vec3 vec7(2.0f, 2.0f, 2.0f);
+
+	IsTrue(vec6.divideElements(vec7) == Vec3(5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec3(5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f));
+
+	//multiplyElements
+	Vec3 vec8(5.0f, 10.0f, 20.0f);
+	Vec3 vec9(2.0f, 2.0f, 2.0f);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
+
+	Vec3 vec11(2.0f, 0.0f, 0.0f);
+	IsTrue(vec11.length() == 2.0);
+
+	Vec3 vec12(3.0f, 5.0f, 8.0f);
+	IsTrue(vec12.normalize().length() == 1.0f);
+}
+
+TEST_METHOD(MathVec3i)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec3i::nullVector().value(0) == 0);
+	IsTrue(Vec3i::nullVector().value(1) == 0);
+	IsTrue(Vec3i::nullVector().value(2) == 0);
+
+	Vec3i vec0 = { 1, 2, 3 }; //check both ways of constructing
+	Vec3i vec1(1, 2, 3);
+	Vec3i vec2(-1, -2, -3);
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+	IsTrue(vec0.value(2) == 3);
+
+	IsTrue(vec1.value(0) == 1);
+	IsTrue(vec1.value(1) == 2);
+	IsTrue(vec1.value(2) == 3);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec3i vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2);
+	IsTrue(vec0.value(1) == 4);
+	IsTrue(vec0.value(2) == 6);
+
+	Vec3i vec3(2, 4, 6);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -14);
+
+	//cross product
+	IsTrue((vec1.crossProduct(vec2)) == Vec3i::nullVector());
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec3i(2, 4, 6));
+
+	Vec3i vec4 = Vec3i::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec3i(0, 0, 0));
+
+	Vec3i vec10 = Vec3i::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec3i vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec3i vec6(5, 10, 20);
+	Vec3i vec7(2, 2, 2);
+
+	IsTrue(vec6.divideElements(vec7) == Vec3i(5 / 2, 10 / 2, 20 / 2));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec3i(5 / 2, 10 / 2, 20 / 2));
+
+	//multiplyElements
+	Vec3i vec8(5, 10, 20);
+	Vec3i vec9(2, 2, 2);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec3i(5 * 2, 10 * 2, 20 * 2));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec3i(5 * 2, 10 * 2, 20 * 2));
+
+	Vec3i vec11(2, 0, 0);
+	IsTrue(vec11.length() == 2.0);
+
+	//Not precise enough
+	//Vec3i vec12(3, 5, 8);
+	//IsTrue(vec12.normalize().length() == 1.0);
+}
+
+TEST_METHOD(MathVec4)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec4::nullVector().value(0) == 0.0f);
+	IsTrue(Vec4::nullVector().value(1) == 0.0f);
+	IsTrue(Vec4::nullVector().value(2) == 0.0f);
+	IsTrue(Vec4::nullVector().value(3) == 0.0f);
+
+	Vec4 vec0 = { 1.0f, 2.0f, 3.0f, 4.0f }; //check both ways of constructing
+	Vec4 vec1(1.0f, 2.0f, 3.0f, 4.0f);
+	Vec4 vec2(-1.0f, -2.0f, -3.0f, -4.0f);
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+	IsTrue(vec0.value(2) == 3.0f);
+	IsTrue(vec0.value(3) == 4.0f);
+
+	//check if value() works
+	IsTrue(vec1.value(0) == 1.0f);
+	IsTrue(vec1.value(1) == 2.0f);
+	IsTrue(vec1.value(2) == 3.0f);
+	IsTrue(vec1.value(3) == 4.0f);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec4 vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2.0f);
+	IsTrue(vec0.value(1) == 4.0f);
+	IsTrue(vec0.value(2) == 6.0f);
+	IsTrue(vec0.value(3) == 8.0f);
+
+	Vec4 vec3(2.0f, 4.0f, 6.0f, 8.0f);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -30.0);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec4(2.0f, 4.0f, 6.0f, 8.0f));
+
+	Vec4 vec4 = Vec4::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+	Vec4 vec10 = Vec4::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec4 vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec4 vec6(5.0f, 10.0f, 20.0f, 40.0f);
+	Vec4 vec7(2.0f, 2.0f, 2.0f, 2.0f);
+
+	IsTrue(vec6.divideElements(vec7) == Vec4(5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f, 40.0f / 2.0f));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec4(5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f, 40.0f / 2.0f));
+
+	//multiplyElements
+	Vec4 vec8(5.0f, 10.0f, 20.0f, 40.0f);
+	Vec4 vec9(2.0f, 2.0f, 2.0f, 2.0f);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
+
+	Vec4 vec11(2.0f, 0.0f, 0.0f, 0.0f);
+	IsTrue(vec11.length() == 2);
+
+	Vec4 vec12(3.0f, 5.0f, 8.0f, 3.0f);
+	IsTrue(vec12.normalize().length() == 1.0f);
+}
+
+TEST_METHOD(MathVec4i)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec4i::nullVector().value(0) == 0);
+	IsTrue(Vec4i::nullVector().value(1) == 0);
+	IsTrue(Vec4i::nullVector().value(2) == 0);
+	IsTrue(Vec4i::nullVector().value(3) == 0);
+
+	Vec4i vec0 = { 1, 2, 3, 4 }; //check both ways of constructing
+	Vec4i vec1(1, 2, 3, 4);
+	Vec4i vec2(-1, -2, -3, -4);
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+	IsTrue(vec0.value(2) == 3);
+	IsTrue(vec0.value(3) == 4);
+
+	//check if value() works
+	IsTrue(vec1.value(0) == 1);
+	IsTrue(vec1.value(1) == 2);
+	IsTrue(vec1.value(2) == 3);
+	IsTrue(vec1.value(3) == 4);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec4i vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2);
+	IsTrue(vec0.value(1) == 4);
+	IsTrue(vec0.value(2) == 6);
+	IsTrue(vec0.value(3) == 8);
+
+	Vec4i vec3(2, 4, 6, 8);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -30.0);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec4i(2, 4, 6, 8));
+
+	Vec4i vec4 = Vec4i::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec4i(0, 0, 0, 0));
+
+	Vec4i vec10 = Vec4i::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec4i vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec4i vec6(5, 10, 20, 40);
+	Vec4i vec7(2, 2, 2, 2);
+
+	IsTrue(vec6.divideElements(vec7) == Vec4i(5 / 2, 10 / 2, 20 / 2, 40 / 2));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec4i(5 / 2, 10 / 2, 20 / 2, 40 / 2));
+
+	//multiplyElements
+	Vec4i vec8(5, 10, 20, 40);
+	Vec4i vec9(2, 2, 2, 2);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
+
+	Vec4i vec11(2, 0, 0, 0);
+	IsTrue(vec11.length() == 2.0);
+
+	//Not precise enough
+	//Vec4i vec12(3, 5, 8, 3);
+	//IsTrue(vec12.normalize().length() == 1.0);
+}
+
+TEST_METHOD(MathVec5f)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(0) == 0.0f);
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(1) == 0.0f);
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(2) == 0.0f);
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(3) == 0.0f);
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(4) == 0.0f);
+
+	Vector<NOU::float32, 5> vec0 = { 1.0f,  2.0f,  3.0f,  4.0f,  5.0f };
+	Vector<NOU::float32, 5> vec1(  { 1.0f,  2.0f,  3.0f,  4.0f,  5.0f });
+	Vector<NOU::float32, 5> vec2( { -1.0f, -2.0f, -3.0f, -4.0f, -5.0f });
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+	IsTrue(vec0.value(2) == 3.0f);
+	IsTrue(vec0.value(3) == 4.0f);
+	IsTrue(vec0.value(4) == 5.0f);
+
+	//check if value() works
+	IsTrue(vec1.value(0) == 1.0f);
+	IsTrue(vec1.value(1) == 2.0f);
+	IsTrue(vec1.value(2) == 3.0f);
+	IsTrue(vec1.value(3) == 4.0f);
+	IsTrue(vec1.value(4) == 5.0f);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vector<NOU::float32, 5> vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2.0f);
+	IsTrue(vec0.value(1) == 4.0f);
+	IsTrue(vec0.value(2) == 6.0f);
+	IsTrue(vec0.value(3) == 8.0f);
+	IsTrue(vec0.value(4) == 10.0f);
+
+	Vector<NOU::float32, 5> vec3({ 2.0f, 4.0f, 6.0f, 8.0f, 10.0f });
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -55.0);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vector<NOU::float32, 5>({ 2.0f, 4.0f, 6.0f, 8.0f, 10.0f}));
+
+	Vector<NOU::float32, 5> vec4 = Vector<NOU::float32, 5>::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vector<NOU::float32, 5>({ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f }));
+
+	Vector<NOU::float32, 5> vec10 = Vector<NOU::float32, 5>::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vector<NOU::float32, 5> vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vector<NOU::float32, 5> vec6({ 5.0f, 10.0f, 20.0f, 40.0f, 80.0f });
+	Vector<NOU::float32, 5> vec7({ 2.0f, 2.0f, 2.0f, 2.0f, 2.0f });
+
+	IsTrue(vec6.divideElements(vec7) == Vector<NOU::float32, 5>({ 5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f, 
+		40.0f / 2.0f, 80.0f / 2.0f }));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vector<NOU::float32, 5>({ 5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f, 40.0f / 2.0f,  
+		80.0f / 2.0f }));
+
+	//multiplyElements
+	Vector<NOU::float32, 5> vec8({ 5.0f, 10.0f, 20.0f, 40.0f, 80.0f });
+	Vector<NOU::float32, 5> vec9({ 2.0f, 2.0f, 2.0f, 2.0f, 2.0f });
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 
+		20.0f * 2.0f, 40.0f * 2.0f, 80.0f * 2.0f }));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f, 
+		80.0f * 2.0f }));
+
+	Vector<NOU::float32, 5> vec11({ 2.0f, 0.0f, 0.0f, 0.0f, 0.0f});
+	IsTrue(vec11.length() == 2.0);
+
+	Vector<NOU::float32, 5> vec12({ 3.0f, 5.0f, 8.0f, 3.0f, 1.0f });
+	IsTrue(vec12.normalize().length() == 1.0);
+}
+
+TEST_METHOD(MathVec5i)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(0) == 0);
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(1) == 0);
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(2) == 0);
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(3) == 0);
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(4) == 0);
+
+	Vector<NOU::int32, 5> vec0 = { 1,  2,  3,  4,  5 };
+	Vector<NOU::int32, 5> vec1({ 1,  2,  3,  4,  5 });
+	Vector<NOU::int32, 5> vec2({ -1, -2, -3, -4, -5 });
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+	IsTrue(vec0.value(2) == 3);
+	IsTrue(vec0.value(3) == 4);
+	IsTrue(vec0.value(4) == 5);
+
+	//check if value() works
+	IsTrue(vec1.value(0) == 1);
+	IsTrue(vec1.value(1) == 2);
+	IsTrue(vec1.value(2) == 3);
+	IsTrue(vec1.value(3) == 4);
+	IsTrue(vec1.value(4) == 5);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vector<NOU::int32, 5> vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2);
+	IsTrue(vec0.value(1) == 4);
+	IsTrue(vec0.value(2) == 6);
+	IsTrue(vec0.value(3) == 8);
+	IsTrue(vec0.value(4) == 10);
+
+	Vector<NOU::int32, 5> vec3({ 2, 4, 6, 8, 10 });
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -55.0);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vector<NOU::int32, 5>({ 2, 4, 6, 8, 10 }));
+
+	Vector<NOU::int32, 5> vec4 = Vector<NOU::int32, 5>::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vector<NOU::int32, 5>({ 0, 0, 0, 0, 0 }));
+
+	Vector<NOU::int32, 5> vec10 = Vector<NOU::int32, 5>::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vector<NOU::int32, 5> vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vector<NOU::int32, 5> vec6({ 5, 10, 20, 40, 80 });
+	Vector<NOU::int32, 5> vec7({ 2, 2, 2, 2, 2 });
+
+	IsTrue(vec6.divideElements(vec7) == Vector<NOU::int32, 5>({ 5 / 2, 10 / 2, 20 / 2,
+		40 / 2, 80 / 2 }));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vector<NOU::int32, 5>({ 5 / 2, 10 / 2, 20 / 2, 40 / 2,
+		80 / 2 }));
+
+	//multiplyElements
+	Vector<NOU::int32, 5> vec8({ 5, 10, 20, 40, 80 });
+	Vector<NOU::int32, 5> vec9({ 2, 2, 2, 2, 2 });
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2,
+		20 * 2, 40 * 2, 80 * 2 }));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2, 20 * 2, 40 * 2,
+		80 * 2 }));
+
+	Vector<NOU::int32, 5> vec11({ 2, 0, 0, 0, 0 });
+	IsTrue(vec11.length() == 2.0);
+
+	//Not precise enough
+	//Vector<NOU::int32, 5> vec12({ 3, 5, 8, 3, 1 });
+	//IsTrue(vec12.normalize().length() == 1.0);
+}
+
+
 int main(int argc, char** argv)
 {
     int result = Catch::Session().run(argc, argv);
