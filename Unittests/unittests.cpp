@@ -1920,8 +1920,17 @@ TEST_METHOD(INIFile)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+void callback(const char *msg, const char *fnName, NOU::sizeType line, const char *file)
+{
+	IsTrue(false);
+}
+
 int main(int argc, char** argv)
 {
+	NOU::NOU_CORE::getAssertionSettings().printOnFail = true;
+	NOU::NOU_CORE::getAssertionSettings().pushErrorOnFail = false;
+	NOU::NOU_CORE::getAssertionSettings().callbackOnFail = callback;
+
     int result = Catch::Session().run(argc, argv);
 
     std::cout << "Test run has finished. Press ENTER to return." << std::endl;
