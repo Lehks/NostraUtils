@@ -2,6 +2,7 @@
 #define NOU_MATH_VECTOR
 
 #include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Assertions.hpp"
 #include "nostrautils/math/Utils.hpp"
 
 #include <initializer_list>
@@ -281,6 +282,8 @@ namespace NOU::NOU_MATH
 	template<typename T, sizeType N>
 	VectorBase<T, N>::VectorBase(const InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == size());
+
 		sizeType index = 0;
 
 		for (auto i = values.begin(); i != values.end(); i++)
@@ -293,12 +296,16 @@ namespace NOU::NOU_MATH
 	template<typename T, sizeType N>
 	const T& VectorBase<T, N>::value(sizeType index) const
 	{
+		NOU_ASSERT(index < size());
+
 		return m_data[index];
 	}
 
 	template<typename T, sizeType N>
 	T& VectorBase<T, N>::value(sizeType index)
 	{
+		NOU_ASSERT(index < size());
+
 		return m_data[index];
 	}
 
@@ -343,6 +350,8 @@ namespace NOU::NOU_MATH
 	template<typename T, sizeType N>
 	Vector<T, N>::Vector(const Vector<T, 2> &vec, const typename VectorBase<T, N>::InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == size() - 2);
+
 		value(0) = vec.value(0);
 		value(1) = vec.value(1);
 
@@ -357,6 +366,8 @@ namespace NOU::NOU_MATH
 	template<typename T, sizeType N>
 	Vector<T, N>::Vector(const Vector<T, 3> &vec, const typename VectorBase<T, N>::InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == size() - 3);
+
 		value(0) = vec.value(0);
 		value(1) = vec.value(1);
 		value(2) = vec.value(2);
@@ -372,6 +383,8 @@ namespace NOU::NOU_MATH
 	template<typename T, sizeType N>
 	Vector<T, N>::Vector(const Vector<T, 4> &vec, const typename VectorBase::InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == size() - 4);
+
 		value(0) = vec.value(0);
 		value(1) = vec.value(1);
 		value(2) = vec.value(2);
@@ -464,6 +477,8 @@ namespace NOU::NOU_MATH
 
 		for (sizeType i = 0; i < size(); i++)
 		{
+			NOU_ASSERT(other.value(i) != 0);
+
 			ret.value(i) = value(i) / other.value(i);
 		}
 
@@ -475,6 +490,8 @@ namespace NOU::NOU_MATH
 	{
 		for (sizeType i = 0; i < size(); i++)
 		{
+			NOU_ASSERT(other.value(i) != 0);
+
 			value(i) /= other.value(i);
 		}
 
@@ -719,12 +736,18 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	Vector<T, 2> Vector<T, 2>::divideElements(const Vector<T, 2> &other) const
 	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+
 		return Vector<T, 2>(value(0) / other.value(0), value(1) / other.value(1));
 	}
 
 	template<typename T>
 	Vector<T, 2>& Vector<T, 2>::divideElementsAssign(const Vector<T, 2> &other)
 	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+
 		value(0) /= other.value(0);
 		value(1) /= other.value(1);
 
@@ -895,6 +918,8 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	Vector<T, 3>::Vector(const Vector<T, 2> &vec, const typename VectorBase<T, 3>::InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == 1);
+
 		value(0) = vec.value(0);
 		value(1) = vec.value(1);
 
@@ -957,12 +982,20 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	Vector<T, 3> Vector<T, 3>::divideElements(const Vector<T, 3> &other) const
 	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+		NOU_ASSERT(other.value(2) != 0);
+
 		return Vector<T, 3>(value(0) / other.value(0), value(1) / other.value(1), value(2) / other.value(2));
 	}
 
 	template<typename T>
 	Vector<T, 3>& Vector<T, 3>::divideElementsAssign(const Vector<T, 3> &other)
 	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+		NOU_ASSERT(other.value(2) != 0);
+
 		value(0) /= other.value(0);
 		value(1) /= other.value(1);
 		value(2) /= other.value(2);
@@ -1160,6 +1193,8 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	Vector<T, 4>::Vector(const Vector<T, 2> &vec, const typename VectorBase<T, 4>::InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == 2);
+
 		value(0) = vec.value(0);
 		value(1) = vec.value(1);
 
@@ -1174,6 +1209,8 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	Vector<T, 4>::Vector(const Vector<T, 3> &vec, const typename VectorBase<T, 4>::InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == 1);
+
 		value(0) = vec.value(0);
 		value(1) = vec.value(1);
 		value(2) = vec.value(2);
@@ -1243,6 +1280,11 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	Vector<T, 4> Vector<T, 4>::divideElements(const Vector<T, 4> &other) const
 	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+		NOU_ASSERT(other.value(2) != 0);
+		NOU_ASSERT(other.value(3) != 0);
+
 		return Vector<T, 4>(value(0) / other.value(0), value(1) / other.value(1), value(2) / other.value(2), 
 			value(3) / other.value(3));
 	}
@@ -1250,6 +1292,11 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	Vector<T, 4>& Vector<T, 4>::divideElementsAssign(const Vector<T, 4> &other)
 	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+		NOU_ASSERT(other.value(2) != 0);
+		NOU_ASSERT(other.value(3) != 0);
+
 		value(0) /= other.value(0);
 		value(1) /= other.value(1);
 		value(2) /= other.value(2);

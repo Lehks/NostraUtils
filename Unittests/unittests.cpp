@@ -2003,6 +2003,8 @@ TEST_METHOD(MathVec2)
 
 	Vec2 vec18(3.0f, 5.0f);
 	IsTrue(vec18.normalize().length() == 1.0f);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(MathVec2i)
@@ -2089,6 +2091,8 @@ TEST_METHOD(MathVec2i)
 	//Not precise enough
 	//Vec2i vec12(3, 5);
 	//IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(MathVec3)
@@ -2191,6 +2195,8 @@ TEST_METHOD(MathVec3)
 
 	Vec3 vec18(3.0f, 5.0f, 8.0f);
 	IsTrue(vec18.normalize().length() == 1.0f);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(MathVec3i)
@@ -2294,6 +2300,8 @@ TEST_METHOD(MathVec3i)
 	//Not precise enough
 	//Vec3i vec12(3, 5, 8);
 	//IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(MathVec4)
@@ -2412,6 +2420,8 @@ TEST_METHOD(MathVec4)
 
 	Vec4 vec18(3.0f, 5.0f, 8.0f, 3.0f);
 	IsTrue(vec18.normalize().length() == 1.0f);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(MathVec4i)
@@ -2532,6 +2542,8 @@ TEST_METHOD(MathVec4i)
 	//Not precise enough
 	//Vec4i vec12(3, 5, 8, 3);
 	//IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(MathVec5f)
@@ -2677,6 +2689,8 @@ TEST_METHOD(MathVec5f)
 
 	Vector<NOU::float32, 5> vec18({ 3.0f, 5.0f, 8.0f, 3.0f, 1.0f });
 	IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(MathVec5i)
@@ -2823,6 +2837,8 @@ TEST_METHOD(MathVec5i)
 	//Not precise enough
 	//Vector<NOU::int32, 5> vec12({ 3, 5, 8, 3, 1 });
 	//IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 
