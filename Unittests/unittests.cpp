@@ -2001,8 +2001,8 @@ TEST_METHOD(MathVec2)
 	Vec2 vec11(2.0f, 0.0f);
 	IsTrue(vec11.length() == 2.0);
 
-	Vec2 vec12(3.0f, 5.0f);
-	IsTrue(vec12.normalize().length() == 1.0f);
+	Vec2 vec18(3.0f, 5.0f);
+	IsTrue(vec18.normalize().length() == 1.0f);
 }
 
 TEST_METHOD(MathVec2i)
@@ -2088,7 +2088,7 @@ TEST_METHOD(MathVec2i)
 
 	//Not precise enough
 	//Vec2i vec12(3, 5);
-	//IsTrue(vec12.normalize().length() == 1.0);
+	//IsTrue(vec18.normalize().length() == 1.0);
 }
 
 TEST_METHOD(MathVec3)
@@ -2103,6 +2103,8 @@ TEST_METHOD(MathVec3)
 	Vec3 vec0 = { 1.0f, 2.0f, 3.0f}; //check both ways of constructing
 	Vec3 vec1(1.0f, 2.0f, 3.0f);
 	Vec3 vec2(-1.0f, -2.0f, -3.0f);
+	Vec3 vec12(Vec2(1.0f, 2.0f), 3.0f);
+	Vec3 vec13(Vec2(1.0f, 2.0f), { 3.0f });
 
 	//check if value() works
 	IsTrue(vec0.value(0) == 1.0f);
@@ -2112,6 +2114,14 @@ TEST_METHOD(MathVec3)
 	IsTrue(vec0.value(0) == 1.0f);
 	IsTrue(vec0.value(1) == 2.0f);
 	IsTrue(vec0.value(2) == 3.0f);
+
+	IsTrue(vec12.value(0) == 1.0f);
+	IsTrue(vec12.value(1) == 2.0f);
+	IsTrue(vec12.value(2) == 3.0f);
+
+	IsTrue(vec13.value(0) == 1.0f);
+	IsTrue(vec13.value(1) == 2.0f);
+	IsTrue(vec13.value(2) == 3.0f);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2179,8 +2189,8 @@ TEST_METHOD(MathVec3)
 	Vec3 vec11(2.0f, 0.0f, 0.0f);
 	IsTrue(vec11.length() == 2.0);
 
-	Vec3 vec12(3.0f, 5.0f, 8.0f);
-	IsTrue(vec12.normalize().length() == 1.0f);
+	Vec3 vec18(3.0f, 5.0f, 8.0f);
+	IsTrue(vec18.normalize().length() == 1.0f);
 }
 
 TEST_METHOD(MathVec3i)
@@ -2195,6 +2205,8 @@ TEST_METHOD(MathVec3i)
 	Vec3i vec0 = { 1, 2, 3 }; //check both ways of constructing
 	Vec3i vec1(1, 2, 3);
 	Vec3i vec2(-1, -2, -3);
+	Vec3i vec12(Vec2i(1, 2), 3);
+	Vec3i vec13(Vec2i(1, 2), { 3 });
 
 	//check if value() works
 	IsTrue(vec0.value(0) == 1);
@@ -2204,6 +2216,14 @@ TEST_METHOD(MathVec3i)
 	IsTrue(vec1.value(0) == 1);
 	IsTrue(vec1.value(1) == 2);
 	IsTrue(vec1.value(2) == 3);
+
+	IsTrue(vec12.value(0) == 1);
+	IsTrue(vec12.value(1) == 2);
+	IsTrue(vec12.value(2) == 3);
+
+	IsTrue(vec13.value(0) == 1);
+	IsTrue(vec13.value(1) == 2);
+	IsTrue(vec13.value(2) == 3);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2273,7 +2293,7 @@ TEST_METHOD(MathVec3i)
 
 	//Not precise enough
 	//Vec3i vec12(3, 5, 8);
-	//IsTrue(vec12.normalize().length() == 1.0);
+	//IsTrue(vec18.normalize().length() == 1.0);
 }
 
 TEST_METHOD(MathVec4)
@@ -2289,6 +2309,10 @@ TEST_METHOD(MathVec4)
 	Vec4 vec0 = { 1.0f, 2.0f, 3.0f, 4.0f }; //check both ways of constructing
 	Vec4 vec1(1.0f, 2.0f, 3.0f, 4.0f);
 	Vec4 vec2(-1.0f, -2.0f, -3.0f, -4.0f);
+	Vec4 vec12(Vec2(1.0f, 2.0f), 3.0f, 4.0f);
+	Vec4 vec13(Vec2(1.0f, 2.0f), { 3.0f, 4.0f });
+	Vec4 vec14(Vec3(1.0f, 2.0f, 3.0f), 4.0f);
+	Vec4 vec15(Vec3(1.0f, 2.0f, 3.0f), { 4.0f });
 
 	//check if value() works
 	IsTrue(vec0.value(0) == 1.0f);
@@ -2301,6 +2325,26 @@ TEST_METHOD(MathVec4)
 	IsTrue(vec1.value(1) == 2.0f);
 	IsTrue(vec1.value(2) == 3.0f);
 	IsTrue(vec1.value(3) == 4.0f);
+
+	IsTrue(vec12.value(0) == 1.0f);
+	IsTrue(vec12.value(1) == 2.0f);
+	IsTrue(vec12.value(2) == 3.0f);
+	IsTrue(vec12.value(3) == 4.0f);
+
+	IsTrue(vec13.value(0) == 1.0f);
+	IsTrue(vec13.value(1) == 2.0f);
+	IsTrue(vec13.value(2) == 3.0f);
+	IsTrue(vec13.value(3) == 4.0f);
+
+	IsTrue(vec14.value(0) == 1.0f);
+	IsTrue(vec14.value(1) == 2.0f);
+	IsTrue(vec14.value(2) == 3.0f);
+	IsTrue(vec14.value(3) == 4.0f);
+
+	IsTrue(vec15.value(0) == 1.0f);
+	IsTrue(vec15.value(1) == 2.0f);
+	IsTrue(vec15.value(2) == 3.0f);
+	IsTrue(vec15.value(3) == 4.0f);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2366,8 +2410,8 @@ TEST_METHOD(MathVec4)
 	Vec4 vec11(2.0f, 0.0f, 0.0f, 0.0f);
 	IsTrue(vec11.length() == 2);
 
-	Vec4 vec12(3.0f, 5.0f, 8.0f, 3.0f);
-	IsTrue(vec12.normalize().length() == 1.0f);
+	Vec4 vec18(3.0f, 5.0f, 8.0f, 3.0f);
+	IsTrue(vec18.normalize().length() == 1.0f);
 }
 
 TEST_METHOD(MathVec4i)
@@ -2383,12 +2427,37 @@ TEST_METHOD(MathVec4i)
 	Vec4i vec0 = { 1, 2, 3, 4 }; //check both ways of constructing
 	Vec4i vec1(1, 2, 3, 4);
 	Vec4i vec2(-1, -2, -3, -4);
+	Vec4i vec12(Vec2i(1, 2), 3, 4);
+	Vec4i vec13(Vec2i(1, 2), { 3, 4 });
+	Vec4i vec14(Vec3i(1, 2, 3), 4);
+	Vec4i vec15(Vec3i(1, 2, 3), { 4 });
+
 
 	//check if value() works
 	IsTrue(vec0.value(0) == 1);
 	IsTrue(vec0.value(1) == 2);
 	IsTrue(vec0.value(2) == 3);
 	IsTrue(vec0.value(3) == 4);
+
+	IsTrue(vec12.value(0) == 1);
+	IsTrue(vec12.value(1) == 2);
+	IsTrue(vec12.value(2) == 3);
+	IsTrue(vec12.value(3) == 4);
+
+	IsTrue(vec13.value(0) == 1);
+	IsTrue(vec13.value(1) == 2);
+	IsTrue(vec13.value(2) == 3);
+	IsTrue(vec13.value(3) == 4);
+
+	IsTrue(vec14.value(0) == 1);
+	IsTrue(vec14.value(1) == 2);
+	IsTrue(vec14.value(2) == 3);
+	IsTrue(vec14.value(3) == 4);
+
+	IsTrue(vec15.value(0) == 1);
+	IsTrue(vec15.value(1) == 2);
+	IsTrue(vec15.value(2) == 3);
+	IsTrue(vec15.value(3) == 4);
 
 	//check if value() works
 	IsTrue(vec1.value(0) == 1);
@@ -2462,7 +2531,7 @@ TEST_METHOD(MathVec4i)
 
 	//Not precise enough
 	//Vec4i vec12(3, 5, 8, 3);
-	//IsTrue(vec12.normalize().length() == 1.0);
+	//IsTrue(vec18.normalize().length() == 1.0);
 }
 
 TEST_METHOD(MathVec5f)
@@ -2479,6 +2548,13 @@ TEST_METHOD(MathVec5f)
 	Vector<NOU::float32, 5> vec0 = { 1.0f,  2.0f,  3.0f,  4.0f,  5.0f };
 	Vector<NOU::float32, 5> vec1(  { 1.0f,  2.0f,  3.0f,  4.0f,  5.0f });
 	Vector<NOU::float32, 5> vec2( { -1.0f, -2.0f, -3.0f, -4.0f, -5.0f });
+	Vector<NOU::float32, 5> vec12(Vec2(1.0f, 2.0f), { 3.0f,  4.0f,  5.0f });
+	Vector<NOU::float32, 5> vec13(Vec2(1.0f, 2.0f), { 3.0f, 4.0f, 5.0f });
+	Vector<NOU::float32, 5> vec14(Vec3(1.0f, 2.0f, 3.0f), { 4.0f,  5.0f });
+	Vector<NOU::float32, 5> vec15(Vec3(1.0f, 2.0f, 3.0f), { 4.0f, 5.0f });
+	Vector<NOU::float32, 5> vec16(Vec4(1.0f, 2.0f, 3.0f, 4.0f), { 5.0f });
+	Vector<NOU::float32, 5> vec17(Vec4(1.0f, 2.0f, 3.0f, 4.0f), { 5.0f });
+
 
 	//check if value() works
 	IsTrue(vec0.value(0) == 1.0f);
@@ -2493,6 +2569,42 @@ TEST_METHOD(MathVec5f)
 	IsTrue(vec1.value(2) == 3.0f);
 	IsTrue(vec1.value(3) == 4.0f);
 	IsTrue(vec1.value(4) == 5.0f);
+
+	IsTrue(vec12.value(0) == 1.0f);
+	IsTrue(vec12.value(1) == 2.0f);
+	IsTrue(vec12.value(2) == 3.0f);
+	IsTrue(vec12.value(3) == 4.0f);
+	IsTrue(vec12.value(4) == 5.0f);
+
+	IsTrue(vec13.value(0) == 1.0f);
+	IsTrue(vec13.value(1) == 2.0f);
+	IsTrue(vec13.value(2) == 3.0f);
+	IsTrue(vec13.value(3) == 4.0f);
+	IsTrue(vec13.value(4) == 5.0f);
+
+	IsTrue(vec14.value(0) == 1.0f);
+	IsTrue(vec14.value(1) == 2.0f);
+	IsTrue(vec14.value(2) == 3.0f);
+	IsTrue(vec14.value(3) == 4.0f);
+	IsTrue(vec14.value(4) == 5.0f);
+
+	IsTrue(vec15.value(0) == 1.0f);
+	IsTrue(vec15.value(1) == 2.0f);
+	IsTrue(vec15.value(2) == 3.0f);
+	IsTrue(vec15.value(3) == 4.0f);
+	IsTrue(vec15.value(4) == 5.0f);
+
+	IsTrue(vec16.value(0) == 1.0f);
+	IsTrue(vec16.value(1) == 2.0f);
+	IsTrue(vec16.value(2) == 3.0f);
+	IsTrue(vec16.value(3) == 4.0f);
+	IsTrue(vec16.value(4) == 5.0f);
+
+	IsTrue(vec17.value(0) == 1.0f);
+	IsTrue(vec17.value(1) == 2.0f);
+	IsTrue(vec17.value(2) == 3.0f);
+	IsTrue(vec17.value(3) == 4.0f);
+	IsTrue(vec17.value(4) == 5.0f);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2563,8 +2675,8 @@ TEST_METHOD(MathVec5f)
 	Vector<NOU::float32, 5> vec11({ 2.0f, 0.0f, 0.0f, 0.0f, 0.0f});
 	IsTrue(vec11.length() == 2.0);
 
-	Vector<NOU::float32, 5> vec12({ 3.0f, 5.0f, 8.0f, 3.0f, 1.0f });
-	IsTrue(vec12.normalize().length() == 1.0);
+	Vector<NOU::float32, 5> vec18({ 3.0f, 5.0f, 8.0f, 3.0f, 1.0f });
+	IsTrue(vec18.normalize().length() == 1.0);
 }
 
 TEST_METHOD(MathVec5i)
@@ -2581,6 +2693,13 @@ TEST_METHOD(MathVec5i)
 	Vector<NOU::int32, 5> vec0 = { 1,  2,  3,  4,  5 };
 	Vector<NOU::int32, 5> vec1({ 1,  2,  3,  4,  5 });
 	Vector<NOU::int32, 5> vec2({ -1, -2, -3, -4, -5 });
+	Vector<NOU::int32, 5> vec12(Vec2i(1, 2), { 3,  4,  5 });
+	Vector<NOU::int32, 5> vec13(Vec2i(1, 2), { 3, 4, 5 });
+	Vector<NOU::int32, 5> vec14(Vec3i(1, 2, 3), { 4,  5 });
+	Vector<NOU::int32, 5> vec15(Vec3i(1, 2, 3), { 4, 5 });
+	Vector<NOU::int32, 5> vec16(Vec4i(1, 2, 3, 4), { 5 });
+	Vector<NOU::int32, 5> vec17(Vec4i(1, 2, 3, 4), { 5 });
+
 
 	//check if value() works
 	IsTrue(vec0.value(0) == 1);
@@ -2595,6 +2714,42 @@ TEST_METHOD(MathVec5i)
 	IsTrue(vec1.value(2) == 3);
 	IsTrue(vec1.value(3) == 4);
 	IsTrue(vec1.value(4) == 5);
+
+	IsTrue(vec12.value(0) == 1);
+	IsTrue(vec12.value(1) == 2);
+	IsTrue(vec12.value(2) == 3);
+	IsTrue(vec12.value(3) == 4);
+	IsTrue(vec12.value(4) == 5);
+
+	IsTrue(vec13.value(0) == 1);
+	IsTrue(vec13.value(1) == 2);
+	IsTrue(vec13.value(2) == 3);
+	IsTrue(vec13.value(3) == 4);
+	IsTrue(vec13.value(4) == 5);
+
+	IsTrue(vec14.value(0) == 1);
+	IsTrue(vec14.value(1) == 2);
+	IsTrue(vec14.value(2) == 3);
+	IsTrue(vec14.value(3) == 4);
+	IsTrue(vec14.value(4) == 5);
+
+	IsTrue(vec15.value(0) == 1);
+	IsTrue(vec15.value(1) == 2);
+	IsTrue(vec15.value(2) == 3);
+	IsTrue(vec15.value(3) == 4);
+	IsTrue(vec15.value(4) == 5);
+
+	IsTrue(vec16.value(0) == 1);
+	IsTrue(vec16.value(1) == 2);
+	IsTrue(vec16.value(2) == 3);
+	IsTrue(vec16.value(3) == 4);
+	IsTrue(vec16.value(4) == 5);
+
+	IsTrue(vec17.value(0) == 1);
+	IsTrue(vec17.value(1) == 2);
+	IsTrue(vec17.value(2) == 3);
+	IsTrue(vec17.value(3) == 4);
+	IsTrue(vec17.value(4) == 5);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2667,7 +2822,7 @@ TEST_METHOD(MathVec5i)
 
 	//Not precise enough
 	//Vector<NOU::int32, 5> vec12({ 3, 5, 8, 3, 1 });
-	//IsTrue(vec12.normalize().length() == 1.0);
+	//IsTrue(vec18.normalize().length() == 1.0);
 }
 
 

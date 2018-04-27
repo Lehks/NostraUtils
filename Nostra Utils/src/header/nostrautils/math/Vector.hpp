@@ -40,6 +40,9 @@ namespace NOU::NOU_MATH
 
 		Vector() = default;
 		Vector(const typename VectorBase::InitializerList &values);
+		Vector(const Vector<T, 2> &vec, const typename VectorBase::InitializerList &values);
+		Vector(const Vector<T, 3> &vec, const typename VectorBase::InitializerList &values);
+		Vector(const Vector<T, 4> &vec, const typename VectorBase::InitializerList &values);
 
 		Vector add(const Vector &other) const;
 		Vector& addAssign(const Vector &other);
@@ -151,7 +154,9 @@ namespace NOU::NOU_MATH
 
 		Vector() = default;
 		Vector(const T &x, const T &y, const T &z);
+		Vector(const Vector<T, 2> &vec, const T &z);
 		Vector(const typename VectorBase::InitializerList &values);
+		Vector(const Vector<T, 2> &vec, const typename VectorBase::InitializerList &values);
 
 		Vector add(const Vector &other) const;
 		Vector& addAssign(const Vector &other);
@@ -208,7 +213,11 @@ namespace NOU::NOU_MATH
 
 		Vector() = default;
 		Vector(const T &x, const T &y, const T &z, const T &w);
+		Vector(const Vector<T, 2> &vec, const T &z, const T &w);
+		Vector(const Vector<T, 3> &vec, const T &w);
 		Vector(const typename VectorBase::InitializerList &values);
+		Vector(const Vector<T, 2> &vec, const typename VectorBase::InitializerList &values);
+		Vector(const Vector<T, 3> &vec, const typename VectorBase::InitializerList &values);
 
 		Vector add(const Vector &other) const;
 		Vector& addAssign(const Vector &other);
@@ -330,6 +339,51 @@ namespace NOU::NOU_MATH
 	Vector<T, N>::Vector(const typename VectorBase<T, N>::InitializerList &values) :
 		VectorBase<T, N>(values)
 	{}
+
+	template<typename T, sizeType N>
+	Vector<T, N>::Vector(const Vector<T, 2> &vec, const typename VectorBase<T, N>::InitializerList &values)
+	{
+		value(0) = vec.value(0);
+		value(1) = vec.value(1);
+
+		sizeType index = 2;
+
+		for (auto i = values.begin(); i != values.end(); i++)
+		{
+			value(index++) = *i;
+		}
+	}
+
+	template<typename T, sizeType N>
+	Vector<T, N>::Vector(const Vector<T, 3> &vec, const typename VectorBase<T, N>::InitializerList &values)
+	{
+		value(0) = vec.value(0);
+		value(1) = vec.value(1);
+		value(2) = vec.value(2);
+
+		sizeType index = 3;
+
+		for (auto i = values.begin(); i != values.end(); i++)
+		{
+			value(index++) = *i;
+		}
+	}
+
+	template<typename T, sizeType N>
+	Vector<T, N>::Vector(const Vector<T, 4> &vec, const typename VectorBase::InitializerList &values)
+	{
+		value(0) = vec.value(0);
+		value(1) = vec.value(1);
+		value(2) = vec.value(2);
+		value(3) = vec.value(3);
+
+		sizeType index = 4;
+
+		for (auto i = values.begin(); i != values.end(); i++)
+		{
+			value(index++) = *i;
+		}
+	}
 
 	template<typename T, sizeType N>
 	Vector<T, N> Vector<T, N>::add(const Vector<T, N> &other) const
@@ -829,9 +883,28 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T>
+	Vector<T, 3>::Vector(const Vector<T, 2> &vec, const T &z) :
+		Vector<T, 3>(vec.value(0), vec.value(1), z)
+	{}
+
+	template<typename T>
 	Vector<T, 3>::Vector(const typename VectorBase<T, 3>::InitializerList &values) :
 		VectorBase<T, 3>(values)
 	{}
+
+	template<typename T>
+	Vector<T, 3>::Vector(const Vector<T, 2> &vec, const typename VectorBase<T, 3>::InitializerList &values)
+	{
+		value(0) = vec.value(0);
+		value(1) = vec.value(1);
+
+		sizeType index = 2;
+
+		for (auto i = values.begin(); i != values.end(); i++)
+		{
+			value(index++) = *i;
+		}
+	}
 
 	template<typename T>
 	Vector<T, 3> Vector<T, 3>::add(const Vector<T, 3> &other) const
@@ -1062,9 +1135,56 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T>
+	Vector<T, 4>::Vector(const Vector<T, 2> &vec, const T &z, const T &w)
+	{
+		value(0) = vec.value(0);
+		value(1) = vec.value(1);
+		value(2) = z;
+		value(3) = w;
+	}
+
+	template<typename T>
+	Vector<T, 4>::Vector(const Vector<T, 3> &vec, const T &w)
+	{
+		value(0) = vec.value(0);
+		value(1) = vec.value(1);
+		value(2) = vec.value(2);
+		value(3) = w;
+	}
+
+	template<typename T>
 	Vector<T, 4>::Vector(const typename VectorBase<T, 4>::InitializerList &values) :
 		VectorBase<T, 4>(values)
 	{}
+
+	template<typename T>
+	Vector<T, 4>::Vector(const Vector<T, 2> &vec, const typename VectorBase<T, 4>::InitializerList &values)
+	{
+		value(0) = vec.value(0);
+		value(1) = vec.value(1);
+
+		sizeType index = 2;
+
+		for (auto i = values.begin(); i != values.end(); i++)
+		{
+			value(index++) = *i;
+		}
+	}
+
+	template<typename T>
+	Vector<T, 4>::Vector(const Vector<T, 3> &vec, const typename VectorBase<T, 4>::InitializerList &values)
+	{
+		value(0) = vec.value(0);
+		value(1) = vec.value(1);
+		value(2) = vec.value(2);
+
+		sizeType index = 3;
+
+		for (auto i = values.begin(); i != values.end(); i++)
+		{
+			value(index++) = *i;
+		}
+	}
 
 	template<typename T>
 	Vector<T, 4> Vector<T, 4>::add(const Vector<T, 4> &other) const
