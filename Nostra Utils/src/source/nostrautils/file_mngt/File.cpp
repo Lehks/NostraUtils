@@ -154,7 +154,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		if(!exists())
 		{
-			open(AccessMode::WRITE);
+			open(AccessMode::READ_WRITE_RESET);
 			close();
 		}else
 		{
