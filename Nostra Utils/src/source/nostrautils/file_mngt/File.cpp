@@ -2,6 +2,7 @@
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 
+#include <iostream>
 #include <fstream>
 
 namespace NOU::NOU_FILE_MNGT
@@ -154,8 +155,9 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		if(!exists())
 		{
-			open(AccessMode::READ_WRITE_RESET);
-			close();
+			std::fstream fs;
+			fs.open(m_path.getAbsolutePath().rawStr(), std::fstream::out);
+			fs.close();
 		}else
 		{
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Fille allready exists");
