@@ -157,6 +157,7 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			std::fstream fs;
 			fs.open(m_path.getAbsolutePath().rawStr(), std::fstream::out);
+			fs.flush();
 			fs.close();
 		}else
 		{
