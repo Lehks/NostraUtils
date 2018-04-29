@@ -11,7 +11,7 @@ namespace NOU::NOU_FILE_MNGT
 		#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 			fopen_s(&m_data, this->m_path.getAbsolutePath().rawStr(), mode);
 		#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-			fopen(&m_data, this->m_path.getAbsolutePath().rawStr(), mode);
+			m_data = fopen(this->m_path.getAbsolutePath().rawStr(), mode);
 		#endif
 	}
 
