@@ -559,6 +559,9 @@ namespace NOU::NOU_MATH
 	template<typename T, sizeType N>
 	boolean Vector<T, N>::equal(const Vector<T, N> &other) const
 	{
+		if (data() == other.data())
+			return true;
+
 		for (sizeType i = 0; i < size(); i++)
 		{
 			if (value(i) != other.value(i))
@@ -790,7 +793,7 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	boolean Vector<T, 2>::equal(const Vector<T, 2> &other) const
 	{
-		return value(0) == other.value(0) && value(1) == other.value(1);
+		return data() == other.data() || (value(0) == other.value(0) && value(1) == other.value(1));
 	}
 
 	template<typename T>
@@ -1049,7 +1052,8 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	boolean Vector<T, 3>::equal(const Vector<T, 3> &other) const
 	{
-		return value(0) == other.value(0) && value(1) == other.value(1) && value(2) == other.value(2);
+		return data() == other.data() || (value(0) == other.value(0) && value(1) == other.value(1) 
+			&& value(2) == other.value(2));
 	}
 
 	template<typename T>
@@ -1344,8 +1348,8 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	boolean Vector<T, 4>::equal(const Vector<T, 4> &other) const
 	{
-		return value(0) == other.value(0) && value(1) == other.value(1) && value(2) == other.value(2)
-			&& value(3) == other.value(3);
+		return data() == other.data() || (value(0) == other.value(0) && value(1) == other.value(1) && 
+			value(2) == other.value(2) && value(3) == other.value(3));
 	}
 
 	template<typename T>
