@@ -62,7 +62,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		 \brief Wraps around either fopen() on POSIX systems or fopen_s() on a Windows system.
 		*/
-		static void fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode);
+		void openStream(const char8 *mode);
 
 		/**
 		\brief File stream of the opened File

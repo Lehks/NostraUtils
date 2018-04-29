@@ -1,4 +1,3 @@
-
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 
@@ -7,12 +6,12 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	void File::fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode)
+	void File::openStream(const char8 *mode)
 	{
 		#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
-			fopen_s(file, filename.rawStr(), mode.rawStr());
+			fopen_s(&m_data, this->m_path.getAbsolutePath().rawStr(), mode);
 		#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-			fopen(file, filename.rawStr(), mode.rawStr());
+			fopen(&m_data, this->m_path.getAbsolutePath().rawStr(), mode);
 		#endif
 	}
 
@@ -114,22 +113,22 @@ namespace NOU::NOU_FILE_MNGT
 			switch (m_mode)
 			{
 				case AccessMode::READ:
-					fopen(&m_data, m_path.getAbsolutePath(), "r");
+					openStream("r");
 					break;
 				case AccessMode::WRITE:
-					fopen(&m_data, m_path.getAbsolutePath(), "w");
+					openStream("w");
 					break;
 				case AccessMode::APPEND:
-					fopen(&m_data, m_path.getAbsolutePath(), "a");
+					openStream("a");
 					break;
 				case AccessMode::READ_WRITE:
-					fopen(&m_data, m_path.getAbsolutePath(), "r+");
+					openStream("r+");
 					break;
 				case AccessMode::READ_WRITE_RESET:
-					fopen(&m_data, m_path.getAbsolutePath(), "w+");
+					openStream("w+");
 					break;
 				case AccessMode::READ_APPEND:
-					fopen(&m_data, m_path.getAbsolutePath(), "a+");
+					openStream("a+");
 					break;
 			}
 		}
