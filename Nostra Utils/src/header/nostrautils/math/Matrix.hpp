@@ -254,9 +254,9 @@ namespace NOU::NOU_MATH
 
 	namespace Matrices
 	{
-		Mat4 scale();
-		Mat4 translate();
-		Mat4 rotate();
+		Mat4 scale(float32 x, float32 y, float32 z);
+		Mat4 translate(float32 x, float32 y, float32 z);
+		Mat4 rotate(float32 x, float32 y, float32 z);
 		Mat4 ortho();
 		Mat4 perspective();
 		Mat4 lookAt();
