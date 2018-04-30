@@ -1751,7 +1751,7 @@ NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 	IsTrue(p13.getParentPath() == "D:");
 	IsTrue(p14.getParentPath() == "D:\\Users");
 
-	IsTrue(p15.getRelativePath() == "\\Test\\TestUser\\TestDir2");
+	IsTrue(p15.getRelativePath() == "Test\\TestUser\\TestDir2");
 	if (str.startsWith('C'))
 	{
 		NOU::NOU_FILE_MNGT::Path p16 = "D:\\Users\\TestUser\\TestDir";
