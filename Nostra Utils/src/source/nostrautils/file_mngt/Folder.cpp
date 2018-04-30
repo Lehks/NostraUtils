@@ -1,4 +1,4 @@
-/*
+
 #include "nostrautils/file_mngt/Folder.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
 
@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 #include <unistd.h>
+#include <sys/stat.h>
 #endif
 
 namespace NOU::NOU_FILE_MNGT
@@ -21,11 +22,13 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean Folder::create()
 	{
+
 		return Folder::create(m_path);
 	}
 
 	boolean Folder::create(const Path &path)
 	{
+#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		if (!CreateDirectory(path.getAbsolutePath().rawStr(), NULL))
 		{
 			DWORD lastError = GetLastError();
@@ -40,6 +43,14 @@ namespace NOU::NOU_FILE_MNGT
 			return false;
 		}
 		return true;
+
+
+#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+
+mkdir(const char *path, mode_t mode);
+
+#endif
+
 	}
 
 	const Path & Folder::getPath() const
@@ -49,6 +60,7 @@ namespace NOU::NOU_FILE_MNGT
 
 	NOU_DAT_ALG::Vector<Folder> Folder::listFolders() const
 	{
+     #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		NOU_DAT_ALG::Vector<Folder> v ;
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
 		pattern.append("\\*");
@@ -68,7 +80,11 @@ namespace NOU::NOU_FILE_MNGT
 			FindClose(hFind);
 		}
 		return v;
+        #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+
+        #endif
 	}
+
 	NOU_DAT_ALG::Vector<Folder> Folder::listFiles() const
 	{
 		NOU_DAT_ALG::Vector<Folder> v;
@@ -92,7 +108,7 @@ namespace NOU::NOU_FILE_MNGT
 		return v;
 	}
 }
-*/
+
 
 
 	

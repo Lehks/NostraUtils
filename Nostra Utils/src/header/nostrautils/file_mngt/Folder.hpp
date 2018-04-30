@@ -1,4 +1,4 @@
-/*
+
 #ifndef NOU_FILE_MNGT_FOLDER_HPP
 #define NOU_FILE_MNGT_FOLDER_HPP
 
@@ -70,10 +70,10 @@ namespace NOU::NOU_FILE_MNGT
 		static boolean create(const Path &path);
 
  
-		//void read_directory(const NOU::NOU_DAT_ALG::String8 &name,  v);
+		
 
 		
 	};
 }
-*/
+
 #endif
