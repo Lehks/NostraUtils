@@ -245,22 +245,18 @@ namespace NOU::NOU_MATH
 		boolean operator != (const Matrix &other) const;
 	};
 
-	using Mat2  = Matrix<float32, 2, 2>;
-	using Mat2i = Matrix<int32,   2, 2>;
-	using Mat3  = Matrix<float32, 3, 3>;
-	using Mat3i = Matrix<int32,   3, 3>;
-	using Mat4  = Matrix<float32, 4, 4>;
-	using Mat4i = Matrix<int32,   4, 4>;
+	template<sizeType R, sizeType C>
+	using Matf = Matrix<float32, R, C>;
 
-	namespace Matrices
-	{
-		Mat4 scale(float32 x, float32 y, float32 z);
-		Mat4 translate(float32 x, float32 y, float32 z);
-		Mat4 rotate(float32 x, float32 y, float32 z);
-		Mat4 ortho();
-		Mat4 perspective();
-		Mat4 lookAt();
-	}
+	template<sizeType R, sizeType C>
+	using Mati = Matrix<int32, R, C>;
+
+	using Mat2  = Matf<2, 2>;
+	using Mat2i = Mati<2, 2>;
+	using Mat3  = Matf<3, 3>;
+	using Mat3i = Mati<3, 3>;
+	using Mat4  = Matf<4, 4>;
+	using Mat4i = Mati<4, 4>;
 
 
 
@@ -344,11 +340,11 @@ namespace NOU::NOU_MATH
 	{
 		Matrix<T, R, C> ret = zeroes();
 
-		sizeType cap = NOU_CORE::min(rows(), coumns());
+		sizeType cap = NOU_CORE::min(R, C);
 
 		for (sizeType i = 0; i < cap; i++)
 		{
-			ret.value(i) = 1;
+			ret.value(i, i) = 1;
 		}
 
 		return ret;
@@ -407,12 +403,12 @@ namespace NOU::NOU_MATH
 	template<NOU::sizeType OC>
 	Matrix<T, R, OC> Matrix<T, R, C>::mult(const Matrix<T, C, OC> &other) const
 	{
-		Matrix<T, R, OC> ret = zeroes();
+		Matrix<T, R, OC> ret = Matrix<T, R, OC>::zeroes();
 
-		for (sizeType row = 0; row < R; rows++)
+		for (sizeType row = 0; row < R; row++)
 			for (sizeType col = 0; col < OC; col++)
-				for (sizeType j = 0; j < rows() / other.columns(); j++)
-					ret.value(row, col) += values(row, j) * other.value(j, col);
+				for (sizeType j = 0; j < rows(); j++)
+					ret.value(row, col) += value(row, j) * other.value(j, col);
 					
 		return ret;
 	}
