@@ -24,6 +24,7 @@ namespace NOU::NOU_FILE_MNGT
 		//replace all / with \ 
 		ret.replace(PATH_SEPARATOR_UNIX_LINUX, PATH_SEPARATOR_WINDOWS);
 
+
 		//if path starts not with *:\, it is a relative path (* is any character, like C)
 		if (!(path.at(1) == ':' && path.at(2) == PATH_SEPARATOR_WINDOWS)) 
 		{
@@ -122,7 +123,7 @@ namespace NOU::NOU_FILE_MNGT
 		if (str.substring(0, cwd.getAbsolutePath().size()) == cwd.getAbsolutePath())
 		{
 			sizeType lastPathSeparator = cwd.getAbsolutePath().size();
-			return NOU_DAT_ALG::String8(path.logicalSubstring(lastPathSeparator, path.size()));
+			return NOU_DAT_ALG::String8(path.logicalSubstring(lastPathSeparator + 1, path.size()));
 		}
 
 

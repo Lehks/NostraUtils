@@ -62,7 +62,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		 \brief Wraps around either fopen() on POSIX systems or fopen_s() on a Windows system.
 		*/
-		static void fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode);
+		void openStream(const char8 *mode);
 
 		/**
 		\brief File stream of the opened File
@@ -188,6 +188,18 @@ namespace NOU::NOU_FILE_MNGT
 		\return true if File exists, false otherwise
 		*/
 		boolean exists();
+
+		/**
+		\brief returns the file size in bytes, pushes an error if the file is not existant
+		\return returns the file size in bytes
+		*/
+		sizeType size();
+
+		/**
+		\brief deletes the corresponding file from the permanent memory
+		\return true if successfully deleted, false if otherwise
+		*/
+		boolean deleteFile();
 
 	private:
 
