@@ -4018,6 +4018,195 @@ TEST_METHOD(MathMat5)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+TEST_METHOD(Color)
+{
+	constexpr NOU::NOU_MATH::Color color0(1.0f, 0.5f, 0.3f);
+
+	//color with some other storage layout
+	constexpr NOU::NOU_MATH::Color color1(1.0f, 0.5f, 0.3f, 0.0f, NOU::NOU_MATH::ColorStorageLayout::ABGR);
+
+	//color that is not color0 or color1
+	constexpr NOU::NOU_MATH::Color color2(0.5f, 0.5f, 1.0f, 1.0f);
+
+	constexpr NOU::float32 red = color0.getRed();
+	constexpr NOU::float32 green = color0.getGreen();
+	constexpr NOU::float32 blue = color0.getBlue();
+	constexpr NOU::float32 alpha = color0.getAlpha();
+
+	IsTrue(red == 1.0f);
+	IsTrue(green == 0.5f);
+	IsTrue(blue == 0.3f);
+	IsTrue(alpha == 0.0f);
+
+	//Check if clamping works
+	constexpr NOU::NOU_MATH::Color color3(2.0f, -1.0f, 0.5f);
+
+	IsTrue(color3.getRed() == 1.0f);
+	IsTrue(color3.getGreen() == 0.0f);
+	IsTrue(color3.getBlue() == 0.5f);
+
+
+	//equal / unequal
+
+	constexpr NOU::boolean equal = color0 == color1;
+	constexpr NOU::boolean unequal = color0 == color2;
+
+	IsTrue(equal);
+	IsTrue(unequal);
+
+	//predefined colors
+	constexpr NOU::NOU_MATH::Color black = NOU::NOU_MATH::Color::black();
+
+	IsTrue(black.getRed() == 0.0f);
+	IsTrue(black.getGreen() == 0.0f);
+	IsTrue(black.getBlue() == 0.0f);
+	IsTrue(black.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color black1 = NOU::NOU_MATH::Color::black(0.5f);
+
+	IsTrue(black.getRed() == 0.0f);
+	IsTrue(black.getGreen() == 0.0f);
+	IsTrue(black.getBlue() == 0.0f);
+	IsTrue(black.getAlpha() == 0.5f);
+
+	constexpr NOU::NOU_MATH::Color grey = NOU::NOU_MATH::Color::grey();
+
+	IsTrue(grey.getRed() == 0.5f);
+	IsTrue(grey.getGreen() == 0.5f);
+	IsTrue(grey.getBlue() == 0.5f);
+	IsTrue(grey.getAlpha() == 1.0f);
+
+
+	constexpr NOU::NOU_MATH::Color grey1 = NOU::NOU_MATH::Color::grey(0.3f);
+
+	IsTrue(grey1.getRed() == 0.3f);
+	IsTrue(grey1.getGreen() == 0.3f);
+	IsTrue(grey1.getBlue() == 0.3f);
+	IsTrue(grey1.getAlpha() == 1.0f);
+
+
+	constexpr NOU::NOU_MATH::Color grey2 = NOU::NOU_MATH::Color::grey(0.7f, 0.3f);
+
+	IsTrue(grey2.getRed() == 0.7f);
+	IsTrue(grey2.getGreen() == 0.7f);
+	IsTrue(grey2.getBlue() == 0.7f);
+	IsTrue(grey2.getAlpha() == 0.3f);
+
+	constexpr NOU::NOU_MATH::Color red0 = NOU::NOU_MATH::Color::red();
+
+	IsTrue(red0.getRed() == 1.0f);
+	IsTrue(red0.getGreen() == 0.0f);
+	IsTrue(red0.getBlue() == 0.0f);
+	IsTrue(red0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color red1 = NOU::NOU_MATH::Color::red(0.5f);
+
+	IsTrue(red1.getRed() == 1.0f);
+	IsTrue(red1.getGreen() == 0.0f);
+	IsTrue(red1.getBlue() == 0.0f);
+	IsTrue(red1.getAlpha() == 0.5f);
+
+	constexpr NOU::NOU_MATH::Color yellow0 = NOU::NOU_MATH::Color::yellow();
+
+	IsTrue(yellow0.getRed() == 1.0f);
+	IsTrue(yellow0.getGreen() == 1.0f);
+	IsTrue(yellow0.getBlue() == 0.0f);
+	IsTrue(yellow0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color yellow1 = NOU::NOU_MATH::Color::yellow(0.5f);
+
+	IsTrue(yellow1.getRed() == 1.0f);
+	IsTrue(yellow1.getGreen() == 1.0f);
+	IsTrue(yellow1.getBlue() == 0.0f);
+	IsTrue(yellow1.getAlpha() == 0.5f);
+
+	constexpr NOU::NOU_MATH::Color green0 = NOU::NOU_MATH::Color::green();
+
+	IsTrue(green0.getRed() == 0.0f);
+	IsTrue(green0.getGreen() == 1.0f);
+	IsTrue(green0.getBlue() == 0.0f);
+	IsTrue(green0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color green1 = NOU::NOU_MATH::Color::green(0.5f);
+
+	IsTrue(green1.getRed() == 0.0f);
+	IsTrue(green1.getGreen() == 1.0f);
+	IsTrue(green1.getBlue() == 0.0f);
+	IsTrue(green1.getAlpha() == 0.5f);
+
+	constexpr NOU::NOU_MATH::Color cyan0 = NOU::NOU_MATH::Color::cyan();
+
+	IsTrue(cyan0.getRed() == 0.0f);
+	IsTrue(cyan0.getGreen() == 1.0f);
+	IsTrue(cyan0.getBlue() == 1.0f);
+	IsTrue(cyan0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color cyan1 = NOU::NOU_MATH::Color::cyan(0.5f);
+
+	IsTrue(cyan1.getRed() == 0.0f);
+	IsTrue(cyan1.getGreen() == 1.0f);
+	IsTrue(cyan1.getBlue() == 1.0f);
+	IsTrue(cyan1.getAlpha() == 0.5f);
+
+	constexpr NOU::NOU_MATH::Color blue0 = NOU::NOU_MATH::Color::blue();
+
+	IsTrue(blue0.getRed() == 0.0f);
+	IsTrue(blue0.getGreen() == 0.0f);
+	IsTrue(blue0.getBlue() == 1.0f);
+	IsTrue(blue0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color blue1 = NOU::NOU_MATH::Color::blue(0.5f);
+
+	IsTrue(blue1.getRed() == 0.0f);
+	IsTrue(blue1.getGreen() == 0.0f);
+	IsTrue(blue1.getBlue() == 1.0f);
+	IsTrue(blue1.getAlpha() == 0.5f);
+
+	constexpr NOU::NOU_MATH::Color purple0 = NOU::NOU_MATH::Color::purple();
+
+	IsTrue(purple0.getRed() == 1.0f);
+	IsTrue(purple0.getGreen() == 0.0f);
+	IsTrue(purple0.getBlue() == 1.0f);
+	IsTrue(purple0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color purple1 = NOU::NOU_MATH::Color::purple(0.5f);
+
+	IsTrue(purple1.getRed() == 1.0f);
+	IsTrue(purple1.getGreen() == 0.0f);
+	IsTrue(purple1.getBlue() == 1.0f);
+	IsTrue(purple1.getAlpha() == 0.5f);
+
+	constexpr NOU::NOU_MATH::Color white0 = NOU::NOU_MATH::Color::white();
+
+	IsTrue(white0.getRed() == 1.0f);
+	IsTrue(white0.getGreen() == 1.0f);
+	IsTrue(white0.getBlue() == 1.0f);
+	IsTrue(white0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color white1 = NOU::NOU_MATH::Color::white(0.5f);
+
+	IsTrue(white1.getRed() == 1.0f);
+	IsTrue(white1.getGreen() == 1.0f);
+	IsTrue(white1.getBlue() == 1.0f);
+	IsTrue(white1.getAlpha() == 0.5f);
+
+	//set/getStorageLayout
+	//color0 has layout RGBA
+	NOU::NOU_MATH::Color color4 = color0;
+	
+	IsTrue(color4.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::RGBA);
+
+	color4.setStorageLayout(NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(color4.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(color0 == color4);
+
+
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
 void callback(const char *msg, const char *fnName, NOU::sizeType line, const char *file)
 {
 	IsTrue(false);

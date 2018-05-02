@@ -25,6 +25,9 @@ namespace NOU::NOU_MATH
 		constexpr sizeType getGreenIndex() const;
 		constexpr sizeType getBlueIndex() const;
 		constexpr sizeType getAlphaIndex() const;
+
+		constexpr boolean operator == (const ColorStorageLayoutImpl &other) const;
+		constexpr boolean operator != (const ColorStorageLayoutImpl &other) const;
 	};
 
 //======================== Implementation required here, to construct instances in ColorStorageLayout
@@ -51,6 +54,20 @@ namespace NOU::NOU_MATH
 	constexpr sizeType ColorStorageLayoutImpl::getAlphaIndex() const
 	{
 		return m_indices[3];
+	}
+
+	constexpr boolean ColorStorageLayoutImpl::operator == (const ColorStorageLayoutImpl &other) const
+	{
+		return (this == &other) || 
+			(   getRedIndex() == other.getRedIndex() &&
+				getGreenIndex() == other.getGreenIndex() &&
+				getBlueIndex() == other.getBlueIndex() &&
+				getAlphaIndex() == other.getAlphaIndex());
+	}
+
+	constexpr boolean ColorStorageLayoutImpl::operator != (const ColorStorageLayoutImpl &other) const
+	{
+		return !(*this == other);
 	}
 //========================
 
