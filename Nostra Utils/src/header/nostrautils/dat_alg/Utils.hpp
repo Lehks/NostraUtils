@@ -41,8 +41,8 @@ namespace NOU::NOU_DAT_ALG
 		{}														 \
 																 \
 		CLASSNAME(O&& DATAONE_NAME, T&& DATATWO_NAME) :			 \
-			DATAONE_NAME(NOU_CORE::move(DATAONE_NAME)),			 \
-			DATATWO_NAME(NOU_CORE::move(DATATWO_NAME))			 \
+			DATAONE_NAME(NOU::NOU_CORE::move(DATAONE_NAME)),	 \
+			DATATWO_NAME(NOU::NOU_CORE::move(DATATWO_NAME))		 \
 		{}														 \
 	};
 
