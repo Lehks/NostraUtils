@@ -350,7 +350,7 @@ namespace NOU::NOU_MATH
     template<typename T, sizeType N>
     Vector<T, N>::Vector(const Vector<T, 2> &vec, const typename VectorBase<T, N>::InitializerList &values)
     {
-        NOU_ASSERT(values.VectorBase<T, N>::size() == VectorBase<T, N>::size() - 2);
+        NOU_ASSERT(values.size() == VectorBase<T, N>::size() - 2);
 
         VectorBase<T, N>::value(0) = vec.value(0);
         VectorBase<T, N>::value(1) = vec.value(1);
@@ -366,7 +366,7 @@ namespace NOU::NOU_MATH
     template<typename T, sizeType N>
     Vector<T, N>::Vector(const Vector<T, 3> &vec, const typename VectorBase<T, N>::InitializerList &values)
     {
-        NOU_ASSERT(values.VectorBase<T, N>::size() == VectorBase<T, N>::size() - 3);
+        NOU_ASSERT(values.size() == this->size() - 3); //this-> is required here
 
         VectorBase<T, N>::value(0) = vec.value(0);
         VectorBase<T, N>::value(1) = vec.value(1);
@@ -383,7 +383,7 @@ namespace NOU::NOU_MATH
     template<typename T, sizeType N>
     Vector<T, N>::Vector(const Vector<T, 4> &vec, const typename VectorBase<T, N>::InitializerList &values)
     {
-        NOU_ASSERT(values.size() == VectorBase<T, N>() - 4);
+        NOU_ASSERT(values.size() == this->size() - 4); //this-> is required here
 
         VectorBase<T, N>::value(0) = vec.value(0);
         VectorBase<T, N>::value(1) = vec.value(1);
@@ -1385,7 +1385,7 @@ namespace NOU::NOU_MATH
         VectorBase<T, 4>::value(0) = -VectorBase<T, 4>::value(0);
         VectorBase<T, 4>::value(1) = -VectorBase<T, 4>::value(1);
         VectorBase<T, 4>::value(2) = -VectorBase<T, 4>::value(2);
-        VectorBase<T, 4>::value(3) = -VectorBase<T, 3>::value(3);
+        VectorBase<T, 4>::value(3) = -VectorBase<T, 4>::value(3);
 
         return *this;
     }

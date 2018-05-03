@@ -205,7 +205,7 @@ namespace NOU::NOU_MATH
         static Matrix<T, 4, 4> identity();
 
         Matrix() = default;
-        Matrix(const typename MatrixBase<T, 4, 4>::InitializerList<typename MatrixBase<T, 4, 4>::InitializerList<T>> &values);
+        Matrix(const typename MatrixBase<T, 4, 4>::template InitializerList<typename MatrixBase<T, 4, 4>::template InitializerList<T>> &values);
         Matrix(
             const T &index00, const T &index01, const T &index02, const T &index03,
             const T &index10, const T &index11, const T &index12, const T &index13,
@@ -359,7 +359,7 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T, sizeType R, sizeType C>
-    Matrix<T, R, C>::Matrix(const typename MatrixBase<T, R, C>::InitializerList<typename MatrixBase<T, R, C>::InitializerList<T>> &values) :
+    Matrix<T, R, C>::Matrix(const typename MatrixBase<T, R, C>::template InitializerList<typename MatrixBase<T, R, C>::template InitializerList<T>> &values) :
         MatrixBase<T, R, C>(values)
     {}
 
@@ -584,7 +584,7 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T>
-    Matrix<T, 2, 2>::Matrix(const typename MatrixBase<T, 2, 2>::InitializerList<typename MatrixBase<T, 2, 2>::InitializerList<T>> &values) :
+    Matrix<T, 2, 2>::Matrix(const typename MatrixBase<T, 2, 2>::template InitializerList<typename MatrixBase<T, 2, 2>::template InitializerList<T>> &values) :
         MatrixBase<T, 2, 2>(values)
     {}
 
@@ -828,7 +828,7 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T>
-    Matrix<T, 3, 3>::Matrix(const typename MatrixBase<T, 3, 3>::InitializerList<typename MatrixBase<T, 3, 3>::InitializerList<T>> &values) :
+    Matrix<T, 3, 3>::Matrix(const typename MatrixBase<T, 3, 3>::template InitializerList<typename MatrixBase<T, 3, 3>::template InitializerList<T>> &values) :
         MatrixBase<T, 3, 3>(values)
     {}
 
@@ -1141,7 +1141,7 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T>
-    Matrix<T, 4, 4>::Matrix(const typename MatrixBase<T, 4, 4>::InitializerList<typename MatrixBase<T, 4, 4>::InitializerList<T>> &values) :
+    Matrix<T, 4, 4>::Matrix(const typename MatrixBase<T, 4, 4>::template InitializerList<typename MatrixBase<T, 4, 4>::template InitializerList<T>> &values) :
         MatrixBase<T, 4, 4>(values)
     {}
 
