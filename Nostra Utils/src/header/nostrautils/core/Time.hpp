@@ -17,5 +17,11 @@ namespace NOU::NOU_CORE {
 	*/
 
 	uint32 NOU_FUNC currentTimeMillis();
+
+	/**
+	\brief returns the current time in nanoseconds
+	\return returns the current time in nanoseconds
+	*/
+	uint64 NOU_FUNC currentTimeNanos();
 }
 #endif
