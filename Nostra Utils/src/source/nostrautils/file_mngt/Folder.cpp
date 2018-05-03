@@ -8,6 +8,8 @@
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <direct.h>
 #endif
 
 namespace NOU::NOU_FILE_MNGT
@@ -28,7 +30,8 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean Folder::create(const Path &path)
 	{
-#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+      #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+
 		if (!CreateDirectory(path.getAbsolutePath().rawStr(), NULL))
 		{
 			DWORD lastError = GetLastError();
@@ -45,11 +48,11 @@ namespace NOU::NOU_FILE_MNGT
 		return true;
 
 
-#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+      #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 
-mkdir(const char *path, mode_t mode);
+        mkdir(const char *path, mode_t mode);
 
-#endif
+      #endif
 
 	}
 
@@ -82,11 +85,39 @@ mkdir(const char *path, mode_t mode);
 		return v;
         #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 
+		struct dirent
+		{
+			ino_t m_ino; 
+			off_t m_off;
+			unsigned short m_reclean;
+			unsigned char m_types;
+				char m_name[256]; 
+
+		};
+
+		static void list_dir(const char *path)
+		{
+			struct dirent *entry;
+			DIR *dir = opendir(path);
+			if (dir == NULL)
+			{
+				return;
+			}
+
+			while ((entry = readdir(dir)) != NULL) 
+			{
+				std::cout << (entry->m_name);
+			}
+
+			closedir(dir);
+	}
+		
         #endif
 	}
 
 	NOU_DAT_ALG::Vector<Folder> Folder::listFiles() const
 	{
+      #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		NOU_DAT_ALG::Vector<Folder> v;
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
 		pattern.append("\\*");
@@ -106,6 +137,10 @@ mkdir(const char *path, mode_t mode);
 			FindClose(hFind);
 		}
 		return v;
+
+       #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+	
+       #endif
 	}
 }
 
