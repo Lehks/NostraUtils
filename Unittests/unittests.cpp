@@ -1922,6 +1922,7 @@ TEST_METHOD(File)
 	IsTrue(!f.exists());
 }
 
+/*
 TEST_METHOD(INIFile)
 {
 	NOU::NOU_FILE_MNGT::INIFile parser = NOU::NOU_FILE_MNGT::INIFile("unittest.ini");
@@ -1957,7 +1958,7 @@ TEST_METHOD(INIFile)
 
 	NOU_CHECK_ERROR_HANDLER;
 }
-
+*/
 TEST_METHOD(MathVec2)
 {
 	using namespace NOU::NOU_MATH;
