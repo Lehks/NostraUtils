@@ -133,7 +133,7 @@ namespace NOU::NOU_MATH
 	public:
 		constexpr static Color black(ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
-		constexpr static Color grey(ChannelType scale = CHANNEL_MAX / static_cast<ChannelType>(2), 
+		constexpr static Color grey(NOU::float32 scale = 0.5f, 
 			ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 		constexpr static Color red(ChannelType alpha = CHANNEL_MAX, 
@@ -211,7 +211,7 @@ namespace NOU::NOU_MATH
 	};
 
 	using Color32f = Color<ColorConfigFloat>;
-	using Colori8  = Color<ColorConfigByte>;
+	using Color8i  = Color<ColorConfigByte>;
 
 	template<typename T>
 	constexpr typename Color<T>::ChannelType Color<T>::CHANNEL_MIN;
@@ -233,10 +233,12 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T>
-	constexpr Color<T> Color<T>::grey(typename Color<T>::ChannelType scale, 
-		typename Color<T>::ChannelType alpha, const ColorStorageLayoutImpl &storageLayout)
+	constexpr Color<T> Color<T>::grey(NOU::float32 scale, typename Color<T>::ChannelType alpha, 
+		const ColorStorageLayoutImpl &storageLayout)
 	{
-		return Color<T>(CHANNEL_MAX * scale, CHANNEL_MAX * scale, CHANNEL_MAX * scale, alpha, storageLayout);
+		ChannelType value = static_cast<ChannelType>(CHANNEL_MAX * scale);
+
+		return Color<T>(value, value, value, alpha, storageLayout);
 	}
 
 	template<typename T>
@@ -506,8 +508,12 @@ namespace NOU::NOU_MATH
 	{
 		using ReturnType = Color<typename COL::Configuration>;
 
-		return ReturnType(getRed() * ReturnType::CHANNEL_MAX, getGreen() * ReturnType::CHANNEL_MAX,
-			getBlue() * ReturnType::CHANNEL_MAX, getAlpha() * ReturnType::CHANNEL_MAX, getStorageLayout());
+		return ReturnType(
+			static_cast<typename ReturnType::ChannelType>(getRed() * ReturnType::CHANNEL_MAX), 
+			static_cast<typename ReturnType::ChannelType>(getGreen() * ReturnType::CHANNEL_MAX),
+			static_cast<typename ReturnType::ChannelType>(getBlue() * ReturnType::CHANNEL_MAX), 
+			static_cast<typename ReturnType::ChannelType>(getAlpha() * ReturnType::CHANNEL_MAX), 
+			getStorageLayout());
 	}
 
 	template<typename T>

@@ -9,7 +9,7 @@
 
 When working with colors in Nostra Utils, the class \link nostra::utils::math::Color Color \endlink is always (directly or indirectly) used. It is a highly configurable class that represents a RGBA color (there is no color that is only RGB, a color in Nostra Utils will always have four channels).
 
-In the most cases, the type <tt>Color32f</tt> is a good choice - it is a color that uses 32 bit floating point numbers (the exact datatype is NOU::float32) in the interval \f$\left[0, 1\right[\f$ and stores them in the order { Red, Green, Blue, Alpha } (how to configure both the type and the layout will be shown in the chapter \link sec_configure Configuring the color class\endlink).
+In the most cases, the type <tt>Color32f</tt> is a good choice - it is a color that uses 32 bit floating point numbers (the exact datatype is NOU::float32) in the interval \f$\left[0, 1\right]\f$ and stores them in the order { Red, Green, Blue, Alpha } (how to configure both the type and the layout will be shown in the chapter \link sec_configure Configuring the color class\endlink).
 
 \par Vocabulary
 
@@ -186,18 +186,145 @@ someFunction(color.data());
 
 \subsection subsec_configure_typeAndValues Configuring the channel type and minimum/maximum values
 
-In the previous chapters, the only type that was used was <tt>Color32f</tt> which is a color type that uses four 32 bit floating point numbers and the values are always in the interval \f$\left[0, 1\right[\f$. Aside from this single type, the color class actually allows it to store the values in any type and within any interval. To accomplish this, a so called "Color Configuration" is used.
+In the previous chapters, the only type that was used was <tt>Color32f</tt> which is a color type that uses four 32 bit floating point numbers. The channel values are always in the interval \f$\left[0, 1\right]\f$. Aside from this single type, the color class allows it to store the values in any type and within any interval. To accomplish this, a so called "color configuration" is used.
 
 A color configuration is simply a class with a bunch of predefined member constants and type alias(es). These are:
 - ChannelType (type): The type of the singe channels. In the case of <tt>Color32f</tt>, this is <tt>NOU::float32</tt>.
 - CHANNEL_MIN (constant): The minimum value of each of the channels. In the case of <tt>Color32f</tt>, this is <tt>0.0f</tt>.
 - CHANNEL_MAX (constant): The maximum value of each of the channels. In the case of <tt>Color32f</tt>, this is <tt>1.0f</tt>.
 - DEFAULT_STORAGE_LAYOUT (constant): The storage layout that will be used by all methods (and the constructor) of the color class as a default parameter for the storage layout. In the case of <tt>Color32f</tt>, this is <tt>ColorStorageLayout::RGBA</tt>.
-- COMPARE_EPSILON (constant): Since the channel type of a color may be a floating point number and comparing floating point numbers using the operator == is often not correct, the color class uses \link nostra::utils::dat_alg::epsilonCompare() epsilonCompare()\endlink to compare its channels. This value is the epsilon that will be passed to that function. In the case of <tt>Color32f</tt>, this is <tt>0.0001f</tt>.
+- COMPARE_EPSILON (constant): Since the channel type of a color may be a floating point number and comparing floating point numbers using the operator == is often not correct, the color class uses \link nostra::utils::dat_alg::epsilonCompare() epsilonCompare()\endlink to compare its channels. This value is the epsilon that will be passed to that function. If the channel type is an integer type, this should usually be 0. In the case of <tt>Color32f</tt>, this is <tt>0.0001f</tt>.
 
-It would work to simply write a class or struct that has all of those members and use it as a configuration. There is however a faster was of doing that: Nostra Utils provides a macro called NOU_GENERATE_COLOR_CONFIG which generates that class and takes in a name for the class and the values for the members.
+It would work to simply write a class or struct that has all of those members and use it as a configuration. There is however a faster was of doing that: Nostra Utils provides a macro called NOU_GENERATE_COLOR_CONFIG which generates that class. It takes the class name and the values for the members as parameters.
 
+A new color configuration can be added and used like this:
 
+\code{.cpp}
+//define a color configuration with 8bits per channel and an interval [0, 255]
+NOU_GENERATE_COLOR_CONFIG(ColorConfigByte, uint8, 0, 255, ColorStorageLayout::RGBA, 0);
+
+int main()
+{
+    //pass the configuration to the color
+    NOU::NOU_MATH::Color<ColorConfigByte> color(255, 0, 0);
+
+    return 0;
+}
+\endcode
+
+\note
+All of the predefined colors work with any configuration - they use the CHANNEL_MIN and CHANNEL_MAX value internally. This also stays true for grey() - the value of the scale parameter is always between 0 and 1 and the method will convert the scale to a proper channel value.
+
+\attention
+NOU_GENERATE_COLOR_CONFIG needs to be outside a function body (it may be in a namespace). This is because the macro will expand to a class and definitions for the members in that class.
+
+\par Predefined color types
+There are two predefined color types with their own color configurations.
+
+These two are:
+<table>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Color32f
+        </th>
+        <th>
+            Color8i
+        </th>
+    </tr>
+    <tr>
+        <td>
+            ChannelType
+        </td>
+        <td>
+            NOU::float32
+        </td>
+        <td>
+            NOU::uint8
+        </td>
+    </tr>
+    <tr>
+        <td>
+            CHANNEL_MIN
+        </td>
+        <td>
+            0.0f
+        </td>
+        <td>
+            0
+        </td>
+    </tr>
+    <tr>
+        <td>
+            CHANNEL_MAX
+        </td>
+        <td>
+            1.0f
+        </td>
+        <td>
+            255
+        </td>
+    </tr>
+    <tr>
+        <td>
+            DEFAULT_STORAGE_LAYOUT
+        </td>
+        <td>
+            ColorStorageLayout::RGBA
+        </td>
+        <td>
+            ColorStorageLayout::RGBA
+        </td>
+    </tr>
+    <tr>
+        <td>
+            COMPARE_EPSILON
+        </td>
+        <td>
+            0.0001f
+        </td>
+        <td>
+            0
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Note
+        </td>
+        <td>
+            This is the configuration that was usually used throughout this document.
+        </td>
+        <td>
+            This is the configuration that was manually created in the previous example.
+        </td>
+    </tr>
+</table>
+
+\par Converting colors with different configurations
+
+Generally, two colors with different configurations are incompatible to each other. Code like this does NOT work:
+
+\code{.cpp}
+NOU::NOU_MATH::Color8i color0(255, 0, 0);
+NOU::NOU_MATH::Color32f color1(0.0f, 1.0f, 0.0f);
+
+NOU::NOU_MATH::Color32f color2 = color0 + color1;
+\endcode
+
+It is however possible to explicitly cast from one color type to another color type using <tt>static_cast</tt>.
+
+Example:
+
+\code{.cpp}
+NOU::NOU_MATH::Color8i color0(255, 0, 0);
+NOU::NOU_MATH::Color32f color1(0.0f, 1.0f, 0.0f);
+
+NOU::NOU_MATH::Color32f color2 = static_cast<NOU::NOU_MATH::Color32f>(color0) + color1;
+\endcode
+
+There is also a method called \link nostra::utils::math::Color::convert convert()\endlink that does the same thing as the static cast. It takes the color to convert to as a template parameter.
 
 \subsection subsec_configure_storageLayout Configuring the storage layout
 */
