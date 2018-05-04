@@ -1,0 +1,66 @@
+/**
+\page Color_tut
+
+\brief On this page, the use and configuration of the color class in Nostra Utils will be explained.
+
+\tableofcontents
+
+\section sec_basicUsage Basic Usage
+
+When working with colors in Nostra Utils, the class \link nostra::utils::math::Color Color \endlink is always (directly or indirectly) used. It is a highly configurable class that represents a RGBA color.
+
+In the most cases, the type <tt>Color32f</tt> is a good choice - it is a color that uses 32bit floating point numbers in the interval \f$\left[0, 1\right[\f$ and stores them in the order { Red, Green, Blue, Alpha } (how to configure that layout will be shown later).
+
+\subsection subsec_basicUsage_Constructing Constructing a color
+The color has a constructor that takes five values - the read, green, blue and alpha channels (in that order) and a fifth channel that is not of importance for now.
+
+The code to call the constructor would look like this:
+
+\code{.cpp}
+NOU::NOU_MATH::Color32f color(1.0f, 1.0f, 0.0f, 0.5f);
+\endcode
+
+In this example, a opaque yellow color would have been constructed.
+
+\note
+Every channel of a color has a minimum and maximum value (for <tt>Color32f</tt> that is <tt>0.0f</tt> and <tt>1.0f</tt> respectively). A channel will never go below / above the minimum / maximum values - the class will clamp the values automatically.
+
+\note
+It is also possible to omit the fourth paramater (the alpha channel value). In that case, <tt>1.0f</tt> will be used as values.
+
+\subsubsection subsubsec_basicUsage_Constructing_predefined Predefined colors
+There are already several predefined colors that can be accessed using methods (there is one method for each color). The predefined colors are:
+- black
+- red
+- yellow
+- green
+- cyan
+- blue
+- purple
+- white
+
+The methods for the predefined colors take two (optional) parameters. The first parameter is the alpha value. By default this is <tt>1.0f</tt>. The second parameter is the same as the fifth parameter in the constructor and it will be explained at a later point.
+
+The predefined colors can be used like this: 
+\code{.cpp}
+NOU::NOU_MATH::Color32f red = NOU::NOU_MATH::Color32f::red(); //red without transparency
+NOU::NOU_MATH::Color32f blue = NOU::NOU_MATH::Color32f::blue(0.5f); //opaque blue
+\endcode
+
+There is also an additional predefined color - grey - that behaves a bit differently. In addition to the two other parameters, it has a third one: the scale. 
+
+\note
+The order of the parameters is first the scale, then the alpha channel and then the parameter that will be explained later.
+
+Using that scale parameter, it is possible to get any grey tone (very light grey to very dark; even white and black are possible). The scale is the value of each of the single color channles. If the scale is <tt>0.3f</tt>, all of the color channels will have the value <tt>0.3f</tt>. The default value for the scale is <tt>0.5f</tt>. The two remaining parameters have the same effect and default values as they have with the other predefined colors.
+
+\code{.cpp}
+NOU::NOU_MATH::Color32f grey1 = NOU::NOU_MATH::Color32f::grey(); //grey with 0.5f as scale
+NOU::NOU_MATH::Color32f grey2 = NOU::NOU_MATH::Color32f::blue(0.3f 0.5f); //opaque grey with 0.3f as scale
+\endcode
+
+\subsection subsec_channelAccess Accessing the channles
+
+To access the single channels of the color, a typical getter / setter system is used. The following piece of code shows how to read and write single channels.
+
+*/
