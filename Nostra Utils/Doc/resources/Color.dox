@@ -17,6 +17,7 @@ Before starting off, this is the most important vocabulary that is used througho
 - Channel: A RGBA color is made up from four color values (red, green, blue and alpha). Each of these values is a single channel (e.g. the red channel is the red color value).
 - Alpha: Aside from the channels red, green and blue, there is also the alpha channel. This channel is the transparency value of the color.
 - Color Channel: Color channels are the red, green and blue color channels, but not the alpha channel.
+- Color Storage Layout: The order in which the colors are stored in the memory.
 
 \subsection subsec_basicUsage_Constructing Constructing a color
 The color has a constructor that takes five values - the red, green, blue and alpha channels (in that order) and a fifth parameter that is explained in the chapter \link subsec_configure_storageLayout Configuring the storage layout\endlink and it will be ignored for now.
@@ -184,6 +185,20 @@ someFunction(color.data());
 
 \section sec_configure Configuring the color class
 
+\subsection subsec_configure_storageLayout Configuring the storage layout
+
+Since the color class is (at least partially) made to be used with 3rd party libraries like OpenGL it has a mechanism to customize the order in which the colors are stored in the internal array. This is because such 3rd party library may required the colors in a order other than RGBA.
+
+To control that storage layout, the predefined constants in the namespace \link nostra::utils::math::ColorStorageLayout NOU::NOU_MATH::ColorStorageLayout\endlink are used. Each of these constants represents a different layout (e.g. NOU::NOU_MATH::ColorStorageLayout::RGBA is the layout { Red, Green, Blue, Alpha } whereas NOU::NOU_MATH::ColorStorageLayout::ABGR is the layout { Alpha, Blue, Green, Red }). These constant can be passed to a color when a color is constructed and it is the last parameter in the constructor (and in the methods for the predefined colors) that was not explained earlier.
+
+\note
+The storage layout is almost not observable from the outside - e.g. getRed() will always return the red channel, independent from the storage layout. The layout is however noticeable when using data(), the values will obviously be different for different layouts.
+
+After the construction of a color, the layout may be changed using \link nostra::utils::math::Color::setStorageLayout setStorageLayout()\endlink.
+
+\note
+Different color instances with different storage layouts are fully compatible with each other - the color class will do all of the converting internally.
+
 \subsection subsec_configure_typeAndValues Configuring the channel type and minimum/maximum values
 
 In the previous chapters, the only type that was used was <tt>Color32f</tt> which is a color type that uses four 32 bit floating point numbers. The channel values are always in the interval \f$\left[0, 1\right]\f$. Aside from this single type, the color class allows it to store the values in any type and within any interval. To accomplish this, a so called "color configuration" is used.
@@ -207,7 +222,7 @@ int main()
 {
     //pass the configuration to the color
     NOU::NOU_MATH::Color<ColorConfigByte> color(255, 0, 0);
-
+    
     return 0;
 }
 \endcode
@@ -321,10 +336,9 @@ Example:
 NOU::NOU_MATH::Color8i color0(255, 0, 0);
 NOU::NOU_MATH::Color32f color1(0.0f, 1.0f, 0.0f);
 
-NOU::NOU_MATH::Color32f color2 = static_cast<NOU::NOU_MATH::Color32f>(color0) + color1;
+NOU::NOU_MATH::Color32f color2 = static_cast<NOU::NOU_MATH::Color32f>
+(color0) + color1;
 \endcode
 
 There is also a method called \link nostra::utils::math::Color::convert convert()\endlink that does the same thing as the static cast. It takes the color to convert to as a template parameter.
-
-\subsection subsec_configure_storageLayout Configuring the storage layout
 */
