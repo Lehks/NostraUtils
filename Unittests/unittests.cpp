@@ -4319,7 +4319,7 @@ TEST_METHOD(Color)
 	//copy
 	IsTrue(color0.copy() == color0);
 
-	constexpr NOU::NOU_MATH::Colori8 color12 = color0.convert<NOU::NOU_MATH::Colori8>();
+	constexpr NOU::NOU_MATH::Colori8 color12 = static_cast<NOU::NOU_MATH::Colori8>(color0);
 
 	IsTrue(color12.getRed() == static_cast<NOU::uint8>(1.0f * 255));
 	IsTrue(color12.getGreen() == static_cast<NOU::uint8>(0.5f * 255));

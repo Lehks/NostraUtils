@@ -92,19 +92,21 @@ namespace NOU::NOU_MATH
 		constexpr static ColorStorageLayoutImpl ABGR = ColorStorageLayoutImpl(3, 2, 1, 0);
 	};
 
-#define NOU_GENERATE_COLOR_CONFIG(name, type, min, max)			 \
-	struct NOU_CLASS name										 \
-	{														 	 \
-		using ChannelType = type;							 	 \
-		constexpr static ChannelType CHANNEL_MIN = min;		 	 \
-		constexpr static ChannelType CHANNEL_MAX = max;		 	 \
-	};															 \
-																 \
-	constexpr name::ChannelType name::CHANNEL_MIN;				 \
-	constexpr name::ChannelType name::CHANNEL_MAX;
+#define NOU_GENERATE_COLOR_CONFIG(name, type, min, max, layout)			         \
+	struct NOU_CLASS name										 		         \
+	{														 	 		         \
+		using ChannelType = type;							 	 		         \
+		constexpr static ChannelType CHANNEL_MIN = min;		 	 		         \
+		constexpr static ChannelType CHANNEL_MAX = max;		 	 		         \
+		constexpr static ColorStorageLayoutImpl DEFAULT_STORAGE_LAYOUT = layout; \
+	};																	         \
+																		         \
+	constexpr name::ChannelType      name::CHANNEL_MIN;					         \
+	constexpr name::ChannelType      name::CHANNEL_MAX;					         \
+	constexpr ColorStorageLayoutImpl name::DEFAULT_STORAGE_LAYOUT;
 
-	NOU_GENERATE_COLOR_CONFIG(ColorConfigFloat, float32, 0.0f, 1.0f);
-	NOU_GENERATE_COLOR_CONFIG(ColorConfigByte, uint8, 0, 255);
+	NOU_GENERATE_COLOR_CONFIG(ColorConfigFloat, float32, 0.0f, 1.0f, ColorStorageLayout::RGBA);
+	NOU_GENERATE_COLOR_CONFIG(ColorConfigByte, uint8, 0, 255, ColorStorageLayout::RGBA);
 
 	template<typename T>
 	class NOU_CLASS Color final
@@ -115,6 +117,7 @@ namespace NOU::NOU_MATH
 
 		constexpr static ChannelType CHANNEL_MIN = Configuration::CHANNEL_MIN;
 		constexpr static ChannelType CHANNEL_MAX = Configuration::CHANNEL_MAX;
+		constexpr static ColorStorageLayoutImpl DEFAULT_STORAGE_LAYOUT = Configuration::DEFAULT_STORAGE_LAYOUT;
 
 	private:
 		ColorStorageLayoutImpl m_storageLayout;
@@ -123,29 +126,29 @@ namespace NOU::NOU_MATH
 		constexpr static const ChannelType& clampChannel(const ChannelType &channel);
 
 	public:
-		constexpr static Color black(ChannelType alpha = CHANNEL_MAX
-			, const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+		constexpr static Color black(ChannelType alpha = CHANNEL_MAX, 
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 		constexpr static Color grey(ChannelType scale = CHANNEL_MAX / static_cast<ChannelType>(2), 
 			ChannelType alpha = CHANNEL_MAX, 
-			const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 		constexpr static Color red(ChannelType alpha = CHANNEL_MAX, 
-			const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 		constexpr static Color yellow(ChannelType alpha = CHANNEL_MAX, 
-			const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 		constexpr static Color green(ChannelType alpha = CHANNEL_MAX, 
-			const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 		constexpr static Color cyan(ChannelType alpha = CHANNEL_MAX, 
-			const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 		constexpr static Color blue(ChannelType alpha = CHANNEL_MAX, 
-			const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 		constexpr static Color purple(ChannelType alpha = CHANNEL_MAX, 
-			const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 		constexpr static Color white(ChannelType alpha = CHANNEL_MAX, 
-			const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 
 		constexpr Color();
 		constexpr Color(ChannelType red, ChannelType green, ChannelType blue, ChannelType alpha = CHANNEL_MAX,
-			const ColorStorageLayoutImpl &storageLayout = ColorStorageLayout::RGBA);
+			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
 
 		void setStorageLayout(const ColorStorageLayoutImpl &storageLayout);
 		constexpr const ColorStorageLayoutImpl& getStorageLayout() const;
@@ -198,6 +201,8 @@ namespace NOU::NOU_MATH
 
 		constexpr boolean operator != (const Color &other) const;
 
+		template<typename CONF>
+		constexpr explicit operator Color<CONF>() const;
 	};
 
 	using Color32f = Color<ColorConfigFloat>;
@@ -208,6 +213,9 @@ namespace NOU::NOU_MATH
 
 	template<typename T>
 	constexpr typename Color<T>::ChannelType Color<T>::CHANNEL_MAX;
+
+	template<typename T>
+	constexpr ColorStorageLayoutImpl Color<T>::DEFAULT_STORAGE_LAYOUT;
 
 	template<typename T>
 	constexpr Color<T> Color<T>::black(typename Color<T>::ChannelType alpha,
@@ -281,7 +289,7 @@ namespace NOU::NOU_MATH
 
 	template<typename T>
 	constexpr Color<T>::Color<T>() :
-		m_storageLayout(ColorStorageLayout::RGBA),
+		m_storageLayout(DEFAULT_STORAGE_LAYOUT),
 		m_channels{ CHANNEL_MIN, CHANNEL_MIN, CHANNEL_MIN, CHANNEL_MIN }
 	{}
 
@@ -537,6 +545,13 @@ namespace NOU::NOU_MATH
 	constexpr boolean Color<T>::operator != (const Color<T> &other) const
 	{
 		return unequal(other);
+	}
+
+	template<typename T>
+	template<typename CONF>
+	constexpr Color<T>::operator Color<CONF>() const
+	{
+		return convert<Color<CONF>>();
 	}
 }
 
