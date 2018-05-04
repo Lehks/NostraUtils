@@ -78,9 +78,14 @@ namespace NOU::NOU_DAT_ALG
 
 	\param epsilon A const reference to the passed epsilon.
 
-	\return True if the difference between the two parameters is smaller than the epsilon.
+	\return True if the difference between the two parameters is smaller or equal to the epsilon.
 
-	\brief Compares two parameters to a passed epsilon. 
+	\brief Compares two parameters using a passed epsilon. 
+
+	\details 
+	Compares two parameters using a passed epsilon. This can be used to properly compare floating point 
+	numbers and also works fine with integers if the epsilon is 0 (however, the latter one is usually not
+	useful).
 	*/
 	template<typename T>
 	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon);
@@ -115,8 +120,8 @@ namespace NOU::NOU_DAT_ALG
 	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon)
 	{
 		T diff = t0 - t1;
-		T abs = (diff < 0 ? -diff : diff);
-		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
+		T abs = (diff < static_cast<T>(0) ? -diff : diff);
+		return !(abs <= epsilon) * (diff < static_cast<T>(0) ? -1 : 1);
 	}
 
 
