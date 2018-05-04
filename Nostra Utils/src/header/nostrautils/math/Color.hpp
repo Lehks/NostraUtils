@@ -2,6 +2,7 @@
 #define NOU_MATH_COLOR_HPP
 
 #include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
 
 namespace NOU::NOU_MATH
 {
@@ -92,21 +93,23 @@ namespace NOU::NOU_MATH
 		constexpr static ColorStorageLayoutImpl ABGR = ColorStorageLayoutImpl(3, 2, 1, 0);
 	};
 
-#define NOU_GENERATE_COLOR_CONFIG(name, type, min, max, layout)			         \
+#define NOU_GENERATE_COLOR_CONFIG(name, type, min, max, layout, cmpEpsi)		 \
 	struct NOU_CLASS name										 		         \
 	{														 	 		         \
 		using ChannelType = type;							 	 		         \
 		constexpr static ChannelType CHANNEL_MIN = min;		 	 		         \
 		constexpr static ChannelType CHANNEL_MAX = max;		 	 		         \
 		constexpr static ColorStorageLayoutImpl DEFAULT_STORAGE_LAYOUT = layout; \
+		constexpr static ChannelType COMPARE_EPSILON = cmpEpsi;                  \
 	};																	         \
 																		         \
 	constexpr name::ChannelType      name::CHANNEL_MIN;					         \
 	constexpr name::ChannelType      name::CHANNEL_MAX;					         \
-	constexpr ColorStorageLayoutImpl name::DEFAULT_STORAGE_LAYOUT;
+	constexpr ColorStorageLayoutImpl name::DEFAULT_STORAGE_LAYOUT;				 \
+	constexpr name::ChannelType name::COMPARE_EPSILON;
 
-	NOU_GENERATE_COLOR_CONFIG(ColorConfigFloat, float32, 0.0f, 1.0f, ColorStorageLayout::RGBA);
-	NOU_GENERATE_COLOR_CONFIG(ColorConfigByte, uint8, 0, 255, ColorStorageLayout::RGBA);
+	NOU_GENERATE_COLOR_CONFIG(ColorConfigFloat, float32, 0.0f, 1.0f, ColorStorageLayout::RGBA, 0.0001f);
+	NOU_GENERATE_COLOR_CONFIG(ColorConfigByte, uint8, 0, 255, ColorStorageLayout::RGBA, 0);
 
 	template<typename T>
 	class NOU_CLASS Color final
@@ -117,7 +120,9 @@ namespace NOU::NOU_MATH
 
 		constexpr static ChannelType CHANNEL_MIN = Configuration::CHANNEL_MIN;
 		constexpr static ChannelType CHANNEL_MAX = Configuration::CHANNEL_MAX;
-		constexpr static ColorStorageLayoutImpl DEFAULT_STORAGE_LAYOUT = Configuration::DEFAULT_STORAGE_LAYOUT;
+		constexpr static ColorStorageLayoutImpl DEFAULT_STORAGE_LAYOUT = 
+																	Configuration::DEFAULT_STORAGE_LAYOUT;
+		constexpr static ChannelType COMPARE_EPSILON = Configuration::COMPARE_EPSILON;
 
 	private:
 		ColorStorageLayoutImpl m_storageLayout;
@@ -165,7 +170,7 @@ namespace NOU::NOU_MATH
 		void setAlpha(ChannelType value);
 		constexpr const ChannelType& getAlpha() const;
 
-		Color& invert();
+		Color& invert(boolean invertAlpha = false);
 		 
 		constexpr Color add(const Color &other) const;
 		Color& addAssign(const Color &other);
@@ -216,6 +221,9 @@ namespace NOU::NOU_MATH
 
 	template<typename T>
 	constexpr ColorStorageLayoutImpl Color<T>::DEFAULT_STORAGE_LAYOUT;
+
+	template<typename T>
+	constexpr typename Color<T>::ChannelType Color<T>::COMPARE_EPSILON;
 
 	template<typename T>
 	constexpr Color<T> Color<T>::black(typename Color<T>::ChannelType alpha,
@@ -383,11 +391,14 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T>
-	Color<T>& Color<T>::invert()
+	Color<T>& Color<T>::invert(boolean invertAlpha)
 	{
 		setRed(CHANNEL_MAX - getRed());
 		setGreen(CHANNEL_MAX - getGreen());
 		setBlue(CHANNEL_MAX - getBlue());
+
+		if (invertAlpha)
+			setAlpha(CHANNEL_MAX - getAlpha());
 
 		return *this;
 	}
@@ -465,10 +476,10 @@ namespace NOU::NOU_MATH
 	constexpr boolean Color<T>::equal(const Color<T> &other) const
 	{
 		return (this == &other) ||
-			(getRed() == other.getRed() &&
-			 getGreen() == other.getGreen() &&
-			 getBlue() == other.getBlue() &&
-			 getAlpha() == other.getAlpha());
+			((NOU_DAT_ALG::epsilonCompare(getRed(), other.getRed(), COMPARE_EPSILON) == 0) &&
+			 (NOU_DAT_ALG::epsilonCompare(getGreen(), other.getGreen(), COMPARE_EPSILON) == 0) &&
+			 (NOU_DAT_ALG::epsilonCompare(getBlue(), other.getBlue(), COMPARE_EPSILON) == 0) &&
+			 (NOU_DAT_ALG::epsilonCompare(getAlpha(), other.getAlpha(), COMPARE_EPSILON) == 0));
 	}
 
 	template<typename T>
