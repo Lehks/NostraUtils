@@ -31,6 +31,9 @@ namespace NOU::NOU_MATH
 
         const T* data() const;
         T* data();
+
+		const T& operator [](sizeType index) const;
+		T& operator [](sizeType index);
     };
 
     template<typename T, sizeType N>
@@ -326,6 +329,18 @@ namespace NOU::NOU_MATH
     {
         return m_data;
     }
+
+	template<typename T, sizeType N>
+	const T& VectorBase<T, N>::operator[](sizeType index) const
+	{
+		return value(index);
+	}
+
+	template<typename T, sizeType N>
+	T& VectorBase<T, N>::operator[](sizeType index)
+	{
+		return value(index);
+	}
 
 
 

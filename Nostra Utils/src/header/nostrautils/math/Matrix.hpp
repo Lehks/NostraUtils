@@ -8,8 +8,24 @@
 
 namespace NOU::NOU_MATH
 {
+	template<typename MatBase>
+	class NOU_CLASS MatrixRow
+	{
+	private:
+		using Type = typename MatBase::Type;
+
+		MatBase  *m_mat;
+		sizeType  m_row;
+
+	public:
+		MatrixRow(MatBase &mat, sizeType row);
+
+		Type& operator [] (sizeType col);
+		const Type& operator [] (sizeType col) const;
+	};
+
     template<typename T, sizeType R, sizeType C>
-    class MatrixBase
+    class NOU_CLASS MatrixBase
     {
         static_assert(R > 1, "There must be at least two rows in a matrix.");
         static_assert(C > 1, "There must be at least two columns in a matrix.");
@@ -17,6 +33,8 @@ namespace NOU::NOU_MATH
     public:
         template<typename U>
         using InitializerList = std::initializer_list<U>;
+
+		using Type = T;
 
     private:
         T m_data[C][R];
@@ -28,6 +46,9 @@ namespace NOU::NOU_MATH
         const T& value(sizeType row, sizeType col) const;
         T& value(sizeType row, sizeType col);
 
+		MatrixRow<MatrixBase> operator [] (sizeType row);
+		const MatrixRow<const MatrixBase> operator [] (sizeType row) const;
+
         sizeType rows() const;
         sizeType columns() const;
 
@@ -36,7 +57,7 @@ namespace NOU::NOU_MATH
     };
 
     template<typename T, sizeType R, sizeType C>
-    class Matrix : public MatrixBase<T, R, C>
+    class NOU_CLASS Matrix : public MatrixBase<T, R, C>
     {
     public:
         using Base = MatrixBase<T, R, C>;
@@ -87,7 +108,7 @@ namespace NOU::NOU_MATH
     };
 
     template<typename T>
-    class Matrix<T, 2, 2> : public MatrixBase<T, 2, 2>
+    class NOU_CLASS Matrix<T, 2, 2> : public MatrixBase<T, 2, 2>
     {
     public:
         using Base = MatrixBase<T, 2, 2>;
@@ -141,7 +162,7 @@ namespace NOU::NOU_MATH
     };
 
     template<typename T>
-    class Matrix<T, 3, 3> : public MatrixBase<T, 3, 3>
+    class NOU_CLASS Matrix<T, 3, 3> : public MatrixBase<T, 3, 3>
     {
     public:
         using Base = MatrixBase<T, 3, 3>;
@@ -196,7 +217,7 @@ namespace NOU::NOU_MATH
     };
 
     template<typename T>
-    class Matrix<T, 4, 4> : public MatrixBase<T, 4, 4>
+    class NOU_CLASS Matrix<T, 4, 4> : public MatrixBase<T, 4, 4>
     {
     public:
         using Base = MatrixBase<T, 4, 4>;
@@ -268,6 +289,26 @@ namespace NOU::NOU_MATH
 
 
 
+	template<typename MatBase>
+	MatrixRow<MatBase>::MatrixRow(MatBase &mat, sizeType row) :
+		m_mat(&mat),
+		m_row(row)
+	{}
+
+	template<typename MatBase>
+	typename MatrixRow<MatBase>::Type& MatrixRow<MatBase>::operator [] (sizeType col)
+	{
+		return m_mat->value(m_row, col);
+	}
+
+	template<typename MatBase>
+	const typename MatrixRow<MatBase>::Type& MatrixRow<MatBase>::operator [] (sizeType col) const
+	{
+		return m_mat->value(m_row, col);
+	}
+
+
+
     template<typename T, sizeType R, sizeType C>
     MatrixBase<T, R, C>::MatrixBase(const InitializerList<InitializerList<T>> &values)
     {
@@ -329,6 +370,19 @@ namespace NOU::NOU_MATH
     {
         return reinterpret_cast<T*>(m_data);
     }
+
+	template<typename T, sizeType R, sizeType C>
+	MatrixRow<MatrixBase<T, R, C>> MatrixBase<T, R, C>::operator [] (sizeType row)
+	{
+		return MatrixRow<MatrixBase<T, R, C>>(*this, row);
+	}
+
+	template<typename T, sizeType R, sizeType C>
+	const MatrixRow<const MatrixBase<T, R, C>> MatrixBase<T, R, C>::operator [] (sizeType row) const
+	{
+		return MatrixRow<const MatrixBase<T, R, C>>(*this, row);
+	}
+
 
 
 

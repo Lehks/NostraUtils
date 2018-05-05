@@ -1978,6 +1978,12 @@ TEST_METHOD(MathVec2)
 	IsTrue(vec0.value(0) == 1.0f);
 	IsTrue(vec0.value(1) == 2.0f);
 
+	//array subscript
+	Vec2 vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+
 	//compare
 	IsTrue(vec0 == vec1);
 	IsTrue(vec0 != vec2);
@@ -2064,6 +2070,12 @@ TEST_METHOD(MathVec2i)
 
 	IsTrue(vec0.value(0) == 1);
 	IsTrue(vec0.value(1) == 2);
+
+	//array subscript
+	Vec2i vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2165,6 +2177,13 @@ TEST_METHOD(MathVec3)
 	IsTrue(vec13.value(0) == 1.0f);
 	IsTrue(vec13.value(1) == 2.0f);
 	IsTrue(vec13.value(2) == 3.0f);
+
+	//array subscript
+	Vec3 vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2269,6 +2288,13 @@ TEST_METHOD(MathVec3i)
 	IsTrue(vec13.value(0) == 1);
 	IsTrue(vec13.value(1) == 2);
 	IsTrue(vec13.value(2) == 3);
+
+	//array subscript
+	Vec3i vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2393,6 +2419,14 @@ TEST_METHOD(MathVec4)
 	IsTrue(vec15.value(2) == 3.0f);
 	IsTrue(vec15.value(3) == 4.0f);
 
+	//array subscript
+	Vec4 vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
+	IsTrue(vecsub[3] == vec1[3]);
+
 	//compare
 	IsTrue(vec0 == vec1);
 	IsTrue(vec0 != vec2);
@@ -2513,6 +2547,14 @@ TEST_METHOD(MathVec4i)
 	IsTrue(vec1.value(1) == 2);
 	IsTrue(vec1.value(2) == 3);
 	IsTrue(vec1.value(3) == 4);
+
+	//array subscript
+	Vec4i vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
+	IsTrue(vecsub[3] == vec1[3]);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2656,6 +2698,15 @@ TEST_METHOD(MathVec5f)
 	IsTrue(vec17.value(2) == 3.0f);
 	IsTrue(vec17.value(3) == 4.0f);
 	IsTrue(vec17.value(4) == 5.0f);
+
+	//array subscript
+	Vector<NOU::float32, 5> vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
+	IsTrue(vecsub[3] == vec1[3]);
+	IsTrue(vecsub[4] == vec1[4]);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2804,6 +2855,15 @@ TEST_METHOD(MathVec5i)
 	IsTrue(vec17.value(3) == 4);
 	IsTrue(vec17.value(4) == 5);
 
+	//array subscript
+	Vector<NOU::int32, 5> vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
+	IsTrue(vecsub[3] == vec1[3]);
+	IsTrue(vecsub[4] == vec1[4]);
+
 	//compare
 	IsTrue(vec0 == vec1);
 	IsTrue(vec0 != vec2);
@@ -2891,6 +2951,14 @@ TEST_METHOD(MathMat2)
 	IsTrue(mat0.value(0, 1) == 2.0f);
 	IsTrue(mat0.value(1, 0) == 3.0f);
 	IsTrue(mat0.value(1, 1) == 4.0f);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat2 matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -2993,6 +3061,14 @@ TEST_METHOD(MathMat2i)
 	IsTrue(mat0.value(0, 1) == 2);
 	IsTrue(mat0.value(1, 0) == 3);
 	IsTrue(mat0.value(1, 1) == 4);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat2i matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3100,6 +3176,19 @@ TEST_METHOD(MathMat3)
 	IsTrue(mat0.value(2, 0) == 7.0f);
 	IsTrue(mat0.value(2, 1) == 8.0f);
 	IsTrue(mat0.value(2, 2) == 9.0f);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat3 matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3241,6 +3330,19 @@ TEST_METHOD(MathMat3i)
 	IsTrue(mat0.value(2, 0) == 7);
 	IsTrue(mat0.value(2, 1) == 8);
 	IsTrue(mat0.value(2, 2) == 9);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat3i matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3390,6 +3492,26 @@ TEST_METHOD(MathMat4)
 	IsTrue(mat0.value(3, 1) == 14.0f);
 	IsTrue(mat0.value(3, 2) == 15.0f);
 	IsTrue(mat0.value(3, 3) == 16.0f);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat4 matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[0][3] == mat1[0][3]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[1][3] == mat1[1][3]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
+	IsTrue(matsub[2][3] == mat1[2][3]);
+	IsTrue(matsub[3][0] == mat1[3][0]);
+	IsTrue(matsub[3][1] == mat1[3][1]);
+	IsTrue(matsub[3][2] == mat1[3][2]);
+	IsTrue(matsub[3][3] == mat1[3][3]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3585,6 +3707,26 @@ TEST_METHOD(MathMat4i)
 	IsTrue(mat0.value(3, 1) == 14);
 	IsTrue(mat0.value(3, 2) == 15);
 	IsTrue(mat0.value(3, 3) == 16);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat4i matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[0][3] == mat1[0][3]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[1][3] == mat1[1][3]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
+	IsTrue(matsub[2][3] == mat1[2][3]);
+	IsTrue(matsub[3][0] == mat1[3][0]);
+	IsTrue(matsub[3][1] == mat1[3][1]);
+	IsTrue(matsub[3][2] == mat1[3][2]);
+	IsTrue(matsub[3][3] == mat1[3][3]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3797,6 +3939,30 @@ TEST_METHOD(MathMat5)
 	IsTrue(mat0.value(4, 1) == 18.0f);
 	IsTrue(mat0.value(4, 2) == 19.0f);
 	IsTrue(mat0.value(4, 3) == 20.0f);
+
+	//array subscript
+	const NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[0][3] == mat1[0][3]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[1][3] == mat1[1][3]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
+	IsTrue(matsub[2][3] == mat1[2][3]);
+	IsTrue(matsub[3][0] == mat1[3][0]);
+	IsTrue(matsub[3][1] == mat1[3][1]);
+	IsTrue(matsub[3][2] == mat1[3][2]);
+	IsTrue(matsub[3][3] == mat1[3][3]);
+	IsTrue(matsub[3][0] == mat1[3][0]);
+	IsTrue(matsub[4][1] == mat1[4][1]);
+	IsTrue(matsub[4][2] == mat1[4][2]);
+	IsTrue(matsub[4][3] == mat1[4][3]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
