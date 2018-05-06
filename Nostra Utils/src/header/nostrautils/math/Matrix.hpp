@@ -6,24 +6,90 @@
 
 #include <initializer_list>
 
+/** \file math/Matrix.hpp
+\author	 Lukas Reichmann
+\since   1.0.0
+\version 1.0.0
+\brief   This file provides functionality to work with matrices.
+*/
+
+
 namespace NOU::NOU_MATH
 {
+	/**
+	\tparam The type of the matrix base class.
+
+	\brief A single row in a matrix.
+
+
+
+	\details
+	A single row in a matrix. The purpose of this class is to allow access to the elements of a matrix by 
+	using two array subscript operators.
+
+	Instances of this class are not meant to be stored.
+	*/
 	template<typename MatBase>
 	class NOU_CLASS MatrixRow
 	{
 	private:
+		/**
+		\brief The type of the matrix base.
+		*/
 		using Type = typename MatBase::Type;
 
+		/**
+		\brief A pointer to the matrix that this row is from
+		*/
 		MatBase  *m_mat;
+
+		/**
+		\brief The index of the row in the matrix.
+		*/
 		sizeType  m_row;
 
 	public:
+		/**
+		\param mat The matrix that this row is in.
+		\param row The index of the row in the matrix.
+
+		\brief Constructs a new row from the passed parameters.
+		*/
 		MatrixRow(MatBase &mat, sizeType row);
 
+		/**
+		\param col The column of the element to return.
+
+		\return The element in the passed column in this row.
+
+		\brief Returns the element in the passed column in this row.
+		*/
 		Type& operator [] (sizeType col);
+
+		/**
+		\param col The column of the element to return.
+
+		\return The element in the passed column in this row.
+
+		\brief Returns the element in the passed column in this row.
+		*/
 		const Type& operator [] (sizeType col) const;
 	};
 
+	/**
+	\tparam T The type of the elements in the matrix.
+	\tparam R The amount of rows in the matrix.
+	\tparam C The amount of columns in the matrix.
+
+	\brief The base class of all matrix types.
+
+	\details
+	The base class of all matrix types. This class provides the storage for the matrices and access to that 
+	storage.
+
+	\note
+	This class stores all elements in row major order.
+	*/
     template<typename T, sizeType R, sizeType C>
     class NOU_CLASS MatrixBase
     {
@@ -31,16 +97,56 @@ namespace NOU::NOU_MATH
         static_assert(C > 1, "There must be at least two columns in a matrix.");
 
     public:
+		/**
+		\brief The type of initializer list used by one of the constructors.
+		*/
         template<typename U>
         using InitializerList = std::initializer_list<U>;
 
+		/**
+		\brief The type of the elements in the matrix.
+		*/
 		using Type = T;
 
     private:
+		/**
+		\brief The array in which the elements are stored in.
+		*/
         T m_data[C][R];
 
     public:
+		/**
+		\brief Constructs a new instance without initializing any of the elements.
+		*/
         MatrixBase() = default;
+
+		/**
+		\param values The values of the matrix.
+
+		\brief Initializes all of the elements in the matrix.
+
+		\details
+		Initializes all of the elements in the matrix. The inner initializer list are the columns and the
+		outer list the rows.
+
+		That means, that such a construct of initializer lists:
+
+		\code{.cpp}
+		{{1, 2, 3},
+		 {4, 5, 6},
+		 {7, 8, 9}}
+		\endcode
+
+		would result in such a matrix:
+
+		\f$
+		\begin{matrix}
+		1 & 2 & 3 \\
+		4 & 5 & 6 \\
+		7 & 8 & 9
+		\end{matrix}
+		\f$
+		*/
         MatrixBase(const InitializerList<InitializerList<T>> &values);
 
         const T& value(sizeType row, sizeType col) const;
