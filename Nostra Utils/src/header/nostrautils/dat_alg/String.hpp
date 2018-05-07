@@ -1423,16 +1423,10 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = m_data.size() - 1;
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
-			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
+		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1),
+							NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		sizeType range = end - start;
-
-		for (sizeType i = start; i < range; i++)
-		{
-			remove(start);
-		}
-
+		remove(start, end);
 		insert(start, replacement);
 
 		return *this;
@@ -1487,7 +1481,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint64 nr)
 	{
 		if (b)
-			appendk(intToString(nr));
+			append(intToString(nr));
 
 		return *this;
 	}
@@ -1552,13 +1546,16 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
 			end = m_data.size() - 1;
 
-		sizeType removeRange = end - start;
+		sizeType offset = this->size() - end;
 
-		for (sizeType i = 0; i < removeRange; i++)
+		for (sizeType i = 0; i < offset; i++)
 		{
-			m_data.remove(start);
-			setSize(m_data.size() - 1);
+			m_data[start + i] = m_data[end+i];
 		}
+
+		insert(start + offset, StringView<CHAR_TYPE>::NULL_TERMINATOR);
+
+		setSize(start + offset);
 		return *this;
 	}
 
