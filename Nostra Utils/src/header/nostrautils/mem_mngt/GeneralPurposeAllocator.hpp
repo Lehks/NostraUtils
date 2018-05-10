@@ -46,7 +46,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\brief This class defines the free chunks of the allocator.
 		*/
-		class NOU_CLASS GeneralPurposeAllocatorFreeChunk
+		class GeneralPurposeAllocatorFreeChunk
 		{
 		public:
 
@@ -66,7 +66,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief		Constructs a new free chunk object.
 			*/
-			GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size);
+			NOU_FUNC GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size);
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -75,7 +75,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Checks if the address of the chunk and the passed chunk touches each other.
 			*/
-			boolean touches(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean touches(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -85,7 +85,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the > operator.
 			*/
-			boolean operator>(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator>(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -95,7 +95,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the < operator.
 			*/
-			boolean operator<(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator<(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -105,7 +105,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the >= operator.
 			*/
-			boolean operator>=(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator>=(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -115,7 +115,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the <= operator.
 			*/
-			boolean operator<=(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator<=(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -125,7 +125,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the == operator.
 			*/
-			boolean operator==(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator==(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 
 			/**
@@ -151,7 +151,7 @@ namespace NOU::NOU_MEM_MNGT
 	\details	The GeneralPurposeAllocator (GPA) cannot increase its size. If the GPA is constructed with the 
 				default size or a passed size it can only be increased by creating a new GPA with a bigger size.
 	*/
-	class NOU_CLASS GeneralPurposeAllocator
+	class GeneralPurposeAllocator
 	{
 	public:
 
@@ -162,7 +162,7 @@ namespace NOU::NOU_MEM_MNGT
 					allocator.
 		*/
 		template <typename T>
-		class NOU_CLASS GeneralPurposeAllocatorPointer
+		class GeneralPurposeAllocatorPointer
 		{
 			/**
 			\brief Defines the GeneralPurposeAllocator as a friend class.
@@ -295,7 +295,7 @@ namespace NOU::NOU_MEM_MNGT
 
 		\brief		Creates a new GPA with a passed size or the default size.
 		*/
-		explicit GeneralPurposeAllocator(sizeType size = GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
+		NOU_FUNC explicit GeneralPurposeAllocator(sizeType size = GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
 
 		GeneralPurposeAllocator(const GeneralPurposeAllocator& other) = delete;
 		GeneralPurposeAllocator(GeneralPurposeAllocator&& other) = delete;
@@ -305,7 +305,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\brief Destructor of the GPA.
 		*/
-		~GeneralPurposeAllocator();
+		NOU_FUNC ~GeneralPurposeAllocator();
 
 		/**
 		\tparam T				The type of the object which will be allocated.

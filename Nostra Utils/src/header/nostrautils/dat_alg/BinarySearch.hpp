@@ -28,7 +28,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief					Makes a binary search for the key in a passed array.
 	*/
 	template<typename T>
-	NOU_FUNC sizeType binarySearch
+	sizeType binarySearch
 	(const T *vec, const T &key, int64 start, int64 end, sizeType *insertionIndex = nullptr);
 
 	/**
@@ -48,11 +48,11 @@ namespace NOU::NOU_DAT_ALG
 	\details				Performs a binary search for the nostra::utils::dat_alg::Vector.
 	*/
 	template<typename T>
-	NOU_FUNC sizeType binarySearch(const NOU::NOU_DAT_ALG::Vector<T> &vec, const T &key, 
+	sizeType binarySearch(const NOU::NOU_DAT_ALG::Vector<T> &vec, const T &key, 
 		int64 start = 0, int64 end = -1, sizeType *insertionIndex = nullptr);
 
 	template<typename T>
-	NOU_FUNC sizeType binarySearch(const T *vec, const T &key,
+	sizeType binarySearch(const T *vec, const T &key,
 		int64 start, int64 end, sizeType *insertionIndex)
 	{
 		if (start > end)
@@ -77,7 +77,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	NOU_FUNC sizeType binarySearch(const NOU::NOU_DAT_ALG::Vector<T> &vec, const T &key,
+	sizeType binarySearch(const NOU::NOU_DAT_ALG::Vector<T> &vec, const T &key,
 		int64 start, int64 end, sizeType *insertionIndex)
 	{
 		return binarySearch(vec.data(), key, start, (end == -1) ? vec.size() - 1 : end, insertionIndex);

@@ -10,7 +10,7 @@
 namespace NOU::NOU_MATH
 {
 	template<typename T, sizeType N>
-	class NOU_CLASS VectorBase
+	class VectorBase
 	{
 		static_assert(N > 1, "A vector can not have 0 or 1 rows.");
 
@@ -34,7 +34,7 @@ namespace NOU::NOU_MATH
 	};
 
 	template<typename T, sizeType N>
-	class NOU_CLASS Vector : public VectorBase<T, N>
+	class Vector : public VectorBase<T, N>
 	{
 	public:
 		static Vector nullVector();
@@ -92,7 +92,7 @@ namespace NOU::NOU_MATH
 	};
 
 	template<typename T>
-	class NOU_CLASS Vector<T, 2> : public VectorBase<T, 2>
+	class Vector<T, 2> : public VectorBase<T, 2>
 	{
 	public:
 		static Vector nullVector();
@@ -148,7 +148,7 @@ namespace NOU::NOU_MATH
 	};
 
 	template<typename T>
-	class NOU_CLASS Vector<T, 3> : public VectorBase<T, 3>
+	class Vector<T, 3> : public VectorBase<T, 3>
 	{
 	public:
 		static Vector nullVector();
@@ -207,7 +207,7 @@ namespace NOU::NOU_MATH
 	};
 
 	template<typename T>
-	class NOU_CLASS Vector<T, 4> : public VectorBase<T, 4>
+	class Vector<T, 4> : public VectorBase<T, 4>
 	{
 	public:
 		static Vector nullVector();

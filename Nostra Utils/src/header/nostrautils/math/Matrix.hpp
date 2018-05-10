@@ -43,7 +43,8 @@ namespace NOU::NOU_MATH
 		static Matrix<T, R, C> identity();
 
 		Matrix() = default;
-		Matrix(const typename MatrixBase<T, R, C>::InitializerList<typename MatrixBase<T, R, C>::InitializerList<T>> &values);
+		Matrix(const typename MatrixBase<T, R, C>::InitializerList<
+			typename MatrixBase<T, R, C>::InitializerList<T>> &values);
 
 		Matrix add(const Matrix &other) const;
 		Matrix& addAssign(const Matrix &other);
@@ -92,7 +93,8 @@ namespace NOU::NOU_MATH
 		static Matrix<T, 2, 2> identity();
 
 		Matrix() = default;
-		Matrix(const typename MatrixBase<T, 2, 2>::InitializerList<typename MatrixBase<T, 2, 2>::InitializerList<T>> &values);
+		Matrix(const typename MatrixBase<T, 2, 2>::template InitializerList<
+			typename MatrixBase<T, 2, 2>::template InitializerList<T>> &values);
 		Matrix(const T &index00, const T &index01, const T &index10, const T &index11);
 
 		Matrix add(const Matrix &other) const;
@@ -144,7 +146,8 @@ namespace NOU::NOU_MATH
 		static Matrix<T, 3, 3> identity();
 
 		Matrix() = default;
-		Matrix(const typename MatrixBase<T, 3, 3>::InitializerList<typename MatrixBase<T, 3, 3>::InitializerList<T>> &values);
+		Matrix(const typename MatrixBase<T, 3, 3>::template InitializerList<
+			typename MatrixBase<T, 3, 3>::template InitializerList<T>> &values);
 		Matrix(const T &index00, const T &index01, const T &index02, const T &index10, const T &index11, 
 			const T &index12, const T &index20, const T &index21, const T &index22);
 
@@ -197,7 +200,8 @@ namespace NOU::NOU_MATH
 		static Matrix<T, 4, 4> identity();
 
 		Matrix() = default;
-		Matrix(const typename MatrixBase<T, 4, 4>::InitializerList<typename MatrixBase<T, 4, 4>::InitializerList<T>> &values);
+		Matrix(const typename MatrixBase<T, 4, 4>::template InitializerList<
+			typename MatrixBase<T, 4, 4>::template InitializerList<T>> &values);
 		Matrix(
 			const T &index00, const T &index01, const T &index02, const T &index03,
 			const T &index10, const T &index11, const T &index12, const T &index13,
@@ -351,7 +355,8 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T, sizeType R, sizeType C>
-	Matrix<T, R, C>::Matrix(const typename MatrixBase<T, R, C>::InitializerList<typename MatrixBase<T, R, C>::InitializerList<T>> &values) :
+	Matrix<T, R, C>::Matrix(const typename MatrixBase<T, R, C>::InitializerList<
+		typename MatrixBase<T, R, C>::InitializerList<T>> &values) :
 		MatrixBase<T, R, C>(values)
 	{}
 
@@ -576,7 +581,8 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T>
-	Matrix<T, 2, 2>::Matrix(const typename MatrixBase<T, 2, 2>::InitializerList<typename MatrixBase<T, 2, 2>::InitializerList<T>> &values) :
+	Matrix<T, 2, 2>::Matrix(const typename MatrixBase<T, 2, 2>::template InitializerList<
+		typename MatrixBase<T, 2, 2>::template InitializerList<T>> &values) :
 		MatrixBase<T, 2, 2>(values)
 	{}
 
@@ -820,7 +826,8 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T>
-	Matrix<T, 3, 3>::Matrix(const typename MatrixBase<T, 3, 3>::InitializerList<typename MatrixBase<T, 3, 3>::InitializerList<T>> &values) :
+	Matrix<T, 3, 3>::Matrix(const typename MatrixBase<T, 3, 3>::template InitializerList<
+		typename MatrixBase<T, 3, 3>::template InitializerList<T>> &values) :
 		MatrixBase<T, 3, 3>(values)
 	{}
 
@@ -926,15 +933,24 @@ namespace NOU::NOU_MATH
 	{
 		Matrix<T, 3, 3> ret;
 
-		ret.value(0, 0) = value(0, 0) * other.value(0, 0) + value(0, 1) * other.value(1, 0) + value(0, 2) * other.value(2, 0);
-		ret.value(0, 1) = value(0, 0) * other.value(0, 1) + value(0, 1) * other.value(1, 1) + value(0, 2) * other.value(2, 1);
-		ret.value(0, 2) = value(0, 0) * other.value(0, 2) + value(0, 1) * other.value(1, 2) + value(0, 2) * other.value(2, 2);
-		ret.value(1, 0) = value(1, 0) * other.value(0, 0) + value(1, 1) * other.value(1, 0) + value(1, 2) * other.value(2, 0);
-		ret.value(1, 1) = value(1, 0) * other.value(0, 1) + value(1, 1) * other.value(1, 1) + value(1, 2) * other.value(2, 1);
-		ret.value(1, 2) = value(1, 0) * other.value(0, 2) + value(1, 1) * other.value(1, 2) + value(1, 2) * other.value(2, 2);
-		ret.value(2, 0) = value(2, 0) * other.value(0, 0) + value(2, 1) * other.value(1, 0) + value(2, 2) * other.value(2, 0);
-		ret.value(2, 1) = value(2, 0) * other.value(0, 1) + value(2, 1) * other.value(1, 1) + value(2, 2) * other.value(2, 1);
-		ret.value(2, 2) = value(2, 0) * other.value(0, 2) + value(2, 1) * other.value(1, 2) + value(2, 2) * other.value(2, 2);
+		ret.value(0, 0) = value(0, 0) * other.value(0, 0) + value(0, 1) * other.value(1, 0) + 
+			value(0, 2) * other.value(2, 0);
+		ret.value(0, 1) = value(0, 0) * other.value(0, 1) + value(0, 1) * other.value(1, 1) + 
+			value(0, 2) * other.value(2, 1);
+		ret.value(0, 2) = value(0, 0) * other.value(0, 2) + value(0, 1) * other.value(1, 2) + 
+			value(0, 2) * other.value(2, 2);
+		ret.value(1, 0) = value(1, 0) * other.value(0, 0) + value(1, 1) * other.value(1, 0) + 
+			value(1, 2) * other.value(2, 0);
+		ret.value(1, 1) = value(1, 0) * other.value(0, 1) + value(1, 1) * other.value(1, 1) + 
+			value(1, 2) * other.value(2, 1);
+		ret.value(1, 2) = value(1, 0) * other.value(0, 2) + value(1, 1) * other.value(1, 2) + 
+			value(1, 2) * other.value(2, 2);
+		ret.value(2, 0) = value(2, 0) * other.value(0, 0) + value(2, 1) * other.value(1, 0) + 
+			value(2, 2) * other.value(2, 0);
+		ret.value(2, 1) = value(2, 0) * other.value(0, 1) + value(2, 1) * other.value(1, 1) + 
+			value(2, 2) * other.value(2, 1);
+		ret.value(2, 2) = value(2, 0) * other.value(0, 2) + value(2, 1) * other.value(1, 2) + 
+			value(2, 2) * other.value(2, 2);
 
 		return ret;
 	}
@@ -944,9 +960,12 @@ namespace NOU::NOU_MATH
 	{
 		Vector<T, 3> ret;
 
-		ret.value(0) = value(0, 0) * other.value(0) + value(0, 1) * other.value(1) + value(0, 2) * other.value(2);
-		ret.value(1) = value(1, 0) * other.value(0) + value(1, 1) * other.value(1) + value(1, 2) * other.value(2);
-		ret.value(2) = value(2, 0) * other.value(0) + value(2, 1) * other.value(1) + value(2, 2) * other.value(2);
+		ret.value(0) = value(0, 0) * other.value(0) + value(0, 1) * other.value(1) + 
+			value(0, 2) * other.value(2);
+		ret.value(1) = value(1, 0) * other.value(0) + value(1, 1) * other.value(1) + 
+			value(1, 2) * other.value(2);
+		ret.value(2) = value(2, 0) * other.value(0) + value(2, 1) * other.value(1) + 
+			value(2, 2) * other.value(2);
 
 		return ret;
 	}
@@ -1133,7 +1152,8 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T>
-	Matrix<T, 4, 4>::Matrix(const typename MatrixBase<T, 4, 4>::InitializerList<typename MatrixBase<T, 4, 4>::InitializerList<T>> &values) :
+	Matrix<T, 4, 4>::Matrix(const typename MatrixBase<T, 4, 4>::template InitializerList<
+		typename MatrixBase<T, 4, 4>::template InitializerList<T>> &values) :
 		MatrixBase<T, 4, 4>(values)
 	{}
 
@@ -1277,22 +1297,38 @@ namespace NOU::NOU_MATH
 	{
 		Matrix<T, 4, 4> ret; 
 		
-		ret.value(0, 0) = value(0, 0) * other.value(0, 0) + value(0, 1) * other.value(1, 0) + value(0, 2) * other.value(2, 0) + value(0, 3) * other.value(3, 0);
-		ret.value(0, 1) = value(0, 0) * other.value(0, 1) + value(0, 1) * other.value(1, 1) + value(0, 2) * other.value(2, 1) + value(0, 3) * other.value(3, 1);
-		ret.value(0, 2) = value(0, 0) * other.value(0, 2) + value(0, 1) * other.value(1, 2) + value(0, 2) * other.value(2, 2) + value(0, 3) * other.value(3, 2);
-		ret.value(0, 3) = value(0, 0) * other.value(0, 3) + value(0, 1) * other.value(1, 3) + value(0, 2) * other.value(2, 3) + value(0, 3) * other.value(3, 3);
-		ret.value(1, 0) = value(1, 0) * other.value(0, 0) + value(1, 1) * other.value(1, 0) + value(1, 2) * other.value(2, 0) + value(1, 3) * other.value(3, 0);
-		ret.value(1, 1) = value(1, 0) * other.value(0, 1) + value(1, 1) * other.value(1, 1) + value(1, 2) * other.value(2, 1) + value(1, 3) * other.value(3, 1);
-		ret.value(1, 2) = value(1, 0) * other.value(0, 2) + value(1, 1) * other.value(1, 2) + value(1, 2) * other.value(2, 2) + value(1, 3) * other.value(3, 2);
-		ret.value(1, 3) = value(1, 0) * other.value(0, 3) + value(1, 1) * other.value(1, 3) + value(1, 2) * other.value(2, 3) + value(1, 3) * other.value(3, 3);
-		ret.value(2, 0) = value(2, 0) * other.value(0, 0) + value(2, 1) * other.value(1, 0) + value(2, 2) * other.value(2, 0) + value(2, 3) * other.value(3, 0);
-		ret.value(2, 1) = value(2, 0) * other.value(0, 1) + value(2, 1) * other.value(1, 1) + value(2, 2) * other.value(2, 1) + value(2, 3) * other.value(3, 1);
-		ret.value(2, 2) = value(2, 0) * other.value(0, 2) + value(2, 1) * other.value(1, 2) + value(2, 2) * other.value(2, 2) + value(2, 3) * other.value(3, 2);
-		ret.value(2, 3) = value(2, 0) * other.value(0, 3) + value(2, 1) * other.value(1, 3) + value(2, 2) * other.value(2, 3) + value(2, 3) * other.value(3, 3);
-		ret.value(3, 0) = value(3, 0) * other.value(0, 0) + value(3, 1) * other.value(1, 0) + value(3, 2) * other.value(2, 0) + value(3, 3) * other.value(3, 0);
-		ret.value(3, 1) = value(3, 0) * other.value(0, 1) + value(3, 1) * other.value(1, 1) + value(3, 2) * other.value(2, 1) + value(3, 3) * other.value(3, 1);
-		ret.value(3, 2) = value(3, 0) * other.value(0, 2) + value(3, 1) * other.value(1, 2) + value(3, 2) * other.value(2, 2) + value(3, 3) * other.value(3, 2);
-		ret.value(3, 3) = value(3, 0) * other.value(0, 3) + value(3, 1) * other.value(1, 3) + value(3, 2) * other.value(2, 3) + value(3, 3) * other.value(3, 3);
+		ret.value(0, 0) = value(0, 0) * other.value(0, 0) + value(0, 1) * other.value(1, 0) + value(0, 2) * 
+			other.value(2, 0) + value(0, 3) * other.value(3, 0);
+		ret.value(0, 1) = value(0, 0) * other.value(0, 1) + value(0, 1) * other.value(1, 1) + value(0, 2) * 
+			other.value(2, 1) + value(0, 3) * other.value(3, 1);
+		ret.value(0, 2) = value(0, 0) * other.value(0, 2) + value(0, 1) * other.value(1, 2) + value(0, 2) * 
+			other.value(2, 2) + value(0, 3) * other.value(3, 2);
+		ret.value(0, 3) = value(0, 0) * other.value(0, 3) + value(0, 1) * other.value(1, 3) + value(0, 2) * 
+			other.value(2, 3) + value(0, 3) * other.value(3, 3);
+		ret.value(1, 0) = value(1, 0) * other.value(0, 0) + value(1, 1) * other.value(1, 0) + value(1, 2) * 
+			other.value(2, 0) + value(1, 3) * other.value(3, 0);
+		ret.value(1, 1) = value(1, 0) * other.value(0, 1) + value(1, 1) * other.value(1, 1) + value(1, 2) * 
+			other.value(2, 1) + value(1, 3) * other.value(3, 1);
+		ret.value(1, 2) = value(1, 0) * other.value(0, 2) + value(1, 1) * other.value(1, 2) + value(1, 2) * 
+			other.value(2, 2) + value(1, 3) * other.value(3, 2);
+		ret.value(1, 3) = value(1, 0) * other.value(0, 3) + value(1, 1) * other.value(1, 3) + value(1, 2) * 
+			other.value(2, 3) + value(1, 3) * other.value(3, 3);
+		ret.value(2, 0) = value(2, 0) * other.value(0, 0) + value(2, 1) * other.value(1, 0) + value(2, 2) * 
+			other.value(2, 0) + value(2, 3) * other.value(3, 0);
+		ret.value(2, 1) = value(2, 0) * other.value(0, 1) + value(2, 1) * other.value(1, 1) + value(2, 2) * 
+			other.value(2, 1) + value(2, 3) * other.value(3, 1);
+		ret.value(2, 2) = value(2, 0) * other.value(0, 2) + value(2, 1) * other.value(1, 2) + value(2, 2) * 
+			other.value(2, 2) + value(2, 3) * other.value(3, 2);
+		ret.value(2, 3) = value(2, 0) * other.value(0, 3) + value(2, 1) * other.value(1, 3) + value(2, 2) * 
+			other.value(2, 3) + value(2, 3) * other.value(3, 3);
+		ret.value(3, 0) = value(3, 0) * other.value(0, 0) + value(3, 1) * other.value(1, 0) + value(3, 2) * 
+			other.value(2, 0) + value(3, 3) * other.value(3, 0);
+		ret.value(3, 1) = value(3, 0) * other.value(0, 1) + value(3, 1) * other.value(1, 1) + value(3, 2) * 
+			other.value(2, 1) + value(3, 3) * other.value(3, 1);
+		ret.value(3, 2) = value(3, 0) * other.value(0, 2) + value(3, 1) * other.value(1, 2) + value(3, 2) * 
+			other.value(2, 2) + value(3, 3) * other.value(3, 2);
+		ret.value(3, 3) = value(3, 0) * other.value(0, 3) + value(3, 1) * other.value(1, 3) + value(3, 2) * 
+			other.value(2, 3) + value(3, 3) * other.value(3, 3);
 
 		return ret;
 	}
@@ -1302,10 +1338,14 @@ namespace NOU::NOU_MATH
 	{
 		Vector<T, 4> ret;
 
-		ret.value(0) = value(0, 0) * other.value(0) + value(0, 1) * other.value(1) + value(0, 2) * other.value(2) + value(0, 3) * other.value(3);
-		ret.value(1) = value(1, 0) * other.value(0) + value(1, 1) * other.value(1) + value(1, 2) * other.value(2) + value(1, 3) * other.value(3);
-		ret.value(2) = value(2, 0) * other.value(0) + value(2, 1) * other.value(1) + value(2, 2) * other.value(2) + value(2, 3) * other.value(3);
-		ret.value(3) = value(3, 0) * other.value(0) + value(3, 1) * other.value(1) + value(3, 2) * other.value(2) + value(3, 3) * other.value(3);
+		ret.value(0) = value(0, 0) * other.value(0) + value(0, 1) * other.value(1) + value(0, 2) * 
+			other.value(2) + value(0, 3) * other.value(3);
+		ret.value(1) = value(1, 0) * other.value(0) + value(1, 1) * other.value(1) + value(1, 2) * 
+			other.value(2) + value(1, 3) * other.value(3);
+		ret.value(2) = value(2, 0) * other.value(0) + value(2, 1) * other.value(1) + value(2, 2) * 
+			other.value(2) + value(2, 3) * other.value(3);
+		ret.value(3) = value(3, 0) * other.value(0) + value(3, 1) * other.value(1) + value(3, 2) * 
+			other.value(2) + value(3, 3) * other.value(3);
 
 		return ret;
 	}
