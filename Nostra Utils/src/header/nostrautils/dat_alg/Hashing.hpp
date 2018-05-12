@@ -39,11 +39,7 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template <typename T>
-<<<<<<< HEAD
 	NOU_FUNC constexpr sizeType hashObj(const T* inputObject, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max())) {
-=======
-	NOU_FUNC constexpr sizeType hashObj(const T*  inputObject, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max())) {
->>>>>>> develop
 		NOU_COND_PUSH_ERROR((max < 1), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Value max cannot be below 1");
 		//T* p = &static_cast<T>(inputObject);
 		
