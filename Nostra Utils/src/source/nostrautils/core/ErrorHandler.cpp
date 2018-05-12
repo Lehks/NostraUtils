@@ -69,6 +69,8 @@ namespace NOU::NOU_CORE
 		new NOU_DAT_ALG::FastQueue<Error>(ErrorCodes::LAST_ELEMENT, 
 		NOU_MEM_MNGT::GenericAllocationCallback<Error>::getInstance()), NOU_MEM_MNGT::defaultDeleter);
 
+	constexpr sizeType DefaultErrorPool::DEFAULT_CAPACITY;
+
 #ifndef NOU_ADD_ERROR
 #define NOU_ADD_ERROR(pool, code) pool->at(ErrorCodes::code) = Error(#code, ErrorCodes::code)
 #endif
@@ -90,6 +92,9 @@ namespace NOU::NOU_CORE
 		NOU_ADD_ERROR(s_defaultErrorPool, INVALID_OBJECT);
 		NOU_ADD_ERROR(s_defaultErrorPool, INVALID_STATE);
 		NOU_ADD_ERROR(s_defaultErrorPool, MUTEX_ERROR);
+		NOU_ADD_ERROR(s_defaultErrorPool, PATH_NOT_FOUND);
+		//NOU_ADD_ERROR(s_defaultErrorPool, CANNOT_OPEN_FILE);
+		NOU_ADD_ERROR(s_defaultErrorPool, ALREADY_EXISTS);
 	}
 
 	const Error* DefaultErrorPool::queryError(ErrorPool::ErrorType id) const
@@ -130,6 +135,8 @@ namespace NOU::NOU_CORE
 	ErrorHandler::ErrorPoolContainerWrapper ErrorHandler::s_errorPools(1);
 
 	ErrorHandler::CallbackType ErrorHandler::s_callback = ErrorHandler::standardCallback;
+
+	constexpr sizeType ErrorHandler::DEFAULT_CAPACITY;
 
 	void ErrorHandler::setCallback(CallbackType callback)
 	{

@@ -16,7 +16,7 @@
 \file thread/ThreadManager.hpp
 
 \author  Lukas Reichmann
-\version 0.0.1
+\version 1.0.0
 \since   1.0.0
 
 \brief A file that contains the thread management system of NOU.
@@ -169,12 +169,12 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief The amount of threads that the manager will work with if ThreadWrapper::maxThreads() returns 0.
 		*/
-		uint32 DEFAULT_THREAD_COUNT = 1;
+		constexpr static uint32 DEFAULT_THREAD_COUNT = 2;
 
 		/**
 		\brief The initial capacity of the task heap.
 		*/
-		sizeType DEFAULT_TASK_CAPACITY = 50;
+		constexpr static sizeType DEFAULT_TASK_CAPACITY = 50;
 
 	private:
 		/**

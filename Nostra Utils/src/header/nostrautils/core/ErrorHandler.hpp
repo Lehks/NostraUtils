@@ -9,7 +9,7 @@
 \file core/ErrorHandler.hpp
 
 \author	 Lukas Gross
-\version 0.0.1
+\version 1.0.0
 \since	 1.0.0
 
 \brief A file that contains the nostra::utils::core::ErrorHandler class.
@@ -459,9 +459,15 @@ namespace NOU::NOU_CORE
 			INVALID_STRING_CONVERSION,
 
 			/**
-			\brief An object of some kind is invalid.
+			\brief The path to a file was not found.
 			*/
-			INVALID_OBJECT,
+			PATH_NOT_FOUND,
+
+			/**
+			\brief The file is already exists 
+			*/
+
+			ALREADY_EXISTS ,
 
 			/**
 			\brief An object was in an invalid state.
@@ -472,6 +478,11 @@ namespace NOU::NOU_CORE
 			\brief An error has occurred in a mutex.
 			*/
 			MUTEX_ERROR,
+
+			/**
+			\brief An object of some kind is invalid.
+			*/
+			INVALID_OBJECT,
 
 			/**
 			\brief	Not an actual error, but always the last element in the enum. The error codes 0 - 

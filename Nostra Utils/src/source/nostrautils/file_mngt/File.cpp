@@ -1,40 +1,33 @@
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
 
+#include <iostream>
+#include <fstream>
+
 namespace NOU::NOU_FILE_MNGT
 {
-	void File::fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode)
+	void File::openStream(const char8 *mode)
 	{
 		#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
-			fopen_s(file, filename.rawStr(), mode.rawStr());
+			fopen_s(&m_data, this->m_path.getAbsolutePath().rawStr(), mode);
 		#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-			fopen(file, filename.rawStr(), mode.rawStr());
+			m_data = fopen(this->m_path.getAbsolutePath().rawStr(), mode);
 		#endif
 	}
 
-	File::File(const NOU::NOU_DAT_ALG::StringView8 &name, const NOU::NOU_DAT_ALG::StringView8 &path, AccessMode mode)
-	{
-		//#pragma warning(suppress : 4996)
-		//m_data = fopen(name, mode);
-		//m_head = reinterpret_cast<byte*>(m_data);
-
-		setPath(path);
-		setMode(mode);
-		setName(name);
-		m_data = nullptr;
-		
-	}
+	File::File(const Path &path) :
+		m_path(path),
+		m_data(nullptr)
+	{}
+	
 	//mv
-	File::File(File &&other)
+	File::File(File &&other) :
+		m_path(other.m_path),
+		m_mode(other.m_mode),
+		m_data(other.m_data)
+
 	{
-		setName(other.m_name);
-		m_data = other.m_data;
-		setPath(other.m_path);
-		setMode(other.m_mode);
-		other.close();
-		other.setMode(AccessMode::READ_WRITE);
-		other.setName("");
-		other.setPath("");
+		other.m_data = nullptr;
 	}
 
 	File::~File()
@@ -46,7 +39,11 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
-
+		NOU_COND_PUSH_ERROR(!exists(), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not Exist");
+		if(!exists())
+		{
+			return 0;
+		}
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
 			return 0;
@@ -56,74 +53,89 @@ namespace NOU::NOU_FILE_MNGT
 		return fgetc(m_data);
 	}
 
-	void File::read(sizeType size, char8 &buffer)
+	void File::read(sizeType size, char8 *buffer)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
-
+		NOU_COND_PUSH_ERROR(!exists(), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
+		if(!exists())
+		{
+			return;
+		}
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
 			return;
 		}
 		open();
-		fread(&buffer, size, 1, m_data);
+		fread(buffer, size, 1, m_data);
 	}
 
-
-	bool File::write(byte b)
+	boolean File::write(byte b)
 	{
+		NOU::boolean err;
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
+		if(!isCurrentlyOpen())
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is not opened");
+			return false;
+		}
 		if (m_mode != AccessMode::READ)
 		{
 			fputc(b, getData());
-			return true;
+			err = (ferror(m_data) == 0);
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Unknown Error");
+			return err;
 		}
 		return false;
 	}
 
-	bool File::write(const NOU::NOU_DAT_ALG::StringView8 &s)
+	boolean File::write(const NOU::NOU_DAT_ALG::StringView8 &s)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::READ), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces read-only file");
+		if(!isCurrentlyOpen())
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is not opened");
+			return false;
+		}
 		if (m_mode != AccessMode::READ)
 		{
-		/*	char8 *p;
-			p = s.rawStr;
-			fread(p, s.size(), 1, m_data);
-		*/	return true;
+			fwrite(s.rawStr(), sizeof(s.rawStr()[0]), s.size(), m_data);
+			return (ferror(m_data)) == 0;
 		}
 		return false;
 	}
 
-
-	bool File::open()
+	boolean File::open(AccessMode mode)
 	{
+		setMode(mode);
 		if (!isCurrentlyOpen())
 		{
 			switch (m_mode)
 			{
 				case AccessMode::READ:
-					fopen(&m_data, m_absolutePath, "r");
+					openStream("r");
 					break;
 				case AccessMode::WRITE:
-					fopen(&m_data, m_absolutePath.rawStr(), "w");
+					openStream("w");
 					break;
 				case AccessMode::APPEND:
-					fopen(&m_data, m_absolutePath.rawStr(), "a");
+					openStream("a");
 					break;
 				case AccessMode::READ_WRITE:
-					fopen(&m_data, m_absolutePath.rawStr(), "r+");
+					openStream("r+");
 					break;
 				case AccessMode::READ_WRITE_RESET:
-					fopen(&m_data, m_absolutePath.rawStr(), "w+");
+					openStream("w+");
 					break;
 				case AccessMode::READ_APPEND:
-					fopen(&m_data, m_absolutePath.rawStr(), "a+");
+					openStream("a+");
 					break;
 			}
 		}
-		return getData() != nullptr;
+		return m_data != nullptr;
 	}
-	bool File::close()
+
+	boolean File::close()
 	{
 		if (isCurrentlyOpen())
 		{
@@ -137,60 +149,73 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 	}
+
 	void File::createFile()
 	{
-		open();
-		close();
+		if(!exists())
+		{
+			std::fstream fs;
+			fs.open(m_path.getAbsolutePath().rawStr(), std::ios::out);
+			fs.flush();
+			fs.close();
+		}else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Fille allready exists");
+		}
 	}
 
-	bool File::isCurrentlyOpen()
+	boolean File::isCurrentlyOpen()
 	{
 		return m_data != nullptr;
-	}
-
-	void File::calcAbsolutePath()
-	{
-		m_absolutePath.append(m_path);
-		m_absolutePath.append("/");
-		m_absolutePath.append(m_name);
-		close();
-	}
-	
-	const NOU::NOU_DAT_ALG::StringView8& File::getName()
-	{
-		return m_name;
-	}
-	void File::setName(const NOU::NOU_DAT_ALG::StringView8 &name)
-	{
-		m_name = name;
-		calcAbsolutePath();
-	}
+	}	
 
 	const AccessMode& File::getMode()
 	{
 		return m_mode;
 	}
+
 	void File::setMode(AccessMode mode)
 	{
+		close();
 		m_mode = mode;
 	}
 
-	const NOU::NOU_DAT_ALG::StringView8& File::getPath()
+	const Path& File::getPath()
 	{
 		return m_path;
 	}
-	void File::setPath(const NOU::NOU_DAT_ALG::StringView8 &path)
-	{
-		m_path = path;
-		calcAbsolutePath();
-	}
 
-	const NOU::NOU_DAT_ALG::StringView8& File::getAbsolutePath()
-	{
-		return m_absolutePath;
-	}
 	FILE* File::getData()
 	{
 		return m_data;
+	}
+
+	sizeType File::size()
+	{
+		if(isCurrentlyOpen()){
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Cannot read size of currently opened file");
+			return 0;
+		}
+		if(exists()){
+			std::ifstream in(m_path.getAbsolutePath().rawStr(), std::ifstream::ate | std::ifstream::binary);
+			return in.tellg();
+		} else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "File does not exist"); //PATH_NOT_FOUND
+			return 0;
+		}
+	}
+
+	boolean File::exists()
+	{
+		struct stat   buffer;
+		boolean r = (stat(m_path.getAbsolutePath().rawStr(), &buffer) == 0);
+		return r;
+	}
+
+	boolean File::deleteFile()
+	{
+		int err = remove(m_path.getAbsolutePath().rawStr());
+		return err == 0;
 	}
 }

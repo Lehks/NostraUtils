@@ -10,6 +10,11 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
+	constexpr char8 Path::PATH_SEPARATOR_WINDOWS;
+	constexpr char8 Path::PATH_SEPARATOR_UNIX_LINUX;
+	constexpr char8 Path::FILE_NAME_EXTENSION_SEPARATOR;
+	constexpr char8 Path::PATH_SEPARATOR;
+
 	NOU_DAT_ALG::String8 Path::makeAbsolutePath(const NOU_DAT_ALG::StringView8 &path)
 	{
 		NOU_DAT_ALG::String8 ret = path;
@@ -18,6 +23,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		//replace all / with \ 
 		ret.replace(PATH_SEPARATOR_UNIX_LINUX, PATH_SEPARATOR_WINDOWS);
+
 
 		//if path starts not with *:\, it is a relative path (* is any character, like C)
 		if (!(path.at(1) == ':' && path.at(2) == PATH_SEPARATOR_WINDOWS)) 
@@ -117,7 +123,7 @@ namespace NOU::NOU_FILE_MNGT
 		if (str.substring(0, cwd.getAbsolutePath().size()) == cwd.getAbsolutePath())
 		{
 			sizeType lastPathSeparator = cwd.getAbsolutePath().size();
-			return NOU_DAT_ALG::String8(path.logicalSubstring(lastPathSeparator, path.size()));
+			return NOU_DAT_ALG::String8(path.logicalSubstring(lastPathSeparator + 1, path.size()));
 		}
 
 
@@ -253,5 +259,57 @@ namespace NOU::NOU_FILE_MNGT
 	boolean Path::operator != (const Path &other) const
 	{
 		return !(*this == other);
+	}
+	Path & Path::operator=(const Path & other)
+	{
+		m_absolutePath = other.m_absolutePath;
+
+		m_name = other.m_name;
+		m_extension = other.m_extension;
+		m_nameAndExtension = other.m_nameAndExtension;
+		m_parentPath = other.m_parentPath;
+		m_relativePath = other.m_relativePath;
+
+		return *this;
+	}
+	Path & Path::operator+(const Path & other)
+	{
+		if (!m_absolutePath.endsWith("\\"))
+		{
+			m_absolutePath.append("\\");
+		}
+		m_absolutePath.append(other.m_absolutePath);
+
+		return *this;
+	}
+	Path & Path::operator+(const NOU::NOU_DAT_ALG::StringView8 & other)
+	{
+		if (!m_absolutePath.endsWith("\\"))
+		{
+			m_absolutePath.append("\\");
+		}
+		m_absolutePath.append(other);
+
+		return *this;
+	}
+	Path & Path::operator+=(const Path & other)
+	{
+		if (!m_absolutePath.endsWith("\\"))
+		{
+			m_absolutePath.append("\\");
+		}
+		m_absolutePath.append(other.m_absolutePath);
+
+		return *this;
+	}
+	Path & Path::operator+=(const NOU::NOU_DAT_ALG::StringView8 & other)
+	{
+		if (!m_absolutePath.endsWith("\\"))
+		{
+			m_absolutePath.append("\\");
+		}
+		m_absolutePath.append(other);
+
+		return *this;
 	}
 }

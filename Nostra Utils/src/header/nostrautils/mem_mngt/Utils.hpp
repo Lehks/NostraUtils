@@ -9,7 +9,7 @@
 \file mem_mngt/Utils.hpp
 
 \author  Lukas Reichmann
-\version 0.0.1
+\version 1.0.0
 \since   1.0.0
 
 \brief A file that contains utility functions that revolve around memory allocation.

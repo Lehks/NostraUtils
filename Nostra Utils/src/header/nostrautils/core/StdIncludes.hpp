@@ -186,7 +186,7 @@ value for NOU_OS_LIBRARY will not be set properly).
 #    elif defined __unix__
 #    define NOU_OS NOU_OS_UNIX
 
-#    elif defined macintosh
+#    elif defined __APPLE__
 #    define NOU_OS NOU_OS_MAC
 
 #    elif defined __DOXYGEN__ //__DOXYGEN__ is defined in the Doxyfile
@@ -416,16 +416,12 @@ and replace * with the compiler name.
 */
 #ifndef NOU_COMPILER
 
-#    ifdef _MSC_VER
-	 //Clang also defines _MSC_VER on a Windows environment. The definition of that macro has been disabled in the
-	 //CMake file.
+#    ifdef __clang__ //This has to be placed first (b/c Clang also defines __GNUC__ and _MSC_VER)
+#    define NOU_COMPILER NOU_COMPILER_CLANG
+#    elif defined _MSC_VER
 #    define NOU_COMPILER NOU_COMPILER_VISUAL_CPP
 #    elif defined __GNUC__ 
-	 //Clang also defines __GNUC__ on a Unix/Linux environment. The definition of that macro has been disabled in the
-	 //CMake file.
 #    define NOU_COMPILER NOU_COMPILER_GCC
-#    elif defined __clang__
-#    define NOU_COMPILER NOU_COMPILER_CLANG
 #    elif defined __INTEL_COMPILER
 #    define NOU_COMPILER NOU_COMPILER_INTEL_CPP
 #    elif defined __MINGW32__
@@ -653,6 +649,19 @@ on different platforms also produces the same result.
 #	endif
 
 #endif
+
+/**
+\brief A macro that is only defined if the library should be compiled in C++14 compatiblity mode.
+
+\details 
+A macro that is only defined if the library should be compiled in C++14 compatiblity mode.
+
+Usually, this is defined by CMake.
+*/
+#if NOU_COMPILER == NOU_COMPILER_DOXYGEN //Only present for Doxygen
+#define NOU_CPP14_COMPATIBILITY
+#endif
+
 
 namespace NOU::NOU_CORE
 {

@@ -6,14 +6,14 @@
 #include "nostrautils/dat_alg/StringView.hpp"
 #include "nostrautils/dat_alg/String.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
+#include <limits>
 #include <array>
-//#include <limits>
 
 
 /** \file Hashing.hpp
 \author  Leslie Marxen
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides some Hashing implementations.
 */
 
@@ -39,7 +39,11 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template <typename T>
+<<<<<<< HEAD
 	NOU_FUNC constexpr sizeType hashObj(const T* inputObject, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max())) {
+=======
+	NOU_FUNC constexpr sizeType hashObj(const T*  inputObject, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max())) {
+>>>>>>> develop
 		NOU_COND_PUSH_ERROR((max < 1), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Value max cannot be below 1");
 		//T* p = &static_cast<T>(inputObject);
 		
@@ -81,10 +85,8 @@ namespace NOU::NOU_DAT_ALG
 		return hashObj(str->rawStr(), max);
 	}
 
-	template<sizeType N>
-	using Hash = std::array<byte, N>;
-	using MD5Hash = Hash<16>;
 
+<<<<<<< HEAD
 	/**
 	\param input beginning of a byte array that will be hashed
 	\param size length of the given byte array
@@ -129,6 +131,9 @@ namespace NOU::NOU_DAT_ALG
 
 	\brief Performs a leftRotation to a given input
 	*/
+=======
+	
+>>>>>>> develop
 	NOU_FUNC byte leftRotation(const byte input, int32 rotations);
 }
 #endif

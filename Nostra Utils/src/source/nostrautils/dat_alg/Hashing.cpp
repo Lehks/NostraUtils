@@ -1,6 +1,5 @@
 #include "nostrautils/dat_alg/Hashing.hpp"
 
-
 namespace NOU::NOU_DAT_ALG
 {
 
@@ -15,8 +14,8 @@ namespace NOU::NOU_DAT_ALG
 
 		return r;
 	}
-
-	NOU_FUNC MD5Hash md5(const NOU::byte * const input, sizeType size)
+	/*
+	NOU_FUNC MD5Hash md5(const NOU::byte *input, sizeType size)
 	{
 		Vector<byte> bytes(10);
 
@@ -28,7 +27,7 @@ namespace NOU::NOU_DAT_ALG
 			4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
 			6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21 };
 
-		//floor(abs(sin(i + 1)) × 2^32) for i in {0..63}
+		//floor(abs(sin(i + 1)) ï¿½ 2^32) for i in {0..63}
 		uint32 sin[64] = {
 			0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 			0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -162,7 +161,7 @@ namespace NOU::NOU_DAT_ALG
 		*reinterpret_cast<uint32*>(ret.data() + 8)  = c0;
 		*reinterpret_cast<uint32*>(ret.data() + 12) = d0;
 		return ret;
-	}
+	}*/
 
 	NOU_FUNC byte leftRotation(const byte input, int32 rotations)
 	{

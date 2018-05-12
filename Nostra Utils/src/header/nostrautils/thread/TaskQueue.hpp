@@ -15,8 +15,8 @@
 
 /** \file thread\TaskQueue.hpp
 \author	 Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a the class TaskQueue
 
 \see TaskQueue
@@ -284,8 +284,10 @@ namespace NOU::NOU_THREAD
 		*/
 		using TaskType = Task<Result, I, ARGS...>;
 
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<Result, I, ARGS...>::value);
 		static_assert(NOU_CORE::IsInvocableR<Result, Accumulator, Result&&, Result&&>::value);
+#endif
 
 		/**
 		\brief The capacity that the queue has by default.
@@ -541,7 +543,9 @@ namespace NOU::NOU_THREAD
 		*/
 		using TaskType = Task<Result, I, ARGS...>;
 
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<Result, I, ARGS...>::value);
+#endif
 
 		/**
 		\brief The capacity that the queue has by default.
@@ -776,6 +780,9 @@ namespace NOU::NOU_THREAD
 	}
 
 	template<typename R, typename I, typename ACCUM, typename... ARGS>
+	constexpr sizeType TaskQueue<R, I, ACCUM, ARGS...>::DEFAULT_INITIAL_CAPACITY;
+
+	template<typename R, typename I, typename ACCUM, typename... ARGS>
 	void TaskQueue<R, I, ACCUM, ARGS...>::executeTask(TaskQueue<R, I, ACCUM, ARGS...> *taskQueue)
 	{
 		taskQueue->m_isExecuting = true;
@@ -942,6 +949,8 @@ namespace NOU::NOU_THREAD
 
 
 
+	template<typename I, typename ACCUM, typename... ARGS>
+	constexpr sizeType TaskQueue<void, I, ACCUM, ARGS...>::DEFAULT_INITIAL_CAPACITY;
 
 	template<typename I, typename ACCUM, typename... ARGS>
 	void TaskQueue<void, I, ACCUM, ARGS...>::executeTask(TaskQueue<void, I, ACCUM, ARGS...> *taskQueue)

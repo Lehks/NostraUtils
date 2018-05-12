@@ -12,8 +12,8 @@
 /** \file Vector.hpp
 \author  Dennis Franz
 \author  Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a Vector implementation.
 */
 
@@ -819,6 +819,8 @@ namespace NOU::NOU_DAT_ALG
 		constexpr VectorReverseIterator& operator -= (sizeType value);
 	};
 
+	template<typename T>
+	constexpr sizeType Vector<T>::MIN_CAPACITY;
 
 	template<typename T>
 	T* Vector<T>::alloc(sizeType amount)
