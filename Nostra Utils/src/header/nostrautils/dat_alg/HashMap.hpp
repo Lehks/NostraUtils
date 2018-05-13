@@ -55,14 +55,14 @@ namespace NOU::NOU_DAT_ALG
 		\return			true if successfully mapped, false if otherwise
 		\brief maps a value to a specific key
 		*/
-		NOU::boolean map(const K &key,const V &value);//WIP
+		boolean HashMap<K, V>::map(const K &key, const V &value, sizeType keySize);//WIP
 
 		/**
 		\param key		the key where a value will be returned
 		\return value
 		\brief Returns the corresponding value mapped to a specific key or nullptr if it does not exist
 		*/
-		V& get(const K &key);
+		V& get(const K &key, sizeType keySize);
 		/**
 		\brief Checks whether the map is empty or not.
 		\return true if empty, false if otherwise
@@ -96,11 +96,6 @@ namespace NOU::NOU_DAT_ALG
 		\brief Checks if the key is contained in the map.
 		*/
 		boolean containsKey(const K &key);
-		/**
-		\brief Overloading [] operators. Works now exactly like get();
-		*/
-		V& operator [](const K& key);
-
 	};
 
 
@@ -117,13 +112,13 @@ namespace NOU::NOU_DAT_ALG
 	 
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::map(const K &key,const V &value) 
+	boolean HashMap<K, V>::map(const K &key, const V &value, sizeType keySize) 
 	{
 		sizeType n;
 
 		Pair<K, V> tmpPair(key, value);
 
-		n = hashObj(&key, m_data.capacity());
+		n = hashObj(&key, keySize, m_data.size());
 
 		if (m_data[n].size() == 0) 
 		{	//if Vector at this position is empty, fill it -> O(1)
@@ -149,10 +144,10 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template <typename K, typename V>
-	V& HashMap<K,V>::get(const K &key) 
+	V& HashMap<K,V>::get(const K &key, sizeType keySize) 
 	{
 		sizeType n;
-		n = hashObj(&key, m_data.capacity());
+		n = hashObj(&key, keySize, m_data.capacity());
 
 		if (m_data[n].size() == 0) 
 		{	//if nothing is mapped to HashPos n, return null
@@ -263,12 +258,6 @@ namespace NOU::NOU_DAT_ALG
 		}
 		return false;
 	}
-
-	template<typename K, typename V>
-	V& HashMap<K,V>::operator [](const K &key) {
-		return get(key);
-	}
-
 	///\endcond
 }
 #endif
