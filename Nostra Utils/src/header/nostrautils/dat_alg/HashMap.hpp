@@ -13,6 +13,9 @@
 \since   1.0.0
 \version 1.0.0
 \brief   This file provides a HashMap implementation.
+\details If an object that is not immutable will be stored it will result in some false states.
+		 To fix this: Create an overloaded function of hashObj(T obj, objSize, sizeType max) 
+		 that internally passes only the immutable data to the original function.
 */
 
 namespace NOU::NOU_DAT_ALG 
