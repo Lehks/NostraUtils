@@ -52,6 +52,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param			key the key where the value will be mapped to
 		\param		    value the value that will be mapped
+		\param			keySize the size of the actual Data of the key
 		\return			true if successfully mapped, false if otherwise
 		\brief maps a value to a specific key
 		*/
@@ -59,6 +60,7 @@ namespace NOU::NOU_DAT_ALG
 
 		/**
 		\param key		the key where a value will be returned
+		\param			keySize the size of the actual Data of the key
 		\return value
 		\brief Returns the corresponding value mapped to a specific key or nullptr if it does not exist
 		*/
