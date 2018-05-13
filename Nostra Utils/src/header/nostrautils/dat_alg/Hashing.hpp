@@ -65,7 +65,7 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template<typename T>
-	NOU_FUNC constexpr sizeType hashObj(const NOU_DAT_ALG::StringView<T> &str, sizeType strSize, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
+	NOU_FUNC constexpr sizeType hashObj(const NOU_DAT_ALG::StringView<T> *str, sizeType strSize, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
 	{
 		return hashObj(str.rawStr(), str.size() * sizeof(T), max);
 	}
@@ -79,7 +79,7 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template<typename T>
-	NOU_FUNC constexpr sizeType hashObj(const NOU_DAT_ALG::String<T> &str, sizeType strSize, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
+	NOU_FUNC constexpr sizeType hashObj(const NOU_DAT_ALG::String<T> *str, sizeType strSize, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
 	{
 		return hashObj(str.rawStr(), str.size() * sizeof(T), max);
 	}
