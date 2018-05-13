@@ -59,6 +59,7 @@ namespace NOU::NOU_DAT_ALG
 	/**
 	\param str A given stringview that is going to be hashed
 	\param max the maximum value the out hashvalue wii have (0 <= output < max)
+	\param strSize the size of the StringView
 
 	\brief A Function that hashes a stringview for a HashTable
 	*/
@@ -72,6 +73,7 @@ namespace NOU::NOU_DAT_ALG
 	/**
 	\param str A given String that is going to be hashed
 	\param max the maximum value the out hashvalue wii have (0 <= output < max)
+	\param strSize the size of the String
 
 	\brief A Function that hashes a string for a HashTable
 	*/
