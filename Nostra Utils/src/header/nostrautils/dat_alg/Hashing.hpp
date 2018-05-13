@@ -59,27 +59,29 @@ namespace NOU::NOU_DAT_ALG
 	/**
 	\param str A given stringview that is going to be hashed
 	\param max the maximum value the out hashvalue wii have (0 <= output < max)
+	\param strSize the size of the StringView
 
 	\brief A Function that hashes a stringview for a HashTable
 	*/
 
 	template<typename T>
-	NOU_FUNC constexpr sizeType hashObj(const NOU_DAT_ALG::StringView<T> &str, sizeType max)
+	NOU_FUNC constexpr sizeType hashObj(const NOU_DAT_ALG::StringView<T> &str, sizeType strSize, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
 	{
-		return hashObj(str.rawStr(), str.size(), max);
+		return hashObj(str.rawStr(), str.size() * sizeof(T), max);
 	}
 
 	/**
 	\param str A given String that is going to be hashed
 	\param max the maximum value the out hashvalue wii have (0 <= output < max)
+	\param strSize the size of the String
 
 	\brief A Function that hashes a string for a HashTable
 	*/
 
 	template<typename T>
-	NOU_FUNC constexpr sizeType hashObj(const NOU_DAT_ALG::String<T> &str, sizeType max)
+	NOU_FUNC constexpr sizeType hashObj(const NOU_DAT_ALG::String<T> &str, sizeType strSize, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
 	{
-		return hashObj(str.rawStr(), str.size(), max);
+		return hashObj(str.rawStr(), str.size() * sizeof(T), max);
 	}
 
 
