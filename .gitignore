@@ -9,7 +9,7 @@
 /main.cpp
 
 #VSCode settings
-/.vscode
+.vscode/
 
 # Visual Studio 2015 cache/options directory
 .vs/

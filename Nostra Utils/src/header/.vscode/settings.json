@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "cstddef": "cpp",
-        "xmemory0": "cpp",
-        "condition_variable": "cpp",
-        "mutex": "cpp",
-        "xlocale": "cpp"
-    }
-}
