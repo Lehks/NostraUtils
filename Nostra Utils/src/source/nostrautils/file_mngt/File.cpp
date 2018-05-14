@@ -218,4 +218,29 @@ namespace NOU::NOU_FILE_MNGT
 		int err = remove(m_path.getAbsolutePath().rawStr());
 		return err == 0;
 	}
+
+	void File::read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer)
+	{
+		char8 *buff;
+		new char8[size+1];
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
+		NOU_COND_PUSH_ERROR(!exists(), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
+		if(!exists())
+		{
+			return;
+		}
+		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
+		{
+			return;
+		}
+		open();
+		fread(buff, size, 1, m_data);
+		buff[size-1] = 0;
+		if(buffer.size() != 0)
+		{
+			buffer.preserve(0, 0);
+		}
+		buffer.append(buff);
+	}
 }

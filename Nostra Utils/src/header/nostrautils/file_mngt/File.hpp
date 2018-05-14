@@ -121,6 +121,13 @@ namespace NOU::NOU_FILE_MNGT
 		void read(sizeType size, char8 *buffer);
 
 		/**
+		\param size the byte count that will be read into
+		\param a reference to a string where the read data will be written to
+		\brief reads a string containing the read byte in the size of the size parameter and writes it ot the buffer
+		*/
+		void File::read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer);
+
+		/**
 		\param b The byte to write
 		\brief writes a single byte into a file according to the i/o mode that is set
 
