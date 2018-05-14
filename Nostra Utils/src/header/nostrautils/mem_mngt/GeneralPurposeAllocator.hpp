@@ -66,7 +66,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief		Constructs a new free chunk object.
 			*/
-			GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size);
+			NOU_FUNC GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size);
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -75,7 +75,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Checks if the address of the chunk and the passed chunk touches each other.
 			*/
-			boolean touches(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean touches(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -85,7 +85,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the > operator.
 			*/
-			boolean operator>(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator>(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -95,7 +95,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the < operator.
 			*/
-			boolean operator<(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator<(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -105,7 +105,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the >= operator.
 			*/
-			boolean operator>=(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator>=(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -115,7 +115,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the <= operator.
 			*/
-			boolean operator<=(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator<=(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 			/**
 			\param other	A const reference to a GeneralPurposeAllocatorFreeChunk.
@@ -125,7 +125,7 @@ namespace NOU::NOU_MEM_MNGT
 
 			\brief			Overloads the == operator.
 			*/
-			boolean operator==(const GeneralPurposeAllocatorFreeChunk& other) const;
+			NOU_FUNC boolean operator==(const GeneralPurposeAllocatorFreeChunk& other) const;
 
 
 			/**
@@ -295,7 +295,7 @@ namespace NOU::NOU_MEM_MNGT
 
 		\brief		Creates a new GPA with a passed size or the default size.
 		*/
-		explicit GeneralPurposeAllocator(sizeType size = GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
+		NOU_FUNC explicit GeneralPurposeAllocator(sizeType size = GENERAL_PURPOSE_ALLOCATOR_DEFAULT_SIZE);
 
 		GeneralPurposeAllocator(const GeneralPurposeAllocator& other) = delete;
 		GeneralPurposeAllocator(GeneralPurposeAllocator&& other) = delete;
@@ -305,7 +305,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\brief Destructor of the GPA.
 		*/
-		~GeneralPurposeAllocator();
+		NOU_FUNC ~GeneralPurposeAllocator();
 
 		/**
 		\tparam T				The type of the object which will be allocated.
@@ -363,59 +363,6 @@ namespace NOU::NOU_MEM_MNGT
 		template<typename T>
 		void getNeigbors(T*& left, T*& right, sizeType insertionIndex);
 	};
-
-	internal::GeneralPurposeAllocatorFreeChunk::GeneralPurposeAllocatorFreeChunk(byte* addr, sizeType size) :
-		m_addr(addr),
-		m_size(size)
-	{
-		//do nothing
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::touches
-	(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		if (m_addr + m_size == other.m_addr)
-		{
-			return true;
-		}
-
-		if (other.m_addr + other.m_size == m_addr)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator>
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr > other.m_addr;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator<
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr < other.m_addr;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator>=
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr >= other.m_addr;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator<=
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr <= other.m_addr;
-	}
-
-	boolean internal::GeneralPurposeAllocatorFreeChunk::operator==
-		(const GeneralPurposeAllocatorFreeChunk& other) const
-	{
-		return m_addr == other.m_addr;
-	}
 
 	template <typename T, typename... ARGS>
 	T* internal::GeneralPurposeAllocatorFreeChunk::allocateObject
@@ -511,22 +458,6 @@ namespace NOU::NOU_MEM_MNGT
 	boolean GeneralPurposeAllocator::GeneralPurposeAllocatorPointer<T>::operator!=(void* ptr) const
 	{
 		return m_pdata != ptr;
-	}
-
-	GeneralPurposeAllocator::GeneralPurposeAllocator(sizeType size) :
-		m_size(size)
-	{
-		m_data = new byte[m_size];
-		m_freeChunks.pushBack(internal::GeneralPurposeAllocatorFreeChunk(m_data, m_size));
-	}
-
-	GeneralPurposeAllocator::~GeneralPurposeAllocator()
-	{
-		if (m_data != nullptr)
-		{
-			delete[] m_data;
-			m_data = nullptr;
-		}
 	}
 
 	template <typename T, typename... ARGS>

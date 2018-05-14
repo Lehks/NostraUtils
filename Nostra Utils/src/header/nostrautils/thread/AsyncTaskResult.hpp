@@ -209,7 +209,7 @@ namespace NOU::NOU_THREAD
 	Each instance of AsyncTaskResult will get its own error handler provided by the thread manager.
 	*/
 	template<typename R, typename I, typename... ARGS>
-	class NOU_CLASS AsyncTaskResult : public internal::AbstractAsyncTaskResult
+	class AsyncTaskResult : public internal::AbstractAsyncTaskResult
 	{	
 	public:
 		/**
@@ -286,7 +286,7 @@ namespace NOU::NOU_THREAD
 
 	///\cond
 	template<typename I, typename... ARGS>
-	class NOU_CLASS AsyncTaskResult<void, I, ARGS...> : public internal::AbstractAsyncTaskResult
+	class AsyncTaskResult<void, I, ARGS...> : public internal::AbstractAsyncTaskResult
 	{
 	public:
 		using State = typename internal::AbstractAsyncTaskResult::State;

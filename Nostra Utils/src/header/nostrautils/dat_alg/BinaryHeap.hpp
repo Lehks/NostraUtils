@@ -28,7 +28,7 @@ namespace NOU::NOU_DAT_ALG
 	we need that because of our search function. The second part is the "standard" id which will be used for sorting / maintaining the heap law.
 	*/
 	template<typename T>
-	class NOU_CLASS BinaryHeap
+	class BinaryHeap
 	{
 	public:
 		using PriorityTypePart = NOU::uint32;

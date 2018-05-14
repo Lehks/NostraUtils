@@ -65,7 +65,7 @@ namespace NOU::NOU_THREAD
 		       choice if no accumulation should happen.
 		*/
 		template<typename R>
-		NOU_FUNC R forward(R &&previous, R &&current);
+		R forward(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -81,7 +81,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator + overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R addition(R &&previous, R &&current);
+		R addition(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -97,7 +97,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator + overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R additionInverted(R &&previous, R &&current);
+		R additionInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -113,7 +113,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator - overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R subtract(R &&previous, R &&current);
+		R subtract(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -129,7 +129,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator - overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R subtractInverted(R &&previous, R &&current);
+		R subtractInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -145,7 +145,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator * overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R multiply(R &&previous, R &&current);
+		R multiply(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -161,7 +161,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator * overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R multiplyInverted(R &&previous, R &&current);
+		R multiplyInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -177,7 +177,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator / overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R divide(R &&previous, R &&current);
+		R divide(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -193,7 +193,7 @@ namespace NOU::NOU_THREAD
 		\p R needs to have the operator / overloaded.
 		*/
 		template<typename R>
-		NOU_FUNC R divideInverted(R &&previous, R &&current);
+		R divideInverted(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -209,7 +209,7 @@ namespace NOU::NOU_THREAD
 			   and \p current the parameter.
 		*/
 		template<typename R, R(R::*FUNC)(R&&)>
-		NOU_FUNC R memberFunction(R &&previous, R &&current);
+		R memberFunction(R &&previous, R &&current);
 
 		/**
 		\tparam R The type of the results that will be accumulated.
@@ -225,7 +225,7 @@ namespace NOU::NOU_THREAD
 			   and \p previous the parameter.
 		*/
 		template<typename R, R(R::*FUNC)(R&&)>
-		NOU_FUNC R memberFunctionInverted(R &&previous, R &&current);
+		R memberFunctionInverted(R &&previous, R &&current);
 	};
 
 	/**
@@ -266,7 +266,7 @@ namespace NOU::NOU_THREAD
 				NOU_CORE::AreSame<R, void>::value, 
 					TaskQueueAccumulators::Void, R>>,
 		typename... ARGS>
-	class NOU_CLASS TaskQueue
+	class TaskQueue
 	{
 	public:
 		/**
@@ -525,7 +525,7 @@ namespace NOU::NOU_THREAD
 	that is used when the result type is not void, see TaskQueue.
 	*/
 	template<typename I, typename ACCUM, typename... ARGS>
-	class NOU_CLASS TaskQueue<void, I, ACCUM, ARGS...>
+	class TaskQueue<void, I, ACCUM, ARGS...>
 	{
 	public:
 		/**
@@ -713,67 +713,67 @@ namespace NOU::NOU_THREAD
 	namespace TaskQueueAccumulators
 	{
 		template<typename R>
-		NOU_FUNC R forward(R &&previous, R &&current)
+		R forward(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		NOU_FUNC R addition(R &&previous, R &&current)
+		R addition(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) + NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		NOU_FUNC R additionInverted(R &&previous, R &&current)
+		R additionInverted(R &&previous, R &&current)
 		{
 			return addAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
 
 		template<typename R>
-		NOU_FUNC R subtract(R &&previous, R &&current)
+		R subtract(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) - NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		NOU_FUNC R subtractInverted(R &&previous, R &&current)
+		R subtractInverted(R &&previous, R &&current)
 		{
 			return subAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
 
 		template<typename R>
-		NOU_FUNC R multiply(R &&previous, R &&current)
+		R multiply(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) * NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		NOU_FUNC R multiplyInverted(R &&previous, R &&current)
+		R multiplyInverted(R &&previous, R &&current)
 		{
 			return mulAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
 
 		template<typename R>
-		NOU_FUNC R divide(R &&previous, R &&current)
+		R divide(R &&previous, R &&current)
 		{
 			return NOU_CORE::move(previous) / NOU_CORE::move(current);
 		}
 
 		template<typename R>
-		NOU_FUNC R divideInverted(R &&previous, R &&current)
+		R divideInverted(R &&previous, R &&current)
 		{
 			return divAccum(NOU_CORE::move(current), NOU_CORE::move(previous));
 		}
 
 		template<typename R, R(R::*FUNC)(R&&)>
-		NOU_FUNC R memberFunction(R &&previous, R &&current)
+		R memberFunction(R &&previous, R &&current)
 		{
 			return (previous.*FUNC)(NOU_CORE::move(current));
 		}
 
 		template<typename R, R(R::*FUNC)(R&&)>
-		NOU_FUNC R memberFunctionInverted(R &&previous, R &&current)
+		R memberFunctionInverted(R &&previous, R &&current)
 		{
 			return (current.*FUNC)(NOU_CORE::move(previous));
 		}

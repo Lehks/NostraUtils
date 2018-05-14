@@ -23,7 +23,7 @@ namespace NOU::NOU_CORE
 	       (like NOU_MAKE_VERSION). However, this struct does not have problems with overflowing the single 
 		   parts.
 	*/
-	struct NOU_CLASS Version final
+	struct Version final
 	{
 	public:
 		/**
