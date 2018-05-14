@@ -1262,16 +1262,16 @@ TEST_METHOD(Hashfunction)
 NOU::int64 i1 = 243536768574;
 NOU::int64 i2 = 243536768574;
 
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
+//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, sizeof(NOU::int64), 20));
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
 
 NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
 NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
+//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
 
 }
@@ -1583,14 +1583,14 @@ IsTrue(objPool.remainingObjects() == 2);
 NOU::int64 i1 = 243536768574;
 NOU::int64 i2 = 243536768574;
 
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
 
 NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
 NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
 
 }

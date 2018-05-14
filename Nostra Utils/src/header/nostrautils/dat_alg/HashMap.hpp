@@ -123,7 +123,7 @@ namespace NOU::NOU_DAT_ALG
 
 		Pair<K, V> tmpPair(key, value);
 
-		n = hashObj(&key, m_data.capacity());
+		n = hashObj(&key, 1, m_data.capacity());
 
 		if (m_data[n].size() == 0) 
 		{	//if Vector at this position is empty, fill it -> O(1)
@@ -152,7 +152,7 @@ namespace NOU::NOU_DAT_ALG
 	V& HashMap<K,V>::get(const K &key) 
 	{
 		sizeType n;
-		n = hashObj(&key, m_data.capacity());
+		n = hashObj(&key, 1, m_data.capacity());
 
 		if (m_data[n].size() == 0) 
 		{	//if nothing is mapped to HashPos n, return null
@@ -197,7 +197,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		sizeType h;
 
-		h = hashObj(&key, m_data.capacity());
+		h = hashObj(&key, 1, m_data.capacity());
 
 		for (sizeType i = 0; i < m_data[h].size(); i++)
 		{
