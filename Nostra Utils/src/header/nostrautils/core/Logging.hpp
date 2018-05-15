@@ -362,7 +362,7 @@ namespace NOU::NOU_CORE
 				You can change the file where you want to print. 
 				e.g.:	log->write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid object type.", "ErrorLog.txt");
 	*/
-	class NOU_CLASS Logger
+	class Logger
 	{
 	public:
 
@@ -380,7 +380,7 @@ namespace NOU::NOU_CORE
 					Object already exists and if so it returns it. If not it will create a new one and
 					save it in the uniqueInstance pointer.
 		*/
-		static Logger* instance();
+		NOU_FUNC static Logger* instance();
 
 		/**
 		\brief Destructor of the Logger. Sets the uniqueInstance to null-pointer.
@@ -394,14 +394,14 @@ namespace NOU::NOU_CORE
 
 		\brief			Returns a custom formated error string.
 		*/
-		static NOU::NOU_DAT_ALG::String8 print(const Event& event);
+		NOU_FUNC static NOU::NOU_DAT_ALG::String8 print(const Event& event);
 
 	private:
 
 		/**
 		\brief Default constructor of the Logger.
 		*/
-		Logger() = default;
+		NOU_FUNC Logger() = default;
 
 		/**
 		\brief A static pointer to the Logger object.
@@ -411,7 +411,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief Deleted copy constructor of the Logger.
 		*/
-		Logger(const Logger& other) = delete;
+		NOU_FUNC Logger(const Logger& other) = delete;
 
 		/**
 		\brief Creates a new vector from ILogger pointers.
@@ -424,7 +424,7 @@ namespace NOU::NOU_CORE
 
 		\brief			Calls the write function for every objects in m_logger.
 		*/
-		void logAll(Event &&events, StringType filename);
+		NOU_FUNC void logAll(Event &&events, StringType filename);
 
 		/**
 		\param logger	The logger to write the event to.
@@ -433,7 +433,7 @@ namespace NOU::NOU_CORE
 
 		\brief			Calls <tt>logger->write(event)</tt>. This is required for the task queue.
 		*/
-		static void callLoggingTarget(ILogger *logger, Event event, StringType filename);
+		NOU_FUNC static void callLoggingTarget(ILogger *logger, Event event, StringType filename);
 
 		/**
 		\brief		A TaskQueue for all multi-threaded tasks.
@@ -465,7 +465,7 @@ namespace NOU::NOU_CORE
 		\brief			Creates a new event object from the level and msg parameters and calls the logAll() 
 						with this event object.
 		*/
-		void write(EventLevelCodes level, const StringType &msg, const StringType &filename = "log.txt");
+		NOU_FUNC void write(EventLevelCodes level, const StringType &msg, const StringType &filename = "log.txt");
 	};
 
 	template<typename T, typename ...ARGS>

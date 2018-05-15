@@ -9,10 +9,10 @@
 
 namespace NOU::NOU_MATH
 {
-    template<typename T, sizeType N>
-    class NOU_CLASS VectorBase
-    {
-        static_assert(N > 1, "A vector can not have 0 or 1 rows.");
+	template<typename T, sizeType N>
+	class VectorBase
+	{
+		static_assert(N > 1, "A vector can not have 0 or 1 rows.");
 
     public:
         using InitializerList = std::initializer_list<T>;
@@ -33,11 +33,11 @@ namespace NOU::NOU_MATH
         T* data();
     };
 
-    template<typename T, sizeType N>
-    class NOU_CLASS Vector : public VectorBase<T, N>
-    {
-    public:
-        static Vector nullVector();
+	template<typename T, sizeType N>
+	class Vector : public VectorBase<T, N>
+	{
+	public:
+		static Vector nullVector();
 
         Vector() = default;
         Vector(const typename VectorBase<T, N>::InitializerList &values);
@@ -91,11 +91,11 @@ namespace NOU::NOU_MATH
         boolean operator != (const Vector &other) const;
     };
 
-    template<typename T>
-    class NOU_CLASS Vector<T, 2> : public VectorBase<T, 2>
-    {
-    public:
-        static Vector nullVector();
+	template<typename T>
+	class Vector<T, 2> : public VectorBase<T, 2>
+	{
+	public:
+		static Vector nullVector();
 
         Vector() = default;
         Vector(const T &x, const T &y);
@@ -147,11 +147,11 @@ namespace NOU::NOU_MATH
         boolean operator != (const Vector &other) const;
     };
 
-    template<typename T>
-    class NOU_CLASS Vector<T, 3> : public VectorBase<T, 3>
-    {
-    public:
-        static Vector nullVector();
+	template<typename T>
+	class Vector<T, 3> : public VectorBase<T, 3>
+	{
+	public:
+		static Vector nullVector();
 
         Vector() = default;
         Vector(const T &x, const T &y, const T &z);
@@ -206,11 +206,11 @@ namespace NOU::NOU_MATH
         boolean operator != (const Vector &other) const;
     };
 
-    template<typename T>
-    class NOU_CLASS Vector<T, 4> : public VectorBase<T, 4>
-    {
-    public:
-        static Vector nullVector();
+	template<typename T>
+	class Vector<T, 4> : public VectorBase<T, 4>
+	{
+	public:
+		static Vector nullVector();
 
         Vector() = default;
         Vector(const T &x, const T &y, const T &z, const T &w);

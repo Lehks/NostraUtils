@@ -18,147 +18,147 @@ namespace NOU::NOU_MATH
 	};
 
 	template<typename T>
-	T NOU_FUNC sin(const T &a);
+	T sin(const T &a);
 
 	template<typename T>
-	T NOU_FUNC cos(const T &a);
+	T cos(const T &a);
 
 	template<typename T>
-	T NOU_FUNC tan(const T &a);
+	T tan(const T &a);
 
 	template<typename T>
-	T NOU_FUNC asin(const T &a);
+	T asin(const T &a);
 
 	template<typename T>
-	T NOU_FUNC acos(const T &a);
+	T acos(const T &a);
 
 	template<typename T>
-	T NOU_FUNC atan(const T &a);
+	T atan(const T &a);
 
 	template<typename T>
-	T NOU_FUNC exp(const T &a);
+	T exp(const T &a);
 
 	template<typename T>
-	T NOU_FUNC pow(const T &a);
+	T pow(const T &a);
 
 	template<typename T>
-	T NOU_FUNC sqrt(const T &a);
+	T sqrt(const T &a);
 
 	template<typename T>
-	T NOU_FUNC cbrt(const T &a);
+	T cbrt(const T &a);
 
 	template<typename T>
-	T NOU_FUNC abs(const T &a);
+	T abs(const T &a);
 
 	template<typename T>
-	T NOU_FUNC log(const T &a);
+	T log(const T &a);
 
 	template<typename T>
-	T NOU_FUNC ceil(const T &a);
+	T ceil(const T &a);
 
 	template<typename T>
-	T NOU_FUNC floor(const T &a);
+	T floor(const T &a);
 
 	template<typename T>
-	T NOU_FUNC round(const T &a);
+	T round(const T &a);
 
 	template<typename T>
-	T NOU_FUNC fmod(const T &a);
+	T fmod(const T &a);
 
 
 
 	template<typename T>
-	T NOU_FUNC sin(const T &a)
+	T sin(const T &a)
 	{
 		return std::sin(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC cos(const T &a)
+	T cos(const T &a)
 	{
 		return std::cos(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC tan(const T &a)
+	T tan(const T &a)
 	{
 		return std::tan(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC asin(const T &a)
+	T asin(const T &a)
 	{
 		return std::asin(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC acos(const T &a)
+	T acos(const T &a)
 	{
 		return std::acos(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC atan(const T &a)
+	T atan(const T &a)
 	{
 		return std::atan(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC exp(const T &a)
+	T exp(const T &a)
 	{
 		return std::exp(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC pow(const T &a)
+	T pow(const T &a)
 	{
 		return std::pow(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC sqrt(const T &a)
+	T sqrt(const T &a)
 	{
 		return std::sqrt(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC cbrt(const T &a)
+	T cbrt(const T &a)
 	{
 		return std::cbrt(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC abs(const T &a)
+	T abs(const T &a)
 	{
 		return std::abs(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC log(const T &a)
+	T log(const T &a)
 	{
 		return std::log(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC ceil(const T &a)
+	T ceil(const T &a)
 	{
 		return std::ceil(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC floor(const T &a)
+	T floor(const T &a)
 	{
 		return std::floor(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC round(const T &a)
+	T round(const T &a)
 	{
 		return std::round(a);
 	}
 
 	template<typename T>
-	T NOU_FUNC fmod(const T &a)
+	T fmod(const T &a)
 	{
 		return std::fmod(a);
 	}

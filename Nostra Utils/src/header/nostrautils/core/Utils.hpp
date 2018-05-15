@@ -41,7 +41,7 @@ namespace NOU::NOU_CORE
 	\brief "Simple" Function that triggers the move constructor.
 	*/
 	template<typename T>
-	NOU_FUNC typename RemoveReference<T>::type&& move(T&& t);
+	typename RemoveReference<T>::type&& move(T&& t);
 	/**
 	\tparam The type of the parameters.
 
@@ -52,7 +52,7 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T& min(T &a, T &b);
+	constexpr T& min(T &a, T &b);
 	/**
 	\tparam The type of the parameters.
 
@@ -64,7 +64,7 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T& min(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
+	constexpr T& min(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
 	/**
 	\tparam The type of the parameters.
 
@@ -75,7 +75,7 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& min(const T &a,const T &b);
+	constexpr const T& min(const T &a,const T &b);
 	/**
 	\tparam The type of the parameters.
 
@@ -87,7 +87,7 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the minimum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& min(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
+	constexpr const T& min(const T &a, const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
 	/**
 	\tparam The type of the parameters.
 
@@ -98,30 +98,7 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the maximum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T& max(T &a, T &b);
-	/**
-	\tparam The type of the parameters.
-
-	\param a The first value.
-	\param b The second value.
-	\param comp The comparator that defines the order of the passed parameters.
-	\return Maximum of the two types.
-
-	\brief A Function to return the maximum of two given types.
-	*/
-	template<typename T>
-	constexpr NOU_FUNC T& max(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
-	/**
-	\tparam The type of the parameters.
-
-	\param a The first value.
-	\param b The second value.
-	\return Maximum of the two types.
-
-	\brief A Function to return the maximum of two given types.
-	*/
-	template<typename T>
-	constexpr NOU_FUNC const T& max(const T &a, const T &b);
+	constexpr T& max(T &a, T &b);
 	/**
 	\tparam The type of the parameters.
 
@@ -133,7 +110,30 @@ namespace NOU::NOU_CORE
 	\brief A Function to return the maximum of two given types.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& max(const T &a,const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
+	constexpr T& max(T &a, T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
+	/**
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
+	\return Maximum of the two types.
+
+	\brief A Function to return the maximum of two given types.
+	*/
+	template<typename T>
+	constexpr const T& max(const T &a, const T &b);
+	/**
+	\tparam The type of the parameters.
+
+	\param a The first value.
+	\param b The second value.
+	\param comp The comparator that defines the order of the passed parameters.
+	\return Maximum of the two types.
+
+	\brief A Function to return the maximum of two given types.
+	*/
+	template<typename T>
+	constexpr const T& max(const T &a,const T &b, NOU::NOU_DAT_ALG::Comparator<T> comp);
 	/**
 	\param arg The argument to forward.
 
@@ -142,7 +142,7 @@ namespace NOU::NOU_CORE
 	\brief Forwards the argument as an l-value if it is an l-value, and as an r-value if it is an r-value.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC auto forward(RemoveReference_t<T>& arg);
+	constexpr auto forward(RemoveReference_t<T>& arg);
 
 	/**
 	\param arg The argument to forward.
@@ -152,10 +152,10 @@ namespace NOU::NOU_CORE
 	\brief Forwards the argument as an l-value if it is an l-value, and as an r-value if it is an r-value.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC auto forward(RemoveReference_t<T>&& arg);
+	constexpr auto forward(RemoveReference_t<T>&& arg);
 
 	template<typename I, typename T>
-	constexpr NOU_FUNC decltype(auto) apply(I &&invocable, T &&tuple);
+	constexpr decltype(auto) apply(I &&invocable, T &&tuple);
 
 	template<typename T>
 	typename RemoveReference<T>::type&& move(T&& t)
@@ -249,7 +249,7 @@ namespace NOU::NOU_CORE
 ///\endcond
 
 	template<typename I, typename T>
-	constexpr NOU_FUNC decltype(auto) apply(I &&invocable, T &&tuple)
+	constexpr decltype(auto) apply(I &&invocable, T &&tuple)
 	{
 #ifndef NOU_CPP14_COMPATIBILITY
 		return std::apply(std::forward<I>(invocable), std::forward<T>(tuple));
@@ -273,7 +273,7 @@ namespace NOU::NOU_CORE
 	min is returned and if \f$t > max\f$, max is returned. This function uses the operators > and <.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& clamp(const T &t, const T &min, const T &max);
+	constexpr const T& clamp(const T &t, const T &min, const T &max);
 
 	/**
 	\tparam The type of the values to clamp.
@@ -289,7 +289,7 @@ namespace NOU::NOU_CORE
 	min is returned and if \f$t > max\f$, max is returned. This function uses the operators > and <.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T& clamp(T &t, T &min, T &max);
+	constexpr T& clamp(T &t, T &min, T &max);
 	/**
 	\tparam The type of the values to clamp.
 
@@ -305,7 +305,7 @@ namespace NOU::NOU_CORE
 	min is returned and if \f$t > max\f$, max is returned. This function uses the operators > and <.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC const T& clamp(const T &t, const T &min, const T &max, 
+	constexpr const T& clamp(const T &t, const T &min, const T &max, 
 		NOU::NOU_DAT_ALG::Comparator<T> comp);
 
 	/**
@@ -323,7 +323,7 @@ namespace NOU::NOU_CORE
 	min is returned and if \f$t > max\f$, max is returned. This function uses the operators > and <.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T& clamp(T &t, T &min, T &max, NOU::NOU_DAT_ALG::Comparator<T> comp);
+	constexpr T& clamp(T &t, T &min, T &max, NOU::NOU_DAT_ALG::Comparator<T> comp);
 
 	template<typename T>
 	constexpr const T& clamp(const T &t, const T &min, const T &max)
@@ -370,13 +370,13 @@ namespace NOU::NOU_CORE
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC auto forward(RemoveReference_t<T>& arg)
+	constexpr auto forward(RemoveReference_t<T>& arg)
 	{
 		return std::forward<T>(arg);
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC auto forward(RemoveReference_t<T>&& arg)
+	constexpr auto forward(RemoveReference_t<T>&& arg)
 	{
 		return std::forward<T>(arg);
 	}

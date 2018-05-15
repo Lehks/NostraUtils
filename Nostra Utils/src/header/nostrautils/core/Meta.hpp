@@ -26,7 +26,7 @@ namespace NOU::NOU_CORE
 	frequently used in combination with inheritance when writing other meta functions.
 	*/
 	template<typename T>
-	struct NOU_CLASS IdentityType
+	struct IdentityType
 	{
 		using type = T;
 	};
@@ -72,7 +72,7 @@ namespace NOU::NOU_CORE
 	is frequently used in combination with inheritance when writing other meta functions.
 	*/
 	template<typename T, T v>
-	struct NOU_CLASS Constant
+	struct Constant
 	{
 		/**
 		\brief The stored value.
@@ -118,11 +118,11 @@ namespace NOU::NOU_CORE
 	second one.
 	*/
 	template<boolean B, typename T1, typename T2>
-	struct NOU_CLASS typeIf : IdentityType<T1>{};
+	struct typeIf : IdentityType<T1>{};
 
 	///\cond
 	template<typename T1, typename T2>
-	struct NOU_CLASS typeIf<false, T1, T2> : IdentityType<T2> {};
+	struct typeIf<false, T1, T2> : IdentityType<T2> {};
 	///\endcond
 
 	/**
@@ -147,11 +147,11 @@ namespace NOU::NOU_CORE
 	const int | int
 	*/
 	template<typename T>
-	struct NOU_CLASS removeConst : IdentityType<T>{};
+	struct removeConst : IdentityType<T>{};
 
 	///\cond
 	template<typename T>
-	struct NOU_CLASS removeConst<const T> : IdentityType<T> {};
+	struct removeConst<const T> : IdentityType<T> {};
 	///\endcond
 
 	/**
@@ -166,7 +166,7 @@ namespace NOU::NOU_CORE
 	\brief Determines the underlying type of an enum.
 	*/
 	template<typename T>
-	struct NOU_CLASS UnderlyingType : std::underlying_type<T> {};
+	struct UnderlyingType : std::underlying_type<T> {};
 
 	/**
 	\brief The result of a call to UnderlyingType.
@@ -185,17 +185,17 @@ namespace NOU::NOU_CORE
 	\brief Checks if one or more types are the same.
 	*/
 	template<typename T0, typename T1, typename... T2>
-	struct NOU_CLASS AreSame : FalseType {};
+	struct AreSame : FalseType {};
 
 	///\cond
 	template<typename T0, typename... T2>
-	struct NOU_CLASS AreSame<T0, T0, T2...> : AreSame<T0, T2...> {};
+	struct AreSame<T0, T0, T2...> : AreSame<T0, T2...> {};
 
 	template<typename T0, typename T1>
-	struct NOU_CLASS AreSame<T0, T1> : FalseType {};
+	struct AreSame<T0, T1> : FalseType {};
 
 	template<typename T>
-	struct NOU_CLASS AreSame<T, T> : TrueType {};
+	struct AreSame<T, T> : TrueType {};
 	///\endcond
 
 	/**
