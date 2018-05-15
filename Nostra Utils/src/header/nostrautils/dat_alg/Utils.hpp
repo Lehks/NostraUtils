@@ -30,7 +30,7 @@ namespace NOU::NOU_DAT_ALG
 	*/
 #define NOU_DEFINE_PAIR(CLASSNAME, DATAONE_NAME, DATATWO_NAME)	 \
 	template<typename O, typename T>							 \
-	struct NOU_CLASS CLASSNAME									 \
+	struct CLASSNAME									 \
 	{															 \
 		O	DATAONE_NAME;										 \
 		T	DATATWO_NAME;										 \
@@ -55,7 +55,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief A Function to swap the two given types.
 	*/
 	template<typename T>
-	NOU_FUNC void swap(T *dataone, T *datatwo);
+	void swap(T *dataone, T *datatwo);
 
 	/**
 	\tparam CHAR_TYPE The type of the character.
@@ -67,7 +67,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief Determines the length of a string.
 	*/
 	template<typename CHAR_TYPE>
-	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
+	constexpr sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
 
 	/**
 	\tparam The type of the parameters.
@@ -83,7 +83,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief Compares two parameters to a passed epsilon. 
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon);
+	constexpr T epsilonCompare(const T &t0, const T &t1, const T &epsilon);
 
 	template<typename T>
 	void swap(T *dataone, T *datatwo) 
@@ -106,13 +106,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str)
+	constexpr sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str)
 	{
 		return *str != 0 ? stringlen<CHAR_TYPE>(str + 1) + 1 : 0;
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon)
+	constexpr T epsilonCompare(const T &t0, const T &t1, const T &epsilon)
 	{
 		T diff = t0 - t1;
 		T abs = (diff < 0 ? -diff : diff);

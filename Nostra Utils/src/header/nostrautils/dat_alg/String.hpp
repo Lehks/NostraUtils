@@ -24,7 +24,7 @@ namespace NOU::NOU_DAT_ALG
 
 
 	template<typename CHAR_TYPE = char8>
-	class NOU_CLASS String final : public StringView<CHAR_TYPE>
+	class String final : public StringView<CHAR_TYPE>
 	{
 	public:
 		using CharType = typename StringView<CHAR_TYPE>::CharType;

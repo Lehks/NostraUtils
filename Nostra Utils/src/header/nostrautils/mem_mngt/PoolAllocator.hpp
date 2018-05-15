@@ -46,7 +46,7 @@ namespace NOU::NOU_MEM_MNGT
 	\brief		A class that defines the PoolAllocator.
 	*/
 	template <typename T>
-	class NOU_CLASS PoolAllocator
+	class PoolAllocator
 	{
 	private:
 		/**
