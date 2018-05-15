@@ -1287,7 +1287,7 @@ NOU::boolean b;
 IsTrue(hm.isEmpty() == true);
 
 for (NOU::sizeType i = 0; i < str.size(); i++) {
-b = hm.map(str.at(i), 1, sizeof(str.at(i)));
+// b = hm.map(str.at(i), 1, sizeof(str.at(i)));
 }
 
 //AreEqual(hm.isEmpty(), false);
@@ -1296,7 +1296,7 @@ IsTrue(hm.isEmpty() == false);
 
 for (NOU::sizeType i = 0; i < str.size(); i++) {
 //AreEqual(hm.get(str.at(i)), 1);
-IsTrue(hm.get(str.at(i), sizeof(str.at(i))) == 1);
+//IsTrue(hm.get(str.at(i), sizeof(str.at(i))) == 1);
 }
 NOU::char8 k = 'h';
 
@@ -1313,27 +1313,27 @@ for (NOU::sizeType i = 0; i < str.size(); i++)
 k = str.at(i);
 if (!hm1.containsKey(str.at(i)))
 {
-hm1.map(k, 1, sizeof(k));
+//hm1.map(k, 1, sizeof(k));
 }
 else
 {
-hm1.map(k, hm1.get(k, sizeof(k)) + 1, sizeof(k));
+// hm1.map(k, hm1.get(k, sizeof(k)) + 1, sizeof(k));
 }
 }
 
 //AreEqual(hm1.get('h'), 2);
 //AreEqual(hm1.get(' '), 8);
 
-IsTrue(hm1.get('h', sizeof('h')) == 2);
-IsTrue(hm1.get(' ', sizeof(' ')) == 8);
+// IsTrue(hm1.get('h', sizeof('h')) == 2);
+// IsTrue(hm1.get(' ', sizeof(' ')) == 8);
 
 NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
-
+/*
 cm.map(5, 1, sizeof(5));
 cm.map(41, 2, sizeof(41));
 cm.map(10, 3, sizeof(10));
 cm.map(49875, 4, sizeof(49875));
-
+*/
 NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
 
 c = cm.entrySet();
