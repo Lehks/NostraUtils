@@ -1197,7 +1197,11 @@ IsTrue(str1 == "wasgeht");
 str1 = "ThisIsAString";
 str1.replace("String", "Integer");
 
-//IsTrue(str1 == "ThisIsAInteger");
+IsTrue(str1 == "ThisIsAInteger");
+
+//NOU::NOU_DAT_ALG::String8 newstr(50);
+
+//IsTrue(newstr.getCapacity() == 51);
 
 NOU_CHECK_ERROR_HANDLER;
 }
