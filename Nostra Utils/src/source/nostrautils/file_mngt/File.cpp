@@ -247,7 +247,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 		if(size > fileSize)
 		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::Errorcodes::INVALID_OBJECT, "Size has to be smaller or equal than the actual FileSize");
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Size has to be smaller or equal than the actual FileSize");
 			size = fileSize;
 		}
 
