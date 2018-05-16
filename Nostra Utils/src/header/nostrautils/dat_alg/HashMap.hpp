@@ -21,28 +21,6 @@
 
 namespace NOU::NOU_DAT_ALG 
 {
-	template<typename T>
-	class NOU_CLASS Wrapper
-	{
-	private:
-		T m_data;
-
-	public:
-		template<typename... ARGS>
-		Wrapper(ARGS&&... args) : 
-			m_data(NOU_CORE::forward<ARGS>(args)...)
-		{}
-
-		T& lval()
-		{
-			return m_data;
-		}
-
-		T rval()
-		{
-			return NOU_CORE::move(m_data); 
-		}
-	};
 
 	/**
 	\brief   This class provides a HashMap implementation using the bucket method.
@@ -52,6 +30,30 @@ namespace NOU::NOU_DAT_ALG
 	class NOU_CLASS HashMap 
 	{
 	private:
+
+		template<typename T>
+		class NOU_CLASS Wrapper
+		{
+		private:
+			T m_data;
+
+		public:
+			template<typename... ARGS>
+			Wrapper(ARGS&&... args) : 
+				m_data(NOU_CORE::forward<ARGS>(args)...)
+			{}
+
+			T& lval()
+			{
+				return m_data;
+			}
+
+			T rval()
+			{
+				return NOU_CORE::move(m_data); 
+			}
+		};
+
 		/**
 		\brief The default count of the internal used buckets.
 		*/
