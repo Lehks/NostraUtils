@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-#include <sys/stat>
+#	include <sys/stat.h>
 #endif
 
 namespace NOU::NOU_FILE_MNGT
