@@ -14,7 +14,7 @@ namespace NOU::NOU_FILE_MNGT
 		public:
 			using NouString = NOU::NOU_DAT_ALG::String<char8>;
 
-			static constexpr NOU::char8 *INI_DEFAULT_SECTION = "undefined";
+			static constexpr const NOU::char8 *INI_DEFAULT_SECTION = "undefined";
 			static const int32 INI_QUOTE_NONE;
 			static const int32 INI_QUOTE_DOUBLE;
 			static const int32 INI_QUOTE_SINGLE;
