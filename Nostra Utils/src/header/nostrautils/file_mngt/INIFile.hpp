@@ -6,20 +6,9 @@
 #include "nostrautils/dat_alg/Hashing.hpp"
 #include "nostrautils/dat_alg/HashMap.hpp"
 
-#include <string>
-#include <unordered_map>
-
 
 namespace NOU::NOU_FILE_MNGT
 {
-	struct INIFileHash 
-	{
-		std::size_t operator()(const NOU::NOU_DAT_ALG::String<char8> &str) const
-		{
-			return std::hash<std::string>()(std::string(str.rawStr()));
-		}
-	};
-
 	class NOU_CLASS INIFile
 	{
 		public:
@@ -37,22 +26,22 @@ namespace NOU::NOU_FILE_MNGT
 			/**
 			\brief Holds the parsed key value pairs, with the values being NouStrings.
 			*/
-			std::unordered_map<NouString, NouString, INIFileHash> m_dataString;
+			NOU::NOU_DAT_ALG::HashMap<NouString, NouString> m_dataString;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being int32.
 			*/
-			std::unordered_map<NouString, int32, INIFileHash> m_dataInteger;
+			NOU::NOU_DAT_ALG::HashMap<NouString, int32> m_dataInteger;
 
 			/**
 			\brief Holds the parsed key value pairs, with the values being float32.
 			*/
-			std::unordered_map<NouString, float32, INIFileHash> m_dataFloat;
+			NOU::NOU_DAT_ALG::HashMap<NouString, float32> m_dataFloat;
 
 			/**
 			\brief Holds the parsed sections and the amount of keys within that section
 			*/
-			std::unordered_map<NouString, int32, INIFileHash> m_dataSections;
+			NOU::NOU_DAT_ALG::HashMap<NouString, int32> m_dataSections;
 
 			/**
 			\brief The target file name to read from/write to.
@@ -148,7 +137,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Writes the INI file
 			*/
-			boolean write(const NouString & = NouString("")) const;
+			boolean write(const NouString & = NouString(""));
 
 			/**
 			\param key     The key to remove
@@ -192,7 +181,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as NouString.
 			*/
-			NouString getString(const NouString & key, const NouString & section = INI_DEFAULT_SECTION) const;
+			NouString getString(const NouString & key, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
 			\param  key     The key to search
@@ -201,7 +190,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as integer.
 			*/
-			int32 getInt(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
+			int32 getInt(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
 			\param key     The key to search
@@ -210,7 +199,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as float.
 			*/
-			float32 getFloat(const NouString &, const NouString & = INI_DEFAULT_SECTION) const;
+			float32 getFloat(const NouString &, const NouString & = INI_DEFAULT_SECTION);
 
 			/**
 			\param key     The key to search
@@ -219,7 +208,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Checks if a given key exists in the given section.
 			*/
-			boolean keyExists(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
+			boolean keyExists(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
 	};
 }
 #endif
