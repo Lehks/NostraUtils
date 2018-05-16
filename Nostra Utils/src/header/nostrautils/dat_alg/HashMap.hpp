@@ -21,6 +21,29 @@
 
 namespace NOU::NOU_DAT_ALG 
 {
+	template<typename T>
+	class NOU_CLASS Wrapper
+	{
+	private:
+		T m_data;
+
+	public:
+		template<typename... ARGS>
+		Wrapper(ARGS&&... args) : 
+			m_data(NOU_CORE::forward<ARGS>(args)...)
+		{}
+
+		T& lval()
+		{
+			return m_data;
+		}
+
+		T rval()
+		{
+			return NOU_CORE::move(m_data); 
+		}
+	};
+
 	/**
 	\brief   This class provides a HashMap implementation using the bucket method.
 	*/
@@ -45,6 +68,7 @@ namespace NOU::NOU_DAT_ALG
 		Vector<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>		m_data;
 
 
+		boolean mapImp(Wrapper<K> &&key, Wrapper<V> &&value);
 	public:
 
 		/**
@@ -52,7 +76,7 @@ namespace NOU::NOU_DAT_ALG
 		\param size the count of buckets used inside the map (the more the better but also more mem space is used)
 		\param allocator the internally used mem allocator, defaults to NOU generic alloc
 		*/
-		HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>::getInstance());
+		explicit HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>::getInstance());
 
 		/**
 		\param			key the key where the value will be mapped to
@@ -70,7 +94,25 @@ namespace NOU::NOU_DAT_ALG
 		\return			true if successfully mapped, false if otherwise
 		\brief maps a value to a specific key
 		*/
-		boolean map(const K &&key, const V &&value);
+		boolean map(K &&key, V &&value);
+
+		/**
+		\param			key the key where the value will be mapped to
+		\param		    value the value that will be mapped
+		\param			keySize the size of the actual Data of the key
+		\return			true if successfully mapped, false if otherwise
+		\brief maps a value to a specific key
+		*/
+		boolean map(const K &key, const V &&value);
+
+		/**
+		\param			key the key where the value will be mapped to
+		\param		    value the value that will be mapped
+		\param			keySize the size of the actual Data of the key
+		\return			true if successfully mapped, false if otherwise
+		\brief maps a value to a specific key
+		*/
+		boolean map(const K &&key, const V &value);
 
 		/**
 		\param key		the key where a value will be returned
@@ -146,6 +188,49 @@ namespace NOU::NOU_DAT_ALG
 	};
 
 
+
+	template <typename K, typename V>
+	boolean HashMap<K, V>::mapImp(Wrapper<K> &&key, Wrapper<V> &&value) 
+	{
+		sizeType n;
+
+		Pair<K, V> tmpPair(NOU_CORE::move(key.rval()), NOU_CORE::move(value.rval()));
+
+		n = hashObj(&key, 1, m_data.size());
+
+		if (m_data[n].size() == 0) 
+		{	//if Vector at this position is empty, fill it -> O(1)
+			m_data[n].emplaceBack(NOU_CORE::move(tmpPair));
+			m_size++;
+			return true;
+		}
+		else 
+		{	//if a Vector in this position has elements, search if the given Key is already existing. If yes overwrite it;
+			for (sizeType i = 0; i < m_data[n].size(); i++) 
+			{
+				if (m_data[n][i].dataOne == tmpPair.dataOne) 
+				{
+					if constexpr (std::is_move_assignable_v<V>)
+					{
+						m_data[n][i].dataTwo = NOU_CORE::move(tmpPair.dataTwo);
+					}
+					else
+					{
+						m_data[n][i].dataTwo.~V();
+						new (&(m_data[n][i].dataTwo)) V(NOU_CORE::move(tmpPair.dataTwo));
+					}
+
+					return true;
+				}
+			}
+		
+			//add tmp Pair at the end of the Vector -> O(n)
+			m_data[n].emplaceBack(NOU_CORE::move(tmpPair));
+			m_size++;
+			return true;
+		}
+	}
+
 	template <typename K, typename V>
 	HashMap<K, V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
 		m_data(size, allocator),
@@ -161,40 +246,14 @@ namespace NOU::NOU_DAT_ALG
 	template <typename K, typename V>
 	boolean HashMap<K, V>::map(const K &key, const V &value) 
 	{
-		sizeType n;
-
-		Pair<K, V> tmpPair(key, value);
-
-		n = hashObj(&key, 1, m_data.size());
-
-		if (m_data[n].size() == 0) 
-		{	//if Vector at this position is empty, fill it -> O(1)
-			m_data[n].emplaceBack(tmpPair);
-			m_size++;
-			return true;
-		}
-		else 
-		{	//if a Vector in this position has elements, search if the given Key is already existing. If yes overwrite it;
-			for (sizeType i = 0; i < m_data[n].size(); i++) 
-			{
-				if (m_data[n][i].dataOne == tmpPair.dataOne) 
-				{
-					m_data[n][i].dataTwo = tmpPair.dataTwo;
-				}
-			}
-		
-			//add tmp Pair at the end of the Vector -> O(n)
-			m_data[n].emplaceBack(tmpPair);
-			m_size++;
-			return true;
-		}
+		return mapImp(Wrapper<K>(key), Wrapper<V>(value));
 	}
 
 	template <typename K, typename V>
 	V& HashMap<K,V>::get(const K &key)
 	{
 		sizeType n;
-		n = hashObj(&key, 1, m_data.capacity());
+		n = hashObj(&key, 1, m_data.size());
 
 		if (m_data[n].size() == 0) 
 		{	//if nothing is mapped to HashPos n, return null
@@ -306,9 +365,21 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::map(const K &&key, const V &&value)
+	boolean HashMap<K, V>::map(K &&key, V &&value)
 	{
-		return true;
+		return mapImp(Wrapper<K>(NOU_CORE::move(key)), Wrapper<V>(NOU_CORE::move(value)));
+	}
+
+	template <typename K, typename V>
+	boolean HashMap<K, V>::map(const K &key, const V &&value)
+	{
+		return mapImp(Wrapper<K>(key), Wrapper<V>(NOU_CORE::move(value)));
+	}
+
+	template <typename K, typename V>
+	boolean HashMap<K, V>::map(const K &&key, const V &value)
+	{
+		return mapImp(Wrapper<K>(NOU_CORE::move(key)), Wrapper<V>(value));
 	}
 
 	template <typename K, typename V>
