@@ -21,12 +21,13 @@ namespace NOU::NOU_FILE_MNGT
 
 #if NOU_OS == NOU_OS_WINDOWS
 
-		//replace all / with \ 
-		ret.replace(PATH_SEPARATOR_UNIX_LINUX, PATH_SEPARATOR_WINDOWS);
+		        //replace all / with \
+
+        ret.replace(PATH_SEPARATOR_UNIX_LINUX, PATH_SEPARATOR_WINDOWS);
 
 
-		//if path starts not with *:\, it is a relative path (* is any character, like C)
-		if (!(path.at(1) == ':' && path.at(2) == PATH_SEPARATOR_WINDOWS)) 
+        //if path starts not with *:\ , it is a relative path (* is any character, like C)
+        if (!path.at(1) == ':')
 		{
 			Path cwd = currentWorkingDirectory();
 
