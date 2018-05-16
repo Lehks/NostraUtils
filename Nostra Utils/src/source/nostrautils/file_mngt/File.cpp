@@ -225,18 +225,33 @@ namespace NOU::NOU_FILE_MNGT
 
 	void File::read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer)
 	{
-		NOU::NOU_DAT_ALG::Vector<char8> buff(size+1);
-		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
-		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
-		NOU_COND_PUSH_ERROR(!exists(), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
+		sizeType fileSize = this->size();
+
+
 		if(!exists())
 		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
 			return;
 		}
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
+			NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
+			NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
 			return;
 		}
+		if (fileSize == 0)
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Could not fetch Filesize, or file dos not contain data");
+			fileSize == 0;
+			return;
+		}
+		if(size > fileSize)
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::Errorcodes::INVALID_OBJECT, "Size has to be smaller or equal than the actual FileSize");
+			size = fileSize;
+		}
+
+		NOU::NOU_DAT_ALG::Vector<char8> buff(size+1);
 		open();
 		fread(buff.data(), size, 1, m_data);
 		buff[size] = 0;
@@ -249,20 +264,22 @@ namespace NOU::NOU_FILE_MNGT
 
 	void File::read(NOU::NOU_DAT_ALG::String8 &buffer)
 	{
-		sizeType size = this->size();
-
-		NOU::NOU_DAT_ALG::Vector<char8> buff(size+1);
-		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
-		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
-		NOU_COND_PUSH_ERROR(!exists(), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
 		if(!exists())
 		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
 			return;
 		}
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
+			NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
+			NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
 			return;
 		}
+
+
+		sizeType size = this->size();
+		NOU::NOU_DAT_ALG::Vector<char8> buff(size+1);
+
 		open();
 		fread(buff.data(), size, 1, m_data);
 		buff[size] = 0;
