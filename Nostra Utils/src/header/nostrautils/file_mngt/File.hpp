@@ -9,7 +9,6 @@
 //#include <stdio.h>
 //#include <io.h>
 
-#include <sys/stat.h>
 
 
 
@@ -125,7 +124,13 @@ namespace NOU::NOU_FILE_MNGT
 		\param a reference to a string where the read data will be written to
 		\brief reads a string containing the read byte in the size of the size parameter and writes it ot the buffer
 		*/
-		void File::read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer);
+		void read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer);
+
+		/**
+		\param a reference to a string where the read data will be written to
+		\brief reads the whole file into a string
+		*/
+		void read(NOU::NOU_DAT_ALG::String8 &buffer);
 
 		/**
 		\param b The byte to write

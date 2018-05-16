@@ -1,5 +1,6 @@
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -201,7 +202,7 @@ namespace NOU::NOU_FILE_MNGT
 			return in.tellg();
 		} else
 		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "File does not exist"); //PATH_NOT_FOUND
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "File does not exist"); // PATH_NOT_FOUND
 			return 0;
 		}
 	}
@@ -221,8 +222,7 @@ namespace NOU::NOU_FILE_MNGT
 
 	void File::read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer)
 	{
-		char8 *buff;
-		new char8[size+1];
+		NOU::NOU_DAT_ALG::Vector<char8> buff(size+1);
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
 		NOU_COND_PUSH_ERROR(!exists(), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
@@ -235,12 +235,38 @@ namespace NOU::NOU_FILE_MNGT
 			return;
 		}
 		open();
-		fread(buff, size, 1, m_data);
-		buff[size-1] = 0;
+		fread(buff.data(), size, 1, m_data);
+		buff[size] = 0;
 		if(buffer.size() != 0)
 		{
-			buffer.preserve(0, 0);
+			buffer.clear();
 		}
-		buffer.append(buff);
+		buffer.append(buff.data());
+	}
+
+	void File::read(NOU::NOU_DAT_ALG::String8 &buffer)
+	{
+		sizeType size = this->size();
+
+		NOU::NOU_DAT_ALG::Vector<char8> buff(size+1);
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces write-only file");
+		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't acces append-only file");
+		NOU_COND_PUSH_ERROR(!exists(), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
+		if(!exists())
+		{
+			return;
+		}
+		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
+		{
+			return;
+		}
+		open();
+		fread(buff.data(), size, 1, m_data);
+		buff[size] = 0;
+		if(buffer.size() != 0)
+		{
+			buffer.clear();
+		}
+		buffer.append(buff.data());
 	}
 }
