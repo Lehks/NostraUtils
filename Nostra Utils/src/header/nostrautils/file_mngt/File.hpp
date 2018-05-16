@@ -67,11 +67,11 @@ namespace NOU::NOU_FILE_MNGT
 		\brief File stream of the opened File
 		*/
 		FILE															*m_data;
+
 		/**
 		\brief Wether the file is in append, write, read mode or any combination of those
 		*/
 		AccessMode														m_mode;
-
 
 		/**
 		\brief Path to the folder containing the file
@@ -94,16 +94,19 @@ namespace NOU::NOU_FILE_MNGT
 		\param other other constructer from which this constructor will copy
 		*/
 		File(const File &other) = delete;
+
 		/**
 		\brief Move-construcor of the File class
 
 		\param other other constructer from which this constructor will move
 		*/
 		File(File &&other);
+
 		/**
 		\brief destructor of the File Class
 		*/
 		~File();
+
 		/**
 		\brief Reads a single byte from the file
 
@@ -180,8 +183,6 @@ namespace NOU::NOU_FILE_MNGT
 		\return current AccessMode 
 		*/
 		const AccessMode& getMode();
-
-
 
 		/**
 		\brief Getter for Path
