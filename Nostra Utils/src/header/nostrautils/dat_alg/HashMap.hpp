@@ -103,7 +103,7 @@ namespace NOU::NOU_DAT_ALG
 		\return			true if successfully mapped, false if otherwise
 		\brief maps a value to a specific key
 		*/
-		boolean map(const K &key, const V &&value);
+		boolean map(const K &key, V &&value);
 
 		/**
 		\param			key the key where the value will be mapped to
@@ -112,7 +112,7 @@ namespace NOU::NOU_DAT_ALG
 		\return			true if successfully mapped, false if otherwise
 		\brief maps a value to a specific key
 		*/
-		boolean map(const K &&key, const V &value);
+		boolean map(K &&key, const V &value);
 
 		/**
 		\param key		the key where a value will be returned
@@ -128,7 +128,7 @@ namespace NOU::NOU_DAT_ALG
 		\return value
 		\brief Returns the corresponding value mapped to a specific key or nullptr if it does not exist
 		*/
-		V& get(const K &&key);
+		V& get(K &&key);
 
 		/**
 		\brief Checks whether the map is empty or not.
@@ -164,7 +164,7 @@ namespace NOU::NOU_DAT_ALG
 		\param		keyCount
 		\brief Removes an Object which the specific key.
 		*/
-		boolean remove(const K &&key, V *out = nullptr);
+		boolean remove(K &&key, V *out = nullptr);
 
 		/**
 		\return			a vector containing all currently used values
@@ -184,7 +184,7 @@ namespace NOU::NOU_DAT_ALG
 		\return			true if the key is contained inside the map;
 		\brief Checks if the key is contained in the map.
 		*/
-		boolean containsKey(const K &&key);
+		boolean containsKey(K &&key);
 	};
 
 
@@ -371,31 +371,31 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::map(const K &key, const V &&value)
+	boolean HashMap<K, V>::map(const K &key, V &&value)
 	{
 		return mapImp(Wrapper<K>(key), Wrapper<V>(NOU_CORE::move(value)));
 	}
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::map(const K &&key, const V &value)
+	boolean HashMap<K, V>::map(K &&key, const V &value)
 	{
 		return mapImp(Wrapper<K>(NOU_CORE::move(key)), Wrapper<V>(value));
 	}
 
 	template <typename K, typename V>
-	V& HashMap<K, V>::get(const K &&key)
+	V& HashMap<K, V>::get(K &&key)
 	{
 		return m_data[0][0].dataTwo;
 	}
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::remove(const K &&key, V *out)
+	boolean HashMap<K, V>::remove(K &&key, V *out)
 	{
 		return true;
 	}
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::containsKey(const K &&key)
+	boolean HashMap<K, V>::containsKey(K &&key)
 	{
 		return true;
 	}
