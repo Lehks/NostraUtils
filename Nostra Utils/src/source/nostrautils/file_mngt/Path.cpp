@@ -41,7 +41,7 @@ namespace NOU::NOU_FILE_MNGT
 		//replace all \ with /
 		ret.replace(PATH_SEPARATOR_WINDOWS, PATH_SEPARATOR_UNIX_LINUX);
 
-		if (!path.startsWith(PATH_SEPARATOR_UNIX_LINUX)) //if path starts not with /, it is a relative path
+		if (!ret.startsWith(PATH_SEPARATOR_UNIX_LINUX)) //if path starts not with /, it is a relative path
 		{
 			Path cwd = currentWorkingDirectory();
 
