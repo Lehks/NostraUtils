@@ -1,10 +1,10 @@
-#include "nostrautils\lang\Lang.hpp"
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\file_mngt\INIfile.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/lang/Lang.hpp"
+
 
 namespace NOU::NOU_LANG
 {
+	NOU::NOU_DAT_ALG::HashMap<Lang::NouString, NOU::NOU_FILE_MNGT::INIFile> Lang::m_data;
 	const NOU::NOU_FILE_MNGT::INIFile::NouString Lang::defaultLanguage("en-GB");
 	NOU::NOU_FILE_MNGT::INIFile::NouString Lang::activeLanguage = Lang::defaultLanguage;
 

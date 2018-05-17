@@ -2,8 +2,10 @@
 #define	NOU_LANG_LANG_HPP
 
 #include "nostrautils/core/StdIncludes.hpp"
-#include "nostrautils/dat_alg/String.hpp"
 #include "nostrautils/file_mngt/INIfile.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/dat_alg/Hashing.hpp"
+#include "nostrautils/dat_alg/HashMap.hpp"
 
 namespace NOU::NOU_LANG
 {
