@@ -5,27 +5,26 @@
 
 namespace NOU::NOU_LANG
 {
-	using NouString = NOU::NOU_FILE_MNGT::NouString;
+	const NOU::NOU_FILE_MNGT::INIFile::NouString Lang::defaultLanguage("en-GB");
+	NOU::NOU_FILE_MNGT::INIFile::NouString Lang::activeLanguage = Lang::defaultLanguage;
 
-	const NouString Lang::default_language("en-GB");
-	NouString Lang::active_language = Lang::default_language;
 
 	void Lang::setActive(const NouString & tag)
 	{
-		Lang::active_language.clear().append(tag);
+		Lang::activeLanguage = tag;
 	}
 
 
-	NouString Lang::getActive()
+	Lang::NouString Lang::getActive()
 	{
-		return Lang::active_language;
+		return Lang::activeLanguage;
 	}
 
 
 	boolean Lang::loadFile(const NouString & filename)
 	{
-		if (Lang::active_language.size() == 0) {
-			Lang::setActive(Lang::default_language);
+		if (Lang::activeLanguage.size() == 0) {
+			Lang::setActive(Lang::defaultLanguage);
 		}
 
 		NOU::NOU_FILE_MNGT::INIFile inifile = NOU::NOU_FILE_MNGT::INIFile(filename);
@@ -34,90 +33,108 @@ namespace NOU::NOU_LANG
 			return false;
 		}
 
-		if (Lang::m_data.count(Lang::active_language) > 0) {
-			Lang::m_data.erase(Lang::active_language);
+		if (Lang::m_data.containsKey(Lang::activeLanguage)) {
+			Lang::m_data.remove(Lang::activeLanguage);
 		}
 
-		Lang::m_data.insert(std::make_pair(Lang::active_language, inifile));
+		Lang::m_data.map(Lang::activeLanguage, inifile);
 	}
 
 
-	NouString Lang::_(const NouString & token)
+	Lang::NouString Lang::_(const NouString & token)
 	{
-		std::unordered_map<NouString, NOU::NOU_FILE_MNGT::INIFile>::const_iterator inifile;
+		// Check if the language is registered
+		if (!Lang::m_data.containsKey(Lang::activeLanguage)) {
+			// If the current language is not the default language, temporarily override it.
+			if (Lang::activeLanguage != Lang::defaultLanguage) {
+				Lang::NouString originalLanguage = Lang::activeLanguage;
+				Lang::setActive(Lang::defaultLanguage);
+				Lang::NouString translation = Lang::_(token);
+				Lang::setActive(originalLanguage);
 
-		// Check if there are any languages
-		if (Lang::active_language.size() == 0) {
-			Lang::setActive(Lang::default_language);
+				return translation;
+			}
+
+			// Cannot find translation for this token...
+			Lang::NouString translation = "*";
+
+			translation += Lang::activeLanguage;
+			translation += "::";
+			translation += token;
+			translation += "*";
+
+			return translation;
 		}
 
-		// Check if the current language is actually registered
-		inifile = m_data.find(Lang::active_language);
+		// Get the language file
+		NOU::NOU_FILE_MNGT::INIFile inifile = Lang::m_data.get(Lang::activeLanguage);
 
-		if (inifile == m_data.end()) {
-			return NouString("*").append(Lang::active_language).append("::").append(token).append("*");
+		// Check if token exists
+		if (!inifile.keyExists(token)) {
+			// If the current language is not the default language, temporarily override it.
+			if (Lang::activeLanguage != Lang::defaultLanguage) {
+				Lang::NouString originalLanguage = Lang::activeLanguage;
+				Lang::setActive(Lang::defaultLanguage);
+				Lang::NouString translation = Lang::_(token);
+				Lang::setActive(originalLanguage);
+
+				return translation;
+			}
+
+			// Cannot find translation for this token...
+			Lang::NouString translation = "*";
+
+			translation += Lang::activeLanguage;
+			translation += "::";
+			translation += token;
+			translation += "*";
+
+			return translation;
 		}
 
-		// Return translated string if exists
-		if (inifile->second.keyExists(token)) {
-			return inifile->second.getString(token);
-		}
-
-		// As fallback, return default language translation
-		NouString tmp_language = Lang::active_language;
-		NouString translation;
-
-		Lang::setActive(Lang::default_language);
-		translation.append(Lang::_(token));
-		Lang::setActive(tmp_language);
-
-		return translation;
+		return inifile.getString(token);
 	}
 
 
-	NouString Lang::_(const NouString & token, const int32 count)
+	Lang::NouString Lang::_(const NouString & token, const int32 count)
 	{
-		NouString count_token;
-
-		count_token.append(token);
+		NouString countToken = token;
 
 		switch (count)
 		{
 			case 0:
-				count_token.append("_0");
+				countToken += "_0";
 				break;
 
 			case 1:
 			case -1:
-				count_token.append("_1");
+				countToken += "_1";
 				break;
 
 			default:
-				count_token.append("_N");
+				countToken += "_N";
 				break;
 		}
 
-		return Lang::_(count_token);
+		return Lang::_(countToken);
 	}
 
 
-	NouString Lang::_(const NouString & token, const boolean state)
+	Lang::NouString Lang::_(const NouString & token, const boolean state)
 	{
-		NouString state_token;
-
-		state_token.append(token);
+		NouString stateToken = token;
 
 		switch (state)
 		{
 			case true:
-				state_token.append("_TRUE");
+				stateToken += "_TRUE";
 				break;
 
 			case false:
-				state_token.append("_FALSE");
+				stateToken += "_FALSE";
 				break;
 		}
 
-		return Lang::_(state_token);
+		return Lang::_(stateToken);
 	}
 }

@@ -1,35 +1,35 @@
 #ifndef	NOU_LANG_LANG_HPP
 #define	NOU_LANG_LANG_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\String.hpp"
-#include "nostrautils\file_mngt\INIfile.hpp"
-
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/String.hpp"
+#include "nostrautils/file_mngt/INIfile.hpp"
 
 namespace NOU::NOU_LANG
 {
-	using NouString = NOU::NOU_FILE_MNGT::NouString;
-
 	class NOU_CLASS Lang
 	{
+		public:
+			using NouString = NOU::NOU_FILE_MNGT::INIFile::NouString;
+
 		private:
 			/**
 			\brief Key value pairs, with the values being the language tags, and the values being the inifiles.
 			*/
-			static std::unordered_map<NouString, NOU::NOU_FILE_MNGT::INIFile> m_data;
+			static NOU::NOU_DAT_ALG::HashMap<NouString, NOU::NOU_FILE_MNGT::INIFile> m_data;
 
 			/**
 			\brief Currently active language tag.
 			*/
-			static NouString active_language;
+			static NouString activeLanguage;
 
 			/**
 			\brief The default language tag (en-GB).
 			*/
-			static const NouString default_language;
+			static const NouString defaultLanguage;
 
 			/**
-			\brief Do not allow instances of this class. Use Lang::_(); instead.
+			\brief Do not allow instances of this class. Use Lang::_() instead.
 			*/
 			Lang();
 
