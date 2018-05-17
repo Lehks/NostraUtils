@@ -88,14 +88,6 @@ namespace NOU::NOU_DAT_ALG
 		void free(T *data);
 
 		/**
-		\brief Reallocate memory for the vector.
-
-		\details 
-		If a new element gets inserted to the vector it has to reallocate the memory for it.
-		*/
-		void reallocateData(sizeType capacity);
-
-		/**
 		\tparam ARGS The types of the arguments that will be passed to the constructor of T.
 
 		\param index The index at which the instance will be inserted at.
@@ -394,6 +386,14 @@ namespace NOU::NOU_DAT_ALG
 		\brief replaces the data at the index with the passed data.
 		*/
 		Vector& replace(sizeType index, const T &replacement);
+
+        /**
+        \brief Reallocate memory for the vector.
+
+        \details
+        If a new element gets inserted to the vector it has to reallocate the memory for it.
+        */
+        void reallocateData(sizeType capacity);
 
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.

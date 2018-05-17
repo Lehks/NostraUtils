@@ -48,12 +48,16 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			return 0;
 		}
+		if(!isCurrentlyOpen())
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "FileStream is not open");
+			return 0;
+		}
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
 			return 0;
 		} 
 
-		open();
 		return fgetc(m_data);
 	}
 
@@ -66,11 +70,14 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			return;
 		}
+		if(!isCurrentlyOpen())
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "FileStream is not open");
+		}
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
 			return;
 		}
-		open();
 		fread(buffer, size, 1, m_data);
 	}
 
