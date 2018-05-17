@@ -1940,12 +1940,15 @@ TEST_METHOD(INIFile)
 
 	parser.remove("TEST_STR");
 	IsTrue(parser.getString("TEST_STR").size() == 0);
+	parser.setString("DEFAULT_TEST_STR", "Testing");
 
 	parser.remove("TEST_INT");
 	IsTrue(parser.getInt("TEST_INT") == 0);
+	parser.setInt("DEFAULT_TEST_INT", 42);
 
 	parser.remove("TEST_FLOAT");
 	IsTrue(parser.getFloat("TEST_FLOAT") < 0.1);
+	parser.setFloat("DEFAULT_TEST_FLOAT", 13.37);
 
 	parser.setString("TEST_STR", "Testing", "section");
 	IsTrue(parser.getString("TEST_STR", "section") == "Testing");
@@ -1956,6 +1959,9 @@ TEST_METHOD(INIFile)
 	parser.setFloat("TEST_FLOAT", 13.37, "section");
 	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369);
 	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381);
+
+	IsTrue(parser.write("unittest.ini"));
+	IsTrue(parser.read());
 
 	NOU_CHECK_ERROR_HANDLER;
 }
