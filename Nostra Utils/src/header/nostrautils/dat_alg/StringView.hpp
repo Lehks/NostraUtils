@@ -1,18 +1,22 @@
 #ifndef NOU_DAT_ALG_STRING_VIEW_HPP
 #define	NOU_DAT_ALG_STRING_VIEW_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\dat_alg\Comparator.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/dat_alg/Comparator.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
 
-/** \file Vector.hpp
+/** \file StringView.hpp
 \author	 Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
-\brief   This file provides a String implementation.
+\since   1.0.0
+\version 1.0.0
+\brief   This file provides the StringView which is an interface between \link nostra::utils::dat_alg::String 
+         String\endlink and C-Strings.
+
+\see nostra::utils::dat_alg::StringView
 */
 
 namespace NOU::NOU_DAT_ALG
@@ -29,7 +33,7 @@ namespace NOU::NOU_DAT_ALG
 	interface to work with either type.
 
 	This class is supposed to be very lightweight, so converting from a string literal to a string view is 
-	always possible without performance impact.
+	always possible without major overhead (no dynamic allocations, but just trivial copies).
 
 	Since a string view is truly read-only, the content of the represented string can not be changed, nor can 
 	a new string be assigned to an existing instance of this class.
@@ -48,12 +52,12 @@ namespace NOU::NOU_DAT_ALG
 	\par Why are there the two attributes m_string and m_dataPtr?
 	Since a string view needs to be able to work with both a string literal and a nostra::utils::data_alg::String, both of these
 	attributes are required for the string view to be "up to date" at any time (in the lifetime of the underlying
-	string). The attribute m_dataPtr is required because because nostra::utils::data_alg::String may reallocate its buffer to
+	string). The attribute m_dataPtr is required because nostra::utils::data_alg::String may reallocate its buffer to
 	store more characters, which invalidates the pointer to the now old buffer. A pointer to a pointer is always up to
 	date, since it points to the variable that points to the buffer (and the address of that variable never changes).
 	*/
 	template<typename CHAR_TYPE = char>
-	class NOU_CLASS StringView 
+	class StringView 
 	{
 	public:
 
@@ -132,7 +136,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the \c multiple'th power of 10.
 		*/
-		constexpr static uint64 getMultipleOf10(uint32 multiple);
+		static uint64 getMultipleOf10(uint32 multiple);
 
 		/**
 		\param place The decimal places (as a negative value &rarr; if a number has 5 decimal places, the parameter
@@ -153,7 +157,7 @@ namespace NOU::NOU_DAT_ALG
 		In this example, \p newNumber would have the value 2123.0. The parameter -3 was passed to
 		getMultiplierForDecPlaces() because 2.123 has 3 decimal places.
 		*/
-		constexpr static float64 getMultiplierForDecPlaces(int32 place);
+		static float64 getMultiplierForDecPlaces(int32 place);
 
 		/**
 		\brief A pointer to the string that is represented by this string view.
@@ -181,7 +185,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Constructs a new instance using a pointer to a pointer to the actual string and the passed size. This
 		constructor is used by nostra::utils::data_alg::String.
 		*/
-		constexpr StringView(ConstCharType ** dataPtr, sizeType size);
+		StringView(ConstCharType ** dataPtr, sizeType size);
 
 	public:
 		/**
@@ -192,7 +196,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Compares the two passed strings in alphabetical order. The single characters are compared using
 		nostra::utils::data_alg::genericComparator.
 		*/
-		constexpr static CompareResult basicComparator(const StringView &str0, const StringView &str1);
+		static CompareResult basicComparator(const StringView &str0, const StringView &str1);
 
 		/**
 		\param c The character to check.
@@ -216,7 +220,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Converts a string into a nou::boolean.
 		*/
-		constexpr static boolean stringToBoolean(const StringView &str);
+		static boolean stringToBoolean(const StringView &str);
 
 		/**
 		\param str The string to convert.
@@ -288,7 +292,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Converts a string into a nou::int64. If the method fails, the error register will be set accordingly and
 		0 is returned.
 		*/
-		constexpr StringView(ConstCharType *str = "");
+		StringView(ConstCharType *str = "");
 
 		/**
 		\param other The StringView to copy the data from.
@@ -296,10 +300,9 @@ namespace NOU::NOU_DAT_ALG
 		\brief Copies a the contents of a StringView.
 		*/
 		///\todo check if correct constructors are getting called.
-		constexpr StringView(const StringView &other); 
+		StringView(const StringView &other); 
 
-	//  no need to exist (and it breaks the constexpr of the class)
-	//	virtual ~StringView() = default;
+		virtual ~StringView() = default;
 
 		/**
 		\param str        The substring to find.
@@ -311,7 +314,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the index of the first occurrence of \p str in the string represented by this string view that is
 		at or after the index \p startIndex.
 		*/
-		constexpr sizeType find(const StringView &str, sizeType startIndex = 0) const;
+		sizeType find(const StringView &str, sizeType startIndex = 0) const;
 
 		/**
 		\param c          The character to find.
@@ -323,7 +326,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the index of the first occurrence of \p c in the string represented by this string view that is at
 		or after the index \p startIndex.
 		*/
-		constexpr sizeType find(CharType c, sizeType startIndex = 0) const;
+		sizeType find(CharType c, sizeType startIndex = 0) const;
 
 		/**
 		\param c The character to find.
@@ -332,7 +335,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the first character that is \p c.
 		*/
-		constexpr sizeType firstIndexOf(ConstCharType c) const;
+		sizeType firstIndexOf(ConstCharType c) const;
 
 		/**
 		\param c The character to find.
@@ -341,7 +344,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the last character that is \p c.
 		*/
-		constexpr sizeType lastIndexOf(ConstCharType c) const;
+		sizeType lastIndexOf(ConstCharType c) const;
 
 		/**
 		\param c The character to exclude.
@@ -350,7 +353,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the first character that is not \p c.
 		*/
-		constexpr sizeType firstIndexOfNot(ConstCharType c) const;
+		sizeType firstIndexOfNot(ConstCharType c) const;
 
 		/**
 		\param c The character to exclude.
@@ -359,7 +362,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the last character that is not \p c.
 		*/
-		constexpr sizeType lastIndexOfNot(ConstCharType c) const;
+		sizeType lastIndexOfNot(ConstCharType c) const;
 
 		/**
 		\param c The character to check.
@@ -367,7 +370,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief   Checks weather the string starts with the passed character.
 		*/
-		constexpr boolean startsWith(ConstCharType c) const;
+		boolean startsWith(ConstCharType c) const;
 
 		/**
 		\param str The string to check.
@@ -375,7 +378,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief   Checks weather the string starts with the passed string.
 		*/
-		constexpr boolean startsWith(const StringView &str) const;
+		boolean startsWith(const StringView &str) const;
 
 		/**
 		\param c The character to check.
@@ -383,7 +386,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief   Checks weather the string ends with the passed character.
 		*/
-		constexpr boolean endsWith(ConstCharType c) const;
+		boolean endsWith(ConstCharType c) const;
 
 		/**
 		\param str The string to check.
@@ -391,7 +394,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief   Checks weather the string ends with the passed string.
 		*/
-		constexpr boolean endsWith(const StringView &str) const;
+		boolean endsWith(const StringView &str) const;
 
 		/**
 		\param index The index of the character that will be returned.
@@ -399,7 +402,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the character at the passed index.
 		*/
-		constexpr ConstCharType at(sizeType index) const;
+		ConstCharType at(sizeType index) const;
 
 		/**
 		\return The size of the string.
@@ -407,7 +410,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the size of the string (or more precise, the amount of characters that come before the first
 		null-character in the string).
 		*/
-		constexpr sizeType size() const;
+		sizeType size() const;
 
 		/**
 		\return The underlying string in its raw form.
@@ -426,7 +429,7 @@ namespace NOU::NOU_DAT_ALG
 		as soon as the original instance of nostra::utils::data_alg::String reallocates its buffer.
 		The lifetime of the string if the string view was created from a string literal remains unchanged.
 		*/
-		constexpr ConstCharType* rawStr() const;
+		ConstCharType* rawStr() const;
 
 		/**
 		\param str        The string to compare this string to.
@@ -435,7 +438,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Compares this string to the passed one using the provided comparator.
 		*/
-		constexpr CompareResult compareTo(const StringView &str, Comparator<StringView> comparator 
+		CompareResult compareTo(const StringView &str, Comparator<StringView> comparator 
 			= basicComparator) const;
 
 		/**
@@ -459,50 +462,50 @@ namespace NOU::NOU_DAT_ALG
 		The returned string view will have the same lifetime as its origin string view.
 
 		\warning
-		A string view that is returned by this method should only be used by method's and functions that use the method
+		A string view that is returned by this method should only be used by methods and functions that use the method
 		size() to determine the end of a string and not by those relying on a null terminator (this is due to a string
 		view being read-only by design and therefore the inability to set a new null terminator).
 		*/
-		constexpr StringView logicalSubstring(sizeType start, sizeType end = NULL_INDEX) const;
+		StringView logicalSubstring(sizeType start, sizeType end = NULL_INDEX) const;
 
 		/**
 		\return A StringConstIterator that points to the first character in the string.
 		\brief  Returns a StringConstIterator that points to the first character in the string.
 		*/
-		constexpr StringConstIterator begin() const;
+		StringConstIterator begin() const;
 
 		/**
 		\return A StringConstIterator that points to the character after the last character in the string.
 		\brief  Returns a StringConstIterator that points to the character after the last character in the string.
 		*/
-		constexpr StringConstIterator end() const;
+		StringConstIterator end() const;
 
 		/**
 		\param index The index at which this iterator will start.
 		\return      A StringConstIterator that points to the character at the passed index.
 		\brief       Returns a StringConstIterator that points to the character at the passed index.
 		*/
-		constexpr StringConstIterator indexIterator(sizeType index) const;
+		StringConstIterator indexIterator(sizeType index) const;
 
 		/**
 		\param index The index at which this iterator will start.
 		\return      A StringReverseConstIterator that points to the character at the passed index.
 		\brief       Returns a StringReverseConstIterator that points to the character at the passed index.
 		*/
-		constexpr StringReverseConstIterator indexRIterator(sizeType index) const;
+		StringReverseConstIterator indexRIterator(sizeType index) const;
 
 		/**
 		\return A StringReverseConstIterator that points to the last character in the string.
 		\brief  Returns a StringReverseConstIterator that points to the last character in the string.
 		*/
-		constexpr StringReverseConstIterator rbegin() const;
+		StringReverseConstIterator rbegin() const;
 
 		/**
 		\return A StringReverseConstIterator that points to the character before the first character in the string.
 		\brief  Returns a StringReverseConstIterator that points to the character before the first character in the
 		string.
 		*/
-		constexpr StringReverseConstIterator rend() const;
+		StringReverseConstIterator rend() const;
 
 		/**
 		\param other The string view to copy the data from.
@@ -510,7 +513,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Copies the data from the other StringView to this one.
 		*/
 		///\todo Check if correct operator is getting called
-		constexpr virtual StringView& operator = (const StringView &other);
+		virtual StringView& operator = (const StringView &other);
 
 		/**
 		\param str The string to compare to.
@@ -518,7 +521,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Compares this string with the passed one, using compareTo() with the default comparator.
 		*/
-		constexpr boolean operator == (const StringView &str) const;
+		boolean operator == (const StringView &str) const;
 
 		/**
 		\param str The string to compare to.
@@ -526,7 +529,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Compares this string with the passed one, using compareTo() with the default comparator.
 		*/
-		constexpr boolean operator != (const StringView &str) const;
+		boolean operator != (const StringView &str) const;
 
 		/**
 		\param str The string to compare to.
@@ -534,7 +537,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Compares this string with the passed one, using compareTo() with the default comparator.
 		*/
-		constexpr boolean operator > (const StringView &str) const;
+		boolean operator > (const StringView &str) const;
 
 		/**
 		\param str The string to compare to.
@@ -542,7 +545,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Compares this string with the passed one, using compareTo() with the default comparator.
 		*/
-		constexpr boolean operator < (const StringView &str) const;
+		boolean operator < (const StringView &str) const;
 
 		/**
 		\param str The string to compare to.
@@ -550,7 +553,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Compares this string with the passed one, using compareTo() with the default comparator.
 		*/
-		constexpr boolean operator >= (const StringView &str) const;
+		boolean operator >= (const StringView &str) const;
 
 		/**
 		\param str The string to compare to.
@@ -558,7 +561,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Compares this string with the passed one, using compareTo() with the default comparator.
 		*/
-		constexpr boolean operator <= (const StringView &str) const;
+		boolean operator <= (const StringView &str) const;
 
 		/**
 		\param index The index of the character that will be returned.
@@ -566,7 +569,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the character at the passed index. This is equal to at().
 		*/
-		constexpr ConstCharType operator [] (sizeType index) const;
+		ConstCharType operator [] (sizeType index) const;
 	};
 
 	/**
@@ -583,6 +586,18 @@ namespace NOU::NOU_DAT_ALG
 	\brief An alias name for a StringView that uses a nostra::utils::char32;
 	*/
 	using StringView32 = StringView<char32>;
+
+	template<typename CHAR_TYPE>
+	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::DECIMAL_PLACE_SEPARATOR;
+
+	template<typename CHAR_TYPE>
+	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::MINUS_CHAR;
+	
+	template<typename CHAR_TYPE>
+	constexpr typename StringView<CHAR_TYPE>::ConstCharType StringView<CHAR_TYPE>::NULL_TERMINATOR;
+	
+	template<typename CHAR_TYPE>
+	constexpr sizeType StringView<CHAR_TYPE>::NULL_INDEX;
 
 	///\todo Re-enable and exchange error handling
 	template<typename CHAR_TYPE>
@@ -625,7 +640,7 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename OT>
-	static OT StringView<CHAR_TYPE>::genericStringToUint(const StringView &str)
+	OT StringView<CHAR_TYPE>::genericStringToUint(const StringView &str)
 	{
 		OT ret = 0;
 
@@ -643,7 +658,7 @@ namespace NOU::NOU_DAT_ALG
 
 	template<typename CHAR_TYPE>
 	template<typename OT>
-	static OT StringView<CHAR_TYPE>::genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator)
+	OT StringView<CHAR_TYPE>::genericStringToFloat(const StringView &str, ConstCharType decimalPlaceSeparator)
 	{
 		sizeType preDecPointNumbers = 0;
 		boolean isNegative = false;
@@ -692,7 +707,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr uint64 StringView<CHAR_TYPE>::getMultipleOf10(uint32 multiple)
+	uint64 StringView<CHAR_TYPE>::getMultipleOf10(uint32 multiple)
 	{
 		if (multiple == 0)
 			return 1;
@@ -735,7 +750,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr float64 StringView<CHAR_TYPE>::getMultiplierForDecPlaces(int32 place)
+	float64 StringView<CHAR_TYPE>::getMultiplierForDecPlaces(int32 place)
 	{
 		if (place == -1)
 			return 1.0 / 10;
@@ -774,7 +789,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr CompareResult StringView<CHAR_TYPE>::basicComparator(const StringView &str0, 
+	CompareResult StringView<CHAR_TYPE>::basicComparator(const StringView &str0, 
 		const StringView &str1)
 	{
 		if (str0.rawStr() == str1.rawStr()) //the underlying strings are the same objects (since the ptr's are the same)
@@ -804,11 +819,11 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	constexpr boolean StringView<CHAR_TYPE>::isCharacter(ConstCharType c)
 	{
-		return c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z';
+		return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::stringToBoolean(const StringView &str)
+	 boolean StringView<CHAR_TYPE>::stringToBoolean(const StringView &str)
 	{
 		return str == "true";
 	}
@@ -852,28 +867,28 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr StringView<CHAR_TYPE>::StringView(ConstCharType ** dataPtr, sizeType size) :
+	StringView<CHAR_TYPE>::StringView(ConstCharType ** dataPtr, sizeType size) :
 		m_dataPtr(dataPtr),
 		m_size(size),
 		m_string(nullptr)
 	{}
 
 	template<typename CHAR_TYPE>
-	constexpr StringView<CHAR_TYPE>::StringView(ConstCharType *str) :
+	StringView<CHAR_TYPE>::StringView(ConstCharType *str) :
 		m_string(str),
 		m_dataPtr(&m_string),
 		m_size(stringlen<ConstCharType>(str))
 	{}
 
 	template<typename CHAR_TYPE>
-	constexpr StringView<CHAR_TYPE>::StringView(const StringView &other) :
+	StringView<CHAR_TYPE>::StringView(const StringView &other) :
 		m_string(other.m_string),
 		m_dataPtr(m_string == nullptr ? other.m_dataPtr : &m_string),
 		m_size(other.m_size)
 	{}
 
 	template<typename CHAR_TYPE>
-	constexpr sizeType StringView<CHAR_TYPE>::find(const StringView &str, sizeType startIndex) const
+	sizeType StringView<CHAR_TYPE>::find(const StringView &str, sizeType startIndex) const
 	{
 		//- str.size() + 1, b/c there needs to be at least str.size() space for the substring
 		for (sizeType i = startIndex; i < (size() - str.size() + 1); i++)
@@ -898,7 +913,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr sizeType StringView<CHAR_TYPE>::find(CharType c, sizeType startIndex) const
+	sizeType StringView<CHAR_TYPE>::find(CharType c, sizeType startIndex) const
 	{
 		for (sizeType i = startIndex; i < size(); ++i)
 			if (at(i) == c)
@@ -908,7 +923,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr sizeType StringView<CHAR_TYPE>::firstIndexOf(ConstCharType c) const
+	sizeType StringView<CHAR_TYPE>::firstIndexOf(ConstCharType c) const
 	{
 		for (sizeType i = 0; i < size(); i++)
 			if (at(i) == c)
@@ -918,7 +933,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr sizeType StringView<CHAR_TYPE>::lastIndexOf(ConstCharType c) const
+	sizeType StringView<CHAR_TYPE>::lastIndexOf(ConstCharType c) const
 	{
 		for (sizeType i = size() - 1; i != -1; i--)
 			if (at(i) == c)
@@ -928,7 +943,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr sizeType StringView<CHAR_TYPE>::firstIndexOfNot(ConstCharType c) const
+	sizeType StringView<CHAR_TYPE>::firstIndexOfNot(ConstCharType c) const
 	{
 		for (sizeType i = 0; i < size(); i++)
 			if (at(i) != c)
@@ -938,7 +953,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr sizeType StringView<CHAR_TYPE>::lastIndexOfNot(ConstCharType c) const
+	sizeType StringView<CHAR_TYPE>::lastIndexOfNot(ConstCharType c) const
 	{
 		for (sizeType i = size() - 1; i != -1; i--)
 			if (at(i) != c)
@@ -948,13 +963,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::startsWith(ConstCharType c) const
+	boolean StringView<CHAR_TYPE>::startsWith(ConstCharType c) const
 	{
 		return (size() > 0) && (at(0) == c);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::startsWith(const StringView &str) const
+	boolean StringView<CHAR_TYPE>::startsWith(const StringView &str) const
 	{
 		if (str.size() > size())
 			return false;
@@ -967,13 +982,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::endsWith(ConstCharType c) const
+	boolean StringView<CHAR_TYPE>::endsWith(ConstCharType c) const
 	{
 		return (size() > 0) && (at(size() - 1) == c);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::endsWith(const StringView &str) const
+	boolean StringView<CHAR_TYPE>::endsWith(const StringView &str) const
 	{
 		if (str.size() > size())
 			return false;
@@ -986,32 +1001,32 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr auto StringView<CHAR_TYPE>::at(sizeType index) const -> ConstCharType
+	auto StringView<CHAR_TYPE>::at(sizeType index) const -> ConstCharType
 	{
 		return (*m_dataPtr)[index];
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr sizeType StringView<CHAR_TYPE>::size() const
+	sizeType StringView<CHAR_TYPE>::size() const
 	{
 		return m_size;
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr auto StringView<CHAR_TYPE>::rawStr() const -> ConstCharType*
+	auto StringView<CHAR_TYPE>::rawStr() const -> ConstCharType*
 	{
 		return *m_dataPtr;
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr CompareResult StringView<CHAR_TYPE>::compareTo(const StringView &str, 
+	CompareResult StringView<CHAR_TYPE>::compareTo(const StringView &str, 
 		Comparator<StringView> comparator) const
 	{
 		return comparator(*this, str);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr StringView<CHAR_TYPE> StringView<CHAR_TYPE>::logicalSubstring(sizeType start, 
+	StringView<CHAR_TYPE> StringView<CHAR_TYPE>::logicalSubstring(sizeType start, 
 		sizeType end) const
 	{
 		if (end == NULL_INDEX)
@@ -1025,43 +1040,43 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr auto StringView<CHAR_TYPE>::begin() const -> StringConstIterator
+	auto StringView<CHAR_TYPE>::begin() const -> StringConstIterator
 	{
 		return indexIterator(0);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr auto StringView<CHAR_TYPE>::end() const -> StringConstIterator
+	auto StringView<CHAR_TYPE>::end() const -> StringConstIterator
 	{
 		return indexIterator(size());
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr auto StringView<CHAR_TYPE>::indexIterator(sizeType index) const -> StringConstIterator
+	auto StringView<CHAR_TYPE>::indexIterator(sizeType index) const -> StringConstIterator
 	{
 		return StringConstIterator(index, m_dataPtr);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr auto StringView<CHAR_TYPE>::indexRIterator(sizeType index) const -> StringReverseConstIterator
+	auto StringView<CHAR_TYPE>::indexRIterator(sizeType index) const -> StringReverseConstIterator
 	{
 		return StringReverseConstIterator(index, m_dataPtr);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr auto StringView<CHAR_TYPE>::rbegin() const -> StringReverseConstIterator
+	auto StringView<CHAR_TYPE>::rbegin() const -> StringReverseConstIterator
 	{
 		return indexRIterator(size() - 1);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr auto StringView<CHAR_TYPE>::rend() const -> StringReverseConstIterator
+	auto StringView<CHAR_TYPE>::rend() const -> StringReverseConstIterator
 	{
 		return indexRIterator(-1);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr StringView<CHAR_TYPE>& StringView<CHAR_TYPE>::operator = (const StringView<CHAR_TYPE> &other)
+	StringView<CHAR_TYPE>& StringView<CHAR_TYPE>::operator = (const StringView<CHAR_TYPE> &other)
 	{
 		m_string = other.m_string;
 		m_dataPtr = m_string == nullptr ? other.m_dataPtr : &m_string;
@@ -1071,43 +1086,43 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::operator == (const StringView &str) const
+	boolean StringView<CHAR_TYPE>::operator == (const StringView &str) const
 	{
 		return compareTo(str) == 0;
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::operator != (const StringView &str) const
+	boolean StringView<CHAR_TYPE>::operator != (const StringView &str) const
 	{
 		return !(*this == str);
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::operator > (const StringView &str) const
+	boolean StringView<CHAR_TYPE>::operator > (const StringView &str) const
 	{
 		return compareTo(str) > 0;
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::operator < (const StringView &str) const
+	boolean StringView<CHAR_TYPE>::operator < (const StringView &str) const
 	{
 		return compareTo(str) < 0;
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::operator >= (const StringView &str) const
+	boolean StringView<CHAR_TYPE>::operator >= (const StringView &str) const
 	{
 		return compareTo(str) >= 0;
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr boolean StringView<CHAR_TYPE>::operator <= (const StringView &str) const
+	boolean StringView<CHAR_TYPE>::operator <= (const StringView &str) const
 	{
 		return compareTo(str) <= 0;
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr auto StringView<CHAR_TYPE>::operator [] (sizeType index) const -> ConstCharType
+	auto StringView<CHAR_TYPE>::operator [] (sizeType index) const -> ConstCharType
 	{
 		return at(index);
 	}

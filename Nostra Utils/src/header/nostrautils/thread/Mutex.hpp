@@ -1,10 +1,19 @@
 #ifndef NOU_THREAD_MUTEX_HPP
 #define	NOU_THREAD_MUTEX_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
 
 #include <mutex>
+
+/** \file Mutex.hpp
+\author	 Lukas Reichmann
+\since   1.0.0
+\version 1.0.0
+\brief   This file provides a mutex class.
+
+\see nostra::utils::thread::Mutex
+*/
 
 namespace NOU::NOU_THREAD
 {
@@ -56,59 +65,6 @@ namespace NOU::NOU_THREAD
 
 		\brief Returns the underlying mutex.
 		*/
-		const UnderlyingType& getUnderlying() const;
-	};
-
-	/**
-	\brief An advanced mutex that is built atop of nostra::utils::thread::Mutex. Instead of just being able to
-	       lock and unlock, this mutex has three levels of being locked.
-	
-	\details
-	An advanced mutex that is built atop of nostra::utils::thread::Mutex. Instead of just being able to lock 
-	and unlock, this mutex has three levels of being locked.
-
-	These three levels are (as represented by the enum Lock): 
-	- NONE
-	- READ
-	- WRITE
-	
-	\todo Add levels
-	*/
-	class NOU_CLASS ReadWriteMutex
-	{
-	public:
-		enum class Lock
-		{
-			NONE,
-			READ,
-			WRITE
-		};
-
-		using UnderlyingType = std::mutex;
-
-	private:
-		Lock m_lock;
-		UnderlyingType m_mutex;
-
-	public:
-		ReadWriteMutex();
-
-		void readLock();
-		void writeLock();
-
-		boolean tryReadLock();
-		boolean tryWriteLock();
-
-		void unlock();
-		void unlockToRead();
-
-		Lock getLockLevel() const;
-
-		boolean isLocked() const;
-		boolean isReadLocked() const;
-		boolean isWriteLocked() const;
-
-		UnderlyingType& getUnderlying();
 		const UnderlyingType& getUnderlying() const;
 	};
 }

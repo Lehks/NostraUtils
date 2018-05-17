@@ -1,7 +1,7 @@
 #ifndef NOU_UNIT_TESTS_DEBUG_CLASS_HPP
 #define NOU_UNIT_TESTS_DEBUG_CLASS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
 
 namespace NOU
 {

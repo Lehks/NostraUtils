@@ -1,7 +1,9 @@
-#include "nostrautils\thread\AsyncTaskResult.hpp"
+#include "nostrautils/thread/AsyncTaskResult.hpp"
 
 namespace NOU::NOU_THREAD
 {
+	constexpr int32 internal::AbstractAsyncTaskResult::DEFAULT_PRIORITY;
+
 	void internal::AbstractAsyncTaskResult::executeTask(AbstractTask *task, 
 		AbstractAsyncTaskResult *taskResult, Mutex *mutex)
 	{

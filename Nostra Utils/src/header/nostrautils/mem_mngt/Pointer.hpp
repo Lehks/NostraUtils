@@ -1,28 +1,38 @@
 #ifndef NOU_MEMORY_MNGT_POINTER_HPP
 #define NOU_MEMORY_MNGT_POINTER_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\Utils.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/Utils.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/Meta.hpp"
+
+/** \file Pointer.hpp
+\author	 Lukas Reichmann
+\since   1.0.0
+\version 1.0.0
+\brief   This file provides smart pointer classes (which is currently only \link 
+         nostra::utils::mem_mngt::UniquePtr UniquePtr \endlink).
+
+\see nostra::utils::mem_mngt::UniquePtr
+*/
 
 namespace NOU::NOU_MEM_MNGT
 {
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A deleter that calls <tt>delete<tt>.
+	\brief A deleter that calls <tt>delete</tt>.
 	*/
 	template<typename T>
-	NOU_FUNC void defaultDeleter(T *t);
+	void defaultDeleter(T *t);
 
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A deleter that calls <tt>delete[]<tt>.
+	\brief A deleter that calls <tt>delete[]</tt>.
 	*/
 	template<typename T>
-	NOU_FUNC void defaultArrayDeleter(T *t);
+	void defaultArrayDeleter(T *t);
 
 	/**
 	\tparam T The type of object to delete.
@@ -30,29 +40,29 @@ namespace NOU::NOU_MEM_MNGT
 	\brief A deleter that calls nostra::utils::mem_mngt::deallocateUninitialized.
 	*/
 	template<typename T>
-	NOU_FUNC void uninitializedDeleter(T *t);
+	void uninitializedDeleter(T *t);
 
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A deleter that calls no functions at all. This can be used if a pointer wrapps around a pointer to
+	\brief A deleter that calls no functions at all. This can be used if a pointer wraps around a pointer to
 	memory that does not need to be freed.
 	*/
 	template<typename T>
-	NOU_FUNC void nullDeleter(T *t);
+	void nullDeleter(T *t);
 
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A Deleter for Smart Pointers that wrapps nostra::utils::mem_mngt::AllocationCallback::deallocate.
+	\brief A Deleter for Smart Pointers that wraps nostra::utils::mem_mngt::AllocationCallback::deallocate.
 	This version does store it's Callback, so the Callback will be stored in the class itself.
 
 	\details
-	Alltough this class is designed to work with childclasses of nostra::utils::mem_mngt::AllocationCallback,
+	All tough this class is designed to work with child classes of nostra::utils::mem_mngt::AllocationCallback,
 	it works with all classes that have a <tt>.deallocate()</tt> member function.
 	*/
 	template<typename T, typename ALLOCATOR>
-	class NOU_CLASS AllocationCallbackDeleter
+	class AllocationCallbackDeleter
 	{
 	private:
 		/**
@@ -95,12 +105,12 @@ namespace NOU::NOU_MEM_MNGT
 	/**
 	\tparam T The type of object to delete.
 
-	\brief A Deleter for Smart Pointers that wrapps nostra::utils::mem_mngt::AllocationCallback::deallocate.
+	\brief A Deleter for Smart Pointers that wraps nostra::utils::mem_mngt::AllocationCallback::deallocate.
 	This version does not store it's Callback, so the Callback that was passed to the constructor must
 	be alive for the entire time that this Deleter is used.
 	*/
 	template<typename T>
-	class NOU_CLASS AllocationCallbackRefDeleter
+	class AllocationCallbackRefDeleter
 	{
 	private:
 		/**
@@ -153,7 +163,7 @@ namespace NOU::NOU_MEM_MNGT
 	This class is not meant to be used directly by a user.
 	*/
 	template<typename T>
-	class NOU_FUNC SmartPtrTempl
+	class SmartPtrTempl
 	{
 	public:
 		/**
@@ -295,7 +305,7 @@ namespace NOU::NOU_MEM_MNGT
 	This class is not meant to be used directly by a user.
 	*/
 	template<typename T, typename DELETER>
-	class NOU_CLASS ManagedPtrTemplate
+	class ManagedPtrTemplate
 	{
 	public:
 		/**
@@ -303,7 +313,9 @@ namespace NOU::NOU_MEM_MNGT
 		*/
 		using Type = typename SmartPtrTempl<T>::Type;
 
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE
 		static_assert(NOU_CORE::IsInvocable<DELETER, Type*>::value);
+#endif
 
 	protected:
 		/**
@@ -339,7 +351,7 @@ namespace NOU::NOU_MEM_MNGT
 	\brief A smart pointer that does not allow any other smart pointers to point to it's own pointer.
 	*/
 	template<typename T, typename DELETER = DeleterFunc<T>>
-	class NOU_CLASS UniquePtr final : public SmartPtrTempl<T>, public ManagedPtrTemplate<T, DELETER>
+	class UniquePtr final : public SmartPtrTempl<T>, public ManagedPtrTemplate<T, DELETER>
 	{
 	public:
 		/**
@@ -385,6 +397,8 @@ namespace NOU::NOU_MEM_MNGT
 		*/
 		UniquePtr& operator = (Type *ptr);
 	};
+
+	///\cond
 
 	template<typename T>
 	void defaultDeleter(T *t)
@@ -442,13 +456,13 @@ namespace NOU::NOU_MEM_MNGT
 	template<typename T>
 	const NOU_MEM_MNGT::AllocationCallback<T>& AllocationCallbackRefDeleter<T>::getAllocator() const
 	{
-		m_allocator.dellocate(data);
+		return m_allocator;
 	}
 
 	template<typename T>
 	NOU_MEM_MNGT::AllocationCallback<T>& AllocationCallbackRefDeleter<T>::getAllocator()
 	{
-		m_allocator.dellocate(data);
+		return m_allocator;
 	}
 
 	template<typename T>
@@ -613,6 +627,8 @@ namespace NOU::NOU_MEM_MNGT
 
 		return *this;
 	}
+
+	///\endcond
 }
 
 #endif

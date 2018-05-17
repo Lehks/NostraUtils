@@ -1,15 +1,15 @@
 #ifndef NOU_CORE_ERROR_HANDLER_HPP
 #define NOU_CORE_ERROR_HANDLER_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
+#include "nostrautils/core/Meta.hpp"
 
 /**
 \file core/ErrorHandler.hpp
 
 \author	 Lukas Gross
-\version 0.0.1
+\version 1.0.0
 \since	 1.0.0
 
 \brief A file that contains the nostra::utils::core::ErrorHandler class.
@@ -68,17 +68,13 @@ namespace NOU::NOU_CORE
 
 	public:
 		/**
-		\param fnName A reference to the function name in which the error occurred.
+		\param fnName	A reference to the function name in which the error occurred.
+		\param line		The line in which the error occurred.
+		\param file		A reference to the file in which the error occurred.
+		\param id		The ID of the error.
+		\param msg		A reference to the message of the error.
 
-		\param line The line in which the error occurred.
-
-		\param file A reference to the file in which the error occurred.
-
-		\param id The ID of the error.
-
-		\param msg A reference to the message of the error.
-
-		\brief Constructs a new ErrorLocation 
+		\brief			Constructs a new ErrorLocation 
 		*/
 		ErrorLocation(const StringType &fnName, sizeType line, const StringType &file,
 			ErrorType id, const StringType &msg);
@@ -86,28 +82,28 @@ namespace NOU::NOU_CORE
 		/**
 		\return Returns the function name.
 
-		\brief Returns the name of the function in which the error occurred.
+		\brief	Returns the name of the function in which the error occurred.
 		*/
 		const StringType& getFnName() const;
 
 		/**
 		\return Returns the line.
 		
-		\brief Returns the line in which the error occurred.
+		\brief	Returns the line in which the error occurred.
 		*/
 		sizeType getLine() const;
 
 		/**
 		\return Returns the file.
 		
-		\brief Returns the file in which the error occurred.
+		\brief	Returns the file in which the error occurred.
 		*/
 		const StringType& getFile() const;
 
 		/**
 		\return Returns the id code.
 		
-		\brief Returns the id of the error, or ErrorCodes::UNKNOWN_ERROR if the error is not known.
+		\brief	Returns the id of the error, or ErrorCodes::UNKNOWN_ERROR if the error is not known.
 		*/
 		ErrorType getID() const;
 
@@ -121,14 +117,14 @@ namespace NOU::NOU_CORE
 		/**
 		\return Returns the error message.
 		
-		\brief Returns the error message of the error.
+		\brief	Returns the error message of the error.
 		*/
 		const StringType& getMsg() const;
 
 		/**
 		\return The name of the error as a string.
 
-		\brief Returns the name of the error as provided by ErrorHandler::getError().getName().
+		\brief	Returns the name of the error as provided by ErrorHandler::getError().getName().
 		*/
 		const StringType& getName() const;
 	};
@@ -165,25 +161,24 @@ namespace NOU::NOU_CORE
 	public:
 
 		/**
-		\param name A reference to the name of the error.
+		\param name	A reference to the name of the error.
+		\param id	The ID of the error.
 
-		\param id The ID of the error.
-
-		\brief Constructs a new error.
+		\brief		Constructs a new error.
 		*/
 		Error(const StringType &name, ErrorType id);
 
 		/**
 		\return Returns the name.
 
-		\brief Returns the name of the error object.
+		\brief	Returns the name of the error object.
 		*/
 		const StringType& getName() const;
 
 		/**
 		\return Returns the id.
 
-		\Brief Returns the id of the error object.
+		\brief Returns the id of the error object.
 		*/
 		ErrorType getID() const;
 	};
@@ -196,6 +191,8 @@ namespace NOU::NOU_CORE
 	{
 	public:
 
+		virtual ~ErrorPool() = default;
+
 		/**
 		\brief Uses the alias ErrorType for the sizeType.
 		*/
@@ -204,7 +201,7 @@ namespace NOU::NOU_CORE
 		/**
 		\return Returns a const pointer to an error.
 
-		\brief Returns a const pointer to an error with the passed ID.
+		\brief	Returns a const pointer to an error with the passed ID.
 		*/
 		virtual const Error* queryError(ErrorType id) const = 0;
 	};
@@ -212,14 +209,14 @@ namespace NOU::NOU_CORE
 	/**
 	\brief Defines the DefaultErrorPool class.
 	*/
-	class NOU_CLASS DefaultErrorPool : public ErrorPool
+	class DefaultErrorPool : public ErrorPool
 	{
 	private:
 
 		/**
 		\brief The vector that stores the single errors of the defaultErrorPool.
 		*/
-		static NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<Error>> s_defaultErrorPool;
+		NOU_FUNC static NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::FastQueue<Error>> s_defaultErrorPool;
 
 	public:
 
@@ -231,26 +228,26 @@ namespace NOU::NOU_CORE
 		/**
 		\brief Constructs a new defaultErrorPool.
 		*/
-		DefaultErrorPool();
+		NOU_FUNC DefaultErrorPool();
 
 		/**
-		\param id The id that is searched for in the pool.
+		\param id	The id that is searched for in the pool.
 
-		\brief Searches for a passed id int the pool.
+		\brief		Searches for a passed id int the pool.
 		*/
-		virtual const Error* queryError(ErrorType id) const override;
+		NOU_FUNC virtual const Error* queryError(ErrorType id) const override;
 	};
 
 	/**
 	\brief Defines the ErrorHandler class.
 	*/
-	class NOU_CLASS ErrorHandler
+	class ErrorHandler
 	{
 	private:
 		/**
 		\brief A wrapper for a container that stores const pointers to error pools.
 		*/
-		class NOU_CLASS ErrorPoolContainerWrapper
+		class ErrorPoolContainerWrapper
 		{
 		private:
 			/**
@@ -261,18 +258,18 @@ namespace NOU::NOU_CORE
 			/**
 			\param pool The error pool to push.
 
-			\brief Used to push back an actual error pool. This needs to be in a .cpp file, since the
-			       FastQueue's operations are not known in the .hpp file.
+			\brief		Used to push back an actual error pool. This needs to be in a .cpp file, since the
+						FastQueue's operations are not known in the .hpp file.
 			*/
-			void _pushPool(const ErrorPool *pool);
+			NOU_FUNC void _pushPool(const ErrorPool *pool);
 
 		public:
 			/**
-			\param initialCapacity The initial capacity of the vector.
+			\param initialCapacity	The initial capacity of the vector.
 
-			\brief Constructs the vector with the passed capacity.
+			\brief					Constructs the vector with the passed capacity.
 			*/
-			ErrorPoolContainerWrapper(sizeType initialCapacity);
+			NOU_FUNC ErrorPoolContainerWrapper(sizeType initialCapacity);
 
 			/**
 			\brief Deletes all the error pools that are in the vector.
@@ -288,9 +285,9 @@ namespace NOU::NOU_CORE
 			/**
 			\return m_errorPools
 
-			\brief Returns the vector that this class wraps around.
+			\brief	Returns the vector that this class wraps around.
 			*/
-			const NOU_DAT_ALG::FastQueue<const ErrorPool*>& getContainer() const;
+			NOU_FUNC const NOU_DAT_ALG::FastQueue<const ErrorPool*>& getContainer() const;
 		};
 
 	public:
@@ -314,7 +311,7 @@ namespace NOU::NOU_CORE
 		/**
 		\brief A wrapper for the vector that stores the single error pools.
 		*/
-		static ErrorPoolContainerWrapper s_errorPools;
+		NOU_FUNC static ErrorPoolContainerWrapper s_errorPools;
 
 		/**
 		\brief Creates a new FastQueue from ErrorLocation.
@@ -324,9 +321,9 @@ namespace NOU::NOU_CORE
 		/**
 		\return s_errorPools
 
-		\brief Returns the s_errorPools member. This is used by pushPools().
+		\brief	Returns the s_errorPools member. This is used by pushPools().
 		*/
-		static ErrorPoolContainerWrapper& getPools();
+		NOU_FUNC static ErrorPoolContainerWrapper& getPools();
 
 	public:
 
@@ -338,90 +335,83 @@ namespace NOU::NOU_CORE
 		/**
 		\brief A CallbackType where loc is a reference to the ErrorLocation.
 		*/
-		static CallbackType s_callback;
+		NOU_FUNC static CallbackType s_callback;
 
 		/**
 		\brief Sets the callback in s_callback.
 		*/
-		static void setCallback(CallbackType callback);
+		NOU_FUNC static void setCallback(CallbackType callback);
 
 		/**
 		\brief A standard callback that does nothing.
 		*/
-		static void standardCallback(const NOU::NOU_CORE::ErrorLocation &loc);
+		NOU_FUNC static void standardCallback(const NOU::NOU_CORE::ErrorLocation &loc);
 
 		/**
-		\param id The passed ID of the error which will be returned.
+		\param id	The passed ID of the error which will be returned.
 
-		\return Returns a reference to an error.
+		\return		Returns a reference to an error.
 
-		\brief Returns an error with the passed ID.
+		\brief		Returns an error with the passed ID.
 		*/
-		static const Error& getError(ErrorType id);
+		NOU_FUNC static const Error& getError(ErrorType id);
 
 		/**
-		\brief The type of the error pool to push. Must be default constructible.
-
-		\brief Pushes an error pool into the error handler.
+		\brief	The type of the error pool to push. Must be default constructible. Pushes an error pool into
+				the error handler.
 		*/
 		template<typename T>
 		static void pushPool();
 
 		/**
-		\return The error handler of the main thread.
+		\return		The error handler of the main thread.
 
-		\brief Returns the error handler of the main thread.
+		\brief		Returns the error handler of the main thread.
 
-		\details
-		Returns the error handler of the main thread. This method also stores said handler as a local
-		static variable.
+		\details	Returns the error handler of the main thread. This method also stores said handler as 
+					a local static variable.
 
-		\note
-		This method is not intended to be used by a user. To get the error handler of the calling thread,
-		getErrorHandler() should be used instead.
+		\note		This method is not intended to be used by a user. To get the error handler of the 
+					calling thread, getErrorHandler() should be used instead.
 		*/
-		static ErrorHandler& getMainThreadHandler();
+		NOU_FUNC static ErrorHandler& getMainThreadHandler();
 
 		/**
 		\return Returns the error count.
 
-		\brief Returns the count of errors in the queue.
+		\brief	Returns the count of errors in the queue.
 		*/
-		sizeType getErrorCount() const;
+		NOU_FUNC sizeType getErrorCount() const;
 
 		/**
 		\brief Constructs an new ErrorHandler.
 		*/
-		ErrorHandler();
+		NOU_FUNC ErrorHandler();
 
 		/**
 		\return Returns a reference to an ErrorLocation.
 
-		\brief Returns the first error in the queue.
+		\brief	Returns the first error in the queue.
 		*/
-		const ErrorLocation& peekError() const;
+		NOU_FUNC const ErrorLocation& peekError() const;
 
 		/**
 		\return Returns an ErrorLocation.
 
-		\brief Removes the first element in the queue and returns it.
+		\brief	Removes the first element in the queue and returns it.
 		*/
-		ErrorLocation popError();
+		NOU_FUNC ErrorLocation popError();
 
 		/**
-		\param fnName A reference to the function name in which the error occurred.
+		\param fnName	A reference to the function name in which the error occurred.
+		\param line		The line in which the error occurred.
+		\param file		A reference to the file in which the error occurred.
+		\param id		The ID of the error.
+		\param msg		A reference to the message of the error.
 
-		\param line The line in which the error occurred.
-		
-		\param file A reference to the file in which the error occurred.
-
-		\param id The ID of the error.
-
-		\param msg A reference to the message of the error.
-
-		\brief Sets an error with its attributes.
+		\brief			Sets an error with its attributes.
 		*/
-		void pushError(const StringType &fnName, sizeType line, const StringType &file, 
+		NOU_FUNC void pushError(const StringType &fnName, sizeType line, const StringType &file, 
 			ErrorType id, const StringType &msg);
 
 	};
@@ -469,9 +459,15 @@ namespace NOU::NOU_CORE
 			INVALID_STRING_CONVERSION,
 
 			/**
-			\brief An object of some kind is invalid.
+			\brief The path to a file was not found.
 			*/
-			INVALID_OBJECT,
+			PATH_NOT_FOUND,
+
+			/**
+			\brief The file is already exists 
+			*/
+
+			ALREADY_EXISTS ,
 
 			/**
 			\brief An object was in an invalid state.
@@ -479,23 +475,28 @@ namespace NOU::NOU_CORE
 			INVALID_STATE,
 
 			/**
-			\brief An error has occrued in a mutex.
+			\brief An error has occurred in a mutex.
 			*/
 			MUTEX_ERROR,
 
 			/**
-			\brief Not an actual error, but always the last element in the enum. The error codes 0 - 
-			LAST_ELEMENT are always reserved for the default error pool.
+			\brief An object of some kind is invalid.
+			*/
+			INVALID_OBJECT,
+
+			/**
+			\brief	Not an actual error, but always the last element in the enum. The error codes 0 - 
+					LAST_ELEMENT are always reserved for the default error pool.
 			*/
 			LAST_ELEMENT				 //Must be the last element!
 		};
 	};
 
 	/**
-	\return The error handler that is associated with the calling thread.
+	\return	The error handler that is associated with the calling thread.
 
-	\brief Returns the error handler that is associated with the calling thread. This function is the 
-	       preferred way to obtain the current error handler.
+	\brief	Returns the error handler that is associated with the calling thread. This function is the 
+			preferred way to obtain the current error handler.
 	*/
 	NOU_FUNC ErrorHandler& getErrorHandler();
 

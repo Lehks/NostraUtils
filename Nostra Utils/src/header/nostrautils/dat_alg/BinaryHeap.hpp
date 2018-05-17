@@ -1,16 +1,16 @@
 #ifndef NOU_DAT_ALG_BINARYHEAP_HPP
 #define NOU_DAT_ALG_BINARYHEAP_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\dat_alg\Vector.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/dat_alg/Vector.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
 
 /** \file BinaryHeap.hpp
 \author  Dennis Franz
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a BinaryHeap (Min / Max) implementation.
 */
 
@@ -28,7 +28,7 @@ namespace NOU::NOU_DAT_ALG
 	we need that because of our search function. The second part is the "standard" id which will be used for sorting / maintaining the heap law.
 	*/
 	template<typename T>
-	class NOU_CLASS BinaryHeap
+	class BinaryHeap
 	{
 	public:
 		using PriorityTypePart = NOU::uint32;
@@ -39,7 +39,7 @@ namespace NOU::NOU_DAT_ALG
 
 	private:
 		/**
-		\brief A boolean that indicates wehter this heap function as a MIN or a MAX heap.
+		\brief A boolean that indicates whether this heap function as a MIN or a MAX heap.
 		*/
 		boolean													m_isMinHeap;
 		/**
@@ -85,10 +85,13 @@ namespace NOU::NOU_DAT_ALG
 
 	public:
 		/**
-		\param isMinHeap		A boolean that indicates wether this heap will be a min or a max heap.
+		\param isMinHeap		A boolean that indicates whether this heap will be a min or a max heap.
+		\param size				The initial size of the binary heap.
 		\param allocator		An allocator reference for the internal Vector.
 
 		\brief "Standard" constructor.
+		Default = true (min heap),
+		false = max heap.
 		*/
 		BinaryHeap(boolean isMinHeap = true, sizeType size = 0, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>::getInstance());
 		/**
@@ -102,7 +105,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief "Standard" move constructor.
 		*/
-		BinaryHeap(BinaryHeap<T> && otehr);
+		BinaryHeap(BinaryHeap<T> && other);
 		/**
 		\param data				The data that will be one part of the Pair which gets inserted in the vector.
 		\param priority			Which is the other part of the Pair thats get inserted in the vector.
@@ -148,7 +151,7 @@ namespace NOU::NOU_DAT_ALG
 		T& get();
 
 		/**
-		\param is				The id that is searched.
+		\param id				The id that is searched.
 		\param newpriority		The new priority that will be replace the old one.
 
 		\brief This Function searches the heap for the given id and replace its old id of the element with the new one.
@@ -173,19 +176,19 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param index			An index.
 
-		\brief Returns the FULL priority at the given index.
+		\brief Returns the FULL priority at the given index (Counter and ID).
 		*/
 		typename BinaryHeap<T>::PriorityType priorityAt(sizeType index);
 		/**
 		\param id			An id.
 
-		\brief Checks if an pair the the given id exsists.
+		\brief Checks if an pair the the given id exists.
 		*/
 		boolean checkIfPresent(PriorityTypePart id);
 		/**
 		\param id			An id.
 
-		\brief delets an pair with the specific id.
+		\brief deletes an pair with the specific id.
 		*/
 		void deleteById(PriorityTypePart id);
 
@@ -193,12 +196,14 @@ namespace NOU::NOU_DAT_ALG
 		\param index			An index.
 
 		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T>::at)
+		\see	 BinaryHeap<T>::at()
 		*/
 		T& operator [] (sizeType index);
 		/**
 		\param index			An index.
 
 		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T>::at)
+		\see	 BinaryHeap<T>::at()
 		*/
 		const T& operator [] (sizeType index) const;
 	};

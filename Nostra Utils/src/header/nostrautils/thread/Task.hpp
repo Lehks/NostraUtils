@@ -1,10 +1,10 @@
 #ifndef	NOU_THREAD_TASK_HPP
 #define	NOU_THREAD_TASK_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
-#include "nostrautils\dat_alg\Uninitialized.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
+#include "nostrautils/dat_alg/Uninitialized.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
 
 #include <tuple>
 #include <type_traits>
@@ -13,7 +13,7 @@
 \file thread/Task.hpp
 
 \author  Lukas Reichmann
-\version 0.0.1
+\version 1.0.0
 \since   1.0.0
 
 \brief This file contains the task class(es).
@@ -72,9 +72,11 @@ namespace NOU::NOU_THREAD
 	\p I must be an invocable according to nostra::utils::core::IsInvocableR<R, I, ARGS...>.
 	*/
 	template<typename R, typename I, typename... ARGS>
-	class NOU_CLASS Task final : public internal::AbstractTask
+	class Task final : public internal::AbstractTask
 	{
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<R, I, ARGS...>::value);
+#endif
 
 	public:
 		/**
@@ -91,7 +93,8 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief The arguments that will be passed to the invocable.
 		*/
-		std::tuple<ARGS...> m_args;
+		//removeConst b/c otherwise it is not possible to pass const objects to the constructor
+		std::tuple<NOU_CORE::removeConst_t<ARGS>...> m_args;
 
 		/**
 		\brief The invocable.
@@ -164,16 +167,18 @@ namespace NOU::NOU_THREAD
 	///\cond
 	//A specialization for the task when the return type is void.
 	template<typename I, typename... ARGS>
-	class NOU_CLASS Task<void, I, ARGS...> final : public internal::AbstractTask
+	class Task<void, I, ARGS...> final : public internal::AbstractTask
 	{
+#ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<void, I, ARGS...>::value);
+#endif
 
 	public:
 		using ReturnType = void;
 		using InvocableType = I;
 
 	private:
-		std::tuple<ARGS...> m_args;
+		std::tuple<NOU_CORE::removeConst_t<ARGS>...> m_args;
 		InvocableType m_invocable;
 
 	public:
@@ -206,10 +211,10 @@ namespace NOU::NOU_THREAD
 	after this object).
 	*/
 	template<typename I, typename... ARGS>
-	NOU_FUNC Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I,
-		NOU_CORE::remove_reference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args);
+	Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::RemoveReference_t<ARGS>...>, I,
+		NOU_CORE::RemoveReference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args);
 
-
+	///\cond
 	template<typename R, typename I, typename... ARGS>
 	Task<R, I, ARGS...>::Task(InvocableType&& invocable, ARGS&&... args) :
 		m_invocable(NOU_CORE::forward<InvocableType>(invocable)),
@@ -219,7 +224,7 @@ namespace NOU::NOU_THREAD
 	template<typename R, typename I, typename... ARGS>
 	void Task<R, I, ARGS...>::execute()
 	{
-		m_result = std::apply(m_invocable, m_args);
+		m_result = NOU_CORE::apply(m_invocable, m_args);
 	}
 
 	template<typename R, typename I, typename... ARGS>
@@ -251,7 +256,7 @@ namespace NOU::NOU_THREAD
 	template<typename I, typename... ARGS>
 	void Task<void, I, ARGS...>::execute()
 	{
-		std::apply(m_invocable, m_args);
+		NOU_CORE::apply(m_invocable, m_args);
 	}
 
 	template<typename I, typename... ARGS>
@@ -262,18 +267,17 @@ namespace NOU::NOU_THREAD
 	typename Task<void, I, ARGS...>::ReturnType Task<void, I, ARGS...>::moveResult()
 	{}
 
-
-
 	template<typename I, typename... ARGS>
-	Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I, 
-		NOU_CORE::remove_reference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args)
+	Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::RemoveReference_t<ARGS>...>, I, 
+		NOU_CORE::RemoveReference_t<ARGS>...> makeTask(I&& invocable, ARGS&&... args)
 	{
-		using TaskType = Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::remove_reference_t<ARGS>...>, I,
-			NOU_CORE::remove_reference_t<ARGS>...>;
+		using TaskType = Task<NOU_CORE::InvokeResult_t<I, NOU_CORE::RemoveReference_t<ARGS>...>, I,
+			NOU_CORE::RemoveReference_t<ARGS>...>;
 
 		return TaskType(NOU_CORE::forward<typename TaskType::InvocableType>(invocable),
-			NOU_CORE::forward<NOU_CORE::remove_reference_t<ARGS>>(args)...);
+			NOU_CORE::forward<NOU_CORE::RemoveReference_t<ARGS>>(args)...);
 	}
+	///\endcond
 }
 
 #endif

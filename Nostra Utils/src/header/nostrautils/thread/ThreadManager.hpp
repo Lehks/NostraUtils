@@ -1,14 +1,14 @@
 #ifndef	NOU_THREAD_THREAD_MANAGER_HPP
 #define	NOU_THREAD_THREAD_MANAGER_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\mem_mngt\Pointer.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
-#include "nostrautils\dat_alg\Utils.hpp"
-#include "nostrautils\thread\ThreadWrapper.hpp"
-#include "nostrautils\thread\Task.hpp"
-#include "nostrautils\thread\Mutex.hpp"
-#include "nostrautils\thread\ConditionVariable.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/Pointer.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/thread/ThreadWrapper.hpp"
+#include "nostrautils/thread/Task.hpp"
+#include "nostrautils/thread/Mutex.hpp"
+#include "nostrautils/thread/ConditionVariable.hpp"
 
 #include <iostream>
 
@@ -16,7 +16,7 @@
 \file thread/ThreadManager.hpp
 
 \author  Lukas Reichmann
-\version 0.0.1
+\version 1.0.0
 \since   1.0.0
 
 \brief A file that contains the thread management system of NOU.
@@ -146,7 +146,7 @@ namespace NOU::NOU_THREAD
 			Priority m_id;
 
 			/**
-			\param The ID of the instance.
+			\param id The ID of the instance.
 
 			\brief Constructs a new instance from the passed id.
 			*/
@@ -169,12 +169,12 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief The amount of threads that the manager will work with if ThreadWrapper::maxThreads() returns 0.
 		*/
-		uint32 DEFAULT_THREAD_COUNT = 1;
+		constexpr static uint32 DEFAULT_THREAD_COUNT = 2;
 
 		/**
 		\brief The initial capacity of the task heap.
 		*/
-		sizeType DEFAULT_TASK_CAPACITY = 50;
+		constexpr static sizeType DEFAULT_TASK_CAPACITY = 50;
 
 	private:
 		/**
@@ -228,14 +228,14 @@ namespace NOU::NOU_THREAD
 			boolean              m_taskReady;
 
 			/**
-			\param The thread that is stored by this bundle.
+			\param thread The thread that is stored by this bundle.
 
 			\brief Constructs a new instance with the passed thread.
 			*/
 			ThreadDataBundle(ThreadWrapper &&thread);
 
 			/**
-			\param The instance to move from.
+			\param tdb The instance to move from.
 
 			\brief Moves the data from \p tdb to the instance that is being constructed by the constructor.
 			*/

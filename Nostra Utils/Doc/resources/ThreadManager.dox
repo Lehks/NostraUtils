@@ -1,0 +1,886 @@
+/**
+\page ThrdMngr_tut Thread Management
+
+\brief On this page, the use and further details of the thread management system of Nostra will be explained.
+
+\tableofcontents
+
+\section sec_include Including the Thread Management
+
+The easiest way to include the thread management is to include the file "nostrautils/thread/Threads.hpp". It
+includes all the other files of the thread management and therefore has all the features that the thread 
+management system has to offer.
+
+It would also be possible to include each file individually, but this poses no benefit to using 
+"nostrautils/thread/Threads.hpp".
+
+In the following examples, it is always assumed that "nostrautils/thread/Threads.hpp" is included.
+
+\section sec_tasks Tasks
+
+To execute functionality in a different thread, Nostra uses the class \link nostra::utils::thread::Task Task 
+\endlink, which in the most basic sense is the combination of a function pointer (or any other sort of 
+invocable, like a lambda) and the parameters that are required to call that invocable. It is also important 
+that the Task on its own does not do any multithreading yet, nor does it enforce any thread safety (e.g. like
+ locking its resources).
+
+\subsection subsec_TaskConstruct Constructing a Task
+
+To create a Task, the function \link nostra::utils::thread::makeTask() makeTask() \endlink can be used. The 
+instantiation of a Task may look like this:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    /*
+     * Create a new task that executes the function addFive() and passes "1" as the parameter.
+     */
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+
+    return 0;
+}
+\endcode
+
+There are a few interesting things about this example:
+<ul>
+    <li>
+        It uses the <tt>auto</tt> keyword, which is because Tasks rely heavily on templates and may have a 
+        very long list of template parameters (especially if the invocable that is called has a lot of 
+        parameters itself). This is also the primary reason for the existence of \link 
+        nostra::utils::thread::makeTask() makeTask() \endlink - the function uses template parameter deduction
+        to avoid having to write down long template parameter lists.
+    </li>
+    <li>
+        The function is explicitly passed as <tt>&addFive</tt> and not as just <tt>addFive</tt>. This is 
+        required and not optional - passing the function as <tt>addFive</tt> will result in a compile error.
+    </li>
+</ul>
+
+It is also possible to use Tasks to execute member functions:
+
+\code{.cpp}
+class A
+{
+public:
+    NOU::int32 addFive(NOU::int32 i) const
+    {
+        return i + 5;
+    }
+}
+
+int main()
+{
+    /*
+     * In the case of member functions, the first parameter needs to be the object that the function will be
+     * executed with. The remaining parameters of the function will follow after that object.
+     */
+    auto task = NOU::NOU_THREAD::makeTask(&A::get, A(), 1);
+
+    return 0;
+}
+\endcode
+
+Passing objects to a task leads to another important subject: The proper way to pass objects and avoiding 
+unnecessary copies of that object. If the object is only needed within the task and not outside it, it is 
+possible to move the object into the task - just as it was done in the previous example with <tt>A()</tt>. If 
+it is required to store the object outside the task and a reference to that object is required in task, it is 
+the best option to pass pointer to that object:
+
+\code{.cpp}
+class A
+{
+public:
+    void doStuff()
+    {
+        //...
+    }
+}
+
+void function(A *a)
+{
+    a->doStuff();
+}
+
+int main()
+{
+    A a;
+
+    auto task = NOU::NOU_THREAD::makeTask(&function, &a);
+
+    return 0;
+}
+\endcode
+
+It is <b>not</b> possible to pass references to a task and trying to do so will either result in a copy of the
+ object (in the case that an object is passed to \link nostra::utils::thread::makeTask() makeTask() \endlink 
+as-is and not as a pointer):
+
+\code{.cpp}
+int main()
+{
+    /*
+     * A and function are the same class and function respectively from the previous example.
+     */
+
+    A a;
+
+    //Pass "a" as plain object.
+    auto task = NOU::NOU_THREAD::makeTask(&function, a);
+
+    return 0;
+}
+\endcode
+
+or in a compile error, as it is also not possible to explicitly define the template parameter of \link 
+nostra::utils::thread::makeTask() makeTask() \endlink as a reference:
+
+\code{.cpp}
+int main()
+{
+    /*
+     * A and function are the same class and function respectively from the previous example.
+     */
+    
+    A a;
+
+    auto task = NOU::NOU_THREAD::makeTask<decltype(&function), A&>(&function, a);
+
+    return 0;
+}
+\endcode
+
+Also, Nostra does not provide any functionality like the STL's std::reference_wrapper, mainly because that 
+would cause unnecessary overhead.
+
+\subsection subsec_TaskExec Executing a Task
+
+Executing a Task is simply done by calling \link nostra::utils::thread::Task::execute execute() \endlink. 
+Since the Task itself does not any multithreading on its own, the execution is entirely done by the thread 
+that called \link nostra::utils::thread::Task::execute execute() \endlink.
+
+\subsection subsec_TaskResultAccess Accessing the results of a Task
+
+Because the invocable that is executed by a Task can return a value, the task also has mechanics to access 
+that result. For reasons that are described in the chapter \ref subsec_Task_AbstractTask, \link 
+nostra::utils::thread::Task::execute execute() \endlink does not return the result that was produced by the 
+invocable. Instead, the result can be accessed using \link nostra::utils::thread::Task::getResult getResult() 
+\endlink and \link nostra::utils::thread::Task::moveResult moveResult() \endlink.
+
+\attention
+Calling \link nostra::utils::thread::Task::getResult getResult() \endlink or \link 
+nostra::utils::thread::Task::moveResult moveResult() \endlink is only valid if \link 
+nostra::utils::thread::Task::execute execute() \endlink has been called before. Otherwise \link 
+nostra::utils::core::ErrorCodes::INVALID_OBJECT ErrorCodes::INVALID_OBJECT \endlink will be pushed to the 
+\link nostra::utils::core::ErrorHandler error handler \endlink.
+
+\par getResult()
+
+\link nostra::utils::thread::Task::getResult getResult() \endlink returns a reference (or a const-reference) 
+to the result. This reference is only valid as long as the Task instance that is was obtained from is valid. 
+Accessing the result would look like this:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    /*
+    * Create a new task that executes the function addFive() and passes "1" as the parameter.
+    */
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+    task.execute();
+    
+    NOU::int32 &iRef = task.getResult();
+    
+    return 0;
+}
+\endcode
+
+\par moveResult()
+
+\link nostra::utils::thread::Task::moveResult moveResult() \endlink returns a R-Value reference to the result. 
+This can be useful if the result still needs to exist, even if the task that produced it has left scope (a 
+user can simply move the result from the Task to a variable in another scope).
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    /*
+    * Create a new task that executes the function addFive() and passes "1" as the parameter.
+    */
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+    task.execute();
+    
+    NOU::int32 iRef = task.moveResult();
+    
+    return 0;
+}
+\endcode
+
+\attention
+If the return type of the invocable is <tt>void</tt>, the return type of \link 
+nostra::utils::thread::Task::getResult getResult() \endlink and \link nostra::utils::thread::Task::moveResult 
+moveResult() \endlink will also be <tt>void</tt>. Since there is nothing to return, both member functions will
+not do anything. The return type can however be a problem with code like this:
+
+\code{.cpp}
+/*
+* R: The return type
+* I: The invocable type
+* ARGS: The argument types
+*/
+template<typename R, typename I, typename... ARGS>
+void executeAndPrintResult(NOU::NOU_THREAD::Task<R, I, ARGS...> &task)
+{
+    //execute task and store the result
+    task.execute();
+    auto &result = task.getResult();
+    
+    //print the result using the STL
+    std::cout << result << std::endl;
+}
+
+void function()
+{
+    //...
+}
+
+int main()
+{
+    auto task = NOU::NOU_THREAD::makeTask(&function);
+    
+    //compile error in executeAndPrintResult(), since a variable of type void is not allowed
+    executeAndPrintResult(task);
+}
+\endcode
+
+\subsection subsec_Task_AbstractTask The class AbstractTask
+
+\subsubsection subsubsec_AbstractConcreteClassModel The Abstract-Concrete-Model
+
+To ease understanding the necessity of AbstractTask, this section will explain the Abstract-Concrete-Model,
+which is a model not only used by the Task class, but also by a bunch of other thread management related
+classes.
+
+The model is used when a class with template parameter(s) is required (as it is the case with the Task class),
+but references to different instantiations of that template (aka. instances with different template
+parameters) should be stored in a single container.
+
+The model itself is simple:
+
+\dot
+digraph example
+{
+node [shape=record, fontname=Helvetica, fontsize=10];
+a [ label="AbstractClass"];
+c [ label="ConcreteClass"];
+c -> a [ arrowhead="empty" ];
+}
+\enddot
+
+With <tt>AbstractClass</tt> being a class that has no template parameters and <tt>ConcreteClass</tt> being a
+class that has all the required template parameters. <tt>AbstractClass</tt> would then already declare the
+functions (as pure virtual) for all the required functionality (those functions have to work without any
+template parameters as well) and <tt>ConcreteClass</tt> would implement those functions.
+
+\subsubsection AbstractTask
+
+As already pointed out, the Task class uses the Abstract-Concrete-Model (with \link
+nostra::utils::thread::internal::AbstractTask AbstractTask \endlink being the abstract class). The model is
+required, because the \link sec_threadManager Thread Manager \endlink needs to execute tasks that take
+different parameters or have different invocables (and therefore, the template parameters of Task are
+different). To solve this problem, instead of storing the Tasks themselves, the thread manager will store
+references to AbstractTask.
+
+The class AbstractTask only provides a single pure virtual function: <tt>execute()</tt> (which is the only
+function that is required by the thread manager). This is also the reason why \link
+nostra::utils::thread::Task::execute execute() \endlink does not return the result of the invocable that it
+calls - it simply has no knowledge of any parameter types (which of course also includes the return type).
+
+\section sec_errorHandling Error Handling
+
+In some way, multi threaded error handling is the same as single threaded error handling. The error handler 
+can be obtained using \link nostra::utils::core::getErrorHandler() getErrorHandler() \endlink and errors can 
+be pushed just as if the program was single threaded. However, there is a difference: As soon as multiple 
+threads are involved there is not only one error handler but there is one error handler per thread. This 
+ensures thread safety, but also means that errors are not shared between threads.
+
+\note
+If the error handling system of Nostra is not the only system being used (e.g. when there are threads being 
+created using the STL), there will be no error handler for these threads and calling \link 
+nostra::utils::core::getErrorHandler() getErrorHandler() \endlink will result in an error.
+
+\section sec_asyncTaskResult AsyncTaskResult
+
+The class \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink is the simplest way to execute
+code in a different thread. It is capable of executing a single task and can easily be used to "outsource" a 
+task while the main thread is doing something different.
+
+\subsection subsec_asyncTaskResultUsage Usage
+
+The first step of creating an instance of \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult 
+\endlink, is creating the \link nostra::utils::thread::Task Task \endlink that will be executed in a different
+thread:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+
+    return 0;
+}
+\endcode
+
+Afterwards, the AsyncTaskResult can be constructed:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    auto task = NOU::NOU_THREAD::makeTask(&addFive, 1);
+
+    NOU::NOU_THREAD::AsyncTaskResult<NOU::int32, decltype(&addFive), NOU::int32> asyncTaskResult(task);
+
+    return 0;
+}
+\endcode
+
+The template parameters are the same as those of the Task that should be executed by the AsyncTaskResult.
+
+\note
+Other than the task class, AsyncTaskResult does not provide a function like \link 
+nostra::utils::thread::makeTask() makeTask() \endlink. This is because AsyncTaskResult can not be moved or 
+copied.
+
+As soon as the instance is created, the task is scheduled for execution (however, no assumptions can be made 
+on when the task will be executed).
+
+\attention
+The instance of AsyncTaskResult must stay in scope until the task has finished execution.
+
+\subsubsection subsubsec_asyncTaskResult_stateQuery Querying the State
+The state of the execution can be queried using \link 
+nostra::utils::thread::internal::AbstractAsyncTaskResult::getState() AbstractAsyncTaskResult::getState() 
+\endlink (the states are represented by the enum \link 
+nostra::utils::thread::internal::AbstractAsyncTaskResult AbstractAsyncTaskResult::State \endlink). The 
+possible states are:
+
+<table>
+    <tr>
+        <th>Enumeration element name</th>
+        <th>Description</th></tr>
+    <tr>
+        <td>NOT_STARTED</td><td>The execution has not been started yet.</tr>
+    <tr>
+        <td>EXECUTING_SYNC</td>
+        <td>
+            The execution has manually been triggered by a user and is currently executed in the thread that 
+            triggered that execution (see \link subsubsec_asyncTaskResult_resultProduction here \endlink).
+        </td></tr>
+    <tr>
+        <td>EXECUTING_ASYNC</td>
+        <td>The execution is currently done asynchronously.</td></tr>
+    <tr>
+        <td>DONE</td>
+        <td>The execution has finished.</td></tr>
+</table>
+
+\subsubsection subsubsec_asyncTaskResult_resultProduction Producing a Result
+
+Since multithreading is often used to calculate a result, AsnycTaskResult (as the name implies) provides 
+functionality to produce a result. To do so, the class uses the functionality to produce the result that is 
+already provided by the tasks (long story short: the return value of the task is the result of the 
+AsyncTaskResult). Obviously, if there is no return value (return type is \p void) there is no result to obtain.
+
+The result is produced after the task is done executing and can be queried using \link 
+nostra::utils::thread::AsyncTaskResult::getResult() AsyncTaskResult::getResult() \endlink. If the result is 
+not produced when <tt>getResult()</tt> is called, the production of the result will be forced. If the task is 
+not already being executed in a different thread, then the task will be executed in the thread that called 
+<tt>getResult()</tt>. If the result should be produced (or the task simply should be executed at a certain 
+point of time) but the value if not necessarily required, \link 
+nostra::utils::thread::internal::AbstractAsyncTaskResult::makeResult() AbstractAsyncTaskResult::makeResult()
+\endlink can be used.
+
+\note
+When the return type of the task that was passed to the AsyncTaskResult is \p void, <tt>getResult()</tt> and 
+<tt>makeResult()</tt> are equivalent.
+
+\subsection subsec_asyncTaskResult_ErrorHandling Error Handling
+
+Generally, error handling works just as it was already explained in \link sec_errorHandling this chapter 
+\endlink. It should however be noted that it is not possible to access the errors of an instance of 
+AsyncTaskResult outside of it (unless the user sets up such functionality). 
+
+\subsection subsec_asyncTaskResult_AbstractConcreteModel Abstract-Concrete-Model
+
+As the names of the classes that were linked to in this chapter might have implied: There are two classes that
+make up the AsyncTaskResult. The classes are \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult 
+\endlink and \link nostra::utils::thread::internal::AbstractAsyncTaskResult AbstractAsyncTaskResult \endlink. 
+This is because AsyncTaskResult was modeled after the \link subsubsec_AbstractConcreteClassModel 
+Abstract-Concrete-Model \endlink.
+
+\section sec_taskQueue TaskQueue
+    
+Like \link sec_asyncTaskResult AsyncTaskResult \endlink, the \link nostra::utils::thread::TaskQueue TaskQueue 
+\endlink can be used to execute tasks in a different thread. The TaskQueue however, is more complex, because 
+it allows the execution of multiple tasks in the order that they were given to the queue (TaskQueue behaves 
+like a FIFO Queue). Also, the execution of the next task in the queue will not start until the previous task 
+has finished execution.
+
+The TaskQueue also provides functionality to produce a single result from all of the tasks that are (or were) 
+in the queue. A further description on how this can be achieved can be found in the chapter \link 
+subsec_taskQueue_Accumulation Accumulation \endlink.
+
+\subsection subsec_taskQueue_Usage Usage
+
+An instantiation of a TaskQueue looks like this:
+
+\code{.cpp}
+int main()
+{
+    //For the sake of simplicity, using namespace is used in this example
+    using namespace NOU::NOU_THREAD;
+
+    TaskQueue<int32, int32(*)(int32), TaskQueueAccumulators::FunctionPtr<int32>, int32> tq(&TaskQueueAccumulators::forward<int32>, 5);
+}
+\endcode
+
+Since the line to instantiate the task queue is quite long, the following list will try to break it up into 
+simpler parts.
+
+<ul>
+    <li>
+        The following list will split up the template parameters in the order of their appearance:
+        <ul>
+            <li>
+                int32: The return value of the single tasks that will be pushed to the queue.
+            </li>
+            <li>
+                int32(*)(int32): The invocable type of the tasks that can be executed by the queue.
+            </li>
+            <li>
+                TaskQueueAccumulators::FunctionPtr<int32>: The type of the accumulator. Accumulator are 
+                described thoroughly in the chapter \link subsec_taskQueue_Accumulation Accumulation \endlink.
+                If the parameter list of the task (see the next bullet point) is empty, this parameter has a 
+                default value (which is \link nostra::utils::thread::TaskQueueAccumulators::FunctionPtr 
+                NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr \endlink).
+            </li>
+            <li>
+                int32: The type parameters of the task. Although there is only one parameter in this case, 
+                this is the entire parameter list for the tasks that will be executed by the task queue.
+            </li>
+        </ul>
+        Overall, the first, second and every parameter after the third are the same parameters as those of the
+        Task.
+    </li>
+    <li>
+        The constructor parameters are the following:
+        <ul>
+            <li>
+                &TaskQueueAccumulators::forward<int32>: The Accumulator function that will be used by the 
+                TaskQueue. Again, this will be described in the chapter \link subsec_taskQueue_Accumulation 
+                Accumulation \endlink.
+
+                \note
+                It is important to have the "&" in front of the function name or the program will fail to 
+                compile.
+            </li>
+            <li>
+                5: The initial capacity of the queue. This parameter is optional.
+            </li>
+        </ul>
+    </li>
+</ul>
+
+In contrast to AsyncTaskResult, the TaskQueue does not immediately do anything after the instance has been 
+constructed. Since it is a queue, a user needs to push tasks to it first. Pushing tasks is done by using \link 
+nostra::utils::thread::TaskQueue::pushTask pushTask() \endlink:
+
+\code{.cpp}
+NOU::int32 addFive(NOU::int32 i)
+{
+    return i + 5;
+}
+
+int main()
+{
+    //For the sake of simplicity, using namespace is used in this example
+    using namespace NOU::NOU_THREAD;
+
+    TaskQueue<int32, int32(*)(int32), TaskQueueAccumulators::FunctionPtr<int32>, int32> tq(&TaskQueueAccumulators::forward<int32>, 5);
+
+    tq.pushTask(makeTask(&addFive, 1));
+	tq.pushTask(makeTask(&addFive, 2));
+	tq.pushTask(makeTask(&addFive, 3));
+	tq.pushTask(makeTask(&addFive, 4));
+	tq.pushTask(makeTask(&addFive, 5));
+	tq.pushTask(makeTask(&addFive, 6));
+}
+\endcode
+
+In this case, six tasks are pushed to the queue. Those tasks will be executed in the order in which they were 
+pushed to the queue and without any overlapping executions.
+
+\note 
+It is possible to push different tasks (with different invocables) to the queue - they just have to have the 
+same types (of return value and parameters).
+
+\subsection subsec_taskQueue_Accumulation Accumulation
+
+As already stated before, the task queue has the capabilities to produce a "final" result from all the tasks 
+that were in the queue. This is by accumulating all of the single results of the tasks that were executed by 
+the queue.
+
+Note that the accumulation only task place for return types other than <tt>void</tt>. For the type 
+<tt>void</tt>, see \link subsubsec_taskQueue_Accumulation_Void here \endlink.
+
+The following graph describes how four tasks would be used to produce an end result (nodes are invocables and
+edges are the results of those invocables).
+
+\dot
+digraph example
+{
+    node [shape=record, fontname=Helvetica, fontsize=10];
+    task1  [ label="Task 1" ];
+    task2  [ label="Task 2" ];
+    accum1 [ label="Accumulation Function" ];
+    task1 -> accum1 [ arrowhead="normal" ];
+    task2 -> accum1 [ arrowhead="normal" ];
+    
+    task3  [ label="Task 3" ];
+    accum2 [ label="Accumulation Function" ];
+    task3  -> accum2 [ arrowhead="normal" ];
+    accum1 -> accum2 [ arrowhead="normal" ];
+    
+    task4  [ label="Task 4" ];
+    accum3 [ label="Accumulation Function" ];
+    task4  -> accum3 [ arrowhead="normal" ];
+    accum2 -> accum3 [ arrowhead="normal" ];
+    
+    endresult [ label="End Result", shape="oval" ];
+    accum3 -> endresult [ arrowhead="normal" ];
+}
+\enddot
+
+\note
+This graph shows the process of producing a final result (node "End Result") from a total of four tasks, the 
+concept would be the same of more or less tasks.
+
+To realize accumulators, the TaskQueue uses invocables of the type <tt>R(*)(R&&, R&&)</tt> with <tt>R</tt> 
+being the return type of the task. Also, Nostra provides a bunch of accumulators out of the box. All of these 
+can be found in the namespace \link nostra::utils::thread::TaskQueueAccumulators 
+NOU::NOU_THREAD::TaskQueueAccumulators \endlink. This is a full list of all predefined accumulators available 
+in that namespace (in the examples given in the descriptions, <tt>previous</tt> is the result of the previous 
+accumulation and <tt>current</tt> is the result of the task that was just executed):
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>forward</td>
+        <td>Always forwards the last result. This accumulator is a good choice if no result is required.</td>
+    </tr>
+    <tr>
+        <td>addition</td>
+        <td>
+            Adds the two results by using the operator +. The exact expression would be \code 
+            previous + current \endcode
+        </td>
+    </tr>
+    <tr>
+        <td>additionInverted</td>
+        <td>
+            Adds the two results by using the operator +. The exact expression would be \code 
+            current + previous \endcode
+        </td>
+    </tr>
+    <tr>
+        <td>subtract</td>
+        <td>
+            Subtracts the two results by using the operator -. The exact expression would be \code
+            previous - current \endcode
+        </td>
+    </tr>
+    <tr>
+        <td>subtractInverted</td>
+        <td>
+            Subtracts the two results by using the operator -. The exact expression would be \code 
+            current - previous \endcode
+        </td>
+    </tr>
+    <tr>
+        <td>multiplicate</td>
+        <td>
+            Multiplicates the two results by using the operator *. The exact expression would be \code 
+            previous * current \endcode
+        </td>
+    </tr>
+    <tr>
+        <td>multiplicateInverted</td>
+        <td>
+            Multiplicates the two results by using the operator *. The exact expression would be \code 
+            current * previous \endcode
+        </td>
+    </tr>
+    <tr>
+        <td>divide</td>
+        <td>
+            Divides the two results by using the operator /. The exact expression would be \code 
+            previous / current \endcode
+        </td>
+    </tr>
+    <tr>
+        <td>divideInverted</td>
+        <td>
+            Divides the two results by using the operator /. The exact expression would be \code 
+            current / previous \endcode
+        </td>
+    </tr>
+    <tr>
+        <td>memberFunction</td>
+        <td>
+            Calls a member function of the type <tt>R(T::*)(R&&)</tt>. The exact expression would be \code 
+            (previous.*function)(current) \endcode with <tt>function</tt> being the member function pointer.
+        </td>
+    </tr>
+    <tr>
+        <td>memberFunctionInverted</td>
+        <td>
+            Calls a member function of the type <tt>R(T::*)(R&&)</tt>. The exact expression would be \code 
+            (current.*function)(previous) \endcode with <tt>function</tt> being the member function pointer.
+        </td>
+    </tr>
+</table>
+
+Other than these functions, the namespace also provides the type \link 
+nostra::utils::thread::TaskQueueAccumulators::FunctionPtr FunctionPtr \endlink which is the function pointer 
+type of all of the functions in the namespace TaskQueueAccumulators. The type is made to be used as a template 
+parameter of the TaskQueue (the type was already used in the example of the beginning of the chapter \link 
+sec_taskQueue TaskQueue \endlink).
+
+\note
+It is not possible to not have an accumulator set (passing <tt>nullptr</tt> as accumulator will result in a 
+runtime error). If no accumulation is required, the accumulator <tt>forward</tt> is a good choice.
+    
+\subsubsection subsubsec_taskQueue_Accumulation_Void Accumulation for the return type void
+
+If the return type of the task is <tt>void</tt>, no accumulation can take place and therefore the 
+specialization for the return type <tt>void</tt> does not have any accumulation mechanics. It does however 
+still have the same parameters - both the template parameter and the constructor still take the accumulator 
+parameters (which is because of technical and compatibility reasons).
+
+\section sec_lockingResources Locking Resources
+
+This chapter will show how to lock resources in order to avoid race conditions and synchronize multiple 
+threads.
+
+\subsection subsec_mutex Mutexes
+
+Mutexes are the most basic way to lock resources. They can be locked and unlocked.
+
+\par Example:
+
+This example shows how to do some calculations and synchronize the std::cout output stream after the 
+calculations are done using <tt>calculate()</tt>. These calculations can be done simultaneously.
+
+\code{.cpp}
+
+NOU::THREAD::Mutex mutex;
+
+void doStuff()
+{
+    NOU::int32 calc = calculate();
+
+    mutex.lock();
+    std::cout << "doStuff(): " << calc << std::endl;
+    mutex.unlock()
+}
+
+void doOtherStuff()
+{
+    NOU::int32 calc = calculate();
+
+    mutex.lock();
+    std::cout << "doMoreStuff(): " << calc << std::endl;
+    mutex.unlock()
+}
+
+\endcode
+
+Assuming that the functions are called simultaneously from two different threads, this would be the order in
+which the functions would be executed. For easier understanding, the <tt>calculate()</tt> function of
+<tt>doOtherStuff()</tt> will take longer than that of <tt>doStuff()</tt>.
+
+<table>
+    <tr>
+        <th>Thread 1 (executes doStuff())</th>
+        <th>Thread 2 (executes doOtherStuff())</th>
+        <th>Notes</th>
+    </tr>
+    <tr>
+        <td>NOU::int32 calc = calculate();</td>
+        <td rowspan="2">NOU::int32 calc = calculate();</td>
+        <td rowspan="2">
+            Both threads call <tt>calculate()</tt>. Thread 1 finishes first with calculating and 
+            already locks the mutex.
+        </td>
+    </tr>
+    <tr>
+        <td>mutex.lock();</td>
+    </tr>
+    <tr>
+        <td>std::cout << "doStuff(): " << calc << std::endl;</td>
+        <td rowspan="2">mutex.lock()</td>
+        <td rowspan="2">
+            Thread 1 already prints to the stream and unlocks the mutex afterwards. Since the mutex was 
+            already locked when Thread 2 tried to lock it, the <tt>mutex.lock()</tt> in Thread 2 will not 
+            return until the mutex is unlocked again.
+        </td>
+    </tr>
+    <tr>
+        <td>mutex.unlock();</td>
+    </tr>
+    <tr>
+        <td rowspan="2"></td>
+        <td>std::cout << "doMoreStuff(): " << calc << std::endl;</td>
+        <td rowspan="2">
+            Now that the mutex is unlocked again, <tt>mutex.lock()</tt> in Thread 2 is able to lock it again 
+            for itself. It can now print to the stream and unlock the mutex afterwards. Thread 1 is done 
+            executing its function.
+        </td>
+    </tr>
+    <tr>
+        <td>mutex.unlock()</td>
+    </tr>
+</table>
+  
+The mutex however has a major problem in its usage: very much like it is the case with deallocating dynamically allocated memory, it is very easily forgotten to unlock a mutex which may result in a deadlock or other unwanted behavior. For this reason, mutexes are usually not used directly but they are managed by so called locks. These locks are described in the following chapter.
+
+\subsection subsec_lockingResources_Locks Locks
+
+Locks are a very simple class: They have a constructor that takes a mutex which is then locked by that constructor. They also have a destructor that simply unlocks the mutex again.
+
+The advantage of locks is, that C++ guarantees that every object that is constructed on the stack will be destructed as soon as it leaves its scope. This means that when a constructor locks a mutex, that mutex will always be unlocked by the constructor as soon as the lock leaves its scope.
+
+\note
+Other than the constructor and destructor, the lock does not offer any other member functions. This means, that there is no way to manually unlock a lock.
+
+\subsubsection Usage
+
+Nostra realizes locks using the class \link nostra::utils::thread::Lock Lock \endlink. In the following piece of code, the usage of a lock is shown.
+
+\code
+//Resource is a class that has a member "get()" and access to it needs to be thread-safe
+Resource resource;
+
+//The mutex that is used to lock "resource"
+NOU::NOU_THREAD::Mutex mutex;
+
+int main()
+{
+    //Lock the mutex
+    NOU::NOU_THREAD::Lock lock(mutex);
+
+    //Access the resource that required locking
+    resource.get();
+
+    //At the end of the function block, the lock will unlock the mutex again
+}
+\endcode
+
+In more complex examples than this one, it is often a good practice to use scopes to keep the time that the mutex is locked to as short as possible. The following piece of code will show a bad example of locking the same resource from the previous example with some time consuming calculations added.
+
+\code
+//Resource is a class that has a member "get()" and access to it needs to be thread-safe
+Resource resource;
+
+//The mutex that is used to lock "resource"
+NOU::NOU_THREAD::Mutex mutex;
+
+int main()
+{
+    //calculate() does a bunch of time consuming calculations. The mutex does not need to be locked while this function is called.
+    calculate();
+
+    //Lock the mutex
+    NOU::NOU_THREAD::Lock lock(mutex);
+
+    //Access the resource that required locking
+    resource.get();
+
+    calculate();
+
+    //At the end of the function block, the lock will unlock the mutex again
+}
+\endcode
+    
+This example is bad, because the mutex is still locked for the entire runtime of the second call of <tt>calculate()</tt>. Using scopes, the time that the mutex is locked can be shortened.
+
+\code
+//Resource is a class that has a member "get()" and access to it needs to be thread-safe
+Resource resource;
+
+//The mutex that is used to lock "resource"
+NOU::NOU_THREAD::Mutex mutex;
+
+int main()
+{
+    //calculate() does a bunch of time consuming calculations. The mutex does not need to be locked while this function is called.
+    calculate();
+
+    {
+        //Lock the mutex
+        NOU::NOU_THREAD::Lock lock(mutex);
+
+        //Access the resource that required locking
+        resource.get();
+
+        //At the end of this block, the mutex will be unlocked again
+    }
+
+    calculate();
+}
+\endcode
+
+It is desirable to lock mutexes for the shortest time possible, because the earlier that a mutex is unlocked, the earlier another thread that waits for that mutex to be unlocked can start working.
+
+\section sec_threadManager The Thread Manager
+
+The class \link nostra::utils::thread::ThreadManager ThreadManager \endlink is the central system of the thread management system of Nostra. It is a singleton that acts as a thread pool but also schedules the Tasks that will be executed by the threads.
+    
+As already stated in the \link sec_tasks chapter about tasks \endlink, the Thread Manager uses the \link nostra::utils::thread::Task Task \endlink class (or to be more precise the class \link nostra::utils::thread::internal::AbstractTask AbstractTask \endlink) to execute functionality that is provided by the user.
+
+Despite being the central component of the thread management system, a user usually interacts rather little with it (there are other interfaces, like \link nostra::utils::thread::AsyncTaskResult AsyncTaskResult \endlink and \link nostra::utils::thread::TaskQueue TaskQueueu \endlink, that provide functionality on a higher level), which is why the ThreadManager (despite being the central class of the system) is described rather little at this point.
+
+Conceptually, the thread manager is internally little more than a priority queue for the Tasks and a pool that store the threads. It will continually execute the tasks using the available threads as they (the tasks) come in or other threads finish the execution of previous tasks.
+
+\subsection subsec_threadManager_Obtain Obtaining the Thread Manager
+Nostra always provides an already constructed instance of the thread manager. It can be acquired using \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink.
+
+\attention
+The first time that \link nostra::utils::thread::getThreadManager() getThreadManager() \endlink is getting called must be from the main thread. Otherwise the error handling will misbehave.
+*/

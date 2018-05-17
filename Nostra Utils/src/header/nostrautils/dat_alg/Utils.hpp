@@ -1,18 +1,22 @@
 #ifndef NOU_DAT_ALG_UTILS_HPP
 #define NOU_DAT_ALG_UTILS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/Meta.hpp"
 
-/** \file Utils.hpp
+/** \file dat_alg/Utils.hpp
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \author	 Lukas Gross
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides useful utility functions for dat_alg.
 */
+
+#ifndef NOU_XOR
+#define NOU_XOR(a,b) ((!a & b) | (a & !b))
+#endif
 
 namespace NOU::NOU_DAT_ALG
 {
@@ -26,7 +30,7 @@ namespace NOU::NOU_DAT_ALG
 	*/
 #define NOU_DEFINE_PAIR(CLASSNAME, DATAONE_NAME, DATATWO_NAME)	 \
 	template<typename O, typename T>							 \
-	struct NOU_CLASS CLASSNAME									 \
+	struct CLASSNAME									 \
 	{															 \
 		O	DATAONE_NAME;										 \
 		T	DATATWO_NAME;										 \
@@ -37,8 +41,8 @@ namespace NOU::NOU_DAT_ALG
 		{}														 \
 																 \
 		CLASSNAME(O&& DATAONE_NAME, T&& DATATWO_NAME) :			 \
-			DATAONE_NAME(NOU_CORE::move(DATAONE_NAME)),			 \
-			DATATWO_NAME(NOU_CORE::move(DATATWO_NAME))			 \
+			DATAONE_NAME(NOU::NOU_CORE::move(DATAONE_NAME)),	 \
+			DATATWO_NAME(NOU::NOU_CORE::move(DATATWO_NAME))		 \
 		{}														 \
 	};
 
@@ -51,7 +55,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief A Function to swap the two given types.
 	*/
 	template<typename T>
-	NOU_FUNC void swap(T *dataone, T *datatwo);
+	void swap(T *dataone, T *datatwo);
 
 	/**
 	\tparam CHAR_TYPE The type of the character.
@@ -63,7 +67,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief Determines the length of a string.
 	*/
 	template<typename CHAR_TYPE>
-	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
+	constexpr sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
 
 	/**
 	\tparam The type of the parameters.
@@ -79,7 +83,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief Compares two parameters to a passed epsilon. 
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon);
+	constexpr T epsilonCompare(const T &t0, const T &t1, const T &epsilon);
 
 	template<typename T>
 	void swap(T *dataone, T *datatwo) 
@@ -102,18 +106,20 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr NOU_FUNC sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str)
+	constexpr sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str)
 	{
 		return *str != 0 ? stringlen<CHAR_TYPE>(str + 1) + 1 : 0;
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC T epsilonCompare(const T &t0, const T &t1, const T &epsilon)
+	constexpr T epsilonCompare(const T &t0, const T &t1, const T &epsilon)
 	{
 		T diff = t0 - t1;
 		T abs = (diff < 0 ? -diff : diff);
 		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
 	}
+
+
 }
 
 #endif

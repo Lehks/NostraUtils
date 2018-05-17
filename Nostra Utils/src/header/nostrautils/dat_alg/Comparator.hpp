@@ -1,8 +1,15 @@
 #ifndef	NOU_DAT_ALG_COMPARTOR_HPP
 #define	NOU_DAT_ALG_COMPARTOR_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Meta.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Meta.hpp"
+
+/** \file Comparator.hpp
+\author	 Lukas Reichmann
+\since   1.0.0
+\version 1.0.0
+\brief   This file provides mechanics to compare objects without relying on operators.
+*/
 
 namespace NOU::NOU_DAT_ALG
 {
@@ -16,12 +23,12 @@ namespace NOU::NOU_DAT_ALG
 
 	\param result The result to be inverted.
 	\return       The converted result.
-	\brief Inverst a CompareResult.
+	\brief Inverts a CompareResult.
 
 	\details
 	Inverts a CompareResult.
 
-	The type \p R must be invertable using the - operator.
+	The type \p R must be invertible using the - operator.
 
 	The resulting values are:\n
 	-1 => 1\n
@@ -29,7 +36,7 @@ namespace NOU::NOU_DAT_ALG
 	1  => -1
 	*/
 	template<typename R = CompareResult>
-	NOU_FUNC constexpr R invert(const R& result);
+	constexpr R invert(const R& result);
 
 	/**
 	\tparam T The type of the objects that will be compared.
@@ -47,7 +54,7 @@ namespace NOU::NOU_DAT_ALG
 	\param  a The first object.
 	\param  b The second object.
 	\return The CompareResult that was produced by a and b.
-	\brief Compares two ojects in ascending order.
+	\brief Compares two objects in ascending order.
 
 	\details
 	This function only works for types that support the operators \>, \<, >=, <=, == and -.
@@ -56,18 +63,18 @@ namespace NOU::NOU_DAT_ALG
 	a == b => Result is == 0\n
 	a <  b => Result is < 0
 	
-	\todo Propperly implement specialisation for char8, char16 and char32 (that take in account other 
+	\todo Properly implement specialization for char8, char16 and char32 (that take in account other 
 	      languages)
 	*/
 	template<typename T, typename R = CompareResult>
-	NOU_FUNC constexpr R genericComparator(const T &a, const T &b);
+	constexpr R genericComparator(const T &a, const T &b);
 
 	/**
 	\tparam T The type of the objects that will be compared.
 	\param  a The first object.
 	\param  b The second object.
 	\return The CompareResult that was produced by a and b in an inverted order.
-	\brief Compares two ojects in descending order.
+	\brief Compares two objects in descending order.
 
 	\details
 	This function only works for types that support the operators \>, \<, >=, <=, == and -.
@@ -80,18 +87,18 @@ namespace NOU::NOU_DAT_ALG
 	using invert().
 	*/
 	template<typename T, typename R = CompareResult>
-	NOU_FUNC constexpr R genericInvertedComparator(const T &a, const T &b);
+	constexpr R genericInvertedComparator(const T &a, const T &b);
 
 	///\todo comment
 	///\cond
 	template<>
-	NOU_FUNC constexpr CompareResult genericComparator<char8, CompareResult>(const char8 &a, const char8 &b);
+	constexpr CompareResult genericComparator<char8, CompareResult>(const char8 &a, const char8 &b);
 
 	template<>
-	NOU_FUNC constexpr CompareResult genericComparator<char16, CompareResult>(const char16 &a, const char16 &b);
+	constexpr CompareResult genericComparator<char16, CompareResult>(const char16 &a, const char16 &b);
 
 	template<>
-	NOU_FUNC constexpr CompareResult genericComparator<char32, CompareResult>(const char32 &a, const char32 &b);
+	constexpr CompareResult genericComparator<char32, CompareResult>(const char32 &a, const char32 &b);
 	///\endcond
 
 	template<typename R>

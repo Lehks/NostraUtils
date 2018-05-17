@@ -1,19 +1,19 @@
 #ifndef NOU_DAT_ALG_VECTOR_HPP
 #define	NOU_DAT_ALG_VECTOR_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\dat_alg\Bubblesort.hpp"
-#include "nostrautils\mem_mngt\AllocationCallback.hpp"
-#include "nostrautils\core\Utils.hpp"
-#include "nostrautils\core\ErrorHandler.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/mem_mngt/AllocationCallback.hpp"
+#include "nostrautils/core/Utils.hpp"
+#include "nostrautils/core/ErrorHandler.hpp"
+#include "nostrautils/dat_alg/Utils.hpp"
 
 #include <new>
 
 /** \file Vector.hpp
 \author  Dennis Franz
 \author  Lukas Reichmann
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.0
 \brief   This file provides a Vector implementation.
 */
 
@@ -41,7 +41,7 @@ namespace NOU::NOU_DAT_ALG
 	\details The most basic of our containers. It can act like a dynamic array a FIFO-Queue, LIFO-Queue or a normal Queue.
 	*/
 	template<typename T>
-	class NOU_CLASS Vector final
+	class Vector final
 	{
 
 	private:
@@ -141,8 +141,8 @@ namespace NOU::NOU_DAT_ALG
 		\brief Standard destructor.
 
 		\details 
-		Note that the Vectors memory isn't allocated with the new keyword therefore the memory gets not deallocated with the delete keyword. 
-		For more details look at the implication.
+		Note that the Vectors memory is not allocated with the new keyword therefore the memory gets not dealocated with the delete keyword. 
+		For more deatils look at the implication.
 		*/
 		~Vector<T>();
 
@@ -160,7 +160,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\return      Returns a boolean.
 
-		\brief Checks wether the Vector is empty or not.
+		\brief Checks whether the Vector is empty or not.
 		*/
 		boolean empty() const ;
 
@@ -195,7 +195,7 @@ namespace NOU::NOU_DAT_ALG
 		const T& at(sizeType index) const;
 
 		/**
-		\param additionalCapactiy Additional capacity amount.
+		\param additionalCapacity Additional capacity amount.
 
 		\brief Expends the capacity of the vector.
 		*/
@@ -367,7 +367,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief returns a const pointer reference to the current data.
 		*/
-		const T* const & data() const;
+		const T* data() const;
 
 		/**
 		\brief Clears the Vector.
@@ -554,7 +554,7 @@ namespace NOU::NOU_DAT_ALG
 	both const and non-const iterating). This iterator is a forward iterator.
 	*/
 	template<typename T>
-	class NOU_CLASS VectorIterator
+	class VectorIterator
 	{
 		friend class Vector<T>;
 
@@ -625,7 +625,7 @@ namespace NOU::NOU_DAT_ALG
 		\param other The iterator to compare this iterator to.
 		\return      True, if the iterators are equal, false if not.
 
-		\brief Returns weather two iterators are equal. Two iterators qualify as equal if their internal
+		\brief Returns whether two iterators are equal. Two iterators qualify as equal if their internal
 		index and the vector that they point to are the same.
 		*/
 		constexpr boolean operator == (const VectorIterator &other) const;
@@ -634,7 +634,7 @@ namespace NOU::NOU_DAT_ALG
 		\param other The iterator to compare this iterator to.
 		\return      False, if the iterators are equal, true if not.
 
-		\brief Returns weather two iterators are unequal. This returns the opposite of what the operator
+		\brief Returns whether two iterators are unequal. This returns the opposite of what the operator
 		= would return.
 		*/
 		constexpr boolean operator != (const VectorIterator &other) const;
@@ -689,7 +689,7 @@ namespace NOU::NOU_DAT_ALG
 	both const and non-const iterating). This iterator is a reverse iterator.
 	*/
 	template<typename T>
-	class NOU_CLASS VectorReverseIterator
+	class VectorReverseIterator
 	{
 		friend class Vector<T>;
 
@@ -819,6 +819,8 @@ namespace NOU::NOU_DAT_ALG
 		constexpr VectorReverseIterator& operator -= (sizeType value);
 	};
 
+	template<typename T>
+	constexpr sizeType Vector<T>::MIN_CAPACITY;
 
 	template<typename T>
 	T* Vector<T>::alloc(sizeType amount)
@@ -1105,14 +1107,14 @@ namespace NOU::NOU_DAT_ALG
 	void Vector<T>::sort()
 	{
 		///\todo implementing a "real" sorting alg.
-		bubbleSort(m_data, m_size);
+		qsort(m_data, m_size);
 	}
 
 	template<typename T>
 	void Vector<T>::sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
 		///\todo implementing a "real" sorting alg.
-		bubbleSortComp(m_data, m_size, comp);
+		qsort(m_data, m_size, comp);
 	}
 
 	template<typename T>
@@ -1122,7 +1124,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	const T* const & Vector<T>::data() const
+	const T* Vector<T>::data() const
 	{
 		return m_data;
 	}

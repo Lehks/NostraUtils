@@ -1,7 +1,7 @@
 #ifndef	NOU_MEM_MNGT_UTILS_HPP
 #define	NOU_MEM_MNGT_UTILS_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
 
 #include <memory>
 
@@ -9,7 +9,7 @@
 \file mem_mngt/Utils.hpp
 
 \author  Lukas Reichmann
-\version 0.0.1
+\version 1.0.0
 \since   1.0.0
 
 \brief A file that contains utility functions that revolve around memory allocation.
@@ -61,7 +61,7 @@ namespace NOU::NOU_MEM_MNGT
 	         construct them).
 	*/
 	template<typename T>
-	NOU_FUNC T* allocateUninitialized(sizeType amount);
+	T* allocateUninitialized(sizeType amount);
 
 	/**
 	\tparam The type of the object.
@@ -74,7 +74,7 @@ namespace NOU::NOU_MEM_MNGT
 		   Wrapper for std::addressof.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T* addressof(T& data);
+	constexpr T* addressof(T& data);
 
 	/**
 	\param data The data to deallocate.
@@ -92,13 +92,13 @@ namespace NOU::NOU_MEM_MNGT
 	NOU_FUNC void deallocateUninitialized(void *data);
 
 	template<typename T>
-	NOU_FUNC T* allocateUninitialized(sizeType amount)
+	T* allocateUninitialized(sizeType amount)
 	{
 		return reinterpret_cast<T*>(alignedAlloc(sizeof(T) * amount, alignof(T)));
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC T* addressof(T& data)
+	constexpr T* addressof(T& data)
 	{
 		return std::addressof(data);
 	}

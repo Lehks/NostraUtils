@@ -1,10 +1,19 @@
 #ifndef NOU_THREAD_CONDITION_VARIABLE_HPP
 #define NOU_THREAD_CONDITION_VARIABLE_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\thread\Lock.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/thread/Lock.hpp"
 
 #include <condition_variable>
+
+/** \file ConditionVariable.hpp
+\author	 Lukas Reichmann
+\since   1.0.0
+\version 1.0.0
+\brief   This file provides a condition variable class.
+
+\see nostra::utils::thread::CondtionVariable
+*/
 
 namespace NOU::NOU_THREAD
 {
@@ -16,7 +25,7 @@ namespace NOU::NOU_THREAD
 	make one or more threads wait until a certain variable has a certain value (and the condition variable is
 	notified of a change).
 	*/
-	class NOU_CLASS ConditionVariable
+	class ConditionVariable
 	{
 	public:
 		/**
@@ -31,24 +40,24 @@ namespace NOU::NOU_THREAD
 		UnderlyingType m_variable;
 
 	public:
-		ConditionVariable() = default;
+		NOU_FUNC ConditionVariable() = default;
 
 		/**
 		\brief Notifies one variable that is waiting.
 		*/
-		void notifyOne();
+		NOU_FUNC void notifyOne();
 
 		/**
 		\brief Notifies all variables that are waiting.
 		*/
-		void notifyAll();
+		NOU_FUNC void notifyAll();
 
 		/**
 		\param lock The lock that will be used to lock the waiting thread.
 
 		\brief Waits until the variable is notified.
 		*/
-		void wait(UniqueLock &lock);
+		NOU_FUNC void wait(UniqueLock &lock);
 
 		/**
 		\tparam PRED The type of the predicate.
