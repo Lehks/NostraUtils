@@ -364,11 +364,11 @@ namespace NOU::NOU_MATH
 		ChannelType m_channels[4];
 
 		/**
-		\param The value to clamp.
+		\param channel The value to clamp.
 
 		\return The clamped value.
 
-		\brief Clamps the passed value to the interval \f$\left[CHANNEL_MIN, CHANNEL_MAX\right]\f4.
+		\brief Clamps the passed value to the interval \f$\left[CHANNEL_MIN, CHANNEL_MAX\right]\f$.
 		*/
 		constexpr static const ChannelType& clampChannel(const ChannelType &channel);
 
@@ -383,7 +383,9 @@ namespace NOU::NOU_MATH
 		*/
 		constexpr static Color black(ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
+
 		/**
+		\param scale         The grey scale.
 		\param alpha         The alpha value of the returned color.
 		\param storageLayout The storage layout of the returned color.
 
@@ -394,6 +396,7 @@ namespace NOU::NOU_MATH
 		constexpr static Color grey(NOU::float32 scale = 0.5f, 
 			ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
+
 		/**
 		\param alpha         The alpha value of the returned color.
 		\param storageLayout The storage layout of the returned color.
@@ -404,6 +407,7 @@ namespace NOU::NOU_MATH
 		*/
 		constexpr static Color red(ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
+
 		/**
 		\param alpha         The alpha value of the returned color.
 		\param storageLayout The storage layout of the returned color.
@@ -414,6 +418,7 @@ namespace NOU::NOU_MATH
 		*/
 		constexpr static Color yellow(ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
+
 		/**
 		\param alpha         The alpha value of the returned color.
 		\param storageLayout The storage layout of the returned color.
@@ -424,6 +429,7 @@ namespace NOU::NOU_MATH
 		*/
 		constexpr static Color green(ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
+
 		/**
 		\param alpha         The alpha value of the returned color.
 		\param storageLayout The storage layout of the returned color.
@@ -434,6 +440,7 @@ namespace NOU::NOU_MATH
 		*/
 		constexpr static Color cyan(ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
+
 		/**
 		\param alpha         The alpha value of the returned color.
 		\param storageLayout The storage layout of the returned color.
@@ -444,6 +451,7 @@ namespace NOU::NOU_MATH
 		*/
 		constexpr static Color blue(ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
+
 		/**
 		\param alpha         The alpha value of the returned color.
 		\param storageLayout The storage layout of the returned color.
@@ -454,6 +462,7 @@ namespace NOU::NOU_MATH
 		*/
 		constexpr static Color purple(ChannelType alpha = CHANNEL_MAX, 
 			const ColorStorageLayoutImpl &storageLayout = DEFAULT_STORAGE_LAYOUT);
+
 		/**
 		\param alpha         The alpha value of the returned color.
 		\param storageLayout The storage layout of the returned color.
@@ -498,7 +507,7 @@ namespace NOU::NOU_MATH
 		constexpr const ColorStorageLayoutImpl& getStorageLayout() const;
 
 		/**
-		\param The new value for the red channel.
+		\param value The new value for the red channel.
 
 		\brief Sets the value of the red channel.
 		*/
@@ -512,7 +521,7 @@ namespace NOU::NOU_MATH
 		constexpr const ChannelType& getRed() const;
 
 		/**
-		\param The new value for the green channel.
+		\param value The new value for the green channel.
 
 		\brief Sets the value of the green channel.
 		*/
@@ -526,7 +535,7 @@ namespace NOU::NOU_MATH
 		constexpr const ChannelType& getGreen() const;
 
 		/**
-		\param The new value for the blue channel.
+		\param value The new value for the blue channel.
 
 		\brief Sets the value of the blue channel.
 		*/
@@ -540,7 +549,7 @@ namespace NOU::NOU_MATH
 		constexpr const ChannelType& getBlue() const;
 
 		/**
-		\param The new value for the alpha channel.
+		\param value The new value for the alpha channel.
 
 		\brief Sets the value of the alpha channel.
 		*/
@@ -699,7 +708,7 @@ namespace NOU::NOU_MATH
 		constexpr Color<typename COL::Configuration> convert() const;
 
 		/**
-		\param The color to add.
+		\param other The color to add.
 
 		\return this->add(other);
 
@@ -708,7 +717,7 @@ namespace NOU::NOU_MATH
 		constexpr Color operator + (const Color &other) const;
 
 		/**
-		\param The color to add.
+		\param other The color to add.
 
 		\return this->addAssign(other);
 
@@ -717,7 +726,7 @@ namespace NOU::NOU_MATH
 		Color& operator += (const Color &other);
 
 		/**
-		\param The color to subtract.
+		\param other The color to subtract.
 
 		\return this->sub(other);
 
@@ -726,7 +735,7 @@ namespace NOU::NOU_MATH
 		constexpr Color operator - (const Color &other) const;
 
 		/**
-		\param The color to subtract.
+		\param other The color to subtract.
 
 		\return this->subAssign(other);
 
@@ -735,7 +744,7 @@ namespace NOU::NOU_MATH
 		Color& operator -= (const Color &other);
 
 		/**
-		\param The color to multiply.
+		\param other The color to multiply.
 
 		\return this->mult(other);
 
@@ -744,7 +753,7 @@ namespace NOU::NOU_MATH
 		constexpr Color operator * (const Color &other) const;
 
 		/**
-		\param The color to multiply.
+		\param other The color to multiply.
 
 		\return this->multAssign(other);
 
@@ -753,7 +762,7 @@ namespace NOU::NOU_MATH
 		Color& operator *= (const Color &other);
 
 		/**
-		\param The color to compare to.
+		\param other The color to compare to.
 
 		\return this->equal(other);
 
@@ -762,7 +771,7 @@ namespace NOU::NOU_MATH
 		constexpr boolean operator == (const Color &other) const;
 
 		/**
-		\param The color to compare to.
+		\param other The color to compare to.
 
 		\return this->unequal(other);
 

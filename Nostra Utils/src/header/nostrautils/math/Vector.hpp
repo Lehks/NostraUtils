@@ -7,6 +7,13 @@
 
 #include <initializer_list>
 
+/** \file math/Vector.hpp
+\author	 Lukas Reichmann
+\since   1.0.0
+\version 1.0.0
+\brief   This file provides functionality to work with vectors.
+*/
+
 namespace NOU::NOU_MATH
 {
 	template<typename T, sizeType N>
@@ -93,6 +100,8 @@ namespace NOU::NOU_MATH
         boolean operator == (const Vector &other) const;
         boolean operator != (const Vector &other) const;
     };
+
+	///\cond
 
 	template<typename T>
 	class Vector<T, 2> : public VectorBase<T, 2>
@@ -1464,6 +1473,9 @@ namespace NOU::NOU_MATH
     {
         return unequal(other);
     }
+
+	///\endcond
+
 }
 
 #endif

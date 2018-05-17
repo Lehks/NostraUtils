@@ -260,14 +260,14 @@ namespace NOU::NOU_MATH
         using Base = MatrixBase<T, R, C>;
 
 		/**
-		\param A matrix that has all elements set to zero.
+		\return A matrix that has all elements set to zero.
 
 		\brief Constructs a new instance with all elements set to zero.
 		*/
 		static Matrix<T, R, C> zeroes();
 
 		/**
-		\param The identity matrix for matrices with \p R rows and \p C columns.
+		\return The identity matrix for matrices with \p R rows and \p C columns.
 
 		\brief Returns the identity matrix for matrices with \p R rows and \p C columns.
 		*/
