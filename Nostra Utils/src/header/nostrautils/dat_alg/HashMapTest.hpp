@@ -193,13 +193,14 @@ namespace NOU::NOU_DAT_ALG
 	template<typename K, typename V>
 	HashMapT<K, V>::HashMapT(const HashMapT &other)
 	{
-		
+		this-> m_size = other.size();
+		this-> m_data = other.m_data;
 	}
 
 	template <typename K, typename V>
 	HashMapT<K, V>::HashMapT(HashMapT &&other)
 	{
-
+		
 	}
 
 	template <typename K, typename V>
