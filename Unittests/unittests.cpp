@@ -1275,7 +1275,7 @@ IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
 
 }
 
-TEST_METHOD(HashMap)
+/*TEST_METHOD(HashMap)
 {
 	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
 	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
@@ -1376,7 +1376,7 @@ TEST_METHOD(HashMap)
 	}
 	
 
-}
+} */
 
 TEST_METHOD(BinarySearch)
 {

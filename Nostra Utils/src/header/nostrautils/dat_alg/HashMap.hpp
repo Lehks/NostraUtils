@@ -94,7 +94,7 @@ namespace NOU::NOU_DAT_ALG
 		\param		    value the value that will be mapped
 		\param			keySize the size of the actual Data of the key
 		\return			true if successfully mapped, false if otherwise
-		\brief maps a value to a specific key
+		\brief maps a value to a	 specific key
 		*/
 		boolean map(K &&key, V &&value);
 
@@ -122,33 +122,25 @@ namespace NOU::NOU_DAT_ALG
 		\return value
 		\brief Returns the corresponding value mapped to a specific key or nullptr if it does not exist
 		*/
-		V& get(const K &key);
-
-		/**
-		\param key		the key where a value will be returned
-		\param			keySize the size of the actual Data of the key
-		\return value
-		\brief Returns the corresponding value mapped to a specific key or nullptr if it does not exist
-		*/
-		V& get(K &&key);
+		const V& get(const K &key) const;
 
 		/**
 		\brief Checks whether the map is empty or not.
 		\return true if empty, false if otherwise
 		*/
-		boolean isEmpty();
+		boolean isEmpty() const;
 
 		/**
 		\return			the current count of values mapped
 		\brief Returns the current size of the map.
 		*/
-		sizeType size();
+		sizeType size() const;
 
 		/**
 		\return			A vector containing all currently used keys
 		\brief Returns an Vector of the keys which are stored in the map.
 		*/
-		Vector<K> keySet();
+		Vector<K*> keySet() const;
 
 		/**
 		\param		key The key of the value that will be deleted
@@ -160,33 +152,17 @@ namespace NOU::NOU_DAT_ALG
 		boolean remove(const K &key, V *out = nullptr);
 
 		/**
-		\param		key The key of the value that will be deleted
-		\param		out An optional output parameter. If this is not \p nullptr, the object that was removed 
-		                will be stored in it.
-		\param		keyCount
-		\brief Removes an Object which the specific key.
-		*/
-		boolean remove(K &&key, V *out = nullptr);
-
-		/**
 		\return			a vector containing all currently used values
 		\brief Returns an Vector of the Objects which are stored in the map.
 		*/
-		Vector<V> entrySet();
+		Vector<V*> entrySet() const;
 
 		/**
 		\param			key The key that will be checked;
 		\return			true if the key is contained inside the map;
 		\brief Checks if the key is contained in the map.
 		*/
-		boolean containsKey(const K &key);
-
-		/**
-		\param			key The key that will be checked;
-		\return			true if the key is contained inside the map;
-		\brief Checks if the key is contained in the map.
-		*/
-		boolean containsKey(K &&key);
+		boolean containsKey(const K &key) const;
 	};
 
 
@@ -252,7 +228,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template <typename K, typename V>
-	V& HashMap<K,V>::get(const K &key)
+	const V& HashMap<K,V>::get(const K &key) const
 	{
 		sizeType n;
 		n = hashObj(&key, 1, m_data.size());
@@ -276,7 +252,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	boolean HashMap<K, V>::isEmpty()
+	boolean HashMap<K, V>::isEmpty() const
 	{
 		if (m_size == 0)
 		{
@@ -289,7 +265,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	sizeType HashMap<K, V>::size()
+	sizeType HashMap<K, V>::size() const
 	{
 		return m_size;
 	}
@@ -317,7 +293,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	Vector<K> HashMap<K, V>::keySet()
+	Vector<K*> HashMap<K, V>::keySet() const
 	{
 		Vector<K> keySetVec(1);
 
@@ -327,7 +303,7 @@ namespace NOU::NOU_DAT_ALG
 			{
 				for (sizeType j = 0; j < m_data[i].size(); j++)
 				{
-					keySetVec.emplaceBack(m_data[i][j].dataOne);
+					keySetVec.emplaceBack(&(m_data[i][j].dataOne));
 				}
 			}
 		}
@@ -335,9 +311,9 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	Vector<V> HashMap<K, V>::entrySet()
+	Vector<V*> HashMap<K, V>::entrySet() const
 	{
-		Vector<V> entrySetVec(1);
+		Vector<V*> entrySetVec(m_size);
 
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
@@ -345,7 +321,7 @@ namespace NOU::NOU_DAT_ALG
 			{
 				for (sizeType j = 0; j < m_data[i].size(); j++)
 				{
-					entrySetVec.emplaceBack(m_data[i][j].dataTwo);
+					entrySetVec.emplaceBack(&(m_data[i][j].dataTwo));
 				}
 			}
 		}
@@ -353,13 +329,13 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::containsKey(const K &key) 
+	boolean HashMap<K, V>::containsKey(const K &key) const
 	{
-		Vector<K> tmp = keySet();
+		Vector<K*> tmp = keySet();
 
 		for (sizeType i = 0; i < tmp.size(); i++)
 		{
-			if (tmp.at(i) == key) {
+			if (*(tmp.at(i)) == key) {
 				return true;
 			}
 		}
@@ -382,24 +358,6 @@ namespace NOU::NOU_DAT_ALG
 	boolean HashMap<K, V>::map(K &&key, const V &value)
 	{
 		return mapImp(Wrapper<K>(NOU_CORE::move(key)), Wrapper<V>(value));
-	}
-
-	template <typename K, typename V>
-	V& HashMap<K, V>::get(K &&key)
-	{
-		return m_data[0][0].dataTwo;
-	}
-
-	template <typename K, typename V>
-	boolean HashMap<K, V>::remove(K &&key, V *out)
-	{
-		return true;
-	}
-
-	template <typename K, typename V>
-	boolean HashMap<K, V>::containsKey(K &&key)
-	{
-		return true;
 	}
 	///\endcond
 }
