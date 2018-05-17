@@ -9,7 +9,6 @@
 //#include <stdio.h>
 //#include <io.h>
 
-#include <sys/stat.h>
 
 
 
@@ -68,11 +67,11 @@ namespace NOU::NOU_FILE_MNGT
 		\brief File stream of the opened File
 		*/
 		FILE															*m_data;
+
 		/**
 		\brief Wether the file is in append, write, read mode or any combination of those
 		*/
 		AccessMode														m_mode;
-
 
 		/**
 		\brief Path to the folder containing the file
@@ -95,16 +94,19 @@ namespace NOU::NOU_FILE_MNGT
 		\param other other constructer from which this constructor will copy
 		*/
 		File(const File &other) = delete;
+
 		/**
 		\brief Move-construcor of the File class
 
 		\param other other constructer from which this constructor will move
 		*/
 		File(File &&other);
+
 		/**
 		\brief destructor of the File Class
 		*/
 		~File();
+
 		/**
 		\brief Reads a single byte from the file
 
@@ -119,6 +121,19 @@ namespace NOU::NOU_FILE_MNGT
 		\brief reads a string of given size
 		*/
 		void read(sizeType size, char8 *buffer);
+
+		/**
+		\param size the byte count that will be read into
+		\param a reference to a string where the read data will be written to
+		\brief reads a string containing the read byte in the size of the size parameter and writes it ot the buffer
+		*/
+		void read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer);
+
+		/**
+		\param a reference to a string where the read data will be written to
+		\brief reads the whole file into a string
+		*/
+		void read(NOU::NOU_DAT_ALG::String8 &buffer);
 
 		/**
 		\param b The byte to write
@@ -168,8 +183,6 @@ namespace NOU::NOU_FILE_MNGT
 		\return current AccessMode 
 		*/
 		const AccessMode& getMode();
-
-
 
 		/**
 		\brief Getter for Path

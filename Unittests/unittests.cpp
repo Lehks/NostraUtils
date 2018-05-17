@@ -2,6 +2,7 @@
 #include "Catch/catch.hpp"
 
 #define NOU_DEBUG
+#define NOU_DLL
 
 #include "nostrautils/NostraUtils.hpp"
 

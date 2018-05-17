@@ -25,7 +25,7 @@ namespace NOU::NOU_MATH
 	\link subsec_configure_storageLayout This chapter\endlink in the color tutorial will hold further 
 	information how and why different storage layouts may be used.
 	*/
-	class NOU_CLASS ColorStorageLayoutImpl final
+	class ColorStorageLayoutImpl final
 	{
 	private:
 		/**
@@ -293,7 +293,7 @@ namespace NOU::NOU_MATH
 	the macro will expand to a class and definitions for the members in that class.
 	*/
 #define NOU_GENERATE_COLOR_CONFIG(name, type, min, max, layout, cmpEpsi)		 \
-	struct NOU_CLASS name										 		         \
+	struct name										 							 \
 	{														 	 		         \
 		using ChannelType = type;							 	 		         \
 		constexpr static ChannelType CHANNEL_MIN = min;		 	 		         \
@@ -323,7 +323,7 @@ namespace NOU::NOU_MATH
 	\link Color_tut This page\endlink holds a full tutorial about the usage of this class.
 	*/
 	template<typename T>
-	class NOU_CLASS Color final
+	class Color final
 	{
 	public:
 		/**
@@ -878,13 +878,13 @@ namespace NOU::NOU_MATH
 	}
 
 	template<typename T>
-	constexpr Color<T>::Color<T>() :
+	constexpr Color<T>::Color() :
 		m_storageLayout(DEFAULT_STORAGE_LAYOUT),
 		m_channels{ CHANNEL_MIN, CHANNEL_MIN, CHANNEL_MIN, CHANNEL_MAX }
 	{}
 
 	template<typename T>
-	constexpr Color<T>::Color<T>(typename Color<T>::ChannelType red, 
+	constexpr Color<T>::Color(typename Color<T>::ChannelType red, 
 		typename Color<T>::ChannelType green, typename Color<T>::ChannelType blue, 
 		typename Color<T>::ChannelType alpha, const ColorStorageLayoutImpl &storageLayout) :
 		m_storageLayout(storageLayout),

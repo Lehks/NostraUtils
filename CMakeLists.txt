@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project("NostraUtils" CXX)
 
 option(NOU_CPP14_COMPATIBLILTY_MODE "Disables some C++17-only features." OFF)
+option(NOU_UNITTEST_COLOR "Enables or disables color in the Unit-Test output." ON)
 
 # Set language standard
 if ("${NOU_CPP14_COMPATIBLILTY_MODE}")
@@ -27,6 +28,10 @@ if (${COMPILE_AS_DEBUG})
 	add_definitions (-DNOU_DEBUG)
 endif()
 #===
+
+if(NOT NOU_UNITTEST_COLOR)
+	add_definitions(-DCATCH_CONFIG_COLOUR_NONE)
+endif()
 
 
 #=== Set RPATH
