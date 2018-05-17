@@ -44,12 +44,12 @@ namespace NOU::NOU_FILE_MNGT
 
         if(ret.startsWith('~'))
         {
+            struct passwd *pw = getpwuid(getuid());
+
             if (ret.at(1) != '/')
             {
                 ret.insert(1,'/');
             }
-
-            struct passwd *pw = getpwuid(getuid());
 
             NOU::NOU_DAT_ALG::String8 str(pw->pw_dir);
 
