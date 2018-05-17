@@ -22,7 +22,7 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template<typename K, typename V>
-	class NOU_CLASS HashMap 
+	class HashMap 
 	{
 	private:
 		/**

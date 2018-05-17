@@ -22,7 +22,7 @@ namespace NOU::NOU_THREAD
 	/**
 	\brief A platform independent wrapper for a thread. Currently, std::thread is used.
 	*/
-	class NOU_CLASS ThreadWrapper
+	class ThreadWrapper
 	{
 	public:
 		/**
@@ -49,7 +49,7 @@ namespace NOU::NOU_THREAD
 		\brief Returns the maximum amount of threads that can be run simultaneously on the current CPU,
 		       or 0 if that value can not be determined.
 		*/
-		static uint32 maxThreads();
+		NOU_FUNC static uint32 maxThreads();
 
 		/**
 		\param function The function to execute.
@@ -63,52 +63,52 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief Copying threads is not allowed.
 		*/
-		ThreadWrapper(const ThreadWrapper&) = delete;
+		NOU_FUNC ThreadWrapper(const ThreadWrapper&) = delete;
 
 		/**
 		\param other The instance to move from.
 
 		\brief Moves the thread from another instance to this one.
 		*/
-		ThreadWrapper(ThreadWrapper&& other);
+		NOU_FUNC ThreadWrapper(ThreadWrapper&& other);
 
 		/**
 		\return The underlying thread.
 
 		\brief Returns the thread that is being wrapped around.
 		*/
-		UnderylingType& getUnderlying();
+		NOU_FUNC UnderylingType& getUnderlying();
 
 		/**
 		\return The underlying thread.
 
 		\brief Returns the thread that is being wrapped around.
 		*/
-		const UnderylingType& getUnderlying() const;
+		NOU_FUNC const UnderylingType& getUnderlying() const;
 
 		/**
 		\brief If possible, joins the thread.
 		*/
-		void join();
+		NOU_FUNC void join();
 
 		/**
 		\brief If possible, joins the thread.
 		*/
-		void detach();
+		NOU_FUNC void detach();
 
 		/**
 		\return Whether the thread is joinable or not.
 
 		\brief Returns whether the thread is joinable or not.
 		*/
-		boolean joinable() const;
+		NOU_FUNC boolean joinable() const;
 
 		/**
 		\return The ID of the thread.
 
 		\brief Returns the ID of the thread.
 		*/
-		ID getID() const;
+		NOU_FUNC ID getID() const;
 	};
 
 	template<typename F, typename... ARGS>

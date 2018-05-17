@@ -36,7 +36,7 @@ namespace NOU::NOU_DAT_ALG
 	1  => -1
 	*/
 	template<typename R = CompareResult>
-	NOU_FUNC constexpr R invert(const R& result);
+	constexpr R invert(const R& result);
 
 	/**
 	\tparam T The type of the objects that will be compared.
@@ -67,7 +67,7 @@ namespace NOU::NOU_DAT_ALG
 	      languages)
 	*/
 	template<typename T, typename R = CompareResult>
-	NOU_FUNC constexpr R genericComparator(const T &a, const T &b);
+	constexpr R genericComparator(const T &a, const T &b);
 
 	/**
 	\tparam T The type of the objects that will be compared.
@@ -87,18 +87,18 @@ namespace NOU::NOU_DAT_ALG
 	using invert().
 	*/
 	template<typename T, typename R = CompareResult>
-	NOU_FUNC constexpr R genericInvertedComparator(const T &a, const T &b);
+	constexpr R genericInvertedComparator(const T &a, const T &b);
 
 	///\todo comment
 	///\cond
 	template<>
-	NOU_FUNC constexpr CompareResult genericComparator<char8, CompareResult>(const char8 &a, const char8 &b);
+	constexpr CompareResult genericComparator<char8, CompareResult>(const char8 &a, const char8 &b);
 
 	template<>
-	NOU_FUNC constexpr CompareResult genericComparator<char16, CompareResult>(const char16 &a, const char16 &b);
+	constexpr CompareResult genericComparator<char16, CompareResult>(const char16 &a, const char16 &b);
 
 	template<>
-	NOU_FUNC constexpr CompareResult genericComparator<char32, CompareResult>(const char32 &a, const char32 &b);
+	constexpr CompareResult genericComparator<char32, CompareResult>(const char32 &a, const char32 &b);
 	///\endcond
 
 	template<typename R>

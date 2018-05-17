@@ -24,7 +24,7 @@ namespace NOU::NOU_MEM_MNGT
 	\brief A deleter that calls <tt>delete</tt>.
 	*/
 	template<typename T>
-	NOU_FUNC void defaultDeleter(T *t);
+	void defaultDeleter(T *t);
 
 	/**
 	\tparam T The type of object to delete.
@@ -32,7 +32,7 @@ namespace NOU::NOU_MEM_MNGT
 	\brief A deleter that calls <tt>delete[]</tt>.
 	*/
 	template<typename T>
-	NOU_FUNC void defaultArrayDeleter(T *t);
+	void defaultArrayDeleter(T *t);
 
 	/**
 	\tparam T The type of object to delete.
@@ -40,7 +40,7 @@ namespace NOU::NOU_MEM_MNGT
 	\brief A deleter that calls nostra::utils::mem_mngt::deallocateUninitialized.
 	*/
 	template<typename T>
-	NOU_FUNC void uninitializedDeleter(T *t);
+	void uninitializedDeleter(T *t);
 
 	/**
 	\tparam T The type of object to delete.
@@ -49,7 +49,7 @@ namespace NOU::NOU_MEM_MNGT
 	memory that does not need to be freed.
 	*/
 	template<typename T>
-	NOU_FUNC void nullDeleter(T *t);
+	void nullDeleter(T *t);
 
 	/**
 	\tparam T The type of object to delete.
@@ -62,7 +62,7 @@ namespace NOU::NOU_MEM_MNGT
 	it works with all classes that have a <tt>.deallocate()</tt> member function.
 	*/
 	template<typename T, typename ALLOCATOR>
-	class NOU_CLASS AllocationCallbackDeleter
+	class AllocationCallbackDeleter
 	{
 	private:
 		/**
@@ -110,7 +110,7 @@ namespace NOU::NOU_MEM_MNGT
 	be alive for the entire time that this Deleter is used.
 	*/
 	template<typename T>
-	class NOU_CLASS AllocationCallbackRefDeleter
+	class AllocationCallbackRefDeleter
 	{
 	private:
 		/**
@@ -163,7 +163,7 @@ namespace NOU::NOU_MEM_MNGT
 	This class is not meant to be used directly by a user.
 	*/
 	template<typename T>
-	class NOU_FUNC SmartPtrTempl
+	class SmartPtrTempl
 	{
 	public:
 		/**
@@ -305,7 +305,7 @@ namespace NOU::NOU_MEM_MNGT
 	This class is not meant to be used directly by a user.
 	*/
 	template<typename T, typename DELETER>
-	class NOU_CLASS ManagedPtrTemplate
+	class ManagedPtrTemplate
 	{
 	public:
 		/**
@@ -351,7 +351,7 @@ namespace NOU::NOU_MEM_MNGT
 	\brief A smart pointer that does not allow any other smart pointers to point to it's own pointer.
 	*/
 	template<typename T, typename DELETER = DeleterFunc<T>>
-	class NOU_CLASS UniquePtr final : public SmartPtrTempl<T>, public ManagedPtrTemplate<T, DELETER>
+	class UniquePtr final : public SmartPtrTempl<T>, public ManagedPtrTemplate<T, DELETER>
 	{
 	public:
 		/**

@@ -32,7 +32,7 @@ namespace NOU::NOU_DAT_ALG
 	uninitialized behavior by default.
 	*/
 	template<typename T>
-	class NOU_CLASS Uninitialized final
+	class Uninitialized final
 	{
 	private:
 		/**
