@@ -485,6 +485,11 @@ namespace NOU::NOU_CORE
 			INVALID_OBJECT,
 
 			/**
+			\brief Cannot open the specified file.
+			*/
+			CANNOT_OPEN_FILE,
+
+			/**
 			\brief	Not an actual error, but always the last element in the enum. The error codes 0 - 
 					LAST_ELEMENT are always reserved for the default error pool.
 			*/
