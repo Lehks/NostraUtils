@@ -129,6 +129,14 @@ namespace NOU::NOU_DAT_ALG
 		const V& get(const K &key) const;
 
 		/**
+		\param key		the key where a value will be returned
+		\param			keySize the size of the actual Data of the key
+		\return value
+		\brief Returns the corresponding value mapped to a specific key or nullptr if it does not exist
+		*/
+		V& get(const K &key);
+
+		/**
 		\brief Checks whether the map is empty or not.
 		\return true if empty, false if otherwise
 		*/
@@ -144,7 +152,13 @@ namespace NOU::NOU_DAT_ALG
 		\return			A vector containing all currently used keys
 		\brief Returns an Vector of the keys which are stored in the map.
 		*/
-		Vector<K*> keySet() const;
+		Vector<K*> keySet();
+
+		/**
+		\return			A vector containing all currently used keys
+		\brief Returns an Vector of the keys which are stored in the map.
+		*/
+		const Vector<K*> keySet() const;
 
 		/**
 		\param		key The key of the value that will be deleted
@@ -159,7 +173,13 @@ namespace NOU::NOU_DAT_ALG
 		\return			a vector containing all currently used values
 		\brief Returns an Vector of the Objects which are stored in the map.
 		*/
-		Vector<V*> entrySet() const;
+		Vector<V*> entrySet();
+
+		/**
+		\return			a vector containing all currently used values
+		\brief Returns an Vector of the Objects which are stored in the map.
+		*/
+		const Vector<V*> entrySet() const;
 
 		/**
 		\param			key The key that will be checked;
@@ -265,6 +285,30 @@ namespace NOU::NOU_DAT_ALG
 		return m_data.data()[0].data()[0].dataTwo;
 	}
 
+	template <typename K, typename V>
+	V& HashMapT<K,V>::get(const K &key)
+	{
+		sizeType n;
+		n = hashObj(&key, 1, m_data.size());
+
+		if (m_data[n].size() == 0) 
+		{	//if nothing is mapped to HashPos n, return null
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
+			return m_data.data()[0].data()[0].dataTwo;
+		}
+
+		for (sizeType i = 0; i < m_data[n].size(); i++)
+		{	//search for key in HashPos n
+			if (m_data[n][i].dataOne == key)
+			{
+				return m_data[n][i].dataTwo;
+			}
+		}
+
+		NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
+		return m_data.data()[0].data()[0].dataTwo;
+	}
+
 	template<typename K, typename V>
 	boolean HashMapT<K, V>::isEmpty() const
 	{
@@ -307,7 +351,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	Vector<K*> HashMapT<K, V>::keySet() const
+	Vector<K*> HashMapT<K, V>::keySet()
 	{
 		Vector<K> keySetVec(m_size);
 
@@ -325,7 +369,43 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename K, typename V>
-	Vector<V*> HashMapT<K, V>::entrySet() const
+	const Vector<K*> HashMapT<K, V>::keySet() const
+	{
+		Vector<K> keySetVec(m_size);
+
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (m_data[i].size() != 0)
+			{
+				for (sizeType j = 0; j < m_data[i].size(); j++)
+				{
+					keySetVec.emplaceBack(&(m_data[i][j].dataOne));
+				}
+			}
+		}
+		return keySetVec;
+	}
+
+	template<typename K, typename V>
+	const Vector<V*> HashMapT<K, V>::entrySet() const
+	{
+		Vector<V*> entrySetVec(m_size);
+
+		for (sizeType i = 0; i < m_data.size(); i++)
+		{
+			if (m_data[i].size() != 0)
+			{
+				for (sizeType j = 0; j < m_data[i].size(); j++)
+				{
+					entrySetVec.emplaceBack(&(m_data[i][j].dataTwo));
+				}
+			}
+		}
+		return entrySetVec;
+	}
+
+	template<typename K, typename V>
+	Vector<V*> HashMapT<K, V>::entrySet()
 	{
 		Vector<V*> entrySetVec(m_size);
 
