@@ -79,7 +79,21 @@ namespace NOU::NOU_FILE_MNGT
 		//NOU::NOU_DAT_ALG::StringView8							m_path
 		Path															m_path;
 
+		/**
+		\brief The size of the File on the Harddrive
+		*/
+		sizeType														m_size;
+
 	public:
+
+		/**
+		\brief sets the internal filesize.
+		\details it's not possible to call this function whie a filestreame is currently opened. 
+				 Everytime the Filesize could have changed or right before the execution of an 
+				 operation where the filesize is needed this function has do be called otherwise 
+				 said functions could result in undefined behaviour.
+		*/
+		void fetchSize();
 
 		/**
 		\brief Constructor of the File class
@@ -127,13 +141,14 @@ namespace NOU::NOU_FILE_MNGT
 		\param a reference to a string where the read data will be written to
 		\brief reads a string containing the read byte in the size of the size parameter and writes it ot the buffer
 		*/
-		void read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer);
+		// void read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer);
 
 		/**
-		\param a reference to a string where the read data will be written to
+		\param buffer a reference to a string where the read data will be written to
+		\param size how many chars/bytes will be read into the String (0 = the whole File)
 		\brief reads the whole file into a string
 		*/
-		void read(NOU::NOU_DAT_ALG::String8 &buffer);
+		void read(NOU::NOU_DAT_ALG::String8 &buffer, sizeType size = 0);
 
 		/**
 		\param b The byte to write
@@ -221,7 +236,6 @@ namespace NOU::NOU_FILE_MNGT
 		\param mode AccessMode of the file
 		*/
 		void setMode(AccessMode mode);
-
 	};
 }
 

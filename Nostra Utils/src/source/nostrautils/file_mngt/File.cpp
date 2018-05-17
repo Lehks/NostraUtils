@@ -21,8 +21,14 @@ namespace NOU::NOU_FILE_MNGT
 
 	File::File(const Path &path) :
 		m_path(path),
-		m_data(nullptr)
-	{}
+		m_data(nullptr),
+		m_size(0)
+	{
+		if(exists())
+		{
+			fetchSize();
+		}
+	}
 	
 	//mv
 	File::File(File &&other) :
@@ -203,13 +209,10 @@ namespace NOU::NOU_FILE_MNGT
 
 	sizeType File::size()
 	{
-		if(isCurrentlyOpen()){
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Cannot read size of currently opened file");
-			return 0;
-		}
 		if(exists()){
 			std::ifstream in(m_path.getAbsolutePath().rawStr(), std::ifstream::ate | std::ifstream::binary);
-			return in.tellg();
+			// return in.tellg();
+			return m_size;
 		} else
 		{
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "File does not exist"); // PATH_NOT_FOUND
@@ -227,10 +230,20 @@ namespace NOU::NOU_FILE_MNGT
 	boolean File::deleteFile()
 	{
 		int err = remove(m_path.getAbsolutePath().rawStr());
+		if(!isCurrentlyOpen())
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is currently opened");
+			return false;
+		}
+		if(!exists())
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
+			return false;
+		}
 		return err == 0;
 	}
 
-	void File::read(sizeType size, NOU::NOU_DAT_ALG::String8 &buffer)
+	void File::read(NOU::NOU_DAT_ALG::String8 &buffer, sizeType size)
 	{
 		sizeType fileSize = this->size();
 
@@ -257,6 +270,10 @@ namespace NOU::NOU_FILE_MNGT
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Size has to be smaller or equal than the actual FileSize");
 			size = fileSize;
 		}
+		if(size == 0)
+		{
+			size = fileSize;
+		}
 
 		NOU::NOU_DAT_ALG::Vector<char8> buff(size+1);
 		open();
@@ -269,7 +286,7 @@ namespace NOU::NOU_FILE_MNGT
 		buffer.append(buff.data());
 	}
 
-	void File::read(NOU::NOU_DAT_ALG::String8 &buffer)
+	/* void File::read(NOU::NOU_DAT_ALG::String8 &buffer)
 	{
 		if(!exists())
 		{
@@ -295,5 +312,21 @@ namespace NOU::NOU_FILE_MNGT
 			buffer.clear();
 		}
 		buffer.append(buff.data());
+	}*/
+
+	void File::fetchSize()
+	{
+		if(isCurrentlyOpen()){
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Cannot read size of currently opened file");
+			return;
+		}
+		if(exists()){
+			std::ifstream in(m_path.getAbsolutePath().rawStr(), std::ifstream::ate | std::ifstream::binary);
+			m_size = in.tellg();
+		} else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "File does not exist"); // PATH_NOT_FOUND
+			return;
+		}
 	}
 }
