@@ -33,11 +33,15 @@ namespace NOU::NOU_LANG
 			return false;
 		}
 
+		// Merge ini file
 		if (Lang::m_data.containsKey(Lang::activeLanguage)) {
-			Lang::m_data.remove(Lang::activeLanguage);
+			Lang::m_data.get(Lang::activeLanguage).merge(inifile);
+			return true;
 		}
 
 		Lang::m_data.map(Lang::activeLanguage, inifile);
+
+		return true;
 	}
 
 
