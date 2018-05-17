@@ -470,7 +470,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	int32 INIFile::getDataType(const NouString &key, const NouString & section = INI_DEFAULT_SECTION)
+	int32 INIFile::getDataType(const NouString &key, const NouString & section)
 	{
 		NouString search = section + "." + key;
 
