@@ -171,7 +171,7 @@ namespace NOU::NOU_FILE_MNGT
 			fs.close();
 		}else
 		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Fille allready exists");
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File already exists");
 		}
 	}
 
