@@ -1963,6 +1963,29 @@ TEST_METHOD(INIFile)
 	IsTrue(parser.write("unittest.ini"));
 	IsTrue(parser.read());
 
+
+	NOU::NOU_FILE_MNGT::INIFile parser2 = NOU::NOU_FILE_MNGT::INIFile("unittest2.ini");
+
+	parser2.setString("TEST_STR2", "Testing");
+	parser2.setInt("TEST_INT2", 42);
+	parser2.setFloat("TEST_FLOAT2", 13.37);
+
+	IsTrue(parser2.getDataType("TEST_STR2") == parser2.INI_TYPE_NouString);
+	IsTrue(parser2.getDataType("TEST_INT2") == parser2.INI_TYPE_INT);
+	IsTrue(parser2.getDataType("TEST_FLOAT2") == parser2.INI_TYPE_FLOAT);
+
+	NOU::NOU_DAT_ALG::HashMap<NOU::NOU_FILE_MNGT::INIFile::NouString, NOU::NOU_FILE_MNGT::INIFile::NouString> inikeys = parser2.getKeys();
+
+	IsTrue(inikeys.containsKey("TEST_STR2"));
+	IsTrue(inikeys.containsKey("TEST_INT2"));
+	IsTrue(inikeys.containsKey("TEST_INT2"));
+
+	parser.merge(parser2);
+
+	IsTrue(parser.keyExists("TEST_STR2"));
+	IsTrue(parser.keyExists("TEST_INT2"));
+	IsTrue(parser.keyExists("TEST_INT2"));
+
 	NOU_CHECK_ERROR_HANDLER;
 }
 
