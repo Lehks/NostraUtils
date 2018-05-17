@@ -407,4 +407,118 @@ namespace NOU::NOU_FILE_MNGT
 
 		return (m_dataString.containsKey(search) || m_dataInteger.containsKey(search) || m_dataFloat.containsKey(search));
 	}
+
+
+	NOU::NOU_DAT_ALG::HashMap<INIFile::NouString, INIFile::NouString> INIFile::getKeys()
+	{
+		NOU::NOU_DAT_ALG::HashMap<NouString, NouString> keys = NOU::NOU_DAT_ALG::HashMap<NouString, NouString>();
+
+		NOU::NOU_DAT_ALG::Vector<NouString> sectionKeys = m_dataSections.keySet();
+		NOU::NOU_DAT_ALG::Vector<int32> sectionValues   = m_dataSections.entrySet();
+		NOU::NOU_DAT_ALG::Vector<NouString> stringKeys  = m_dataString.keySet();
+		NOU::NOU_DAT_ALG::Vector<NouString> integerKeys = m_dataInteger.keySet();
+		NOU::NOU_DAT_ALG::Vector<NouString> floatKeys   = m_dataFloat.keySet();
+
+		NouString key_section;
+		int32 pos_dot;
+		int32 pos_sec;
+
+		// Loop through all the sections
+		for (int32 isec = (sectionKeys.size() - 1); isec >= 0; isec--)
+		{
+			// Save string size for later
+			pos_sec = sectionKeys.at(isec).size();
+
+			// Get keys from string map
+			for (auto istr = 0; istr < stringKeys.size(); istr++)
+			{
+				pos_dot = stringKeys.at(istr).firstIndexOf('.');
+				if (pos_dot == NouString::NULL_INDEX) continue;
+
+				key_section = stringKeys.at(istr).substring(0, pos_dot);
+				if (key_section != sectionKeys.at(isec)) continue;
+
+				keys.map(stringKeys.at(istr).substring(pos_sec + 1).rawStr(), key_section);
+			}
+
+			// Get keys from int map
+			for (auto iint = 0; iint < integerKeys.size(); iint++)
+			{
+				pos_dot = integerKeys.at(iint).firstIndexOf('.');
+				if (pos_dot == NouString::NULL_INDEX) continue;
+
+				key_section = integerKeys.at(iint).substring(0, pos_dot);
+				if (key_section != sectionKeys.at(isec)) continue;
+
+				keys.map(integerKeys.at(iint).substring(pos_sec + 1).rawStr(), key_section);
+			}
+
+			// Get keys from float data
+			for (auto ifloat = 0; ifloat < floatKeys.size(); ifloat++)
+			{
+				pos_dot = floatKeys.at(ifloat).firstIndexOf('.');
+				if (pos_dot == NouString::NULL_INDEX) continue;
+
+				key_section = floatKeys.at(ifloat).substring(0, pos_dot);
+				if (key_section != sectionKeys.at(isec)) continue;
+
+				keys.map(floatKeys.at(ifloat).substring(pos_sec + 1).rawStr(), key_section);
+			}
+		}
+
+		return keys;
+	}
+
+
+	int32 INIFile::getDataType(const NouString &key, const NouString & section = INI_DEFAULT_SECTION)
+	{
+		NouString search = section + "." + key;
+
+		if (m_dataString.containsKey(search)) {
+			return INI_TYPE_NouString;
+		}
+
+		if (m_dataInteger.containsKey(search)) {
+			return INI_TYPE_INT;
+		}
+
+		if (m_dataFloat.containsKey(search)) {
+			return INI_TYPE_FLOAT;
+		}
+
+		return 0;
+	}
+
+
+	void INIFile::merge(INIFile & other)
+	{
+		NOU::NOU_DAT_ALG::HashMap<NouString, NouString> otherKeySections = other.getKeys();
+
+		NOU::NOU_DAT_ALG::Vector<NouString> keys     = otherKeySections.keySet();
+		NOU::NOU_DAT_ALG::Vector<NouString> sections = otherKeySections.entrySet();
+
+		NouString key, section;
+
+		// Loop through all the keys
+		for (int32 i = (keys.size() - 1); i >= 0; i--)
+		{
+			key     = keys.at(i);
+			section = sections.at(i);
+
+			switch (other.getDataType(key, section)) 
+			{
+				case INI_TYPE_NouString:
+					this->setString(key, other.getString(key, section), section);
+					break;
+
+				case INI_TYPE_INT:
+					this->setInt(key, other.getInt(key, section), section);
+					break;
+
+				case INI_TYPE_FLOAT:
+					this->setFloat(key, other.getFloat(key, section), section);
+					break;
+			}
+		}
+	}
 }
