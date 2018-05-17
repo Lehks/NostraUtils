@@ -204,11 +204,34 @@ namespace NOU::NOU_FILE_MNGT
 			/**
 			\param key     The key to search
 			\param section The section to search in
-			\return        TTrue if found, False if not.
+			\return        True if found, False if not.
 
 			\brief Checks if a given key exists in the given section.
 			*/
 			boolean keyExists(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
+
+			/**
+			\param key     The key to search for
+			\param section The section to search in
+			\return        0 = Key not found, 1 = String, 2 = Integer, 3 = Float
+
+			\brief Returns the data type for the value of a given key.
+			*/
+			int32 getDataType(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
+
+			/**
+			\return A hashmap with the key - section pairs.
+
+			\brief Returns a list of all keys in the ini file, including their corresponding section.
+			*/
+			NOU::NOU_DAT_ALG::HashMap<NouString, NouString> getKeys();
+
+			/**
+			\param other The inifile that should be merged into this one.
+
+			\brief Merges the given ini file data into the current file. Existing keys will be replaced.
+			*/
+			void merge(INIFile &other);
 	};
 }
 #endif
