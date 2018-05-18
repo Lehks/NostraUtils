@@ -25,7 +25,7 @@ namespace NOU::NOU_DAT_ALG
 	\return the pivots
 	*/
 	template <typename T>
-	NOU_FUNC T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot);
+	T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot);
 
 	/**
 	\brief An implementation of the quicksort algorithm.
@@ -36,10 +36,10 @@ namespace NOU::NOU_DAT_ALG
 	\return The sorted array.
 	*/
 	template<typename T >
-	NOU_FUNC T* qsort(T *a, NOU::int64 leftrangelimit, NOU::int64 rightrangelimit);
+	T* qsort(T *a, NOU::int64 leftrangelimit, NOU::int64 rightrangelimit);
 
 	template<typename T>
-	NOU_FUNC T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot)
+	T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot)
 	{
 		int64 pn = leftrangelimit;
 		int64 pv = array[pivot];
@@ -66,7 +66,7 @@ namespace NOU::NOU_DAT_ALG
 
 
 	template<typename T >
-	NOU_FUNC T* qsort(T *a, int64 leftrangelimit, int64 rightrangelimit)
+	T* qsort(T *a, int64 leftrangelimit, int64 rightrangelimit)
 	{
 		
 		if (rightrangelimit > leftrangelimit) {

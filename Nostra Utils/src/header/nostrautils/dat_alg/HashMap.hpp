@@ -27,7 +27,7 @@ namespace NOU::NOU_DAT_ALG
 	*/
 
 	template<typename K, typename V>
-	class NOU_CLASS HashMap 
+	class HashMap 
 	{
 	private:
 
@@ -57,8 +57,10 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The default count of the internal used buckets.
 		*/
-		const static NOU::sizeType							LOAD_SIZE = 20;  //can be changed to minimize collisions -> the bigger the more often O(1) occurs
+		//can be changed to minimize collisions -> the bigger the more often O(1) occurs
+		constexpr static NOU::sizeType						LOAD_SIZE = 20;
 
+	private:
 		/**
 		\brief count of current objects stored inside the map.
 		*/
@@ -69,8 +71,25 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		Vector<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>		m_data;
 
+		/**
+		\param key The key to search.
 
-		boolean mapImp(Wrapper<K> &&key, Wrapper<V> &&value);
+		\return A pointer to the pair if it is in the map. If not, \p nullptr.
+
+		\brief Searches for the pair with the passed key. Compares keys using the operator ==.
+		*/
+		NOU::NOU_DAT_ALG::Pair<K, V>* getPair(const K &key);
+
+		/**
+		\param key  The key to search.
+		\param comp The comparator to use.
+
+		\return A pointer to the pair if it is in the map. If not, \p nullptr.
+
+		\brief Searches for the pair with the passed key. Compares keys using the passed comparator.
+		*/
+		NOU::NOU_DAT_ALG::Pair<K, V>* getPair(const K &key, Comparator<K> comp);
+
 	public:
 
 		/**
@@ -122,8 +141,16 @@ namespace NOU::NOU_DAT_ALG
 		\return value
 		\brief Returns the corresponding value mapped to a specific key or nullptr if it does not exist
 		*/
+		V& get(const K &key);
+
 		const V& get(const K &key) const;
 
+		/**
+		\param key		the key where a value will be returned
+		\return value
+		\brief Returns the corresponding value mapped to a specific key or nullptr if it does not exist
+		*/
+		V& get(const K &key, Comparator<K> comp);
 		/**
 		\brief Checks whether the map is empty or not.
 		\return true if empty, false if otherwise
@@ -163,8 +190,69 @@ namespace NOU::NOU_DAT_ALG
 		\brief Checks if the key is contained in the map.
 		*/
 		boolean containsKey(const K &key) const;
+		/**
+		\param			key  The key that will be checked.
+		\param			comp The comparator that will be used to check two keys for equality.
+		\return			true if the key is contained inside the map;
+		\brief Checks if the key is contained in the map.
+		*/
+		boolean containsKey(const K &key, Comparator<K> comp) const;
+		/**
+		\return The amount of buckets in this hash map.
+
+		\brief Returns the amount of buckets in this hash map.
+
+		\details
+		Returns the amount of buckets in this hash map. This is the exact value that was passed as the first 
+		value to the constructor, or, in the case that there were now values passed, \p LOAD_SIZE.
+		*/
+		NOU::sizeType bucketCount() const;
+		/**
+		\brief Overloading [] operators. Works now exactly like get();
+		*/
+		V& operator [](const K& key);
 	};
 
+	template <typename K, typename V>
+	constexpr NOU::sizeType HashMap<K, V>::LOAD_SIZE;
+
+	template <typename K, typename V>
+	NOU::NOU_DAT_ALG::Pair<K, V>* getPair(const K &key) {
+		NOU::sizeType hash = hashObj(&key, 1, m_data.size());
+
+		NOU::sizeType size = m_data[hash].size();
+
+		if (size == 0) {
+			return false;
+		}
+		else {
+			for (auto &pair : m_data[hash]) {
+				if (pair.dataone == key) {
+					return &pair;
+				}
+			}
+		}
+	}
+
+	template <typename K, typename V>
+	NOU::NOU_DAT_ALG::Pair<K, V>* getPair(const K &key, Comparator<K> comp) {
+		NOU::sizeType hash = hashObj(&key, 1, m_data.size());
+
+		NOU::sizeType size = m_data[hash].size();
+
+		if (size == 0) {
+			return nullptr;
+		}
+		else {
+			for (auto &pair : m_data[hash]) {
+				if (comp(pair.dataone, key) == 0) {
+					return &pair;
+				}
+			}
+
+			return nullptr;
+		}
+	}
 
 
 	template <typename K, typename V>
@@ -232,36 +320,39 @@ namespace NOU::NOU_DAT_ALG
 	{
 		sizeType n;
 		n = hashObj(&key, 1, m_data.size());
+		NOU::NOU_DAT_ALG::Pair<K, V> *pair = getPair(key);
 
-		if (m_data[n].size() == 0) 
-		{	//if nothing is mapped to HashPos n, return null
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
+		if(pair == nullptr) {
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, 
+				"No object was found.");
+
 			return m_data.data()[0].data()[0].dataTwo;
 		}
-
-		for (sizeType i = 0; i < m_data[n].size(); i++)
-		{	//search for key in HashPos n
-			if (m_data[n][i].dataOne == key)
-			{
-				return m_data[n][i].dataTwo;
-			}
+		else {
+			return pair->dataTwo;
 		}
+	}
 
-		NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
-		return m_data.data()[0].data()[0].dataTwo;
+	template <typename K, typename V>
+	V& HashMap<K, V>::get(const K &key, Comparator<K> comp)
+	{
+		NOU::NOU_DAT_ALG::Pair<K, V> *pair = getPair(key, comp);
+
+		if (pair == nullptr) {
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, 
+				"No object was found.");
+
+			return m_data.data()[0].data()[0].dataTwo;
+		}
+		else {
+			return pair->dataTwo;
+		}
 	}
 
 	template<typename K, typename V>
 	boolean HashMap<K, V>::isEmpty() const
 	{
-		if (m_size == 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return m_size == 0;
 	}
 
 	template<typename K, typename V>
@@ -275,7 +366,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		sizeType h;
 
-		h = hashObj(&key, 1,m_data.size());
+		h = hashObj(&key, 1, m_data.size());
 
 		for (sizeType i = 0; i < m_data[h].size(); i++)
 		{
@@ -299,12 +390,9 @@ namespace NOU::NOU_DAT_ALG
 
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
-			if (m_data[i].size() != 0)
+			for (sizeType j = 0; j < m_data[i].size(); j++)
 			{
-				for (sizeType j = 0; j < m_data[i].size(); j++)
-				{
-					keySetVec.emplaceBack(&(m_data[i][j].dataOne));
-				}
+				keySetVec.emplaceBack(m_data[i][j].dataOne);
 			}
 		}
 		return keySetVec;
@@ -318,12 +406,9 @@ namespace NOU::NOU_DAT_ALG
 
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
-			if (m_data[i].size() != 0)
+			for (sizeType j = 0; j < m_data[i].size(); j++)
 			{
-				for (sizeType j = 0; j < m_data[i].size(); j++)
-				{
-					entrySetVec.emplaceBack(&(m_data[i][j].dataTwo));
-				}
+				entrySetVec.emplaceBack(m_data[i][j].dataTwo);
 			}
 		}
 		return entrySetVec;
@@ -331,17 +416,23 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template <typename K, typename V>
-	boolean HashMap<K, V>::containsKey(const K &key) const
-	{
-		Vector<K*> tmp = keySet();
+	boolean HashMap<K, V>::containsKey(const K &key) const {
+		return getPair(key) != nullptr;
+	}
 
-		for (sizeType i = 0; i < tmp.size(); i++)
-		{
-			if (*(tmp.at(i)) == key) {
-				return true;
-			}
-		}
-		return false;
+	template <typename K, typename V>
+	boolean HashMap<K, V>::containsKey(const K &key, Comparator<K> comp) const {
+		return getPair(key, comp) != nullptr;
+	}
+
+	template<typename K, typename V>
+	V& HashMap<K, V>::operator [](const K &key) {
+		return get(key);
+	}
+
+	template<typename K, typename V>
+	NOU::sizeType HashMap<K, V>::bucketCount() const {
+		return m_data.size();
 	}
 
 	template <typename K, typename V>

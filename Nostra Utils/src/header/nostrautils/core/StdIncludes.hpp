@@ -612,7 +612,7 @@ static_cast<NOU::uint32> 									 \
 \brief Converts any expression into a const char*.
 */
 #ifndef NOU_STRINGIFY
-#define NOU_STRINGIFY(str) #str
+#define NOU_STRINGIFY(...) #__VA_ARGS__
 #endif 
 
 /**

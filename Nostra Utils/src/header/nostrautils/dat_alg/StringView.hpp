@@ -57,7 +57,7 @@ namespace NOU::NOU_DAT_ALG
 	date, since it points to the variable that points to the buffer (and the address of that variable never changes).
 	*/
 	template<typename CHAR_TYPE = char>
-	class NOU_CLASS StringView 
+	class StringView 
 	{
 	public:
 
