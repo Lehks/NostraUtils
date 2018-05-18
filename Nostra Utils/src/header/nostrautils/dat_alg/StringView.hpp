@@ -158,7 +158,7 @@ namespace NOU::NOU_DAT_ALG
 		getMultiplierForDecPlaces() because 2.123 has 3 decimal places.
 		*/
 		static float64 getMultiplierForDecPlaces(int32 place);
-
+		
 		/**
 		\brief A pointer to the string that is represented by this string view.
 		\note

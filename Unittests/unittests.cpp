@@ -968,9 +968,34 @@ IsTrue(NOU::DebugClass::getCounter() == 0);
 TEST_METHOD(Quicksort)
 
 {
+	class Test
+	{
+	private:
+		NOU::uint32 i;
+
+	public:
+		Test(NOU::uint32 i) :
+			i(i)
+		{}
+
+		NOU::uint32 get()
+		{
+			return i;
+		}
+	};
+
+
+	Test arrTest[5] = { Test(2),Test(1),Test(3),Test(5),Test(4) };
+	NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, NOU::NOU_DAT_ALG::genericComparator<NOU::uint32>);
+	IsTrue(arrTest[0].get() == 1);
+	IsTrue(arrTest[1].get() == 2);
+	IsTrue(arrTest[2].get() == 3);
+	IsTrue(arrTest[3].get() == 4);
+	IsTrue(arrTest[4].get() == 5);
+
 
 int arr[5] = {2,1,3,5,4};
-NOU::NOU_DAT_ALG::qsort(arr, 0, 4);
+NOU::NOU_DAT_ALG::qsort(arr, 0, 4, NOU::NOU_DAT_ALG::genericComparator<NOU::uint32>);
 IsTrue(arr[0] == 1);
 IsTrue(arr[1] == 2);
 IsTrue(arr[2] == 3);
