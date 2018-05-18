@@ -1991,29 +1991,38 @@ TEST_METHOD(INIFile)
 
 TEST_METHOD(Lang)
 {
+	using Lang = NOU::NOU_LANG::Lang;
+	using NouString = NOU::NOU_FILE_MNGT::INIFile::NouString;
+
 	// Create language file first
 	NOU::NOU_FILE_MNGT::INIFile parser = NOU::NOU_FILE_MNGT::INIFile("unittest-lang.ini");
 
-	parser.setString("LANG_TOKEN_A", "I am a translated token.");
-	parser.setString("LANG_TOKEN_B_0", "There are no eggs in the basket.");
-	parser.setString("LANG_TOKEN_B_1", "There is one egg in the basket.");
-	parser.setString("LANG_TOKEN_B_N", "There are multiple eggs in the basket");
-	parser.setString("LANG_TOKEN_C_TRUE", "This is true");
-	parser.setString("LANG_TOKEN_C_FALSE", "This is false");
-	parser.write();
+	NouString stringA      = "I am a translated token";
+	NouString stringB0     = "There are no eggs in the basket";
+	NouString stringB1     = "There is one egg in the basket";
+	NouString stringBN     = "There are multiple eggs in the basket";
+	NouString stringCTrue  = "This is true";
+	NouString stringCFalse = "This is false";
 
-	using Lang = NOU::NOU_LANG::Lang;
+	parser.setString("LANG_TOKEN_A", stringA);
+	parser.setString("LANG_TOKEN_B_0", stringB0);
+	parser.setString("LANG_TOKEN_B_1", stringB1);
+	parser.setString("LANG_TOKEN_B_N", stringBN);
+	parser.setString("LANG_TOKEN_C_TRUE", stringCTrue);
+	parser.setString("LANG_TOKEN_C_FALSE", stringCFalse);
+	parser.write("unittest-lang.ini");
 
 	Lang::setActive("de-DE");
 	IsTrue(Lang::getActive() == "de-DE");
 
 	IsTrue(Lang::loadFile("unittest-lang.ini"));
-	IsTrue(Lang::_("LANG_TOKEN_A") == "I am a translated token.");
-	IsTrue(Lang::_("LANG_TOKEN_B", 0) == "There are no eggs in the basket.");
-	IsTrue(Lang::_("LANG_TOKEN_B", 1) == "There is one egg in the basket.");
-	IsTrue(Lang::_("LANG_TOKEN_B", 2) == "There are multiple eggs in the basket");
-	IsTrue(Lang::_("LANG_TOKEN_C", true) == "This is true");
-	IsTrue(Lang::_("LANG_TOKEN_C", false) == "This is false");
+	
+	IsTrue(Lang::_("LANG_TOKEN_A").rawStr() == stringA.rawStr());
+	IsTrue(Lang::_("LANG_TOKEN_B", 0).rawStr() == stringB0.rawStr());
+	IsTrue(Lang::_("LANG_TOKEN_B", 1).rawStr() == stringB1.rawStr());
+	IsTrue(Lang::_("LANG_TOKEN_B", 2).rawStr() == stringBN.rawStr());
+	IsTrue(Lang::_("LANG_TOKEN_C", true).rawStr() == stringCTrue.rawStr());
+	IsTrue(Lang::_("LANG_TOKEN_C", false).rawStr() == stringCFalse.rawStr());
 
 	NOU_CHECK_ERROR_HANDLER;
 }
