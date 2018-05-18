@@ -1938,7 +1938,7 @@ TEST_METHOD(File)
 
 	file.fetchSize();
 	file.open(NOU::NOU_FILE_MNGT::AccessMode::READ);
-	file.read(buffer); //Reads the hole file into the buffer.
+	file.read(buffer); //Reads the whole file into the buffer.
 
 	file.close();
 	IsTrue(file.isCurrentlyOpen() == false);
