@@ -11,6 +11,8 @@
 #include <string>
 #include <iostream>
 
+#include "nostrautils/dat_alg/HashMapTest.hpp"
+
 #define NOU_CHECK_ERROR_HANDLER 																		 \
 				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
 				while(NOU::NOU_CORE::getErrorHandler().getErrorCount() > 0)								 \
@@ -1261,24 +1263,24 @@ TEST_METHOD(Hashfunction)
 NOU::int64 i1 = 243536768574;
 NOU::int64 i2 = 243536768574;
 
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
+NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1);
 //AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1));
 
 NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
 NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
+h = NOU::NOU_DAT_ALG::hashObj(&str1, 1);
 //AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 1));
 
 
 }
 
-/*TEST_METHOD(HashMap)
+TEST_METHOD(HashMap)
 {
-	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
-	NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
+	NOU::NOU_DAT_ALG::HashMapT<NOU::char8, NOU::int32> hm(100);
+	NOU::NOU_DAT_ALG::HashMapT<NOU::char8, NOU::int32> hm1(100);
 	NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
 	NOU::boolean b;
 
@@ -1326,45 +1328,41 @@ IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
 	IsTrue(hm1.get('h') == 2);
 	IsTrue(hm1.get(' ') == 8);
 
-	NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
+	NOU::NOU_DAT_ALG::HashMapT<NOU::int32, NOU::int32> cm(100);
 
 	cm.map(5, 1);
 	cm.map(41, 2);
 	cm.map(10, 3);
 	cm.map(49875, 4);
 
-	NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
-
-	c = cm.entrySet();
+	NOU::NOU_DAT_ALG::Vector<NOU::int32*> &c = cm.entrySet();
 
 	// AreEqual(c[0], 1);
 	// AreEqual(c[1], 4);
 	// AreEqual(c[2], 3);
 	// AreEqual(c[3], 2);
 
-	IsTrue(c[0] == 1);
-	IsTrue(c[1] == 4);
-	IsTrue(c[2] == 3);
-	IsTrue(c[3] == 2);
+	IsTrue(*c.at(0) == 1);
+	IsTrue(*c.at(1) == 4);
+	IsTrue(*c.at(2) == 3);
+	IsTrue(*c.at(3) == 2);
 
-	NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
-
-	a = cm.keySet();
+	NOU::NOU_DAT_ALG::Vector<NOU::int32*> &a = cm.keySet();
 
 	// AreEqual(a[0], 5);
 	// AreEqual(a[1], 49875);
 	// AreEqual(a[2], 10);
 	// AreEqual(a[3], 41);
 
-	IsTrue(a[0] == 5);
-	IsTrue(a[1] == 49875);
-	IsTrue(a[2] == 10);
-	IsTrue(a[3] == 41);
+	IsTrue(*a.at(0) == 5);
+	IsTrue(*a.at(1) == 49875);
+	IsTrue(*a.at(2) == 10);
+	IsTrue(*a.at(3) == 41);
 
 
 	NOU::NOU_DAT_ALG::String8 keys[] = {"ilefjkulljfgkziluikgrfATSHZTJDUZILTUOLUIKSTBAGD", "ufkgjhgdfudtgjzhfgniflh", "tpaauset0ihgjeoruhfpidsfhouherjgposjdfovuhe"};
 	NOU::NOU_DAT_ALG::String8 vals[] = {"a", "b", "c"};
-	NOU::NOU_DAT_ALG::HashMap<NOU::NOU_DAT_ALG::String8, NOU::NOU_DAT_ALG::String8> hm10(20000);
+	NOU::NOU_DAT_ALG::HashMapT<NOU::NOU_DAT_ALG::String8, NOU::NOU_DAT_ALG::String8> hm10(20000);
 	for(NOU::sizeType i = 0; i < 3; i++)
 	{
 		hm10.map(keys[2-i], vals[2-i]);
@@ -1376,7 +1374,7 @@ IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
 	}
 	
 
-} */
+}
 
 TEST_METHOD(BinarySearch)
 {
@@ -1594,19 +1592,6 @@ objPool.giveBack(obj0);
 IsTrue(objPool.capacity() == 5);
 IsTrue(objPool.size() == 3);
 IsTrue(objPool.remainingObjects() == 2);
-NOU::int64 i1 = 243536768574;
-NOU::int64 i2 = 243536768574;
-
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 20));
-
-NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
-NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
-
-h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
-
-
 }
 
 static void taskTestFunction1(NOU::int32 i, NOU::int32 *out)

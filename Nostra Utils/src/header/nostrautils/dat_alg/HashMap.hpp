@@ -170,7 +170,7 @@ namespace NOU::NOU_DAT_ALG
 	template <typename K, typename V>
 	boolean HashMap<K, V>::mapImp(Wrapper<K> &&key, Wrapper<V> &&value) 
 	{
-		/* sizeType n;
+		sizeType n;
 
 		Pair<K, V> tmpPair(NOU_CORE::move(key.rval()), NOU_CORE::move(value.rval()));
 
@@ -204,20 +204,20 @@ namespace NOU::NOU_DAT_ALG
 		
 			//add tmp Pair at the end of the Vector -> O(n)
 			m_data[n].emplaceBack(NOU_CORE::move(tmpPair));
-			m_size++; */
+			m_size++; 
 			return true;
-		// }
+		}
 	}
 
 	template <typename K, typename V>
-	HashMap<K, V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) // :
-		// m_data(size, allocator),
-		// m_size(0)
+	HashMap<K, V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
+		m_data(size, allocator),
+		m_size(0)
 	{
-		/* for (sizeType i = 0; i < size; i++)
+		for (sizeType i = 0; i < size; i++)
 		{
 			m_data.emplaceBack(Vector<Pair<K, V>>());
-		} */
+		}
 	}
 	 
 
@@ -230,7 +230,7 @@ namespace NOU::NOU_DAT_ALG
 	template <typename K, typename V>
 	const V& HashMap<K,V>::get(const K &key) const
 	{
-		/* sizeType n;
+		sizeType n;
 		n = hashObj(&key, 1, m_data.size());
 
 		if (m_data[n].size() == 0) 
@@ -248,35 +248,32 @@ namespace NOU::NOU_DAT_ALG
 		}
 
 		NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
-		return m_data.data()[0].data()[0].dataTwo; */
-		return V();
+		return m_data.data()[0].data()[0].dataTwo;
 	}
 
 	template<typename K, typename V>
 	boolean HashMap<K, V>::isEmpty() const
 	{
-		/* if (m_size == 0)
+		if (m_size == 0)
 		{
 			return true;
 		}
 		else
 		{
 			return false;
-		} */
-		return true;
+		}
 	}
 
 	template<typename K, typename V>
 	sizeType HashMap<K, V>::size() const
 	{
-		// return m_size;
-		return 0;
+		return m_size;
 	}
 
 	template <typename K, typename V>
 	boolean HashMap<K, V>::remove(const K &key, V *out)
 	{
-		/* sizeType h;
+		sizeType h;
 
 		h = hashObj(&key, 1,m_data.size());
 
@@ -291,14 +288,14 @@ namespace NOU::NOU_DAT_ALG
 				m_data[h].remove(i);
 				return true;
 			}
-		} */
+		}
 		return false;
 	}
 
 	template<typename K, typename V>
 	Vector<K*> HashMap<K, V>::keySet() const
 	{
-		/* Vector<K> keySetVec(m_size);
+		Vector<K> keySetVec(m_size);
 
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
@@ -310,14 +307,14 @@ namespace NOU::NOU_DAT_ALG
 				}
 			}
 		}
-		return keySetVec; */
+		return keySetVec;
 		return Vector<K*>();
 	}
 
 	template<typename K, typename V>
 	Vector<V*> HashMap<K, V>::entrySet() const
 	{
-		/* Vector<V*> entrySetVec(m_size);
+		Vector<V*> entrySetVec(m_size);
 
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
@@ -329,21 +326,21 @@ namespace NOU::NOU_DAT_ALG
 				}
 			}
 		}
-		return entrySetVec; */
+		return entrySetVec;
 		return Vector<V*>();
 	}
 
 	template <typename K, typename V>
 	boolean HashMap<K, V>::containsKey(const K &key) const
 	{
-		/* Vector<K*> tmp = keySet();
+		Vector<K*> tmp = keySet();
 
 		for (sizeType i = 0; i < tmp.size(); i++)
 		{
 			if (*(tmp.at(i)) == key) {
 				return true;
 			}
-		} */
+		}
 		return false;
 	}
 

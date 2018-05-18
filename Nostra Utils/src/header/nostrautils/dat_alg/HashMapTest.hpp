@@ -355,7 +355,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename K, typename V>
 	Vector<K*> HashMapT<K, V>::keySet()
 	{
-		Vector<K> keySetVec(m_size);
+		Vector<K *> keySetVec(m_size);
 
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
@@ -373,8 +373,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename K, typename V>
 	const Vector<K*> HashMapT<K, V>::keySet() const
 	{
-		Vector<K> keySetVec(m_size);
-
+		Vector<K*> keySetVec(m_size);
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
 			if (m_data[i].size() != 0)
