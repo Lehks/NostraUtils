@@ -18,7 +18,6 @@
 \details If an object that is not immutable will be stored it will result in some false states.
 		 To fix this: Create an overloaded function of hashObj(T obj, objSize, sizeType max) 
 		 that internally passes only the immutable data to the original function.
-		 All stored objects need to overload the '==' operator.
 */
 
 namespace NOU::NOU_DAT_ALG 
@@ -342,7 +341,8 @@ namespace NOU::NOU_DAT_ALG
 		boolean isEmpty() const;
 
 		/**
-		\return Returns the amount of key-value-pairs that are currently in the map.
+		\return Returns the amount 
+		of key-value-pairs that are currently in the map.
 
 		\brief Returns the amount of key-value-pairs that are currently in the map.
 		*/
