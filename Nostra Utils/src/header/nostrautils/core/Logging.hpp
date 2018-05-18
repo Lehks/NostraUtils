@@ -36,7 +36,6 @@
 */
 namespace NOU::NOU_CORE
 {
-
 	/**
 	\brief A enum class, which stores the different event level. 
 		   The eventLevel can be:
@@ -52,7 +51,6 @@ namespace NOU::NOU_CORE
 	*/
 	enum class EventLevelCodes
 	{
-
 		FATAL		= 0,
 
 		ERROR		= 1,
@@ -74,6 +72,7 @@ namespace NOU::NOU_CORE
 	class NOU_CLASS Event
 	{
 	public:
+
 		/**
 		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
 		*/
@@ -288,6 +287,7 @@ namespace NOU::NOU_CORE
 		using StringType = Event::StringType;
 
 	private:
+
 		/**
 		\param event	A const referenced object of the event class.
 		\param filename	The name of the file where the log will be written to.
