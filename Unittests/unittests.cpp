@@ -1989,6 +1989,35 @@ TEST_METHOD(INIFile)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+TEST_METHOD(Lang)
+{
+	// Create language file first
+	NOU::NOU_FILE_MNGT::INIFile parser = NOU::NOU_FILE_MNGT::INIFile("unittest-lang.ini");
+
+	parser.setString("LANG_TOKEN_A", "I am a translated token.");
+	parser.setString("LANG_TOKEN_B_0", "There are no eggs in the basket.");
+	parser.setString("LANG_TOKEN_B_1", "There is one egg in the basket.");
+	parser.setString("LANG_TOKEN_B_N", "There are multiple eggs in the basket");
+	parser.setString("LANG_TOKEN_C_TRUE", "This is true");
+	parser.setString("LANG_TOKEN_C_FALSE", "This is false");
+	parser.write();
+
+	using Lang = NOU::NOU_LANG::Lang;
+
+	Lang::setActive("de-DE");
+	IsTrue(Lang::getActive() == "de-DE");
+
+	IsTrue(Lang::loadFile("unittest-lang.ini"));
+	IsTrue(Lang::_("LANG_TOKEN_A") == "I am a translated token.");
+	IsTrue(Lang::_("LANG_TOKEN_B", 0) == "There are no eggs in the basket.");
+	IsTrue(Lang::_("LANG_TOKEN_B", 1) == "There is one egg in the basket.");
+	IsTrue(Lang::_("LANG_TOKEN_B", 2) == "There are multiple eggs in the basket");
+	IsTrue(Lang::_("LANG_TOKEN_C", true) == "This is true");
+	IsTrue(Lang::_("LANG_TOKEN_C", false) == "This is false");
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
 TEST_METHOD(MathVec2)
 {
 	using namespace NOU::NOU_MATH;
