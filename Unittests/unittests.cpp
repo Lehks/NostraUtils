@@ -1311,6 +1311,7 @@ TEST_METHOD(HashMap)
 		//construction
 		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> map;
 
+		IsTrue(map.bucketCount() == NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32>::LOAD_SIZE);
 		IsTrue(map.size() == 0);
 		IsTrue(map.isEmpty());
 		IsTrue(!map.containsKey(0));
@@ -1385,8 +1386,9 @@ TEST_METHOD(HashMap)
 		};
 
 		//construction
-		NOU::NOU_DAT_ALG::HashMap<Test, Test> map;
+		NOU::NOU_DAT_ALG::HashMap<Test, Test> map(50);
 
+		IsTrue(map.bucketCount() == 50);
 		IsTrue(map.size() == 0);
 		IsTrue(map.isEmpty());
 		IsTrue(!map.containsKey(Test(0)));
