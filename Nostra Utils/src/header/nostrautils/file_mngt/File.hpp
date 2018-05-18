@@ -92,8 +92,9 @@ namespace NOU::NOU_FILE_MNGT
 				 Everytime the Filesize could have changed or right before the execution of an 
 				 operation where the filesize is needed this function has do be called otherwise 
 				 said functions could result in undefined behaviour.
+		\return true if size was fetched successfully
 		*/
-		void fetchSize();
+		boolean fetchSize();
 
 		/**
 		\brief Constructor of the File class
@@ -194,7 +195,7 @@ namespace NOU::NOU_FILE_MNGT
 		boolean isCurrentlyOpen();
 
 		/**
-		\brief Getter for AccessMode
+		\brief Getter for AccessMode that was used the last time
 		\return current AccessMode 
 		*/
 		const AccessMode& getMode();
@@ -234,8 +235,9 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\brief Setter for AccessMode
 		\param mode AccessMode of the file
+		\return if mode was set successfully
 		*/
-		void setMode(AccessMode mode);
+		boolean setMode(AccessMode mode);
 	};
 }
 

@@ -124,7 +124,13 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean File::open(AccessMode mode)
 	{
-		setMode(mode);
+		if(isCurrentlyOpen())
+		{
+			return false;
+		}
+		if (setMode(mode) == false){
+			return false;
+		}
 		if (!isCurrentlyOpen())
 		{
 			switch (m_mode)
@@ -162,9 +168,9 @@ namespace NOU::NOU_FILE_MNGT
 			return (tmp == 0);
 		} else
 		{
-			return 1;
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Cannot close an allready closed Stream");
+			return false;
 		}
-
 	}
 
 	void File::createFile()
@@ -191,10 +197,15 @@ namespace NOU::NOU_FILE_MNGT
 		return m_mode;
 	}
 
-	void File::setMode(AccessMode mode)
+	boolean File::setMode(AccessMode mode)
 	{
-		close();
+		if(isCurrentlyOpen())
+		{
+			return false;
+
+		}
 		m_mode = mode;
+		return true;
 	}
 
 	const Path& File::getPath()
@@ -314,19 +325,20 @@ namespace NOU::NOU_FILE_MNGT
 		buffer.append(buff.data());
 	}*/
 
-	void File::fetchSize()
+	boolean File::fetchSize()
 	{
 		if(isCurrentlyOpen()){
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Cannot read size of currently opened file");
-			return;
+			return false;
 		}
 		if(exists()){
 			std::ifstream in(m_path.getAbsolutePath().rawStr(), std::ifstream::ate | std::ifstream::binary);
 			m_size = in.tellg();
+			return true;
 		} else
 		{
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "File does not exist"); // PATH_NOT_FOUND
-			return;
+			return false;
 		}
 	}
 }
