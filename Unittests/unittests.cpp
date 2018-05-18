@@ -12,8 +12,6 @@
 #include <string>
 #include <iostream>
 
-#include "nostrautils/dat_alg/HashMapTest.hpp"
-
 #define NOU_CHECK_ERROR_HANDLER 																		 \
 				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
 				while(NOU::NOU_CORE::getErrorHandler().getErrorCount() > 0)								 \
@@ -55,6 +53,35 @@ int dummyFunc1(int)
 
 //used in test UniquePtr
 NOU::boolean testVar = false;
+
+
+class NoCopyClass
+{
+private:
+	NOU::uint32 m_id;
+
+public:
+	explicit NoCopyClass(NOU::uint32 id) :
+		m_id(id)
+	{}
+
+	NoCopyClass(const NoCopyClass &) = delete;
+
+	NoCopyClass(NoCopyClass && other) :
+		m_id(other.m_id)
+	{}
+
+	NOU::uint32 get() const
+	{
+		return m_id;
+	}
+};
+
+NOU::NOU_DAT_ALG::CompareResult noCopyClassComparator(const NoCopyClass &a, const NoCopyClass &b)
+{
+	return NOU::NOU_DAT_ALG::genericComparator(a.get(), b.get());
+}
+
 
 TEST_METHOD(TypeSizes)
 {
@@ -1309,6 +1336,7 @@ IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
 TEST_METHOD(HashMap)
 {
+	
 	{
 		//construction
 		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> map;
@@ -1357,72 +1385,45 @@ TEST_METHOD(HashMap)
 
 		IsTrue(entrySet.size() == 3);
 
+		//check if compiles
+		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> mapMove = NOU::NOU_CORE::move(map);
 	}
-	/*
+	
 	{
-		class Test
-		{
-		private:
-			NOU::uint32 m_id;
-
-		public:
-			explicit Test(NOU::uint32 id) : 
-				m_id(id)
-			{}
-
-			Test(const Test &) = delete;
-
-			Test(Test && other) : 
-				m_id(other.m_id)
-			{}
-
-			NOU::uint32 get() const
-			{
-				return m_id;
-			}
-
-			NOU::boolean operator == (const Test &other) const
-			{
-				return get() == other.get();
-			}
-		};
-
 		//construction
-		NOU::NOU_DAT_ALG::HashMap<Test, Test> map(50);
+		NOU::NOU_DAT_ALG::HashMap<NoCopyClass, NoCopyClass> map(50);
 
 		IsTrue(map.bucketCount() == 50);
 		IsTrue(map.size() == 0);
 		IsTrue(map.isEmpty());
-		IsTrue(!map.containsKey(Test(0)));
+		IsTrue(!map.containsKey(NoCopyClass(0), noCopyClassComparator));
 
 		//push values
-		map.map(Test(0), Test(5));
-		map.map(Test(1), Test(900));
-		map.map(Test(2), Test(1337));
+		map.map(NoCopyClass(0), NoCopyClass(5), noCopyClassComparator);
+		map.map(NoCopyClass(1), NoCopyClass(900), noCopyClassComparator);
+		map.map(NoCopyClass(2), NoCopyClass(1337), noCopyClassComparator);
 
-		IsTrue(map.containsKey(Test(0)));
-		IsTrue(map.containsKey(Test(1)));
-		IsTrue(map.containsKey(Test(2)));
+		IsTrue(map.containsKey(NoCopyClass(0), noCopyClassComparator));
+		IsTrue(map.containsKey(NoCopyClass(1), noCopyClassComparator));
+		IsTrue(map.containsKey(NoCopyClass(2), noCopyClassComparator));
 
 		IsTrue(map.size() == 3);
 		IsTrue(!map.isEmpty());
 
-		IsTrue(map.get(Test(0)).get() == Test(5).get());
-		IsTrue(map.get(Test(1)).get() == Test(900).get());
-		IsTrue(map.get(Test(2)).get() == Test(1337).get());
+		IsTrue(map.get(NoCopyClass(0), noCopyClassComparator).get() == NoCopyClass(5).get());
+		IsTrue(map.get(NoCopyClass(1), noCopyClassComparator).get() == NoCopyClass(900).get());
+		IsTrue(map.get(NoCopyClass(2), noCopyClassComparator).get() == NoCopyClass(1337).get());
 
 		//assign new value to key
-		map.map(Test(2), Test(42));
+		map.map(NoCopyClass(2), NoCopyClass(42), noCopyClassComparator);
 
-		IsTrue(map.containsKey(Test(2)));
-		IsTrue(map.get(Test(2)).get() == Test(42).get());
+		IsTrue(map.containsKey(NoCopyClass(2), noCopyClassComparator));
+		IsTrue(map.get(NoCopyClass(2), noCopyClassComparator).get() == NoCopyClass(42).get());
 
 		IsTrue(map.size() == 3);
 
-		//array subscript
-		IsTrue(map.get(Test(0)).get() == map[Test(0)].get());
-		IsTrue(map.get(Test(1)).get() == map[Test(1)].get());
-		IsTrue(map.get(Test(2)).get() == map[Test(2)].get());
+		//array subscript not possible, array subscript can not take 2 parameters 
+		//(which is required for the comparator)
 
 		//key set
 		auto keySet = map.keySet();
@@ -1434,7 +1435,7 @@ TEST_METHOD(HashMap)
 
 		IsTrue(entrySet.size() == 3);
 	}
-	*/
+	
 	NOU_CHECK_ERROR_HANDLER;
 }
 
