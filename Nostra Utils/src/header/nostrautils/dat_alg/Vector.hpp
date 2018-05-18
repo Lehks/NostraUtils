@@ -9,7 +9,7 @@
 
 #include <new>
 
-/** \file Vector.hpp
+/** \file dat_alg\Vector.hpp
 \author  Dennis Franz
 \author  Lukas Reichmann
 \since   1.0.0
