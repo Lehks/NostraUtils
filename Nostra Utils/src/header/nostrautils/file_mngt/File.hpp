@@ -9,7 +9,6 @@
 //#include <stdio.h>
 //#include <io.h>
 
-
 /** file_mngt/File.hpp
 \author  Leslie Marxen
 \author	 Lukas Gross
@@ -39,7 +38,7 @@ namespace NOU::NOU_FILE_MNGT
 	};
 
 	/**
-	\brief Class that handles very basic i/o on a single file
+	\brief Class that handles very basic i/o on a single file.
 	*/
 	class NOU_CLASS File
 	{
@@ -54,22 +53,22 @@ namespace NOU::NOU_FILE_MNGT
 		void openStream(const char8 *mode);
 
 		/**
-		\brief File stream of the opened File
+		\brief File stream of the opened File.
 		*/
 		FILE															*m_data;
 
 		/**
-		\brief Whether the file is in append, write, read mode or any combination of those
+		\brief Whether the file is in append, write, read mode or any combination of those.
 		*/
 		AccessMode														m_mode;
 
 		/**
-		\brief Path to the folder containing the file
+		\brief Path to the folder containing the file.
 		*/
 		Path															m_path;
 
 		/**
-		\brief The size of the File on the hard drive
+		\brief The size of the File on the hard drive.
 		*/
 		sizeType														m_size;
 
@@ -83,7 +82,7 @@ namespace NOU::NOU_FILE_MNGT
 	public:
 
 		/**
-		\return true if size was fetched successfully
+		\return True if size was fetched successfully.
 		
 		\brief sets the internal size of the file.
 		
@@ -98,35 +97,35 @@ namespace NOU::NOU_FILE_MNGT
 		boolean fetchSize();
 
 		/**
-		\param path Path object containing the path to the file
+		\param path Path object containing the path to the file.
 		
-		\brief Constructor of the File class
+		\brief Constructor of the File class.
 		*/
 		File(const Path &path);
 		
 		/**
 		\param other The object to copy.
 
-		\brief Copy-constructor of the File class
+		\brief Copy-constructor of the File class.
 		*/
 		File(const File &other) = delete;
 
 		/**
 		\param other The object to move.
 
-		\brief Move-constructor of the File class
+		\brief Move-constructor of the File class.
 		*/
 		File(File &&other);
 
 		/**
-		\brief destructor of the File Class
+		\brief Destructor of the File Class.
 		*/
 		~File();
 
 		/**
-		\return The read byte
+		\return The read byte.
 
-		\brief Reads a single byte from the file
+		\brief Reads a single byte from the file.
 		*/
 		byte read();
 
@@ -159,9 +158,9 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\param s The given string.
 
-		\return True if successfully written, false if otherwise
+		\return True if successfully written, false if otherwise.
 
-		\brief Writes a string into a file
+		\brief Writes a string into a file.
 		*/
 		boolean write(const NOU::NOU_DAT_ALG::StringView8 &s);
 
@@ -180,7 +179,7 @@ namespace NOU::NOU_FILE_MNGT
 		boolean close();
 
 		/**
-		\brief Creates the file if not already existing
+		\brief Creates the file if not already existing.
 		*/
 		void createFile();
 
@@ -195,7 +194,7 @@ namespace NOU::NOU_FILE_MNGT
 		/**
 		\return Returns the current access mode of the file.
 
-		\brief Getter for the access mode that was used the last time
+		\brief Getter for the access mode that was used the last time.
 		*/
 		const AccessMode& getMode();
 
@@ -207,30 +206,30 @@ namespace NOU::NOU_FILE_MNGT
 		const Path& getPath();
 
 		/**
-		\return data stream
+		\return The data stream.
 
-		\brief Getter for data stream
+		\brief Getter for data stream.
 		*/
 		FILE* getData(); 
 
 		/**
-		\return true if File exists, false otherwise
+		\return True if file exists, false otherwise.
 
-		\brief checks if a File is already existing according to the set Path
+		\brief Checks if a file is already existing according to the set path.
 		*/
 		boolean exists();
 
 		/**
-		\return returns the file size in bytes
+		\return The size of the file in bytes.
 		
-		\brief returns the file size in bytes, pushes an error if the file is not existent
+		\brief Returns the file size in bytes, pushes an error if the file is not existent.
 		*/
 		sizeType size();
 
 		/**
-		\return true if successfully deleted, false if otherwise
+		\return True if successfully deleted, false if otherwise.
 		
-		\brief deletes the corresponding file from the permanent memory
+		\brief Deletes the corresponding file.
 		*/
 		boolean deleteFile();
 

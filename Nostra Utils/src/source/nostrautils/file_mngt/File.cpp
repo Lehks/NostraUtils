@@ -171,7 +171,6 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		if (isCurrentlyOpen())
 		{
-			
 			return closeUnchecked();
 		}
 		else
@@ -189,7 +188,8 @@ namespace NOU::NOU_FILE_MNGT
 			fs.open(m_path.getAbsolutePath().rawStr(), std::ios::out);
 			fs.flush();
 			fs.close();
-		}else
+		}
+		else
 		{
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File already exists");
 		}
@@ -210,7 +210,6 @@ namespace NOU::NOU_FILE_MNGT
 		if(isCurrentlyOpen())
 		{
 			return false;
-
 		}
 		m_mode = mode;
 		return true;
@@ -305,34 +304,6 @@ namespace NOU::NOU_FILE_MNGT
 		buffer.append(buff);
 		delete[] buff;
 	}
-
-	/* void File::read(NOU::NOU_DAT_ALG::String8 &buffer)
-	{
-		if(!exists())
-		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
-			return;
-		}
-		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
-		{
-			NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't access write-only file");
-			NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't access append-only file");
-			return;
-		}
-
-
-		sizeType size = this->size();
-		NOU::NOU_DAT_ALG::Vector<char8> buff(size+1);
-
-		open();
-		fread(buff.data(), size, 1, m_data);
-		buff[size] = 0;
-		if(buffer.size() != 0)
-		{
-			buffer.clear();
-		}
-		buffer.append(buff.data());
-	}*/
 
 	boolean File::fetchSize()
 	{
