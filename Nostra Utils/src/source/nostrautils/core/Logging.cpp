@@ -138,6 +138,11 @@ namespace NOU::NOU_CORE
 
 		NOU::NOU_FILE_MNGT::File file(absPath);
 
+		if (!file.exists())
+		{
+			file.createFile();
+		}
+
 		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
 		{
 			NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
@@ -147,11 +152,10 @@ namespace NOU::NOU_CORE
 		}
 		else
 		{
-			//NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
-			//	"Could not open log file.");
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+				"Could not open log file.");
 		}
 	}
-
 
 	Logger* Logger::instance()
 	{

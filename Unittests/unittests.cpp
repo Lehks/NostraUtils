@@ -1196,8 +1196,37 @@ IsTrue(str1 == "wasgeht");
 
 str1 = "ThisIsAString";
 str1.replace("String", "Integer");
+IsTrue(str1 == "ThisIsAInteger");
 
-//IsTrue(str1 == "ThisIsAInteger");
+str1 = "ThisIsAString";
+str1.replace("String", "Intege");
+IsTrue(str1 == "ThisIsAIntege");
+
+str1 = "ThisIsAString";
+str1.replace("AString", "Intege");
+IsTrue(str1 == "ThisIsIntege");
+
+
+str1 = "ThisIsAString";
+str1.replace(0, 7, "Integer");
+IsTrue(str1 == "IntegerString");
+
+str1 = "ThisIsAString";
+str1.replace(0,13, "Integer");
+IsTrue(str1 == "Integer");
+
+str1 = "ThisIsAString";
+str1.replace(0, 5, "Integer");
+IsTrue(str1 == "IntegersAString");
+
+NOU::NOU_DAT_ALG::String8 newstr(50, 'b');
+IsTrue(newstr.getCapacity() == 50);
+
+newstr.appendBuffer(10);
+IsTrue(newstr.getCapacity() == 60);
+
+newstr.removeRemainingBufferFromString();
+IsTrue(newstr.getCapacity() == 1);
 
 NOU_CHECK_ERROR_HANDLER;
 }
