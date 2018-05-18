@@ -97,7 +97,7 @@ namespace NOU::NOU_FILE_MNGT
 		struct dirent * DT_DIR;
 		while ((DT_DIR = readdir(dirp)) != NULL) 
 		{
-			v.emplaceBack(dp->d_name);
+			v.emplaceBack(DT_DIR->d_name);
 	}
 		closedir(dirp);
 		
@@ -134,7 +134,7 @@ namespace NOU::NOU_FILE_MNGT
 		struct dirent * DT_REG;
 		while ((DT_REG = readdir(dirp)) != NULL)
 		{
-			v.emplaceBack(dp->d_name);
+			v.emplaceBack(DT_REG->d_name);
 		}
 		closedir(dirp);
 
