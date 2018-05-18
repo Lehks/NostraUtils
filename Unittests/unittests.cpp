@@ -1307,90 +1307,131 @@ IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
 TEST_METHOD(HashMap)
 {
-NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
-NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
-NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
-NOU::boolean b;
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> map;
 
-//AreEqual(hm.isEmpty(), true);
-IsTrue(hm.isEmpty() == true);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey(0));
 
-for (NOU::sizeType i = 0; i < str.size(); i++) {
-b = hm.map(str.at(i), 1);
-}
+		//push values
+		map.map(0, 5);
+		map.map(1, 900);
+		map.map(2, 1337);
 
-//AreEqual(hm.isEmpty(), false);
+		IsTrue(map.containsKey(0));
+		IsTrue(map.containsKey(1));
+		IsTrue(map.containsKey(2));
 
-IsTrue(hm.isEmpty() == false);
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
 
-for (NOU::sizeType i = 0; i < str.size(); i++) {
-//AreEqual(hm.get(str.at(i)), 1);
-IsTrue(hm.get(str.at(i)) == 1);
-}
-NOU::char8 k = 'h';
+		IsTrue(map.get(0) == 5);
+		IsTrue(map.get(1) == 900);
+		IsTrue(map.get(2) == 1337);
 
-//NOU::int32 count = hm.remove(k, &out);
+		//assign new value to key
+		map.map(2, 42);
 
-NOU::boolean r = hm.remove(k);
-IsTrue(r);
+		IsTrue(map.containsKey(2));
+		IsTrue(map.get(2) == 42);
 
-//AreEqual(1, count);
+		IsTrue(map.size() == 3);
 
+		//array subscript
+		IsTrue(map.get(0) == map[0]);
+		IsTrue(map.get(1) == map[1]);
+		IsTrue(map.get(2) == map[2]);
 
-for (NOU::sizeType i = 0; i < str.size(); i++)
-{
-k = str.at(i);
-if (!hm1.containsKey(str.at(i)))
-{
-hm1.map(k, 1);
-}
-else
-{
-hm1.map(k, hm1.get(k) + 1);
-}
-}
+		//key set
+		auto keySet = map.keySet();
 
-//AreEqual(hm1.get('h'), 2);
-//AreEqual(hm1.get(' '), 8);
+		IsTrue(keySet.size() == 3);
 
-IsTrue(hm1.get('h') == 2);
-IsTrue(hm1.get(' ') == 8);
+		//entry set
+		auto entrySet = map.entrySet();
 
-NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
+		IsTrue(entrySet.size() == 3);
 
-cm.map(5, 1);
-cm.map(41, 2);
-cm.map(10, 3);
-cm.map(49875, 4);
+	}
+	/*
+	{
+		class Test
+		{
+		private:
+			NOU::uint32 m_id;
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
+		public:
+			explicit Test(NOU::uint32 id) : 
+				m_id(id)
+			{}
 
-c = cm.entrySet();
+			Test(const Test &) = delete;
 
-//AreEqual(c[0], 1);
-//AreEqual(c[1], 4);
-//AreEqual(c[2], 3);
-//AreEqual(c[3], 2);
+			Test(Test && other) : 
+				m_id(other.m_id)
+			{}
 
-IsTrue(c[0] == 1);
-IsTrue(c[1] == 4);
-IsTrue(c[2] == 3);
-IsTrue(c[3] == 2);
+			NOU::uint32 get() const
+			{
+				return m_id;
+			}
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
+			NOU::boolean operator == (const Test &other) const
+			{
+				return get() == other.get();
+			}
+		};
 
-a = cm.keySet();
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<Test, Test> map;
 
-//AreEqual(a[0], 5);
-//AreEqual(a[1], 49875);
-//AreEqual(a[2], 10);
-//AreEqual(a[3], 41);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey(Test(0)));
 
-IsTrue(a[0] == 5);
-IsTrue(a[1] == 49875);
-IsTrue(a[2] == 10);
-IsTrue(a[3] == 41);
+		//push values
+		map.map(Test(0), Test(5));
+		map.map(Test(1), Test(900));
+		map.map(Test(2), Test(1337));
 
+		IsTrue(map.containsKey(Test(0)));
+		IsTrue(map.containsKey(Test(1)));
+		IsTrue(map.containsKey(Test(2)));
+
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
+
+		IsTrue(map.get(Test(0)).get() == Test(5).get());
+		IsTrue(map.get(Test(1)).get() == Test(900).get());
+		IsTrue(map.get(Test(2)).get() == Test(1337).get());
+
+		//assign new value to key
+		map.map(Test(2), Test(42));
+
+		IsTrue(map.containsKey(Test(2)));
+		IsTrue(map.get(Test(2)).get() == Test(42).get());
+
+		IsTrue(map.size() == 3);
+
+		//array subscript
+		IsTrue(map.get(Test(0)).get() == map[Test(0)].get());
+		IsTrue(map.get(Test(1)).get() == map[Test(1)].get());
+		IsTrue(map.get(Test(2)).get() == map[Test(2)].get());
+
+		//key set
+		auto keySet = map.keySet();
+
+		IsTrue(keySet.size() == 3);
+
+		//entry set
+		auto entrySet = map.entrySet();
+
+		IsTrue(entrySet.size() == 3);
+	}
+	*/
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(BinarySearch)

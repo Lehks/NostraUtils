@@ -175,14 +175,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename K, typename V>
 	boolean HashMap<K, V>::isEmpty()
 	{
-		if (m_size == 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return m_size == 0;
 	}
 
 	template<typename K, typename V>
