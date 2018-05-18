@@ -984,6 +984,11 @@ namespace NOU::NOU_DAT_ALG
 			i = i * (-1); //ABS MATH
 		}
 
+		if (i == 0)
+		{
+			str.append('0');
+		}
+
 		while (i != 0)
 		{
 			char8 c = (i % 10) + '0';
@@ -1004,6 +1009,11 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)
 	{
 		String<CHAR_TYPE> str;
+
+		if (i == 0)
+		{
+			str.append('0');
+		}
 
 		while (i != 0)
 		{
