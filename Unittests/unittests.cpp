@@ -358,6 +358,39 @@ IsTrue(NOU::DebugClass::getCounter() == 0);
 //Check if this compiles
 NOU::NOU_DAT_ALG::Vector<NotCopiable> vec;
 
+NOU::NOU_DAT_ALG::Vector<NOU::int32> vecSortTest;
+NOU::NOU_DAT_ALG::Vector<NOU::int32> vecSortTest2;
+
+vecSortTest.pushBack(5);
+vecSortTest.pushBack(8);
+vecSortTest.pushBack(2);
+vecSortTest.pushBack(4);
+vecSortTest.pushBack(9);
+
+vecSortTest.sort();
+
+IsTrue(vecSortTest[0] == 2);
+IsTrue(vecSortTest[1] == 4);
+IsTrue(vecSortTest[2] == 5);
+IsTrue(vecSortTest[3] == 8);
+IsTrue(vecSortTest[4] == 9);
+
+vecSortTest2.pushBack(5);
+vecSortTest2.pushBack(8);
+vecSortTest2.pushBack(2);
+vecSortTest2.pushBack(4);
+vecSortTest2.pushBack(9);
+
+NOU::NOU_DAT_ALG::Comparator<NOU::int32> cmp;
+
+vecSortTest2.sortComp(cmp);
+
+IsTrue(vecSortTest2[0] == 2);
+IsTrue(vecSortTest2[1] == 4);
+IsTrue(vecSortTest2[2] == 5);
+IsTrue(vecSortTest2[3] == 8);
+IsTrue(vecSortTest2[4] == 9);
+
 NOU_CHECK_ERROR_HANDLER;
 }
 
