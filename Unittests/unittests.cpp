@@ -1291,16 +1291,16 @@ TEST_METHOD(Hashfunction)
 NOU::int64 i1 = 243536768574;
 NOU::int64 i2 = 243536768574;
 
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
+//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, sizeof(NOU::int64), 20));
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
 
 NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
 NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
+//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
 
 }
@@ -1316,7 +1316,7 @@ NOU::boolean b;
 IsTrue(hm.isEmpty() == true);
 
 for (NOU::sizeType i = 0; i < str.size(); i++) {
-b = hm.map(str.at(i), 1);
+// b = hm.map(str.at(i), 1, sizeof(str.at(i)));
 }
 
 //AreEqual(hm.isEmpty(), false);
@@ -1325,7 +1325,7 @@ IsTrue(hm.isEmpty() == false);
 
 for (NOU::sizeType i = 0; i < str.size(); i++) {
 //AreEqual(hm.get(str.at(i)), 1);
-IsTrue(hm.get(str.at(i)) == 1);
+//IsTrue(hm.get(str.at(i), sizeof(str.at(i))) == 1);
 }
 NOU::char8 k = 'h';
 
@@ -1342,27 +1342,27 @@ for (NOU::sizeType i = 0; i < str.size(); i++)
 k = str.at(i);
 if (!hm1.containsKey(str.at(i)))
 {
-hm1.map(k, 1);
+//hm1.map(k, 1, sizeof(k));
 }
 else
 {
-hm1.map(k, hm1.get(k) + 1);
+// hm1.map(k, hm1.get(k, sizeof(k)) + 1, sizeof(k));
 }
 }
 
 //AreEqual(hm1.get('h'), 2);
 //AreEqual(hm1.get(' '), 8);
 
-IsTrue(hm1.get('h') == 2);
-IsTrue(hm1.get(' ') == 8);
+// IsTrue(hm1.get('h', sizeof('h')) == 2);
+// IsTrue(hm1.get(' ', sizeof(' ')) == 8);
 
 NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
-
-cm.map(5, 1);
-cm.map(41, 2);
-cm.map(10, 3);
-cm.map(49875, 4);
-
+/*
+cm.map(5, 1, sizeof(5));
+cm.map(41, 2, sizeof(41));
+cm.map(10, 3, sizeof(10));
+cm.map(49875, 4, sizeof(49875));
+*/
 NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
 
 c = cm.entrySet();
@@ -1612,14 +1612,14 @@ IsTrue(objPool.remainingObjects() == 2);
 NOU::int64 i1 = 243536768574;
 NOU::int64 i2 = 243536768574;
 
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
 
 NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
 NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
 
 }
@@ -1952,7 +1952,7 @@ TEST_METHOD(File)
 	IsTrue(!f.exists());
 }
 
-/*
+
 TEST_METHOD(INIFile)
 {
 	NOU::NOU_FILE_MNGT::INIFile parser = NOU::NOU_FILE_MNGT::INIFile("unittest.ini");
@@ -1969,12 +1969,15 @@ TEST_METHOD(INIFile)
 
 	parser.remove("TEST_STR");
 	IsTrue(parser.getString("TEST_STR").size() == 0);
+	parser.setString("DEFAULT_TEST_STR", "Testing");
 
 	parser.remove("TEST_INT");
 	IsTrue(parser.getInt("TEST_INT") == 0);
+	parser.setInt("DEFAULT_TEST_INT", 42);
 
 	parser.remove("TEST_FLOAT");
 	IsTrue(parser.getFloat("TEST_FLOAT") < 0.1);
+	parser.setFloat("DEFAULT_TEST_FLOAT", 13.37);
 
 	parser.setString("TEST_STR", "Testing", "section");
 	IsTrue(parser.getString("TEST_STR", "section") == "Testing");
@@ -1986,9 +1989,35 @@ TEST_METHOD(INIFile)
 	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369);
 	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381);
 
+	IsTrue(parser.write("unittest.ini"));
+	IsTrue(parser.read());
+
+
+	NOU::NOU_FILE_MNGT::INIFile parser2 = NOU::NOU_FILE_MNGT::INIFile("unittest2.ini");
+
+	parser2.setString("TEST_STR2", "Testing");
+	parser2.setInt("TEST_INT2", 42);
+	parser2.setFloat("TEST_FLOAT2", 13.37);
+
+	IsTrue(parser2.getDataType("TEST_STR2") == parser2.INI_TYPE_NouString);
+	IsTrue(parser2.getDataType("TEST_INT2") == parser2.INI_TYPE_INT);
+	IsTrue(parser2.getDataType("TEST_FLOAT2") == parser2.INI_TYPE_FLOAT);
+
+	NOU::NOU_DAT_ALG::HashMap<NOU::NOU_FILE_MNGT::INIFile::NouString, NOU::NOU_FILE_MNGT::INIFile::NouString> inikeys = parser2.getKeys();
+
+	IsTrue(inikeys.containsKey("TEST_STR2"));
+	IsTrue(inikeys.containsKey("TEST_INT2"));
+	IsTrue(inikeys.containsKey("TEST_INT2"));
+
+	parser.merge(parser2);
+
+	IsTrue(parser.keyExists("TEST_STR2"));
+	IsTrue(parser.keyExists("TEST_INT2"));
+	IsTrue(parser.keyExists("TEST_INT2"));
+
 	NOU_CHECK_ERROR_HANDLER;
 }
-*/
+
 TEST_METHOD(MathVec2)
 {
 	using namespace NOU::NOU_MATH;
