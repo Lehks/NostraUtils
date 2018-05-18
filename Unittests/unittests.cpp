@@ -1915,122 +1915,44 @@ TEST_METHOD(Logging)
 
 TEST_METHOD(File)
 {	
-	NOU::NOU_CORE::ErrorHandler &eh = NOU::NOU_CORE::getErrorHandler();
-
-	// @todo: Change to relative path in the same directory as the unittest executable
-	NOU::NOU_FILE_MNGT::Path p("D:/Repos/NostraUtils/Build/Build/Install/bin/UnitTestfile");
-	NOU::NOU_FILE_MNGT::File f(p);
-
-	NOU::boolean errorBit;
-	NOU::NOU_DAT_ALG::String8 testString = "Nostra";
-	NOU::NOU_DAT_ALG::String8 in;
-	NOU::char8 c;
-	NOU::char8 buff[3];
-	NOU::sizeType s;
-
-
-
-	// Creating File
-	errorBit = f.exists();
-	IsTrue(!errorBit);
-
-	f.createFile();
-
-	errorBit = f.exists();
-	IsTrue(errorBit);
-
-	// writing to a file as StringView
-	errorBit = f.isCurrentlyOpen();
-	IsTrue(!errorBit);
-
-	errorBit = f.open();
-	IsTrue(errorBit);
-
-	errorBit = f.isCurrentlyOpen();
-	IsTrue(errorBit);
-
-	errorBit = f.write(testString);
-	IsTrue(errorBit);
-
-	errorBit = f.open();
-	IsTrue(!errorBit);
-
-	errorBit = f.close();
-	IsTrue(errorBit);
-
-
-	// Reading a Whole File into a String
-	errorBit = f.fetchSize();
-	IsTrue(errorBit);
-
-	errorBit = f.open();
-	IsTrue(errorBit);
-
-	f.read(in);
-	IsTrue(in == testString);
-
-	errorBit = f.close();
-	IsTrue(errorBit);
-
-
-	// Testing FileSize
-	f.fetchSize();
-	s = f.size();
-	IsTrue(s == testString.size());
-
-
-	// reading byte by byte
-	errorBit = f.open();
-	IsTrue(errorBit);
-
-	for(NOU::sizeType i = 0; i < f.size(); i++)
 	{
-		c = f.read();
-		IsTrue(c == testString[i]);
+		NOU::NOU_DAT_ALG::String8 filename = "unittest_testfile.txt";
+		NOU::NOU_DAT_ALG::String8 output = "1. 2. 3. This is a string for testing the unittests.";
+		NOU::NOU_DAT_ALG::String8 buffer;
+
+		NOU::NOU_FILE_MNGT::Path path = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+
+		path += filename;
+
+		NOU::NOU_FILE_MNGT::File file(path);
+
+		file.createFile();
+		IsTrue(file.exists() == true);
+
+		file.open(NOU::NOU_FILE_MNGT::AccessMode::WRITE);
+		IsTrue(file.isCurrentlyOpen() == true);
+
+		file.write(output);
+
+		file.close();
+		IsTrue(file.isCurrentlyOpen() == false);
+
+		file.fetchSize();
+		file.open(NOU::NOU_FILE_MNGT::AccessMode::READ);
+		file.read(buffer); //Reads the hole file into the buffer.
+
+		file.close();
+		IsTrue(file.isCurrentlyOpen() == false);
+
+		file.deleteFile();
+		IsTrue(file.exists() == false);
+
+		for (int i = 0; i < buffer.size() - 1; i++)
+		{
+			IsTrue(output[i] == buffer[i]);
+		}
 	}
 
-	errorBit = f.close();
-	IsTrue(errorBit);
-
-
-	// reading into a C-String
-	errorBit = f.open();
-	IsTrue(errorBit);
-
-	s = 3;
-	f.read(s, buff);
-	for(NOU::sizeType i = 0; i < s; i++){
-		IsTrue(buff[i] == testString[i]);
-	}
-
-	errorBit = f.close();
-	IsTrue(errorBit);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	while(eh.getErrorCount() != 0){
-		NOU::NOU_CORE::ErrorLocation &el = eh.popError();
-		std::cout << el.getMsg() << "|" << el.getLine() << "|" << el.getFile() << std::endl;
-	}
-
-	//cleanup
-	if(f.exists()){
-		f.deleteFile();
-	}
 	NOU_CHECK_ERROR_HANDLER;
 }
 
