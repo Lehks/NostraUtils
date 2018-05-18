@@ -50,7 +50,7 @@ namespace NOU::NOU_DAT_ALG
 		This wrapper is required because:
 
 		map() has several overloads, one for each combination of L- and R-Values of all key and value objects 
-		possible (the combinations are: \f$\{(K\&, V\&), (K\&\&, V\&) (K\&, V\&\&), (K\&\&, V\&\&)\})\$f.
+		possible (the combinations are: \f$\{(K\&, V\&), (K\&\&, V\&) (K\&, V\&\&), (K\&\&, V\&\&)\})\f$
 
 		To avoid the necessity of having to implement the method for each overload, a method called mapImpl()
 		was implemented, which is called by all of the overloads.
@@ -84,7 +84,7 @@ namespace NOU::NOU_DAT_ALG
 
 			\brief Constructs a new instance and constructs the wrapped object from the passed parameter(s).
 
-			\detailed
+			\details
 			Constructs a new instance and constructs the wrapped object from the passed parameter(s). The 
 			construction of the wrapped object will behave like this:
 
@@ -215,8 +215,9 @@ namespace NOU::NOU_DAT_ALG
 		///\endcond
 
 		/**
-		\param key     The key that the passed value will be mapped to.
-		\param value   The value that will be mapped to the passed key.
+		\param key   The key that the passed value will be mapped to.
+		\param value The value that will be mapped to the passed key.
+		\param comp  The comparator that will used to compare keys.
 
 		\return	True, if the key-value-pair was successfully added to the map, false if not. As of now, the
 		adding of new pairs will never fail, hence only true will be returned.
@@ -226,7 +227,7 @@ namespace NOU::NOU_DAT_ALG
 		\details
 		Adds a new value and a new key that the values is mapped to.
 
-		This method will use the operator == for comparisons of keys.
+		This method will use the passed comparator for comparisons of keys.
 
 		\attention
 		If a key already exists in the map, the value that is mapped to that key will be overridden.
@@ -250,7 +251,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param key The key of the value that should be returned.
 
-		\return The value that is mapped to \k key.
+		\return The value that is mapped to \p key.
 
 		\brief Returns the value that is mapped to \p key, or an invalid value if no value is mapped to the
 		       key (see detailed section).
@@ -271,7 +272,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param key The key of the value that should be returned.
 
-		\return The value that is mapped to \k key.
+		\return The value that is mapped to \p key.
 
 		\brief Returns the value that is mapped to \p key, or an invalid value if no value is mapped to the
 		key (see detailed section).
@@ -293,7 +294,7 @@ namespace NOU::NOU_DAT_ALG
 		\param key  The key of the value that should be returned.
 		\param comp The comparator that will used to compare keys.
 
-		\return The value that is mapped to \k key.
+		\return The value that is mapped to \p key.
 
 		\brief Returns the value that is mapped to \p key, or an invalid value if no value is mapped to the
 		key (see detailed section).
@@ -315,7 +316,7 @@ namespace NOU::NOU_DAT_ALG
 		\param key  The key of the value that should be returned.
 		\param comp The comparator that will used to compare keys.
 
-		\return The value that is mapped to \k key.
+		\return The value that is mapped to \p key.
 
 		\brief Returns the value that is mapped to \p key, or an invalid value if no value is mapped to the
 		key (see detailed section).
@@ -416,6 +417,7 @@ namespace NOU::NOU_DAT_ALG
 		V& operator [](const K& key);
 	};
 
+	///\cond
 
 	template <typename K, typename V>
 	template<typename T>
