@@ -54,6 +54,35 @@ int dummyFunc1(int)
 //used in test UniquePtr
 NOU::boolean testVar = false;
 
+
+class NoCopyClass
+{
+private:
+	NOU::uint32 m_id;
+
+public:
+	explicit NoCopyClass(NOU::uint32 id) :
+		m_id(id)
+	{}
+
+	NoCopyClass(const NoCopyClass &) = delete;
+
+	NoCopyClass(NoCopyClass && other) :
+		m_id(other.m_id)
+	{}
+
+	NOU::uint32 get() const
+	{
+		return m_id;
+	}
+};
+
+NOU::NOU_DAT_ALG::CompareResult noCopyClassComparator(const NoCopyClass &a, const NoCopyClass &b)
+{
+	return NOU::NOU_DAT_ALG::genericComparator(a.get(), b.get());
+}
+
+
 TEST_METHOD(TypeSizes)
 {
 IsTrue(sizeof(NOU::int8) >= 1);
@@ -1307,90 +1336,107 @@ IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
 TEST_METHOD(HashMap)
 {
-NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
-NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
-NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
-NOU::boolean b;
+	
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> map;
 
-//AreEqual(hm.isEmpty(), true);
-IsTrue(hm.isEmpty() == true);
+		IsTrue(map.bucketCount() == NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32>::LOAD_SIZE);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey(0));
 
-for (NOU::sizeType i = 0; i < str.size(); i++) {
-// b = hm.map(str.at(i), 1, sizeof(str.at(i)));
-}
+		//push values
+		map.map(0, 5);
+		map.map(1, 900);
+		map.map(2, 1337);
 
-//AreEqual(hm.isEmpty(), false);
+		IsTrue(map.containsKey(0));
+		IsTrue(map.containsKey(1));
+		IsTrue(map.containsKey(2));
 
-IsTrue(hm.isEmpty() == false);
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
 
-for (NOU::sizeType i = 0; i < str.size(); i++) {
-//AreEqual(hm.get(str.at(i)), 1);
-//IsTrue(hm.get(str.at(i), sizeof(str.at(i))) == 1);
-}
-NOU::char8 k = 'h';
+		IsTrue(map.get(0) == 5);
+		IsTrue(map.get(1) == 900);
+		IsTrue(map.get(2) == 1337);
 
-//NOU::int32 count = hm.remove(k, &out);
+		//assign new value to key
+		map.map(2, 42);
 
-NOU::boolean r = hm.remove(k);
-IsTrue(r);
+		IsTrue(map.containsKey(2));
+		IsTrue(map.get(2) == 42);
 
-//AreEqual(1, count);
+		IsTrue(map.size() == 3);
 
+		//array subscript
+		IsTrue(map.get(0) == map[0]);
+		IsTrue(map.get(1) == map[1]);
+		IsTrue(map.get(2) == map[2]);
 
-for (NOU::sizeType i = 0; i < str.size(); i++)
-{
-k = str.at(i);
-if (!hm1.containsKey(str.at(i)))
-{
-//hm1.map(k, 1, sizeof(k));
-}
-else
-{
-// hm1.map(k, hm1.get(k, sizeof(k)) + 1, sizeof(k));
-}
-}
+		//key set
+		auto keySet = map.keySet();
 
-//AreEqual(hm1.get('h'), 2);
-//AreEqual(hm1.get(' '), 8);
+		IsTrue(keySet.size() == 3);
 
-// IsTrue(hm1.get('h', sizeof('h')) == 2);
-// IsTrue(hm1.get(' ', sizeof(' ')) == 8);
+		//entry set
+		auto entrySet = map.entrySet();
 
-NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
-/*
-cm.map(5, 1, sizeof(5));
-cm.map(41, 2, sizeof(41));
-cm.map(10, 3, sizeof(10));
-cm.map(49875, 4, sizeof(49875));
-*/
-NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
+		IsTrue(entrySet.size() == 3);
 
-c = cm.entrySet();
+		//check if compiles
+		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> mapMove = NOU::NOU_CORE::move(map);
+	}
+	
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NoCopyClass, NoCopyClass> map(50);
 
-//AreEqual(c[0], 1);
-//AreEqual(c[1], 4);
-//AreEqual(c[2], 3);
-//AreEqual(c[3], 2);
+		IsTrue(map.bucketCount() == 50);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey(NoCopyClass(0), noCopyClassComparator));
 
-IsTrue(c[0] == 1);
-IsTrue(c[1] == 4);
-IsTrue(c[2] == 3);
-IsTrue(c[3] == 2);
+		//push values
+		map.map(NoCopyClass(0), NoCopyClass(5), noCopyClassComparator);
+		map.map(NoCopyClass(1), NoCopyClass(900), noCopyClassComparator);
+		map.map(NoCopyClass(2), NoCopyClass(1337), noCopyClassComparator);
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
+		IsTrue(map.containsKey(NoCopyClass(0), noCopyClassComparator));
+		IsTrue(map.containsKey(NoCopyClass(1), noCopyClassComparator));
+		IsTrue(map.containsKey(NoCopyClass(2), noCopyClassComparator));
 
-a = cm.keySet();
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
 
-//AreEqual(a[0], 5);
-//AreEqual(a[1], 49875);
-//AreEqual(a[2], 10);
-//AreEqual(a[3], 41);
+		IsTrue(map.get(NoCopyClass(0), noCopyClassComparator).get() == NoCopyClass(5).get());
+		IsTrue(map.get(NoCopyClass(1), noCopyClassComparator).get() == NoCopyClass(900).get());
+		IsTrue(map.get(NoCopyClass(2), noCopyClassComparator).get() == NoCopyClass(1337).get());
 
-IsTrue(a[0] == 5);
-IsTrue(a[1] == 49875);
-IsTrue(a[2] == 10);
-IsTrue(a[3] == 41);
+		//assign new value to key
+		map.map(NoCopyClass(2), NoCopyClass(42), noCopyClassComparator);
 
+		IsTrue(map.containsKey(NoCopyClass(2), noCopyClassComparator));
+		IsTrue(map.get(NoCopyClass(2), noCopyClassComparator).get() == NoCopyClass(42).get());
+
+		IsTrue(map.size() == 3);
+
+		//array subscript not possible, array subscript can not take 2 parameters 
+		//(which is required for the comparator)
+
+		//key set
+		auto keySet = map.keySet();
+
+		IsTrue(keySet.size() == 3);
+
+		//entry set
+		auto entrySet = map.entrySet();
+
+		IsTrue(entrySet.size() == 3);
+	}
+	
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(BinarySearch)
