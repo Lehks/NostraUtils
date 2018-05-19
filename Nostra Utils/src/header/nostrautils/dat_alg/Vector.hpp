@@ -1189,7 +1189,15 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		//####
 		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //copy-assign part
-			at(i) = other.at(i);
+		{
+			if constexpr (std::is_copy_assignable_v<T>)
+				at(i) = other.at(i);
+			else
+			{
+				at(i).~T();
+				new (m_data + i) T(at(i));
+			}
+		}
 
 		for (; i < other.m_size; i++) //copy-constr part
 			new (m_data + i) T(other.at(i));

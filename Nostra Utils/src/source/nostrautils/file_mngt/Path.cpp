@@ -27,14 +27,14 @@ namespace NOU::NOU_FILE_MNGT
 
 
         //if path starts not with *:\ , it is a relative path (* is any character, like C)
-        if (!path.at(1) == ':')
+        if (ret[1] != ':')
 		{
+			if (!ret.startsWith(PATH_SEPARATOR))
+				ret.insert(0, PATH_SEPARATOR);
+
 			Path cwd = currentWorkingDirectory();
 
 			ret.insert(0, cwd.getAbsolutePath());
-
-			if(!path.startsWith(PATH_SEPARATOR))
-				ret.insert(cwd.getAbsolutePath().size(), PATH_SEPARATOR);
 		}
 
 #elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
