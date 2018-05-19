@@ -55,7 +55,7 @@ namespace NOU::NOU_CORE
 
 		TRACE		= 5,
 
-		UNKNWON		= 6
+		UNKNOWN		= 6
 	};
 
 	/**
