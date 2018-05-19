@@ -136,7 +136,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Constructs a new instance.
 		*/
 		explicit ObjectPool(sizeType capacity, NOU_MEM_MNGT::AllocationCallback<AllocType> &allocationCallback
-			= NOU_MEM_MNGT::GenericAllocationCallback<AllocType>::getInstance());
+			= NOU_MEM_MNGT::GenericAllocationCallback<AllocType>::get());
 
 		ObjectPool(const ObjectPool&) = delete;
 		ObjectPool(ObjectPool&&) = delete;

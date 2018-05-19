@@ -107,7 +107,7 @@ namespace NOU::NOU_THREAD
 		\warning
 		The first time that this method is called must be done from the main thread.
 		*/
-		static ThreadManager& getInstance();
+		static ThreadManager& get();
 	//End of singleton parts
 
 		/**

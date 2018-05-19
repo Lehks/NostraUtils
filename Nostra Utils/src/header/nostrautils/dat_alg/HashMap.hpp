@@ -177,7 +177,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		explicit HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<
 			NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<
-			NOU::NOU_DAT_ALG::Pair<K, V>>>::getInstance());
+			NOU::NOU_DAT_ALG::Pair<K, V>>>::get());
 
 		/**
 		\param key     The key that the passed value will be mapped to.
