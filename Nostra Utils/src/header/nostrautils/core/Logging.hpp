@@ -30,6 +30,7 @@ namespace NOU::NOU_CORE
 	/**
 	\brief A enum class, which stores the different event level. 
 		   The eventLevel can be:
+
 		   Fatal:	Error, which results in the termination of the application.
 		   Error:	Runtime error, which obstruct the application or unexpected errors.
 		   Warning: Call of an deprecated interface, wrong call of a interface, user error or inconvenient
@@ -281,7 +282,6 @@ namespace NOU::NOU_CORE
 
 		/**
 		\param event	A const referenced object of the event class.
-		\param filename	The name of the file where the log will be written to.
 		
 		\brief			A pure virtual class whose behavior will be overridden in derived classes.
 		*/
@@ -306,7 +306,6 @@ namespace NOU::NOU_CORE
 
 		/**
 		\param event	A const reference to an event object.
-		\param filename	The name of the file where the log will be written to.
 
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry 
 						to the console.
@@ -321,11 +320,13 @@ namespace NOU::NOU_CORE
 	{
 	private:
 
+		/**
+		\brief			The path of the file
+		*/
 		NOU_FILE_MNGT::Path m_path;
 
 		/**
 		\param event	A const reference to an event object.
-		\param filename	The name of the file where the log will be written to.
 
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
 						to a log file.
@@ -334,9 +335,9 @@ namespace NOU::NOU_CORE
 
 	public:
 		/**
-		\param path The path to the file that the log will be written to.
+		\param path		The path to the file that the log will be written to.
 
-		\brief Constructs a new instance that will write the log to the passed file.
+		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLogger(const NOU_FILE_MNGT::Path &path);
 	};
@@ -345,53 +346,63 @@ namespace NOU::NOU_CORE
 	/**
 	\brief		A class for storing the different logger and writing logs to all of them.
 	
-	\details	To create a new Logger you need to call the instance() and store the result in a Logger*.
-				e.g.:	Logger* log = Logger::instance();
+	\details	To create a new Logger you need to call the get() and store the result in a Logger.
+				e.g.:	Logger& log = Logger::get();
 
-				The instance() will create a new Logger object. If there is already a Logger object it won't 
-				create one and will return a pointer to the existing one.
+				The get() will create a new Logger object. If there is already a Logger object it won't 
+				create a new one and you will get the already created one.
 
 				This ensures that there is only one Logger object at all time.
 
 				After that you need to push a logging target to the logger you created.
-				e.g.:	log->pushLogger<ConsoleLogger>(); //This will push a ConsoleLogger
+				e.g.:	log.pushLogger<ConsoleLogger>(); //This will push a ConsoleLogger
+
+				If you want to specify a file, where your logs should be written to, you can use the
+				fileLogger and pass the name of the file.
+				e.g.:	log.pushLogger<FileLogger>("logFile.txt");
 
 				And at end you can tell the logger to write a log.
-				e.g.:	log->write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid object type.");
+				e.g.:	NOU_LOG_ERROR("Invalid object type.");
 
-				This will write an error of the ERROR level with its error message to the log file.
-				You can change the file where you want to print. 
-				e.g.:	log->write(NOU::NOU_CORE::EventLevelCodes::ERROR, "Invalid object type.", "ErrorLog.txt");
+				This example will write an error of the ERROR level. You can change the event level 
+				by using a different macro. All macros start with NOU_LOG_ and end with the event level.
+
+				All macros are:
+
+				-NOU_LOG_FATAL()
+				-NOU_LOG_ERROR()
+				-NOU_LOG_WARNING()
+				-NOU_LOG_INFO()
+				-NOU_LOG_DEBUG()
+				-NOU_LOG_TRACE()
 	*/
 	class Logger
 	{
 	public:
 
 		/**
-		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
+		\brief		Alias for the NOU::NOU_DAT_ALG::StringView8.
 		*/
 		using StringType = Event::StringType;
 
 		/**
-		\return	A pointer to the Logger.
+		\return		The logger object.
 
-		\brief Creates a new Logger object and returns it.
+		\brief		Creates a Logger object and returns it.
 
-		\details This is the function that is called for creating a new Logger object. It checks if a Logger
-					Object already exists and if so it returns it. If not it will create a new one and
-					save it in the uniqueInstance pointer.
+		\details	This function is implemented as a singleton.
 		*/
 		NOU_FUNC static Logger& get();
 
 		/**
-		\brief Destructor of the Logger. Sets the uniqueInstance to null-pointer.
+		\brief			Destructor of the Logger.
 		*/
 		~Logger();
 
 		/**
-		\param event	A const reference to an event.
+		\param	event	An event.
 
-		\return			Returns the error string.
+		\return			The error string.
 
 		\brief			Returns a custom formated error string.
 		*/
@@ -400,23 +411,22 @@ namespace NOU::NOU_CORE
 	private:
 
 		/**
-		\brief Default constructor of the Logger.
+		\brief			Default constructor of the Logger.
 		*/
 		NOU_FUNC Logger() = default;
 
 		/**
-		\brief Deleted copy constructor of the Logger.
+		\brief			Deleted copy constructor of the Logger.
 		*/
 		NOU_FUNC Logger(const Logger& other) = delete;
 
 		/**
-		\brief Creates a new vector from ILogger pointers.
+		\brief			Creates a new vector from ILogger pointers.
 		*/
 		NOU::NOU_DAT_ALG::Vector<ILogger*> m_logger;
 
 		/**
-		\param events	A const reference to an event object.
-		\param filename	The name of the file where the log will be written to.
+		\param events	An event object.
 
 		\brief			Calls the write function for every objects in m_logger.
 		*/
@@ -425,14 +435,14 @@ namespace NOU::NOU_CORE
 		/**
 		\param logger	The logger to write the event to.
 		\param event	The event to write.
-		\param filename	The name of the file where the log will be written to.
 
-		\brief			Calls <tt>logger->write(event)</tt>. This is required for the task queue.
+		\brief			Calls <tt>logger.write(event)</tt>. This is required for the task queue.
 		*/
 		NOU_FUNC static void callLoggingTarget(ILogger *logger, Event event);
 
 		/**
 		\brief		A TaskQueue for all multi-threaded tasks.
+
 		\details	A task in the TaskQueue logs an error to one of the logging targets. Those tasks are
 					executed in parallel.
 		*/
@@ -456,7 +466,6 @@ namespace NOU::NOU_CORE
 		/**
 		\param level	A enum value, which represents the level of the event.
 		\param msg		A const reference to the message, which specifies the event.
-		\param filename	The name of the file where the log will be written to. The default value is log.txt.
 
 		\brief			Creates a new event object from the level and msg parameters and calls the logAll() 
 						with this event object.
@@ -521,6 +530,13 @@ namespace NOU::NOU_CORE
 #    ifndef NOU_LOG_TRACE_DISABLE
 #        define NOU_LOG_TRACE(msg) \
                             NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::TRACE, msg);   
+#    endif
+#endif
+
+#ifndef NOU_LOG_UNKNOWN
+#    ifndef NOU_LOG_UNKNOWN_DISABLE
+#        define NOU_LOG_UNKNOWN(msg) \
+                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::UNKNOWN, msg);   
 #    endif
 #endif
 }
