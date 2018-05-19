@@ -1,4 +1,0 @@
-ToolSet: 15.0@D:\VisualStudio
-Options: 
-
-Options:-DCMAKE_INSTALL_PREFIX=D:/NOU
