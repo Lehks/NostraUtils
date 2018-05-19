@@ -201,8 +201,6 @@ namespace NOU::NOU_CORE
 
 		if (event.getTimeStamp().getSeconds() < 10)
 			error.append("0");
-		if (event.getTimeStamp().getSeconds() == 0)
-			error.append("0");
 		error.append(event.getTimeStamp().getSeconds());
 
 		error.append("] ");
