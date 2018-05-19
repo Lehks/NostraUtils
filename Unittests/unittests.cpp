@@ -20,6 +20,27 @@
 				}																						 \
 				IsTrue(errorCount == 0);
 
+namespace Catch
+{
+	template<>
+	struct StringMaker<NOU::NOU_DAT_ALG::StringView8>
+	{
+		static std::string convert(const NOU::NOU_DAT_ALG::StringView8 &value)
+		{
+			return std::string("\"") + value.rawStr() + std::string("\"");
+		}
+	};
+
+	template<>
+	struct StringMaker<NOU::NOU_DAT_ALG::String8>
+	{
+		static std::string convert(const NOU::NOU_DAT_ALG::String8 &value)
+		{
+			return StringMaker<NOU::NOU_DAT_ALG::StringView8>::convert(value);
+		}
+	};
+}
+
 void printErrors()
 {
     while (NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
@@ -1436,6 +1457,54 @@ TEST_METHOD(HashMap)
 		IsTrue(entrySet.size() == 3);
 	}
 	
+
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NOU::NOU_DAT_ALG::String8, NOU::NOU_DAT_ALG::String8> map(50);
+
+		IsTrue(map.bucketCount() == 50);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey("test"));
+
+		//push values
+		map.map("test", "map to test");
+		map.map("another test", "map to another test");
+		map.map("yet another test", "map to yet another test");
+
+		IsTrue(map.containsKey("test"));
+		IsTrue(map.containsKey("another test"));
+		IsTrue(map.containsKey("yet another test"));
+
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
+
+		IsTrue(map.get("test") == "map to test");
+		IsTrue(map.get("another test") == "map to another test");
+		IsTrue(map.get("yet another test") == "map to yet another test");
+
+		//assign new value to key
+		map.map("yet another test", "over write");
+
+		IsTrue(map.containsKey("yet another test"));
+		IsTrue(map.get("yet another test") == "over write");
+
+		IsTrue(map.size() == 3);
+
+		//array subscript not possible, array subscript can not take 2 parameters 
+		//(which is required for the comparator)
+
+		//key set
+		auto keySet = map.keySet();
+
+		IsTrue(keySet.size() == 3);
+
+		//entry set
+		auto entrySet = map.entrySet();
+
+		IsTrue(entrySet.size() == 3);
+	}
+
 	NOU_CHECK_ERROR_HANDLER;
 }
 
