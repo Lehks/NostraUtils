@@ -16,15 +16,6 @@
 #include <chrono>
 #include <iostream>
 
-///\cond
-//Temporary macro rename from ERROR to NOU_TMP_MACRO_RENAME_ERROR. This caused problems when using Catch
-//The original name will be restored at the end of the file.
-#ifdef ERROR
-#define NOU_TMP_MACRO_RENAME_ERROR ERROR
-#undef ERROR
-#endif
-///\endcond
-
 /**
 \file core/Logging.hpp
 
@@ -294,7 +285,7 @@ namespace NOU::NOU_CORE
 		
 		\brief			A pure virtual class whose behavior will be overridden in derived classes.
 		*/
-		virtual void write(const Event& event, StringType filename) = 0;
+		virtual void write(const Event& event) = 0;
 	};
 
 	/**
@@ -320,7 +311,7 @@ namespace NOU::NOU_CORE
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry 
 						to the console.
 		*/
-		void write(const Event& event, StringType filename) override;
+		void write(const Event& event) override;
 	};
 
 	/**
@@ -330,6 +321,8 @@ namespace NOU::NOU_CORE
 	{
 	private:
 
+		NOU_FILE_MNGT::Path m_path;
+
 		/**
 		\param event	A const reference to an event object.
 		\param filename	The name of the file where the log will be written to.
@@ -337,7 +330,15 @@ namespace NOU::NOU_CORE
 		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
 						to a log file.
 		*/
-		void write(const Event& event, StringType filename) override;
+		void write(const Event& event) override;
+
+	public:
+		/**
+		\param path The path to the file that the log will be written to.
+
+		\brief Constructs a new instance that will write the log to the passed file.
+		*/
+		FileLogger(const NOU_FILE_MNGT::Path &path);
 	};
 
 
@@ -380,7 +381,7 @@ namespace NOU::NOU_CORE
 					Object already exists and if so it returns it. If not it will create a new one and
 					save it in the uniqueInstance pointer.
 		*/
-		NOU_FUNC static Logger* instance();
+		NOU_FUNC static Logger& get();
 
 		/**
 		\brief Destructor of the Logger. Sets the uniqueInstance to null-pointer.
@@ -404,11 +405,6 @@ namespace NOU::NOU_CORE
 		NOU_FUNC Logger() = default;
 
 		/**
-		\brief A static pointer to the Logger object.
-		*/
-		static Logger* s_uniqueInstance;
-
-		/**
 		\brief Deleted copy constructor of the Logger.
 		*/
 		NOU_FUNC Logger(const Logger& other) = delete;
@@ -424,7 +420,7 @@ namespace NOU::NOU_CORE
 
 		\brief			Calls the write function for every objects in m_logger.
 		*/
-		NOU_FUNC void logAll(Event &&events, StringType filename);
+		NOU_FUNC void logAll(Event &&events);
 
 		/**
 		\param logger	The logger to write the event to.
@@ -433,7 +429,7 @@ namespace NOU::NOU_CORE
 
 		\brief			Calls <tt>logger->write(event)</tt>. This is required for the task queue.
 		*/
-		NOU_FUNC static void callLoggingTarget(ILogger *logger, Event event, StringType filename);
+		NOU_FUNC static void callLoggingTarget(ILogger *logger, Event event);
 
 		/**
 		\brief		A TaskQueue for all multi-threaded tasks.
@@ -442,7 +438,7 @@ namespace NOU::NOU_CORE
 		*/
 		NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
 			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
-			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event, StringType>
+			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event>
 			m_taskQueue;
 
 	public:
@@ -465,7 +461,7 @@ namespace NOU::NOU_CORE
 		\brief			Creates a new event object from the level and msg parameters and calls the logAll() 
 						with this event object.
 		*/
-		NOU_FUNC void write(EventLevelCodes level, const StringType &msg, const StringType &filename = "log.txt");
+		NOU_FUNC void write(EventLevelCodes level, const StringType &msg);
 	
 		/**
 		\brief Holds the execution of the thread that the method is called from until the logger is done
@@ -486,28 +482,47 @@ namespace NOU::NOU_CORE
 		m_logger.pushBack(new T(NOU_CORE::forward<ARGS>(args)...));
 	}
 
-/**
-\brief This macro is a convenience macro for writing logs to the logger. This macro automatically
-passes the level and message.
-*/
-#ifndef NOU_WRITE_LOG
-#define NOU_WRITE_LOG(logger, level, msg, filename) logger->write(level, msg, filename)
+#ifndef NOU_LOG_FATAL
+#    ifndef NOU_LOG_FATAL_DISABLE
+#        define NOU_LOG_FATAL(msg) \
+                              NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::FATAL, msg);
+#    endif
 #endif
 
-/**
-\brief This macro is a convenience macro, that behaves exactly like NOU_WRITE_LOG, but only if NOU_DEBUG is
-defined. Otherwise, it will do nothing.
-*/
-#ifndef NOU_WRITE_DEBUG_LOG
-#    ifdef  NOU_DEBUG
-#        define NOU_WRITE_DEBUG_LOG(logger, level, msg, filename) NOU_WRITE_LOG(logger, level, msg, filename)
-#    else
-#        define NOU_WRITE_DEBUG_LOG(logger, level, msg, filename)
+#ifndef NOU_LOG_ERROR
+#    ifndef NOU_LOG_ERROR_DISABLE
+#        define NOU_LOG_ERROR(msg) \
+                              NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::ERROR, msg);   
+#    endif
+#endif
+
+#ifndef NOU_LOG_WARNING
+#    ifndef NOU_LOG_WARNING_DISABLE
+#        define NOU_LOG_WARNING(msg) \
+                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::WARNING, msg);   
+#    endif
+#endif
+
+#ifndef NOU_LOG_INFO
+#    ifndef NOU_LOG_INFO_DISABLE
+#        define NOU_LOG_INFO(msg) \
+                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::INFO, msg);   
+#    endif
+#endif
+
+#ifndef NOU_LOG_DEBUG
+#    ifndef NOU_LOG_DEBUG_DISABLE
+#        define NOU_LOG_DEBUG(msg) \
+                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::DEBUG, msg);   
+#    endif
+#endif
+
+#ifndef NOU_LOG_TRACE
+#    ifndef NOU_LOG_TRACE_DISABLE
+#        define NOU_LOG_TRACE(msg) \
+                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::TRACE, msg);   
 #    endif
 #endif
 }
-
-#define NOU_TMP_MACRO_RENAME_ERROR ERROR
-#undef NOU_TMP_MACRO_RENAME_ERROR
 
 #endif

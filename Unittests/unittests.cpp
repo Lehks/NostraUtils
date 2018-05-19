@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_RUNNER
-#include "Catch/catch.hpp"
 
 #define NOU_DEBUG
 #define NOU_DLL
@@ -11,6 +9,10 @@
 #include <type_traits>
 #include <string>
 #include <iostream>
+
+#define CATCH_CONFIG_RUNNER
+#include "Catch/catch.hpp"
+
 
 #define NOU_CHECK_ERROR_HANDLER 																		 \
 				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
@@ -1987,42 +1989,144 @@ TEST_METHOD(IsBaseOf)
 
 TEST_METHOD(Logging)
 {
-	static NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
-
-	static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
 	static NOU::NOU_DAT_ALG::String8 writeOutput;
 
-	NOU::NOU_CORE::Logger* log = NOU::NOU_CORE::Logger::instance();
-
-	static NOU::NOU_THREAD::Mutex mutex;
-	static NOU::NOU_THREAD::ConditionVariable variable;
+	NOU::NOU_CORE::Logger& log = NOU::NOU_CORE::Logger::get();
 
 	class TestLogger : public NOU::NOU_CORE::ILogger
 	{
-		void write(const NOU::NOU_CORE::Event& event, StringType filename)
+		void write(const NOU::NOU_CORE::Event& event) override
 		{
 			writeOutput = NOU::NOU_CORE::Logger::print(event);
-			variable.notifyAll();
 		}
 	};
 
-	log->pushLogger<TestLogger>();
-	log->write(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+	log.pushLogger<TestLogger>();
 
-	//Wait until the logger has actually printed the message
-	NOU::NOU_THREAD::UniqueLock lock(mutex);
-	variable.wait(lock);
-
-	if (testOutput.size() == writeOutput.size()) //For better error message
 	{
-		for (int i = 0; i < testOutput.size(); i++)
+		NOU_LOG_FATAL("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::FATAL, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
 		{
-			IsTrue(testOutput.at(i) == writeOutput.at(i));
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
 		}
 	}
-	else
+
 	{
-		IsTrue(false);
+#define ERROR_RENAME ERROR
+#undef ERROR
+
+		NOU_LOG_ERROR("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::ERROR, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+
+#define ERROR ERROR_RENAME
+#undef ERROR_RENAME
+	}
+
+	{
+		NOU_LOG_WARNING("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::WARNING, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+	}
+
+	{
+#define INFO_RENAME INFO
+#undef INFO
+
+		NOU_LOG_INFO("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::INFO, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+
+#define INFO INFO_RENAME
+#undef INFO_RENAME
+	}
+
+	{
+		NOU_LOG_DEBUG("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+	}
+
+	{
+		NOU_LOG_TRACE("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::TRACE, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
 	}
 
 	NOU_CHECK_ERROR_HANDLER;

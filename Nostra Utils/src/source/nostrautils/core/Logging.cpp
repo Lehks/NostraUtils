@@ -125,18 +125,15 @@ namespace NOU::NOU_CORE
 		}
 	}
 
-	void ConsoleLogger::write(const Event& event, StringType filename)
+	void ConsoleLogger::write(const Event& event)
 	{
 		NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
 		std::cout << error.rawStr() << std::endl;
 	}
 
-	void FileLogger::write(const Event& event, StringType filename)
+	void FileLogger::write(const Event& event)
 	{
-		NOU::NOU_DAT_ALG::String8 absPath = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory().getAbsolutePath();
-		absPath.append("/").append(filename);
-
-		NOU::NOU_FILE_MNGT::File file(absPath);
+		NOU::NOU_FILE_MNGT::File file(m_path);
 
 		if (!file.exists())
 		{
@@ -157,19 +154,18 @@ namespace NOU::NOU_CORE
 		}
 	}
 
-	Logger* Logger::instance()
+	FileLogger::FileLogger(const NOU_FILE_MNGT::Path &path) :
+		m_path(path)
+	{}
+
+	Logger& Logger::get()
 	{
-		if (s_uniqueInstance == nullptr)
-		{
-			s_uniqueInstance = new Logger();
-		}
-		return s_uniqueInstance;
+		static Logger instance;
+		return instance;
 	}
 
 	Logger::~Logger()
 	{
-		s_uniqueInstance = nullptr;
-
 		for (ILogger* element : m_logger)
 		{
 			delete element;
@@ -216,25 +212,23 @@ namespace NOU::NOU_CORE
 		return error;
 	}
 
-	Logger* Logger::s_uniqueInstance = nullptr;
-
-	void Logger::logAll(Event&& events, StringType filename)
+	void Logger::logAll(Event&& events)
 	{
 		for (sizeType i = 0; i < m_logger.size(); i++)
 		{
 			m_taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i], 
-				NOU_CORE::move(events), filename));
+				NOU_CORE::move(events)));
 		}
 	}
 
-	void Logger::callLoggingTarget(ILogger *logger, Event event, StringType filename)
+	void Logger::callLoggingTarget(ILogger *logger, Event event)
 	{
-		logger->write(event, filename);
+		logger->write(event);
 	}
 
-	void Logger::write(EventLevelCodes level, const StringType &msg, const StringType &filename)
+	void Logger::write(EventLevelCodes level, const StringType &msg)
 	{
-		logAll(Event(level, msg), filename);
+		logAll(Event(level, msg));
 	}
 
 	void Logger::wait()
