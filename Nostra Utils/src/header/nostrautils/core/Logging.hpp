@@ -321,7 +321,7 @@ namespace NOU::NOU_CORE
 	private:
 
 		/**
-		\brief			The path of the file
+		\brief			The path of the file.
 		*/
 		NOU_FILE_MNGT::Path m_path;
 
@@ -376,6 +376,7 @@ namespace NOU::NOU_CORE
 				-NOU_LOG_INFO()
 				-NOU_LOG_DEBUG()
 				-NOU_LOG_TRACE()
+				-NOU_LOG_UNKNOWN()
 	*/
 	class Logger
 	{
