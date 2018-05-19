@@ -443,7 +443,7 @@ namespace NOU::NOU_CORE
 		NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
 			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
 			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event, StringType>
-			taskQueue;
+			m_taskQueue;
 
 	public:
 
@@ -466,6 +466,18 @@ namespace NOU::NOU_CORE
 						with this event object.
 		*/
 		NOU_FUNC void write(EventLevelCodes level, const StringType &msg, const StringType &filename = "log.txt");
+	
+		/**
+		\brief Holds the execution of the thread that the method is called from until the logger is done
+		       writing to all of the logging targets.
+
+		\attention
+		This method can 
+		1. only be called once
+		2. converts the logger into an invalid state; it is not possible to write messages to the logger once 
+		   this method was called.
+		*/
+		NOU_FUNC void wait();
 	};
 
 	template<typename T, typename ...ARGS>

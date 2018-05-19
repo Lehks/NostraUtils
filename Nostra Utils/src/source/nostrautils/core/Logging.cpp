@@ -222,7 +222,8 @@ namespace NOU::NOU_CORE
 	{
 		for (sizeType i = 0; i < m_logger.size(); i++)
 		{
-			taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i], NOU_CORE::move(events), filename));
+			m_taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i], 
+				NOU_CORE::move(events), filename));
 		}
 	}
 
@@ -234,5 +235,11 @@ namespace NOU::NOU_CORE
 	void Logger::write(EventLevelCodes level, const StringType &msg, const StringType &filename)
 	{
 		logAll(Event(level, msg), filename);
+	}
+
+	void Logger::wait()
+	{
+		m_taskQueue.close();
+		m_taskQueue.getResult();
 	}
 }
