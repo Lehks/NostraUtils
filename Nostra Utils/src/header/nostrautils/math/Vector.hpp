@@ -16,6 +16,16 @@
 
 namespace NOU::NOU_MATH
 {
+	/**
+	\tparam T The type of the components in the vector.
+	\tparam N The amount of components that the vector has.
+
+	\brief The base class of all vector types.
+
+	\details
+	The base class of all vector types. This class provides the storage for the vectors and access to that 
+	storage.
+	*/
 	template<typename T, sizeType N>
 	class VectorBase
 	{
@@ -25,21 +35,106 @@ namespace NOU::NOU_MATH
         using InitializerList = std::initializer_list<T>;
 
     protected:
+		/**
+		\brief The single components.
+		*/
         T m_data[N];
 
+		/**
+		\brief Constructs a new instance without initializing any of the components.
+		*/
         VectorBase() = default;
+
+		/**
+		\param values The values of the components.
+
+		\brief Initializes all of the components in the vector with the passed values.
+
+		\details
+		Initializes all of the components in the vector with the passed values.
+
+		Sonstruct of initializer lists:
+
+		\code{.cpp}
+		{1, 2, 3}
+		\endcode
+
+		would result in such a vector:
+
+		\f$
+		\begin{pmatrix}
+		1 \\ 2 \\ 3
+		\end{pmatrix}
+		\f$
+		*/
         VectorBase(const InitializerList &values);
 
     public:
+		/**
+		\param index The index of the component.
+
+		\return The value of the component at the specified index.
+
+		\brief Returns the value of the component at the specified index.
+
+		\note
+		Typically, the components in a vector have names like \f$x\f$ or \f$y\f$. The vector does not provide
+		names like that, but the indices are meant like this: index 0 is \f$x\f$, index 1 is \f$y\f$ and so 
+		on.
+		*/
         const T& value(sizeType index) const;
+
+		/**
+		\param index The index of the component.
+
+		\return The value of the component at the specified index.
+
+		\brief Returns the value of the component at the specified index.
+
+		\note
+		Typically, the components in a vector have names like \f$x\f$ or \f$y\f$. The vector does not provide
+		names like that, but the indices are meant like this: index 0 is \f$x\f$, index 1 is \f$y\f$ and so
+		on.
+		*/
         T& value(sizeType index);
 
+		/**
+		\return The amount of components in the vector. This is the same as the template parameter \p N.
+
+		\brief Returns the amount of components in the vector.
+		*/
         sizeType size() const;
 
+		/**
+		\return The data of the vector as an array.
+
+		\brief Returns the data of the vector as an array.
+		*/
         const T* data() const;
+
+		/**
+		\return The data of the vector as an array.
+
+		\brief Returns the data of the vector as an array.
+		*/
         T* data();
 
+		/**
+		\param index The index of the component.
+
+		\return Same as <tt>value()</tt>.
+
+		\brief Same as <tt>value()</tt>.
+		*/
 		const T& operator [](sizeType index) const;
+
+		/**
+		\param index The index of the component.
+
+		\return Same as <tt>value()</tt>.
+
+		\brief Same as <tt>value()</tt>.
+		*/
 		T& operator [](sizeType index);
     };
 
@@ -47,57 +142,536 @@ namespace NOU::NOU_MATH
 	class Vector : public VectorBase<T, N>
 	{
 	public:
+		/**
+		\return The null vector.
+
+		\brief Returns the null vector.
+		*/
 		static Vector nullVector();
 
+		/**
+		\brief Constructs a new instance without initializing any of its components.
+		*/
         Vector() = default;
+
+		/**
+		\param values The values of the components.
+
+		\brief Initializes all of the components in the vector with the passed values.
+
+		\details
+		Initializes all of the components in the vector with the passed values.
+
+		Sonstruct of initializer lists:
+
+		\code{.cpp}
+		{1, 2, 3}
+		\endcode
+
+		would result in such a vector:
+
+		\f$
+		\begin{pmatrix}
+		1 \\ 2 \\ 3
+		\end{pmatrix}
+		\f$
+		*/
         Vector(const typename VectorBase<T, N>::InitializerList &values);
+
+		/**
+		\param vec    A vector that contains the first two values.
+		\param values The values of the remaining components.
+
+		\brief Initializes all of the components in the vector with the passed values.
+
+		\details
+		Initializes all of the components in the vector with the passed values.
+
+		Sonstruct of initializer lists:
+
+		\code{.cpp}
+		Vector<int32, 6>(Vec2i(1, 2), {3, 4, 5, 6})
+		\endcode
+
+		would result in such a vector:
+
+		\f$
+		\begin{pmatrix}
+		1 \\ 2 \\ 3 \\ 4 \\ 5 \\ 6
+		\end{pmatrix}
+		\f$
+		*/
         Vector(const Vector<T, 2> &vec, const typename VectorBase<T, N>::InitializerList &values);
+
+		/**
+		\param vec    A vector that contains the first three values.
+		\param values The values of the remaining components.
+
+		\brief Initializes all of the components in the vector with the passed values.
+
+		\details
+		Initializes all of the components in the vector with the passed values.
+
+		Sonstruct of initializer lists:
+
+		\code{.cpp}
+		Vector<int32, 6>(Vec3i(1, 2, 3), {4, 5, 6})
+		\endcode
+
+		would result in such a vector:
+
+		\f$
+		\begin{pmatrix}
+		1 \\ 2 \\ 3 \\ 4 \\ 5 \\ 6
+		\end{pmatrix}
+		\f$
+		*/
         Vector(const Vector<T, 3> &vec, const typename VectorBase<T, N>::InitializerList &values);
+
+		/**
+		\param vec    A vector that contains the first four values.
+		\param values The values of the remaining components.
+
+		\brief Initializes all of the components in the vector with the passed values.
+
+		\details
+		Initializes all of the components in the vector with the passed values.
+
+		Sonstruct of initializer lists:
+
+		\code{.cpp}
+		Vector<int32, 6>(Vec2i(1, 2, 3, 4), {5, 6})
+		\endcode
+
+		would result in such a vector:
+
+		\f$
+		\begin{pmatrix}
+		1 \\ 2 \\ 3 \\ 4 \\ 5 \\ 6
+		\end{pmatrix}
+		\f$
+		*/
         Vector(const Vector<T, 4> &vec, const typename VectorBase<T, N>::InitializerList &values);
 
+		/**
+		\param other The vector to add.
+
+		\return A new vector with the added components.
+
+		\brief Adds the components of two vectors and returns the result in a new instance.
+
+		\details
+		Adds the components of two vectors and returns the result in a new instance.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{result} =
+		\begin{pmatrix}
+		this->value(0) + other.value(0) \\
+		this->value(1) + other.value(1) \\
+		this->value(2) + other.value(2)
+		\end{pmatrix}
+		\f$
+		*/
         Vector add(const Vector &other) const;
+
+		/**
+		\param other The vector to add.
+
+		\return A reference to the vector that the method was called on, with the added components.
+
+		\brief Adds the components of two vectors and assigns the result to the vector that the method was 
+		       called on.
+
+		\details
+		Adds the components of two vectors and assigns the result to the vector that the method was
+		called on.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{this} =
+		\begin{pmatrix}
+		this->value(0) + other.value(0) \\
+		this->value(1) + other.value(1) \\
+		this->value(2) + other.value(2)
+		\end{pmatrix}
+		\f$
+		*/
         Vector& addAssign(const Vector &other);
 
+		/**
+		\param other The vector to subtract.
+
+		\return A new vector with the subtracted components.
+
+		\brief Subtracts the components of two vectors and returns the result in a new instance.
+
+		\details
+		Subtracts the components of two vectors and returns the result in a new instance.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{result} =
+		\begin{pmatrix}
+		this->value(0) - other.value(0) \\
+		this->value(1) - other.value(1) \\
+		this->value(2) - other.value(2)
+		\end{pmatrix}
+		\f$
+		*/
         Vector sub(const Vector &other) const;
+
+		/**
+		\param other The vector to subtract.
+
+		\return A reference to the vector that the method was called on, with the subtracted components.
+
+		\brief Subtracts the components of two vectors and assigns the result to the vector that the method 
+		       was called on.
+
+		\details
+		Subtracts the components of two vectors and assigns the result to the vector that the method was 
+		called on.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{this} =
+		\begin{pmatrix}
+		this->value(0) - other.value(0) \\
+		this->value(1) - other.value(1) \\
+		this->value(2) - other.value(2)
+		\end{pmatrix}
+		\f$
+		*/
         Vector& subAssign(const Vector &other);
 
-        Vector multiplicateElements(const Vector &other) const;
-        Vector& multiplicateElementsAssign(const Vector &other);
+		/**
+		\param other The vector to multiply with.
 
+		\return A new vector with the multiplied components.
+
+		\brief Multiplies the components of two vectors and returns the result in a new instance.
+
+		\details
+		Multiplies the components of two vectors and returns the result in a new instance.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{result} =
+		\begin{pmatrix}
+		this->value(0) * other.value(0) \\
+		this->value(1) * other.value(1) \\
+		this->value(2) * other.value(2)
+		\end{pmatrix}
+		\f$
+		*/
+        Vector multiplyElements(const Vector &other) const;
+
+		/**
+		\param other The vector to multiply.
+
+		\return A reference to the vector that the method was called on, with the multiplied components.
+
+		\brief Multiplies the components of two vectors and assigns the result to the vector that the method 
+		       was called on.
+
+		\details
+		Multiplies the components of two vectors and assigns the result to the vector that the method was 
+		called on.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{this} =
+		\begin{pmatrix}
+		this->value(0) * other.value(0) \\
+		this->value(1) * other.value(1) \\
+		this->value(2) * other.value(2)
+		\end{pmatrix}
+		\f$
+		*/
+        Vector& multiplyElementsAssign(const Vector &other);
+
+		/**
+		\param other The vector to divide with.
+
+		\return A new vector with the divided components.
+
+		\brief Divides the components of two vectors and returns the result in a new instance.
+
+		\details
+		Divides the components of two vectors and returns the result in a new instance.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{result} =
+		\begin{pmatrix}
+		this->value(0) \ other.value(0) \\
+		this->value(1) \ other.value(1) \\
+		this->value(2) \ other.value(2)
+		\end{pmatrix}
+		\f$
+		*/
         Vector divideElements(const Vector &other) const;
+
+		/**
+		\param other The vector to divide with.
+
+		\return A reference to the vector that the method was called on, with the divided components.
+
+		\brief Divides the components of two vectors and assigns the result to the vector that the method was 
+		       called on.
+
+		\details
+		Divides the components of two vectors and assigns the result to the vector that the method was called 
+		on.
+		
+		For a vector with three components, the result would be:
+
+		\f$
+		Vec_{this} =
+		\begin{pmatrix}
+		this->value(0) \ other.value(0) \\
+		this->value(1) \ other.value(1) \\
+		this->value(2) \ other.value(2)
+		\end{pmatrix}
+		\f$
+		*/
         Vector& divideElementsAssign(const Vector &other);
 
+		/**
+		\param scale The scalar that the vector should be scaled by.
+
+		\return A new instance with the scaled components.
+
+		\brief Scales all of the components in the vector and returns the result in a new instance.
+
+		\details
+		Scales all of the components in the vector and returns the result in a new instance.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{return} =
+		\begin{pmatrix}
+		this->value(0) * other \\
+		this->value(1) * other \\
+		this->value(2) * other
+		\end{pmatrix}
+		\f$
+		*/
         Vector scale(float64 scale) const;
+
+		/**
+		\param scale The scalar that the vector should be scaled by.
+
+		\return The instance that the method was called on, with the scaled components.
+
+		\brief Scales all of the components in the vector and assigns the result to the instance that the 
+		       method was called on.
+
+		\details
+		Scales all of the components in the vector and assigns the result to the instance that the method was 
+		called on.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{this} =
+		\begin{pmatrix}
+		this->value(0) * other \\
+		this->value(1) * other \\
+		this->value(2) * other
+		\end{pmatrix}
+		\f$
+		*/
         Vector& scaleAssign(float64 scale);
 
+		/**
+		\param other The vector to calculate the dot product with.
+
+		\return The dot product of the vector that the method was called on with the passed vector.
+
+		\brief Calculates the dot product with the passed vector.
+
+		\details
+		Calculates the dot product with the passed vector.
+
+		For a vector with three components, the result would be:
+		\f$
+		ret =
+		this->value(0) * other.value(0) +
+		this->value(1) * other.value(1) +
+		this->value(2) * other.value(2)
+		\f$
+		*/
         T dotProduct(const Vector &other) const;
 
+		/**
+		\return The length of the vector.
+
+		\brief Returns the length of the vector.
+		*/
         float32 length() const;
 
+		/**
+		\return An exact copy of the vector.
+
+		\brief Returns an exact copy of the vector.
+		*/
         Vector copy() const;
 
+		/**
+		\param other The vector to compare with.
+
+		\return True, if the vectors are equal, false if not.
+
+		\brief Compares two vectors.
+		*/
         boolean equal(const Vector &other) const;
 
+		/**
+		\param other The vector to compare with.
+
+		\return True, if the vectors are not equal, false if not.
+
+		\brief Compares two vectors.
+		*/
         boolean unequal(const Vector &other) const;
 
+		/**
+		\return Returns the instance of the vector that the method was called on.
+
+		\brief Normalizes the vector.
+
+		\note
+		For component types that are integer types, this method is highly imprecise.
+		*/
         Vector& normalize();
 
+		/**
+		\return A new instance.
+
+		\brief Inverts all of the components in the vector using the unary "-" operator.
+
+		\details
+		Inverts all of the components in the vector using the unary "-" operator.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{result} =
+		\begin{pmatrix}
+		-this->value(0) \\
+		-this->value(1) \\
+		-this->value(2)
+		\end{pmatrix}
+		\f$
+		*/
         Vector invert() const;
+
+		/**
+		\return The instance that this method was called on.
+
+		\brief Inverts all of the components in the vector using the unary "-" operator.
+
+		\details
+		Inverts all of the components in the vector using the unary "-" operator.
+
+		For a vector with three components, the result would be:
+		\f$
+		Vec_{this} =
+		\begin{pmatrix}
+		-this->value(0) \\
+		-this->value(1) \\
+		-this->value(2)
+		\end{pmatrix}
+		\f$
+		*/
         Vector& invertThis();
 
+		/**
+		\param other The vector to add with.
+
+		\return Same as <tt>add()</tt>.
+
+		\brief Same as <tt>add()</tt>.
+		*/
         Vector operator + (const Vector &other) const;
+
+		/**
+		\param other The vector to add with.
+
+		\return Same as <tt>addAssign()</tt>.
+
+		\brief Same as <tt>addAssign()</tt>.
+		*/
         Vector& operator += (const Vector &other);
 
+		/**
+		\param other The vector to subtract with.
+
+		\return Same as <tt>sub()</tt>.
+
+		\brief Same as <tt>sub()</tt>.
+		*/
         Vector operator - (const Vector &other) const;
+
+		/**
+		\param other The vector to subtract with.
+
+		\return Same as <tt>subAssign()</tt>.
+
+		\brief Same as <tt>subAssign()</tt>.
+		*/
         Vector& operator -= (const Vector &other);
 
-        T operator * (const Vector &other) const;
-        Vector operator * (const T &other) const;
-        Vector& operator *= (const T &other);
+		/**
+		\param other The vector to calculate the dot product with.
 
+		\return Same as <tt>dotProduct()</tt>.
+
+		\brief Same as <tt>dotProduct()</tt>.
+		*/
+        T operator * (const Vector &other) const;
+
+		/**
+		\param scale The scale.
+
+		\return Same as <tt>scale()</tt>.
+
+		\brief Same as <tt>scale()</tt>.
+		*/
+        Vector operator * (NOU::float32 scale) const;
+
+		/**
+		\param scale The scale.
+
+		\return Same as <tt>scaleAssign()</tt>.
+
+		\brief Same as <tt>scaleAssign()</tt>.
+		*/
+        Vector& operator *= (NOU::float32 scale);
+
+		/**
+		\return Same as <tt>invert()</tt>.
+
+		\brief Same as <tt>invert()</tt>.
+		*/
         Vector operator - () const;
 
+		/**
+		\param other The vector to compare to.
+
+		\return Same as <tt>equal()</tt>.
+
+		\brief Same as <tt>equal()</tt>.
+		*/
         boolean operator == (const Vector &other) const;
+
+		/**
+		\param other The vector to compare to.
+
+		\return Same as <tt>unequal()</tt>.
+
+		\brief Same as <tt>unequal()</tt>.
+		*/
         boolean operator != (const Vector &other) const;
     };
 
@@ -119,8 +693,8 @@ namespace NOU::NOU_MATH
         Vector sub(const Vector &other) const;
         Vector& subAssign(const Vector &other);
 
-        Vector multiplicateElements(const Vector &other) const;
-        Vector& multiplicateElementsAssign(const Vector &other);
+        Vector multiplyElements(const Vector &other) const;
+        Vector& multiplyElementsAssign(const Vector &other);
 
         Vector divideElements(const Vector &other) const;
         Vector& divideElementsAssign(const Vector &other);
@@ -150,8 +724,8 @@ namespace NOU::NOU_MATH
         Vector& operator -= (const Vector &other);
 
         T operator * (const Vector &other) const;
-        Vector operator * (const T &other) const;
-        Vector& operator *= (const T &other);
+        Vector operator * (NOU::float32 scale) const;
+        Vector& operator *= (NOU::float32 scale);
 
         Vector operator - () const;
 
@@ -177,8 +751,8 @@ namespace NOU::NOU_MATH
         Vector sub(const Vector &other) const;
         Vector& subAssign(const Vector &other);
 
-        Vector multiplicateElements(const Vector &other) const;
-        Vector& multiplicateElementsAssign(const Vector &other);
+        Vector multiplyElements(const Vector &other) const;
+        Vector& multiplyElementsAssign(const Vector &other);
 
         Vector divideElements(const Vector &other) const;
         Vector& divideElementsAssign(const Vector &other);
@@ -209,8 +783,8 @@ namespace NOU::NOU_MATH
         Vector& operator -= (const Vector &other);
 
         T operator * (const Vector &other) const;
-        Vector operator * (const T &other) const;
-        Vector& operator *= (const T &other);
+        Vector operator * (NOU::float32 scale) const;
+        Vector& operator *= (NOU::float32 scale);
 
         Vector operator - () const;
 
@@ -238,8 +812,8 @@ namespace NOU::NOU_MATH
         Vector sub(const Vector &other) const;
         Vector& subAssign(const Vector &other);
 
-        Vector multiplicateElements(const Vector &other) const;
-        Vector& multiplicateElementsAssign(const Vector &other);
+        Vector multiplyElements(const Vector &other) const;
+        Vector& multiplyElementsAssign(const Vector &other);
 
         Vector divideElements(const Vector &other) const;
         Vector& divideElementsAssign(const Vector &other);
@@ -269,8 +843,8 @@ namespace NOU::NOU_MATH
         Vector& operator -= (const Vector &other);
 
         T operator * (const Vector &other) const;
-        Vector operator * (const T &other) const;
-        Vector& operator *= (const T &other);
+        Vector operator * (NOU::float32 scale) const;
+        Vector& operator *= (NOU::float32 scale);
 
         Vector operator - () const;
 
@@ -278,18 +852,55 @@ namespace NOU::NOU_MATH
         boolean operator != (const Vector &other) const;
     };
 
+	///endcond
+
+	/**
+	\tparam N The amount of components in the vector.
+
+	\brief A vector that uses NOU::float32 as its component type and the passed size. 
+	*/
     template<sizeType N>
     using Vecf = Vector<float32, N>;
 
+	/**
+	\tparam N The amount of components in the vector.
+
+	\brief A vector that uses NOU::int32 as its component type and the passed size.
+	*/
     template<sizeType N>
     using Veci = Vector<int32, N>;
 
+	/**
+	\brief A vector that uses NOU::float32 as its component type and has a size of 2.
+	*/
     using Vec2 = Vecf<2>;
+
+	/**
+	\brief A vector that uses NOU::float32 as its component type and has a size of 3.
+	*/
     using Vec3 = Vecf<3>;
+
+	/**
+	\brief A vector that uses NOU::float32 as its component type and has a size of 4.
+	*/
     using Vec4 = Vecf<4>;
+
+	/**
+	\brief A vector that uses NOU::int32 as its component type and has a size of 2.
+	*/
     using Vec2i = Veci<2>;
+
+	/**
+	\brief A vector that uses NOU::int32 as its component type and has a size of 3.
+	*/
     using Vec3i = Veci<3>;
+
+	/**
+	\brief A vector that uses NOU::int32 as its component type and has a size of 4.
+	*/
     using Vec4i = Veci<4>;
+
+	///cond
 
     template<typename T, sizeType N>
     VectorBase<T, N>::VectorBase(const InitializerList &values)
@@ -471,7 +1082,7 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T, sizeType N>
-    Vector<T, N> Vector<T, N>::multiplicateElements(const Vector<T, N> &other) const
+    Vector<T, N> Vector<T, N>::multiplyElements(const Vector<T, N> &other) const
     {
         Vector<T, N> ret;
 
@@ -484,7 +1095,7 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T, sizeType N>
-    Vector<T, N>& Vector<T, N>::multiplicateElementsAssign(const Vector<T, N> &other)
+    Vector<T, N>& Vector<T, N>::multiplyElementsAssign(const Vector<T, N> &other)
     {
         for (sizeType i = 0; i < VectorBase<T, N>::size(); i++)
         {
@@ -664,15 +1275,15 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T, sizeType N>
-    Vector<T, N> Vector<T, N>::operator * (const T &other) const
+    Vector<T, N> Vector<T, N>::operator * (NOU::float32 scale) const
     {
-        return scale(other);
+        return this->scale(scale);
     }
 
     template<typename T, sizeType N>
-    Vector<T, N>& Vector<T, N>::operator *= (const T &other)
+    Vector<T, N>& Vector<T, N>::operator *= (NOU::float32 scale)
     {
-        return scaleAssign(other);
+        return scaleAssign(scale);
     }
 
     template<typename T, sizeType N>
@@ -746,13 +1357,13 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T>
-    Vector<T, 2> Vector<T, 2>::multiplicateElements(const Vector<T, 2> &other) const
+    Vector<T, 2> Vector<T, 2>::multiplyElements(const Vector<T, 2> &other) const
     {
         return Vector<T, 2>(VectorBase<T, 2>::value(0) * other.value(0), VectorBase<T, 2>::value(1) * other.value(1));
     }
 
     template<typename T>
-    Vector<T, 2>& Vector<T, 2>::multiplicateElementsAssign(const Vector<T, 2> &other)
+    Vector<T, 2>& Vector<T, 2>::multiplyElementsAssign(const Vector<T, 2> &other)
     {
         VectorBase<T, 2>::value(0) *= other.value(0);
         VectorBase<T, 2>::value(1) *= other.value(1);
@@ -885,15 +1496,15 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T>
-    Vector<T, 2> Vector<T, 2>::operator * (const T &other) const
+    Vector<T, 2> Vector<T, 2>::operator * (NOU::float32 scale) const
     {
-        return scale(other);
+        return this->scale(scale);
     }
 
     template<typename T>
-    Vector<T, 2>& Vector<T, 2>::operator *= (const T &other)
+    Vector<T, 2>& Vector<T, 2>::operator *= (NOU::float32 scale)
     {
-        return scaleAssign(other);
+        return scaleAssign(scale);
     }
 
     template<typename T>
@@ -991,13 +1602,13 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T>
-    Vector<T, 3> Vector<T, 3>::multiplicateElements(const Vector<T, 3> &other) const
+    Vector<T, 3> Vector<T, 3>::multiplyElements(const Vector<T, 3> &other) const
     {
         return Vector<T, 3>(VectorBase<T, 3>::value(0) * other.value(0), VectorBase<T, 3>::value(1) * other.value(1), VectorBase<T, 3>::value(2) * other.value(2));
     }
 
     template<typename T>
-    Vector<T, 3>& Vector<T, 3>::multiplicateElementsAssign(const Vector<T, 3> &other)
+    Vector<T, 3>& Vector<T, 3>::multiplyElementsAssign(const Vector<T, 3> &other)
     {
         VectorBase<T, 3>::value(0) *= other.value(0);
         VectorBase<T, 3>::value(1) *= other.value(1);
@@ -1147,15 +1758,15 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T>
-    Vector<T, 3> Vector<T, 3>::operator * (const T &other) const
+    Vector<T, 3> Vector<T, 3>::operator * (NOU::float32 scale) const
     {
-        return scale(other);
+        return this->scale(scale);
     }
 
     template<typename T>
-    Vector<T, 3>& Vector<T, 3>::operator *= (const T &other)
+    Vector<T, 3>& Vector<T, 3>::operator *= (NOU::float32 scale)
     {
-        return scaleAssign(other);
+        return scaleAssign(scale);
     }
 
     template<typename T>
@@ -1288,14 +1899,14 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T>
-    Vector<T, 4> Vector<T, 4>::multiplicateElements(const Vector<T, 4> &other) const
+    Vector<T, 4> Vector<T, 4>::multiplyElements(const Vector<T, 4> &other) const
     {
         return Vector<T, 4>(VectorBase<T, 4>::value(0) * other.value(0), VectorBase<T, 4>::value(1) * other.value(1), VectorBase<T, 4>::value(2) * other.value(2), 
             VectorBase<T, 4>::value(3) * other.value(3));
     }
 
     template<typename T>
-    Vector<T, 4>& Vector<T, 4>::multiplicateElementsAssign(const Vector<T, 4> &other)
+    Vector<T, 4>& Vector<T, 4>::multiplyElementsAssign(const Vector<T, 4> &other)
     {
         VectorBase<T, 4>::value(0) *= other.value(0);
         VectorBase<T, 4>::value(1) *= other.value(1);
@@ -1445,15 +2056,15 @@ namespace NOU::NOU_MATH
     }
 
     template<typename T>
-    Vector<T, 4> Vector<T, 4>::operator * (const T &other) const
+    Vector<T, 4> Vector<T, 4>::operator * (NOU::float32 scale) const
     {
-        return scale(other);
+        return this->scale(scale);
     }
 
     template<typename T>
-    Vector<T, 4>& Vector<T, 4>::operator *= (const T &other)
+    Vector<T, 4>& Vector<T, 4>::operator *= (NOU::float32 scale)
     {
-        return scaleAssign(other);
+        return scaleAssign(scale);
     }
 
     template<typename T>

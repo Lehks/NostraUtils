@@ -2039,9 +2039,9 @@ TEST_METHOD(MathVec2)
 	Vec2 vec8(5.0f, 10.0f);
 	Vec2 vec9(2.0f, 2.0f);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
+	IsTrue(vec8.multiplyElements(vec9) == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
 
 	Vec2 vec11(2.0f, 0.0f);
@@ -2132,9 +2132,9 @@ TEST_METHOD(MathVec2i)
 	Vec2i vec8(5, 10);
 	Vec2i vec9(2, 2);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec2i(5 * 2, 10 * 2));
+	IsTrue(vec8.multiplyElements(vec9) == Vec2i(5 * 2, 10 * 2));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec2i(5 * 2, 10 * 2));
 
 	Vec2i vec11(2, 0);
@@ -2244,9 +2244,9 @@ TEST_METHOD(MathVec3)
 	Vec3 vec8(5.0f, 10.0f, 20.0f);
 	Vec3 vec9(2.0f, 2.0f, 2.0f);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
+	IsTrue(vec8.multiplyElements(vec9) == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
 
 	Vec3 vec11(2.0f, 0.0f, 0.0f);
@@ -2355,9 +2355,9 @@ TEST_METHOD(MathVec3i)
 	Vec3i vec8(5, 10, 20);
 	Vec3i vec9(2, 2, 2);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec3i(5 * 2, 10 * 2, 20 * 2));
+	IsTrue(vec8.multiplyElements(vec9) == Vec3i(5 * 2, 10 * 2, 20 * 2));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec3i(5 * 2, 10 * 2, 20 * 2));
 
 	Vec3i vec11(2, 0, 0);
@@ -2484,9 +2484,9 @@ TEST_METHOD(MathVec4)
 	Vec4 vec8(5.0f, 10.0f, 20.0f, 40.0f);
 	Vec4 vec9(2.0f, 2.0f, 2.0f, 2.0f);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
+	IsTrue(vec8.multiplyElements(vec9) == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
 
 	Vec4 vec11(2.0f, 0.0f, 0.0f, 0.0f);
@@ -2613,9 +2613,9 @@ TEST_METHOD(MathVec4i)
 	Vec4i vec8(5, 10, 20, 40);
 	Vec4i vec9(2, 2, 2, 2);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
+	IsTrue(vec8.multiplyElements(vec9) == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
 
 	Vec4i vec11(2, 0, 0, 0);
@@ -2768,10 +2768,10 @@ TEST_METHOD(MathVec5f)
 	Vector<NOU::float32, 5> vec8({ 5.0f, 10.0f, 20.0f, 40.0f, 80.0f });
 	Vector<NOU::float32, 5> vec9({ 2.0f, 2.0f, 2.0f, 2.0f, 2.0f });
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 
+	IsTrue(vec8.multiplyElements(vec9) == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 
 		20.0f * 2.0f, 40.0f * 2.0f, 80.0f * 2.0f }));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f, 
 		80.0f * 2.0f }));
 
@@ -2924,10 +2924,10 @@ TEST_METHOD(MathVec5i)
 	Vector<NOU::int32, 5> vec8({ 5, 10, 20, 40, 80 });
 	Vector<NOU::int32, 5> vec9({ 2, 2, 2, 2, 2 });
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2,
+	IsTrue(vec8.multiplyElements(vec9) == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2,
 		20 * 2, 40 * 2, 80 * 2 }));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2, 20 * 2, 40 * 2,
 		80 * 2 }));
 

@@ -17,11 +17,10 @@
 namespace NOU::NOU_MATH
 {
 	/**
-	\tparam The type of the matrix base class.
+	\tparam MatBase The type of the matrix base class. This is always Matrix<R, C> (or a specialization of 
+		            that class).
 
 	\brief A single row in a matrix.
-
-
 
 	\details
 	A single row in a matrix. The purpose of this class is to allow access to the elements of a matrix by 
@@ -109,16 +108,17 @@ namespace NOU::NOU_MATH
 		using Type = T;
 
     private:
+
 		/**
 		\brief The array in which the elements are stored in.
 		*/
         T m_data[C][R];
 
-    public:
+	protected:
 		/**
 		\brief Constructs a new instance without initializing any of the elements.
 		*/
-        MatrixBase() = default;
+		MatrixBase() = default;
 
 		/**
 		\param values The elements of the matrix.
@@ -133,8 +133,8 @@ namespace NOU::NOU_MATH
 
 		\code{.cpp}
 		{{1, 2, 3},
-		 {4, 5, 6},
-		 {7, 8, 9}}
+		{4, 5, 6},
+		{7, 8, 9}}
 		\endcode
 
 		would result in such a matrix:
@@ -147,8 +147,9 @@ namespace NOU::NOU_MATH
 		\end{bmatrix}
 		\f$
 		*/
-        MatrixBase(const InitializerList<InitializerList<T>> &values);
+		MatrixBase(const InitializerList<InitializerList<T>> &values);
 
+    public:
 		/**
 		\param row The row of the element.
 		\param col The column of the element.
