@@ -361,7 +361,8 @@ namespace NOU::NOU_CORE
 				fileLogger and pass the name of the file.
 				e.g.:	log.pushLogger<FileLogger>("logFile.txt");
 
-				And at end you can tell the logger to write a log.
+				And at end you can tell the logger to write a log. You should always use the macro if you
+				want to log something. It is not advised to use the write().
 				e.g.:	NOU_LOG_ERROR("Invalid object type.");
 
 				This example will write an error of the ERROR level. You can change the event level 
