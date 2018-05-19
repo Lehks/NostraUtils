@@ -2,15 +2,14 @@
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
 
-#include <iostream>
-#include <fstream>
-
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 #	include <sys/stat.h>
 #endif
 
 namespace NOU::NOU_FILE_MNGT
 {
+	const sizeType File::INVALID_SIZE = -1;
+
 	void File::openStream(const char8 *mode)
 	{
 		#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
@@ -30,14 +29,8 @@ namespace NOU::NOU_FILE_MNGT
 
 	File::File(const Path &path) :
 		m_path(path),
-		m_data(nullptr),
-		m_size(0)
-	{
-		if(exists())
-		{
-			fetchSize();
-		}
-	}
+		m_data(nullptr)
+	{}
 	
 	//Move constructor
 	File::File(File &&other) :
@@ -76,24 +69,30 @@ namespace NOU::NOU_FILE_MNGT
 		return fgetc(m_data);
 	}
 
-	void File::read(sizeType size, char8 *buffer)
+	sizeType File::read(sizeType size, char8 *buffer)
 	{
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't access write-only file");
 		NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't access append-only file");
-		NOU_COND_PUSH_ERROR(!exists(), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
+
 		if(!exists())
 		{
-			return;
+			NOU_COND_PUSH_ERROR(!exists(), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
+			return INVALID_SIZE;
 		}
+
 		if(!isCurrentlyOpen())
 		{
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "FileStream is not open");
 		}
+
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
-			return;
+			return INVALID_SIZE;
 		}
-		fread(buffer, size, 1, m_data);
+
+		sizeType ret = fread(buffer, size, 1, m_data);
+
+		return ret;
 	}
 
 	boolean File::write(byte b)
@@ -184,10 +183,11 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		if(!exists())
 		{
-			std::fstream fs;
-			fs.open(m_path.getAbsolutePath().rawStr(), std::ios::out);
-			fs.flush();
-			fs.close();
+			if (!isCurrentlyOpen())
+			{
+				open(AccessMode::WRITE);
+				close();
+			}
 		}
 		else
 		{
@@ -227,16 +227,31 @@ namespace NOU::NOU_FILE_MNGT
 
 	sizeType File::size()
 	{
-		if(exists())
+		if (!exists())
+			return INVALID_SIZE;
+
+		boolean wasOpened = true;
+
+		if (!isCurrentlyOpen())
 		{
-			std::ifstream in(m_path.getAbsolutePath().rawStr(), std::ifstream::ate | std::ifstream::binary);
-			// return in.tellg();
-			return m_size;
-		} else
-		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "File does not exist"); // PATH_NOT_FOUND
-			return 0;
+			wasOpened = true;
+			open();
 		}
+
+		sizeType oldPos = ftell(m_data);
+
+		fseek(m_data, 0, SEEK_END);
+
+		sizeType ret = ftell(m_data);
+
+		fseek(m_data, oldPos, SEEK_SET);
+
+		if (!wasOpened)
+		{
+			close();
+		}
+
+		return ret;
 	}
 
 	boolean File::exists()
@@ -250,14 +265,15 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		if(isCurrentlyOpen())
 		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File stream is currently opened");
-			return false;
+			close();
 		}
+
 		if(!exists())
 		{
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
 			return false;
 		}
+
 		int err = remove(m_path.getAbsolutePath().rawStr());
 		return err == 0;
 	}
@@ -271,57 +287,40 @@ namespace NOU::NOU_FILE_MNGT
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "File does not exist");
 			return;
 		}
+
 		if (m_mode == AccessMode::WRITE || m_mode == AccessMode::APPEND)
 		{
 			NOU_COND_PUSH_ERROR((m_mode == AccessMode::WRITE), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't access write-only file");
 			NOU_COND_PUSH_ERROR((m_mode == AccessMode::APPEND), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Can't access append-only file");
 			return;
 		}
-		if (fileSize == 0)
+
+		if (fileSize == INVALID_SIZE)
 		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Could not fetch the size of the file, or the file does not contain any data");
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Could not read the size of the file.");
 			return;
 		}
+
 		if(size > fileSize)
 		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Size has to be smaller or equal than the actual FileSize");
 			size = fileSize;
 		}
+
 		if(size == 0)
 		{
 			size = fileSize;
 		}
 
 		char8* buff = new char8[size + 1];
-		memset(buff, '1', size + 1);
+		memset(buff, 0, size + 1);
 		open();
-		fread(buff, sizeof(char8), size, m_data);
-		buff[size] = 0;
+		sizeType ret = fread(buff, sizeof(char8), size, m_data);
+		buff[ret] = 0;
 		if(buffer.size() != 0)
 		{
 			buffer.clear();
 		}
 		buffer.append(buff);
 		delete[] buff;
-	}
-
-	boolean File::fetchSize()
-	{
-		if(isCurrentlyOpen())
-		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Cannot read size of currently opened file");
-			return false;
-		}
-		if(exists())
-		{
-			std::ifstream in(m_path.getAbsolutePath().rawStr(), std::ifstream::ate | std::ifstream::binary);
-			m_size = in.tellg();
-			return true;
-		} 
-		else
-		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "File does not exist"); // PATH_NOT_FOUND
-			return false;
-		}
 	}
 }

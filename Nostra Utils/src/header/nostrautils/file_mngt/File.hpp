@@ -6,7 +6,7 @@
 #include "nostrautils/dat_alg/Vector.hpp"
 #include "nostrautils/file_mngt/Path.hpp"
 
-//#include <stdio.h>
+#include <stdio.h>
 //#include <io.h>
 
 /** file_mngt/File.hpp
@@ -43,6 +43,8 @@ namespace NOU::NOU_FILE_MNGT
 	class NOU_CLASS File
 	{
 	private:
+		const static sizeType INVALID_SIZE;
+
 		/**
 		 \param file     The file handle of the opened file. This is an output parameter.
 		 \param filename The name of the file to open.
@@ -68,11 +70,6 @@ namespace NOU::NOU_FILE_MNGT
 		Path															m_path;
 
 		/**
-		\brief The size of the File on the hard drive.
-		*/
-		sizeType														m_size;
-
-		/**
 		\return True if the closing was successful, false if not.
 
 		\brief This is a private function, that closes the file without checking whether it is opened or not.
@@ -80,21 +77,6 @@ namespace NOU::NOU_FILE_MNGT
 		boolean closeUnchecked();
 
 	public:
-
-		/**
-		\return True if size was fetched successfully.
-		
-		\brief sets the internal size of the file.
-		
-		\details 
-		It is not possible to call this function while a file is open. Every time the size of the file may 
-		have been changed, either by exterior or interior influence (exterior influence is such influence 
-		that has been cause by an other process and interior influence is such influence that has been 
-		caused by the process that this program is being executed in), or right before the execution of an 
-		operation, were the size of the file is needed, this function has to be called. Otherwise said 
-		functions could result in undefined behavior.
-		*/
-		boolean fetchSize();
 
 		/**
 		\param path Path object containing the path to the file.
@@ -135,7 +117,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief reads a string of given size
 		*/
-		void read(sizeType size, char8 *buffer);
+		sizeType read(sizeType size, char8 *buffer);
 
 		/**
 		\param buffer A reference to a string where the read data will be written to.
