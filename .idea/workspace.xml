@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
+    <generated>
+      <config projectName="NostraUtils" targetName="Test" />
+      <config projectName="NostraUtils" targetName="NostraUtils" />
+      <config projectName="NostraUtils" targetName="UnitTests" />
+    </generated>
+  </component>
+  <component name="CMakeSettings" AUTO_RELOAD="true">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_INSTALL_PREFIX=&quot;D:/NOU&quot;" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bfd76cd2-8c8a-44bc-b2d4-35947d3a0e7c" name="Default" comment="" />
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="String.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="33005">
+              <caret line="1435" column="60" selection-start-line="1435" selection-start-column="60" selection-end-line="1435" selection-end-column="60" />
+              <folding>
+                <element signature="e#63#106#0" expanded="true" />
+                <element signature="e#533#561#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/main.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="253">
+              <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Path.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="505">
+              <caret line="131" column="9" selection-start-line="131" selection-start-column="9" selection-end-line="131" selection-end-column="9" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="String_imp" />
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/UnitTests/unittests.cpp" />
+        <option value="$PROJECT_DIR$/main.cpp" />
+        <option value="$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp" />
+        <option value="$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="260" />
+    <option name="y" value="25" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="header" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="header" type="462c0819:PsiDirectoryNode" />
+              <item name="nostrautils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="header" type="462c0819:PsiDirectoryNode" />
+              <item name="nostrautils" type="462c0819:PsiDirectoryNode" />
+              <item name="dat_alg" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="header" type="462c0819:PsiDirectoryNode" />
+              <item name="nostrautils" type="462c0819:PsiDirectoryNode" />
+              <item name="file_mngt" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="source" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="source" type="462c0819:PsiDirectoryNode" />
+              <item name="nostrautils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="source" type="462c0819:PsiDirectoryNode" />
+              <item name="nostrautils" type="462c0819:PsiDirectoryNode" />
+              <item name="dat_alg" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Nostra Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="source" type="462c0819:PsiDirectoryNode" />
+              <item name="nostrautils" type="462c0819:PsiDirectoryNode" />
+              <item name="file_mngt" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NostraUtils" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NostraUtils" type="462c0819:PsiDirectoryNode" />
+              <item name="Unittests" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="tests" factoryName="Nosetests">
+      <module name="NostraUtils" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_regexPattern" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Twisted Trial">
+      <module name="NostraUtils" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Unittests">
+      <module name="NostraUtils" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="py.test">
+      <module name="NostraUtils" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bfd76cd2-8c8a-44bc-b2d4-35947d3a0e7c" name="Default" comment="" />
+      <created>1524757938090</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1524757938090</updated>
+      <workItem from="1524757940646" duration="118000" />
+      <workItem from="1524837871646" duration="4000" />
+      <workItem from="1526120389315" duration="114000" />
+      <workItem from="1526120514473" duration="2705000" />
+      <workItem from="1526126348738" duration="1162000" />
+      <workItem from="1526316822045" duration="270000" />
+      <workItem from="1526406584306" duration="688000" />
+      <workItem from="1526459375843" duration="2596000" />
+      <workItem from="1526462000424" duration="148000" />
+      <workItem from="1526462199727" duration="6000" />
+      <workItem from="1526463512010" duration="476000" />
+      <workItem from="1526464002830" duration="20000" />
+      <workItem from="1526464039061" duration="496000" />
+      <workItem from="1526467831531" duration="1583000" />
+      <workItem from="1526489903190" duration="1376000" />
+      <workItem from="1526642715623" duration="115000" />
+      <workItem from="1526642973472" duration="55000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="68000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18020834" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="CMake" order="7" weight="0.30662394" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32905984" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32905984" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info active="true" anchor="bottom" id="Messages" order="7" visible="true" weight="0.32905984" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fixed Path" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed Path" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="33005">
+          <caret line="1435" column="60" selection-start-line="1435" selection-start-column="60" selection-end-line="1435" selection-end-column="60" />
+          <folding>
+            <element signature="e#63#106#0" expanded="true" />
+            <element signature="e#533#561#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3013">
+          <caret line="131" column="9" lean-forward="true" selection-start-line="131" selection-start-column="9" selection-end-line="131" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32361">
+          <caret line="1407" column="60" lean-forward="true" selection-start-line="1407" selection-start-column="60" selection-end-line="1407" selection-end-column="60" />
+          <folding>
+            <element signature="e#63#106#0" expanded="true" />
+            <element signature="e#533#561#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26404">
+          <caret line="1148" column="29" selection-start-line="1148" selection-start-column="29" selection-end-line="1148" selection-end-column="29" />
+          <folding>
+            <element signature="e#63#106#0" expanded="true" />
+            <element signature="e#533#561#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="28451">
+          <caret line="1237" column="23" selection-start-line="1237" selection-start-column="23" selection-end-line="1237" selection-end-column="23" />
+          <folding>
+            <element signature="e#63#106#0" expanded="true" />
+            <element signature="e#533#561#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1173">
+          <caret line="51" selection-start-line="50" selection-start-column="40" selection-end-line="51" />
+          <folding>
+            <element signature="e#63#106#0" expanded="true" />
+            <element signature="e#533#561#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/file_mngt/Path.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2300">
+          <caret line="100" column="8" selection-start-line="100" selection-start-column="8" selection-end-line="100" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1173">
+          <caret line="51" selection-start-line="50" selection-start-column="40" selection-end-line="51" />
+          <folding>
+            <element signature="e#63#106#0" expanded="true" />
+            <element signature="e#533#561#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/file_mngt/Path.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2300">
+          <caret line="100" column="8" selection-start-line="100" selection-start-column="8" selection-end-line="100" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="759">
+          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26404">
+          <caret line="1148" column="89" selection-start-line="1148" selection-start-column="89" selection-end-line="1148" selection-end-column="89" />
+          <folding>
+            <element signature="e#63#106#0" expanded="true" />
+            <element signature="e#533#561#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="759">
+          <caret line="33" selection-start-line="33" selection-end-line="33" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Unittests/unittests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26887">
+          <caret line="1169" column="21" selection-start-line="1169" selection-start-column="21" selection-end-line="1169" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/file_mngt/Path.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2300">
+          <caret line="100" column="8" selection-start-line="100" selection-start-column="8" selection-end-line="100" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/Vector.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5359">
+          <caret line="233" lean-forward="true" selection-start-line="233" selection-end-line="233" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26404">
+          <caret line="1148" column="89" selection-start-line="1148" selection-start-column="89" selection-end-line="1148" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="759">
+          <caret line="33" selection-start-line="33" selection-end-line="33" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Unittests/unittests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26887">
+          <caret line="1169" column="21" selection-start-line="1169" selection-start-column="21" selection-end-line="1169" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/file_mngt/Path.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2300">
+          <caret line="100" column="8" selection-start-line="100" selection-start-column="8" selection-end-line="100" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/Vector.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6509">
+          <caret line="283" column="10" lean-forward="true" selection-start-line="283" selection-start-column="10" selection-end-line="283" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26404">
+          <caret line="1148" column="89" selection-start-line="1148" selection-start-column="89" selection-end-line="1148" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="759">
+          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/file_mngt/Path.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2300">
+          <caret line="100" column="8" selection-start-line="100" selection-start-column="8" selection-end-line="100" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Unittests/unittests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26887">
+          <caret line="1169" column="21" selection-start-line="1169" selection-start-column="21" selection-end-line="1169" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="28244">
+          <caret line="1228" column="89" selection-start-line="1228" selection-start-column="89" selection-end-line="1228" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="1" lean-forward="true" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27600">
+          <caret line="1200" lean-forward="true" selection-start-line="1200" selection-end-line="1200" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="35696">
+          <caret line="1552" selection-start-line="1552" selection-end-line="1552" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="35696">
+          <caret line="1552" selection-start-line="1552" selection-end-line="1552" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build/Nostra Utils/cmake_install.cmake" />
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="15" column="35" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build/Nostra Utils/cmake_install.cmake" />
+    <entry file="file://$PROJECT_DIR$/Unittests/unittests.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26887">
+          <caret line="1169" column="21" selection-start-line="1169" selection-start-column="21" selection-end-line="1169" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/Vector.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="433">
+          <caret line="233" selection-start-line="233" selection-end-line="233" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/file_mngt/Path.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2300">
+          <caret line="100" column="8" selection-start-line="100" selection-start-column="8" selection-end-line="100" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/core/Utils.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-552" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/header/nostrautils/dat_alg/String.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="33005">
+          <caret line="1435" column="60" selection-start-line="1435" selection-start-column="60" selection-end-line="1435" selection-end-column="60" />
+          <folding>
+            <element signature="e#63#106#0" expanded="true" />
+            <element signature="e#533#561#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="505">
+          <caret line="131" column="9" selection-start-line="131" selection-start-column="9" selection-end-line="131" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

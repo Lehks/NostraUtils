@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="NostraUtils"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="msvc8"/>
+		<Option virtualFolders="CMake Files\;CMake Files\Nostra Utils\;CMake Files\Unittests\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="D:/NostraUtils/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 all"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="D:/NostraUtils/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Test">
+				<Option output="D:/NostraUtils/cmake-build-debug/Test.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/NostraUtils/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="D:/NostraUtils/Nostra Utils/src/header"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\ATLMFC\include"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 Test"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Test/fast">
+				<Option output="D:/NostraUtils/cmake-build-debug/Test.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/NostraUtils/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="D:/NostraUtils/Nostra Utils/src/header"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\ATLMFC\include"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 Test/fast"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install/local">
+				<Option working_dir="D:/NostraUtils/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 install/local"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install">
+				<Option working_dir="D:/NostraUtils/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 install"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="D:/NostraUtils/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 edit_cache"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="list_install_components">
+				<Option working_dir="D:/NostraUtils/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 list_install_components"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="NostraUtils">
+				<Option output="D:/NostraUtils/cmake-build-debug/Nostra Utils/NostraUtils.dll" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/NostraUtils/cmake-build-debug/Nostra Utils"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="D:/NostraUtils/Nostra Utils/src/header"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\ATLMFC\include"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f &quot;D:\NostraUtils\cmake-build-debug\Nostra Utils\Makefile&quot; VERBOSE=1 NostraUtils"/>
+					<CompileFile command="nmake /NOLOGO /f &quot;D:\NostraUtils\cmake-build-debug\Nostra Utils\Makefile&quot; VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f &quot;D:\NostraUtils\cmake-build-debug\Nostra Utils\Makefile&quot; VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f &quot;D:\NostraUtils\cmake-build-debug\Nostra Utils\Makefile&quot; VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="NostraUtils/fast">
+				<Option output="D:/NostraUtils/cmake-build-debug/Nostra Utils/NostraUtils.dll" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/NostraUtils/cmake-build-debug/Nostra Utils"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="D:/NostraUtils/Nostra Utils/src/header"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\ATLMFC\include"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f &quot;D:\NostraUtils\cmake-build-debug\Nostra Utils\Makefile&quot; VERBOSE=1 NostraUtils/fast"/>
+					<CompileFile command="nmake /NOLOGO /f &quot;D:\NostraUtils\cmake-build-debug\Nostra Utils\Makefile&quot; VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f &quot;D:\NostraUtils\cmake-build-debug\Nostra Utils\Makefile&quot; VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f &quot;D:\NostraUtils\cmake-build-debug\Nostra Utils\Makefile&quot; VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="UnitTests">
+				<Option output="D:/NostraUtils/cmake-build-debug/UnitTests/UnitTests.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/NostraUtils/cmake-build-debug/UnitTests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="D:/NostraUtils/Nostra Utils/src/header"/>
+					<Add directory="D:/NostraUtils/Unittests/../Nostra Utils/src/header"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\ATLMFC\include"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\UnitTests\Makefile VERBOSE=1 UnitTests"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\UnitTests\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\UnitTests\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\UnitTests\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="UnitTests/fast">
+				<Option output="D:/NostraUtils/cmake-build-debug/UnitTests/UnitTests.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/NostraUtils/cmake-build-debug/UnitTests"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add directory="D:/NostraUtils/Nostra Utils/src/header"/>
+					<Add directory="D:/NostraUtils/Unittests/../Nostra Utils/src/header"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\ATLMFC\include"/>
+					<Add directory="D:\VisualStudio\VC\Tools\MSVC\14.12.25827\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.16299.0\winrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\UnitTests\Makefile VERBOSE=1 UnitTests/fast"/>
+					<CompileFile command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\UnitTests\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\UnitTests\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f D:\NostraUtils\cmake-build-debug\UnitTests\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/core/Assertions.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/core/ErrorHandler.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/core/Logging.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/core/SystemInformation.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/core/Time.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/dat_alg/Hashing.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/dat_alg/Random.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/file_mngt/File.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/file_mngt/Path.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/mem_mngt/GeneralPurposeAllocator.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/mem_mngt/Utils.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/thread/AsyncTaskResult.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/thread/ConditionVariable.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/thread/Lock.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/thread/Mutex.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/thread/ThreadManager.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/src/source/nostrautils/thread/ThreadWrapper.cpp">
+			<Option target="NostraUtils"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Unittests/DebugClass.cpp">
+			<Option target="UnitTests"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Unittests/DebugClass.hpp">
+			<Option target="UnitTests"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Unittests/unittests.cpp">
+			<Option target="UnitTests"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/main.cpp">
+			<Option target="Test"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Nostra Utils/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\Nostra Utils\"/>
+		</Unit>
+		<Unit filename="D:/NostraUtils/Unittests/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\Unittests\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
