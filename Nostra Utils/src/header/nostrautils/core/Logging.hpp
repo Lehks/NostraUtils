@@ -122,6 +122,7 @@ namespace NOU::NOU_CORE
 			using TimeType = uint32;
 
 		private:
+
 			/**
 			\brief Attribute that stores the second.
 			*/
@@ -235,7 +236,7 @@ namespace NOU::NOU_CORE
 
 		\brief	Returns the event level of the event object.
 		*/
-		const StringType getEventLevel() const;
+		const EventLevelCodes getEventLevel() const;
 
 		/**
 		\return A reference to the event message.
@@ -314,9 +315,43 @@ namespace NOU::NOU_CORE
 	};
 
 	/**
-	\brief A derived class of the ILogger interface. Used for writing logs to a file.
+	\brief			A derived class of the ILogger interface. Used for writing logs to a file.
+
+	\details		This logger writes ALL errors independently from there error code.
 	*/
 	class NOU_CLASS FileLogger : public ILogger
+	{
+	private:
+
+		/**
+		\brief			The path of the file.
+		*/
+		NOU_FILE_MNGT::Path m_path;
+
+		/**
+		\param event	A const reference to an event object.
+
+		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
+		to a log file.
+		*/
+		void write(const Event& event) override;
+
+	public:
+
+		/**
+		\param path		The path to the file that the log will be written to.
+
+		\brief			Constructs a new instance that will write the log to the passed file.
+		*/
+		FileLogger(const NOU_FILE_MNGT::Path &path);
+	};
+
+	/**
+	\brief			A derived class of the ILogger interface. Used for writing logs to a file.
+
+	\details		This logger writes only errors with the error code 'Fatal'.
+	*/
+	class NOU_CLASS FileLoggerFatal : public ILogger
 	{
 	private:
 
@@ -334,14 +369,206 @@ namespace NOU::NOU_CORE
 		void write(const Event& event) override;
 
 	public:
+
 		/**
 		\param path		The path to the file that the log will be written to.
 
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
-		FileLogger(const NOU_FILE_MNGT::Path &path);
+		FileLoggerFatal(const NOU_FILE_MNGT::Path &path);
 	};
 
+	/**
+	\brief			A derived class of the ILogger interface. Used for writing logs to a file.
+
+	\details		This logger writes only errors with the error code 'Error'.
+	*/
+	class NOU_CLASS FileLoggerError : public ILogger
+	{
+	private:
+
+		/**
+		\brief			The path of the file.
+		*/
+		NOU_FILE_MNGT::Path m_path;
+
+		/**
+		\param event	A const reference to an event object.
+
+		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
+		to a log file.
+		*/
+		void write(const Event& event) override;
+
+	public:
+
+		/**
+		\param path		The path to the file that the log will be written to.
+
+		\brief			Constructs a new instance that will write the log to the passed file.
+		*/
+		FileLoggerError(const NOU_FILE_MNGT::Path &path);
+	};
+
+	/**
+	\brief			A derived class of the ILogger interface. Used for writing logs to a file.
+
+	\details		This logger writes only errors with the error code 'Warning'.
+	*/
+	class NOU_CLASS FileLoggerWarning : public ILogger
+	{
+	private:
+
+		/**
+		\brief			The path of the file.
+		*/
+		NOU_FILE_MNGT::Path m_path;
+
+		/**
+		\param event	A const reference to an event object.
+
+		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
+		to a log file.
+		*/
+		void write(const Event& event) override;
+
+	public:
+
+		/**
+		\param path		The path to the file that the log will be written to.
+
+		\brief			Constructs a new instance that will write the log to the passed file.
+		*/
+		FileLoggerWarning(const NOU_FILE_MNGT::Path &path);
+	};
+
+	/**
+	\brief			A derived class of the ILogger interface. Used for writing logs to a file.
+
+	\details		This logger writes only errors with the error code 'Info'.
+	*/
+	class NOU_CLASS FileLoggerInfo : public ILogger
+	{
+	private:
+
+		/**
+		\brief			The path of the file.
+		*/
+		NOU_FILE_MNGT::Path m_path;
+
+		/**
+		\param event	A const reference to an event object.
+
+		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
+		to a log file.
+		*/
+		void write(const Event& event) override;
+
+	public:
+
+		/**
+		\param path		The path to the file that the log will be written to.
+
+		\brief			Constructs a new instance that will write the log to the passed file.
+		*/
+		FileLoggerInfo(const NOU_FILE_MNGT::Path &path);
+	};
+
+	/**
+	\brief			A derived class of the ILogger interface. Used for writing logs to a file.
+
+	\details		This logger writes only errors with the error code 'Debug'.
+	*/
+	class NOU_CLASS FileLoggerDebug : public ILogger
+	{
+	private:
+
+		/**
+		\brief			The path of the file.
+		*/
+		NOU_FILE_MNGT::Path m_path;
+
+		/**
+		\param event	A const reference to an event object.
+
+		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
+		to a log file.
+		*/
+		void write(const Event& event) override;
+
+	public:
+
+		/**
+		\param path		The path to the file that the log will be written to.
+
+		\brief			Constructs a new instance that will write the log to the passed file.
+		*/
+		FileLoggerDebug(const NOU_FILE_MNGT::Path &path);
+	};
+
+	/**
+	\brief			A derived class of the ILogger interface. Used for writing logs to a file.
+
+	\details		This logger writes only errors with the error code 'Trace'.
+	*/
+	class NOU_CLASS FileLoggerTrace : public ILogger
+	{
+	private:
+
+		/**
+		\brief			The path of the file.
+		*/
+		NOU_FILE_MNGT::Path m_path;
+
+		/**
+		\param event	A const reference to an event object.
+
+		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
+		to a log file.
+		*/
+		void write(const Event& event) override;
+
+	public:
+
+		/**
+		\param path		The path to the file that the log will be written to.
+
+		\brief			Constructs a new instance that will write the log to the passed file.
+		*/
+		FileLoggerTrace(const NOU_FILE_MNGT::Path &path);
+	};
+
+	/**
+	\brief			A derived class of the ILogger interface. Used for writing logs to a file.
+
+	\details		This logger writes only errors with the error code 'Unknown'.
+	*/
+	class NOU_CLASS FileLoggerUnknown : public ILogger
+	{
+	private:
+
+		/**
+		\brief			The path of the file.
+		*/
+		NOU_FILE_MNGT::Path m_path;
+
+		/**
+		\param event	A const reference to an event object.
+
+		\brief			A overridden function of the write() in the ILogger interface. Writes the log entry
+		to a log file.
+		*/
+		void write(const Event& event) override;
+
+	public:
+
+		/**
+		\param path		The path to the file that the log will be written to.
+
+		\brief			Constructs a new instance that will write the log to the passed file.
+		*/
+		FileLoggerUnknown(const NOU_FILE_MNGT::Path &path);
+	};
 
 	/**
 	\brief		A class for storing the different logger and writing logs to all of them.
@@ -497,27 +724,35 @@ namespace NOU::NOU_CORE
 #    ifndef NOU_LOG_FATAL_DISABLE
 #        define NOU_LOG_FATAL(msg) \
                               NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::FATAL, msg);
+#	 else
+#        define NOU_LOG_FATAL(msg)
 #    endif
 #endif
 
 #ifndef NOU_LOG_ERROR
 #    ifndef NOU_LOG_ERROR_DISABLE
 #        define NOU_LOG_ERROR(msg) \
-                              NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::ERROR, msg);   
+                              NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::ERROR, msg);
+#	 else
+#        define NOU_LOG_ERROR(msg)
 #    endif
 #endif
 
 #ifndef NOU_LOG_WARNING
 #    ifndef NOU_LOG_WARNING_DISABLE
 #        define NOU_LOG_WARNING(msg) \
-                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::WARNING, msg);   
+                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::WARNING, msg); 
+#	 else
+#        define NOU_LOG_WARNING(msg)
 #    endif
 #endif
 
 #ifndef NOU_LOG_INFO
 #    ifndef NOU_LOG_INFO_DISABLE
 #        define NOU_LOG_INFO(msg) \
-                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::INFO, msg);   
+                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::INFO, msg);
+#	 else
+#        define NOU_LOG_INFO(msg)
 #    endif
 #endif
 
@@ -525,20 +760,26 @@ namespace NOU::NOU_CORE
 #    ifndef NOU_LOG_DEBUG_DISABLE
 #        define NOU_LOG_DEBUG(msg) \
                             NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::DEBUG, msg);   
+#    else
+#        define NOU_LOG_DEBUG(msg)
 #    endif
 #endif
 
 #ifndef NOU_LOG_TRACE
 #    ifndef NOU_LOG_TRACE_DISABLE
 #        define NOU_LOG_TRACE(msg) \
-                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::TRACE, msg);   
+                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::TRACE, msg); 
+#	else
+#        define NOU_LOG_TRACE(msg)
 #    endif
 #endif
 
 #ifndef NOU_LOG_UNKNOWN
 #    ifndef NOU_LOG_UNKNOWN_DISABLE
 #        define NOU_LOG_UNKNOWN(msg) \
-                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::UNKNOWN, msg);   
+                            NOU::NOU_CORE::Logger::get().write(NOU::NOU_CORE::EventLevelCodes::UNKNOWN, msg);
+#	else
+#        define NOU_LOG_UNKNOWN(msg)
 #    endif
 #endif
 }

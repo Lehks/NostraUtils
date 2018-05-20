@@ -4,7 +4,6 @@
 
 namespace NOU::NOU_CORE
 {
-
 	const Event::StringType Event::FATAL	= "Fatal";
 	const Event::StringType Event::ERROR	= "Error";
 	const Event::StringType Event::WARNING	= "Warning";
@@ -83,9 +82,9 @@ namespace NOU::NOU_CORE
 		return ret;
 	}
 
-	const Event::StringType Event::getEventLevel() const
+	const EventLevelCodes Event::getEventLevel() const
 	{
-		return enumToString(m_eventLevel);
+		return m_eventLevel;
 	}
 
 	const Event::StringType& Event::getEventMsg() const
@@ -158,6 +157,216 @@ namespace NOU::NOU_CORE
 		m_path(path)
 	{}
 
+	void FileLoggerFatal::write(const Event& event)
+	{
+		if (event.getEventLevel() != EventLevelCodes::FATAL)
+			return;
+
+		NOU::NOU_FILE_MNGT::File file(m_path);
+
+		if (!file.exists())
+		{
+			file.createFile();
+		}
+
+		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
+		{
+			NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
+
+			file.write(error);
+			file.close();
+		}
+		else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+				"Could not open log file.");
+		}
+	}
+
+	FileLoggerFatal::FileLoggerFatal(const NOU_FILE_MNGT::Path &path) :
+		m_path(path)
+	{}
+
+	void FileLoggerError::write(const Event& event)
+	{
+		if (event.getEventLevel() != EventLevelCodes::ERROR)
+			return;
+
+		NOU::NOU_FILE_MNGT::File file(m_path);
+
+		if (!file.exists())
+		{
+			file.createFile();
+		}
+
+		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
+		{
+			NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
+
+			file.write(error);
+			file.close();
+		}
+		else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+				"Could not open log file.");
+		}
+	}
+
+	FileLoggerError::FileLoggerError(const NOU_FILE_MNGT::Path &path) :
+		m_path(path)
+	{}
+
+	void FileLoggerWarning::write(const Event& event)
+	{
+		if (event.getEventLevel() != EventLevelCodes::WARNING)
+			return;
+
+		NOU::NOU_FILE_MNGT::File file(m_path);
+
+		if (!file.exists())
+		{
+			file.createFile();
+		}
+
+		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
+		{
+			NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
+
+			file.write(error);
+			file.close();
+		}
+		else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+				"Could not open log file.");
+		}
+	}
+
+	FileLoggerWarning::FileLoggerWarning(const NOU_FILE_MNGT::Path &path) :
+		m_path(path)
+	{}
+
+	void FileLoggerInfo::write(const Event& event)
+	{
+		if (event.getEventLevel() != EventLevelCodes::INFO)
+			return;
+
+		NOU::NOU_FILE_MNGT::File file(m_path);
+
+		if (!file.exists())
+		{
+			file.createFile();
+		}
+
+		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
+		{
+			NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
+
+			file.write(error);
+			file.close();
+		}
+		else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+				"Could not open log file.");
+		}
+	}
+
+	FileLoggerInfo::FileLoggerInfo(const NOU_FILE_MNGT::Path &path) :
+		m_path(path)
+	{}
+
+	void FileLoggerDebug::write(const Event& event)
+	{
+		if (event.getEventLevel() != EventLevelCodes::DEBUG)
+			return;
+
+		NOU::NOU_FILE_MNGT::File file(m_path);
+
+		if (!file.exists())
+		{
+			file.createFile();
+		}
+
+		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
+		{
+			NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
+
+			file.write(error);
+			file.close();
+		}
+		else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+				"Could not open log file.");
+		}
+	}
+
+	FileLoggerDebug::FileLoggerDebug(const NOU_FILE_MNGT::Path &path) :
+		m_path(path)
+	{}
+
+	void FileLoggerTrace::write(const Event& event)
+	{
+		if (event.getEventLevel() != EventLevelCodes::TRACE)
+			return;
+
+		NOU::NOU_FILE_MNGT::File file(m_path);
+
+		if (!file.exists())
+		{
+			file.createFile();
+		}
+
+		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
+		{
+			NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
+
+			file.write(error);
+			file.close();
+		}
+		else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+				"Could not open log file.");
+		}
+	}
+
+	FileLoggerTrace::FileLoggerTrace(const NOU_FILE_MNGT::Path &path) :
+		m_path(path)
+	{}
+
+	void FileLoggerUnknown::write(const Event& event)
+	{
+		if (event.getEventLevel() != EventLevelCodes::UNKNOWN)
+			return;
+
+		NOU::NOU_FILE_MNGT::File file(m_path);
+
+		if (!file.exists())
+		{
+			file.createFile();
+		}
+
+		if (file.open(NOU::NOU_FILE_MNGT::AccessMode::APPEND) == true)
+		{
+			NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
+
+			file.write(error);
+			file.close();
+		}
+		else
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::CANNOT_OPEN_FILE,
+				"Could not open log file.");
+		}
+	}
+
+	FileLoggerUnknown::FileLoggerUnknown(const NOU_FILE_MNGT::Path &path) :
+		m_path(path)
+	{}
+
 	Logger& Logger::get()
 	{
 		static Logger instance;
@@ -204,7 +413,7 @@ namespace NOU::NOU_CORE
 		error.append(event.getTimeStamp().getSeconds());
 
 		error.append("] ");
-		error.append(event.getEventLevel()).append(": ");
+		error.append(enumToString(event.getEventLevel())).append(": ");
 		error.append(event.getEventMsg()).append("\n");
 
 		return error;
