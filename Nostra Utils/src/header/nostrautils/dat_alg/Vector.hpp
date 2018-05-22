@@ -9,7 +9,7 @@
 
 #include <new>
 
-/** \file Vector.hpp
+/** \file dat_alg/Vector.hpp
 \author  Dennis Franz
 \author  Lukas Reichmann
 \since   1.0.0
@@ -113,7 +113,7 @@ namespace NOU::NOU_DAT_ALG
 		\see   nostra::utils::mem_mngt::GenericAllocationCallback
 		*/
 		Vector<T>(sizeType size = MIN_CAPACITY, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = 
-			NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance());
+			NOU_MEM_MNGT::GenericAllocationCallback<T>::get());
 
 		/**
 		\param other Takes an other vector for moving.
@@ -1189,7 +1189,15 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		//####
 		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //copy-assign part
-			at(i) = other.at(i);
+		{
+			if constexpr (std::is_copy_assignable_v<T>)
+				at(i) = other.at(i);
+			else
+			{
+				at(i).~T();
+				new (m_data + i) T(at(i));
+			}
+		}
 
 		for (; i < other.m_size; i++) //copy-constr part
 			new (m_data + i) T(other.at(i));

@@ -607,7 +607,7 @@ static_cast<NOU::uint32> 									 \
 #endif
 
 /**
-\param str The expression to convert.
+\param ... The expression to convert.
 
 \brief Converts any expression into a const char*.
 */

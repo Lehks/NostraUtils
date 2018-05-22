@@ -1,0 +1,345 @@
+/**
+\page Color_tut Colors Tutorial
+
+\brief On this page, the use and configuration of the color class in Nostra Utils will be explained.
+
+\tableofcontents
+
+\section sec_basicUsage Basic Usage
+
+When working with colors in Nostra Utils, the class \link nostra::utils::math::Color Color \endlink is always (directly or indirectly) used. It is a highly configurable class that represents a RGBA color (there is no color that is only RGB, a color in Nostra Utils will always have four channels).
+
+In the most cases, the type <tt>Color32f</tt> is a good choice - it is a color that uses 32 bit floating point numbers (the exact datatype is NOU::float32) in the interval \f$\left[0, 1\right]\f$ and stores them in the order { Red, Green, Blue, Alpha } (how to configure both the type and the layout will be shown in the chapter \link sec_configure Configuring the color class\endlink).
+
+\par Vocabulary
+
+Before starting off, this is the most important vocabulary that is used throughout this page:
+- Channel: A RGBA color is made up from four color values (red, green, blue and alpha). Each of these values is a single channel (e.g. the red channel is the red color value).
+- Alpha: Aside from the channels red, green and blue, there is also the alpha channel. This channel is the transparency value of the color.
+- Color Channel: Color channels are the red, green and blue color channels, but not the alpha channel.
+- Color Storage Layout: The order in which the colors are stored in the memory.
+
+\subsection subsec_basicUsage_Constructing Constructing a color
+The color has a constructor that takes five values - the red, green, blue and alpha channels (in that order) and a fifth parameter that is explained in the chapter \link subsec_configure_storageLayout Configuring the storage layout\endlink and it will be ignored for now.
+
+The code to call the constructor would look like this:
+
+\code{.cpp}
+NOU::NOU_MATH::Color32f color(1.0f, 1.0f, 0.0f, 0.5f);
+\endcode
+
+In this example, an semi transparent yellow color would have been constructed.
+
+\attention
+Every channel of a color has a minimum and maximum value (for <tt>Color32f</tt> that is <tt>0.0f</tt> and <tt>1.0f</tt> respectively). A channel will never go below/above the minimum/maximum values - the class will clamp the values automatically.
+
+\note
+It is also possible to omit the fourth parameter (the alpha channel value). In that case, <tt>1.0f</tt> will be used as values.
+
+\subsubsection subsubsec_basicUsage_Constructing_predefined Predefined colors
+There are already several predefined colors that can be accessed using methods (there is one method for each predefined color). The predefined colors are:
+- black
+- red
+- yellow
+- green
+- cyan
+- blue
+- purple
+- white
+
+The methods for the predefined colors take two (optional) parameters. The first parameter is the alpha value. By default this is <tt>1.0f</tt>. The second parameter is the same as the fifth parameter in the constructor and it will be explained in the chapter \link subsec_configure_storageLayout Configuring the storage layout\endlink.
+
+The predefined colors can be used like this:
+\code{.cpp}
+NOU::NOU_MATH::Color32f red = NOU::NOU_MATH::Color32f::red(); //red without transparency
+NOU::NOU_MATH::Color32f blue = NOU::NOU_MATH::Color32f::blue(0.5f); //semi transparent blue
+\endcode
+
+\par Grey
+There is also an additional predefined color - grey - that behaves a bit differently. In addition to the two other parameters, it has a third one: the scale.
+
+\note
+In the case of grey, the order of the parameters is: first the scale, then the alpha channel and then the parameter that will be explained later.
+
+Using that scale parameter, it is possible to get any grey tone (very light grey to very dark; even white and black are possible). The scale is the value of each of the single color channels. If the scale is <tt>0.3f</tt>, all of the color channels will have the value <tt>0.3f</tt>. The default value for the scale is <tt>0.5f</tt>. The two remaining parameters have the same effect and default values as they have with the other predefined colors.
+
+\code{.cpp}
+NOU::NOU_MATH::Color32f grey1 = NOU::NOU_MATH::Color32f::grey(); //grey with 0.5f as scale
+NOU::NOU_MATH::Color32f grey2 = NOU::NOU_MATH::Color32f::grey(0.3f, 0.5f); //semi transparent grey with 0.3f as scale
+\endcode
+
+\subsection subsec_channelAccess Accessing the channels
+To access the single channels of the color, a typical getter/setter system is used. The following piece of code shows how to read and write single channels.
+
+\code{.cpp}
+NOU::NOU_MATH::Color32f red = NOU::NOU_MATH::Color32f::red();
+
+NOU::float32 redChannel = red.getRed(); //get the value of the red channel
+red.setGreen(0.5f); //set the value of the green channel to 0.5
+\endcode
+
+Such getters and setters exist for each of the four channels.
+
+\subsection subsec_advancedOperations Advanced operations
+
+Aside from per-channel modifications, the class also provides methods for more advanced operations.
+
+\par Copy
+
+Method: \link nostra::utils::math::Color::copy() copy() \endlink
+
+Returns an exact copy of the current color - this can be used for some nice single line code (see the invert() method for an example).
+
+Example:
+\code{.cpp}
+NOU::NOU_MATH::Color32f color = NOU::NOU_MATH::Color32f::red();
+
+//in this case, copy() is not required, but as already said, it does make sense in combination with other methods.
+NOU::NOU_MATH::Color32f color2 = color.copy();
+\endcode
+
+\par Invert
+
+Method: \link nostra::utils::math::Color::invert() invert() \endlink
+
+Inverts the color, by setting the values of the color channels to \f$ChannelValue_(max) - ChannelValue_(current)\f$. \f$ChannelValue_(max)\f$ is the maximum value of the channel (more on that in \link subsec_configure_typeAndValues this chapter\endlink, but for Color32f this value is always <tt>1.0f</tt>) and \f$ChannelValue_(current)\f$ is the current value of the channel. By default, only the color channels will be inverted, but the method has an optional <tt>boolean</tt> parameter (the default value is <tt>true</tt>) that, if set to <tt>false</tt>, will cause the method to also invert the alpha channel.
+
+\note
+This method will invert the colors of the object, that the method was called on and only return a reference to that object. If only a copy should be inverted, use
+\code{.cpp}
+NOU::NOU_MATH::Color32f color = NOU::NOU_MATH::Color32f::red();
+
+color.copy().invert();
+\endcode
+
+Example:
+\code{.cpp}
+NOU::NOU_MATH::Color32f color = NOU::NOU_MATH::Color32f::red();
+
+color.invert(); //invert the color channels only
+color.invert(true); //invert the color channels as well as the alpha channel
+\endcode
+
+\par Arithmetic
+
+Methods: \link nostra::utils::math::Color::add() add()\endlink, \link nostra::utils::math::Color::addAssign() addAssign()\endlink, operators "+" and "+=": Used for adding colors<br>
+Methods: \link nostra::utils::math::Color::sub() sub()\endlink, \link nostra::utils::math::Color::subAssign() subAssign()\endlink, operators "-" and "-=": Used for subtracting colors<br>
+Methods: \link nostra::utils::math::Color::mult() mult()\endlink, \link nostra::utils::math::Color::multAssign() multAssign()\endlink, operators "*" and "*=": Used for multiplying colors<br>
+
+Adds, subtracts or multiplies one color with another by either creating a new color (add(), sub(), mult() and their operators) or assigning it to an already existing one (addAssign(), subAssign(), mutlAssign() and their operators). The methods will add/subtract/multiply all channels - the color channels as well as the alpha channel.
+
+The operators do exactly the same thing as their respective methods (e.g.: add() is the same as the operator "+" and multAssign() is the same as the operator "*=").
+
+Example:
+\code{.cpp}
+NOU::NOU_MATH::Color32f color = NOU::NOU_MATH::Color32f::red();
+NOU::NOU_MATH::Color32f color1 = NOU::NOU_MATH::Color32f::blue();
+
+//create a new color from "color" and "color1"
+NOU::NOU_MATH::Color32f color2 = color + color1;
+
+//subtract and assign "color1" from "color"
+color -= color1;
+\endcode
+
+Again, it is not possible to "overflow" or "underflow" the channels. Although in the example above, both <tt>color</tt> and <tt>color1</tt> have an alpha value of <tt>1.0f</tt> (and <tt>1.0f</tt> + <tt>1.0f</tt> would obviously be <tt>2.0f</tt>), the alpha value of <tt>color2</tt> is still <tt>1.0f</tt>.
+
+\par Comparing
+
+Methods: \link nostra::utils::math::Color::equal() equal()\endlink, \link nostra::utils::math::Color::unequal() unequal()\endlink, operators "==" and "!="
+
+Compares two colors with each other while taking all channels into consideration. The comparison will either return whether the colors are equal (equal(), "==") or not (unequal(), "!=").
+
+The method equal() and the operator "==" are the same, just as unequal() and the operator "!=" are the same.
+
+Example:
+\code{.cpp}
+NOU::NOU_MATH::Color32f color = NOU::NOU_MATH::Color32f::red();
+NOU::NOU_MATH::Color32f color1 = NOU::NOU_MATH::Color32f::blue();
+NOU::NOU_MATH::Color32f color2 = NOU::NOU_MATH::Color32f::red();
+
+color != color1 //true
+
+color != color2 //false
+
+color == color2 //true
+
+\endcode
+
+\par Retrieving the channels as array
+
+Methods: \link nostra::utils::math::Color::data() data()\endlink
+
+When the colors are used with other 3rd party libraries (like OpenGL), the single channels are often required as an array of values. The method data() allows access to exactly that array (the color class stores the channels in an array of four values).
+
+\note
+The order in which the channels are stored in the array can be defined by a user (more about that can be read in the chapter \link subsec_configure_storageLayout Configuring the storage layout\endlink), but by default <tt>Color32f</tt> will always store the channels in the order { Red, Green, Blue, Alpha }.
+
+Example:
+\code{.cpp}
+NOU::NOU_MATH::Color32f color = NOU::NOU_MATH::Color32f::red();
+
+//someFunction() is a function that expects a color as an array of floats
+someFunction(color.data());
+\endcode
+
+\section sec_configure Configuring the color class
+
+\subsection subsec_configure_storageLayout Configuring the storage layout
+
+Since the color class is (at least partially) made to be used with 3rd party libraries like OpenGL, it has a mechanism to customize the order in which the colors are stored in the internal array. This is because such 3rd party library may required the colors in an order other than RGBA.
+
+To control that storage layout, the predefined constants in the namespace \link nostra::utils::math::ColorStorageLayout NOU::NOU_MATH::ColorStorageLayout\endlink are used. Each of these constants represents a different layout (e.g. NOU::NOU_MATH::ColorStorageLayout::RGBA is the layout { Red, Green, Blue, Alpha } whereas NOU::NOU_MATH::ColorStorageLayout::ABGR is the layout { Alpha, Blue, Green, Red }). These constant can be passed to a color when a color is constructed and it is the last parameter in the constructor (and in the methods for the predefined colors) that was not explained earlier.
+
+\note
+The storage layout is almost not observable from the outside - e.g. getRed() will always return the red channel, independent from the storage layout. The layout is however noticeable when using data(), the values will obviously be different for different layouts.
+
+After the construction of a color, the layout may be changed using \link nostra::utils::math::Color::setStorageLayout setStorageLayout()\endlink.
+
+\note
+Different color instances with different storage layouts are fully compatible with each other - the color class will do all of the converting internally.
+
+\subsection subsec_configure_typeAndValues Configuring the channel type and minimum/maximum values
+
+In the previous chapters, the only type that was used was <tt>Color32f</tt> which is a color type that uses four 32 bit floating point numbers. The channel values are always in the interval \f$\left[0, 1\right]\f$. Aside from this single type, the color class allows it to store the values in any type and within any interval. To accomplish this, a so called "color configuration" is used.
+
+A color configuration is simply a class with a bunch of predefined member constants and type alias(es). These are:
+- ChannelType (type): The type of the singe channels. In the case of <tt>Color32f</tt>, this is <tt>NOU::float32</tt>.
+- CHANNEL_MIN (constant): The minimum value of each of the channels. In the case of <tt>Color32f</tt>, this is <tt>0.0f</tt>.
+- CHANNEL_MAX (constant): The maximum value of each of the channels. In the case of <tt>Color32f</tt>, this is <tt>1.0f</tt>.
+- DEFAULT_STORAGE_LAYOUT (constant): The storage layout that will be used by all methods (and the constructor) of the color class as a default parameter for the storage layout. In the case of <tt>Color32f</tt>, this is <tt>ColorStorageLayout::RGBA</tt>.
+- COMPARE_EPSILON (constant): Since the channel type of a color may be a floating point number and comparing floating point numbers using the operator "==" is often not correct, the color class uses \link nostra::utils::dat_alg::epsilonCompare() epsilonCompare()\endlink to compare its channels. This value is the epsilon that will be passed to that function. If the channel type is an integer type, this should usually be 0. In the case of <tt>Color32f</tt>, this is <tt>0.0001f</tt>.
+
+It would work to simply write a class or struct that has all of those members and use it as a configuration. There is however a faster was of doing that: Nostra Utils provides a macro called NOU_GENERATE_COLOR_CONFIG which generates that class. It takes the class name and the values for the members as parameters.
+
+A new color configuration can be added and used like this:
+
+\code{.cpp}
+//define a color configuration with 8bits per channel and an interval [0, 255]
+NOU_GENERATE_COLOR_CONFIG(ColorConfigByte, uint8, 0, 255, ColorStorageLayout::RGBA, 0);
+
+int main()
+{
+    //pass the configuration to the color
+    NOU::NOU_MATH::Color<ColorConfigByte>
+    color(255, 0, 0);
+
+    return 0;
+}
+\endcode
+
+\note
+All of the predefined colors work with any configuration - they use the CHANNEL_MIN and CHANNEL_MAX value internally. This also stays true for grey() - the value of the scale parameter is always between 0 and 1 and the method will convert the scale to a proper channel value.
+
+\attention
+NOU_GENERATE_COLOR_CONFIG needs to be outside a function body (it may be in a namespace). This is because the macro will expand to a class and definitions for the members in that class.
+
+\par Predefined color types
+There are two predefined color types with their own color configurations.
+
+These two are:
+<table>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Color32f
+        </th>
+        <th>
+            Color8i
+        </th>
+    </tr>
+    <tr>
+        <td>
+            ChannelType
+        </td>
+        <td>
+            NOU::float32
+        </td>
+        <td>
+            NOU::uint8
+        </td>
+    </tr>
+    <tr>
+        <td>
+            CHANNEL_MIN
+        </td>
+        <td>
+            0.0f
+        </td>
+        <td>
+            0
+        </td>
+    </tr>
+    <tr>
+        <td>
+            CHANNEL_MAX
+        </td>
+        <td>
+            1.0f
+        </td>
+        <td>
+            255
+        </td>
+    </tr>
+    <tr>
+        <td>
+            DEFAULT_STORAGE_LAYOUT
+        </td>
+        <td>
+            ColorStorageLayout::RGBA
+        </td>
+        <td>
+            ColorStorageLayout::RGBA
+        </td>
+    </tr>
+    <tr>
+        <td>
+            COMPARE_EPSILON
+        </td>
+        <td>
+            0.0001f
+        </td>
+        <td>
+            0
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Note
+        </td>
+        <td>
+            This is the configuration that was usually used throughout this document.
+        </td>
+        <td>
+            This is the configuration that was manually created in the previous example.
+        </td>
+    </tr>
+</table>
+
+\par Converting colors with different configurations
+
+Generally, two colors with different configurations are incompatible to each other. Code like this does NOT work:
+
+\code{.cpp}
+NOU::NOU_MATH::Color8i color0(255, 0, 0);
+NOU::NOU_MATH::Color32f color1(0.0f, 1.0f, 0.0f);
+
+NOU::NOU_MATH::Color32f color2 = color0 + color1;
+\endcode
+
+It is however possible to explicitly cast from one color type to another color type using <tt>static_cast</tt>.
+
+Example:
+
+\code{.cpp}
+NOU::NOU_MATH::Color8i color0(255, 0, 0);
+NOU::NOU_MATH::Color32f color1(0.0f, 1.0f, 0.0f);
+
+NOU::NOU_MATH::Color32f color2 = static_cast<NOU::NOU_MATH::Color32f>
+(color0) + color1;
+\endcode
+
+There is also a method called \link nostra::utils::math::Color::convert convert()\endlink that does the same thing as the static cast. It takes the color to convert to as a template parameter.
+*/
