@@ -1,4 +1,4 @@
-#ifndef NOU_MATH_UTILS_HPP
+ #ifndef NOU_MATH_UTILS_HPP
 #define NOU_MATH_UTILS_HPP
 
 #include "nostrautils/core/StdIncludes.hpp"
