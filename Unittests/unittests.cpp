@@ -1170,7 +1170,7 @@ for (HandleType &value : dbgVec)
 IsTrue(value->get() == testValue);
 }
 
-for (int i = 0; i < dbgVec.size(); i++)
+for (NOU::uint32 i = 0; i < dbgVec.size(); i++)
 {
 gpa.deallocateObjects(dbgVec.at(i));
 }
@@ -1355,7 +1355,7 @@ IsTrue(b.at(2) == 4);
 IsTrue(b.at(3) == 1);
 IsTrue(b.at(4) == 4);
 
-NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> c(5);
+NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> c(true, 5);
 
 c.enqueue(1, 11);
 c.enqueue(2, 5);

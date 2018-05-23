@@ -16,9 +16,9 @@ or download the ZIP-compressed directly from GitHub using the link above.
 ## Requirements
 
 Nostra Utils was written for the C\++17 standard and uses a lot of C\++17 features. **Officially, C\++17 is the 
-minimum required C\++ standard.** There is however a so-called C\++14 compatibility mode which disables or 
-modifies some features in the library to try to enable C\++14 support. There are still a lot of C\++14 features 
-left (like static_assert without a message or nested namespace definitions) so it is not guaranteed that the 
+minimum required C\++ standard.** There is however a so-called C\++14 compatibility mode, which disables, or 
+modifies, some features in the library to try to enable C\++14 support. There are still a lot of C\++17 features 
+left (like static_assert without a message or nested namespace definitions), so it is not guaranteed that the 
 compiler actually supports those features.
 
 Tests for the C\++14 compatibility mode were run and succeeded on:
@@ -29,6 +29,8 @@ Tests for the C\++14 compatibility mode were run and succeeded on:
 - Clang
     - Linux
         - Version 4.0.1 (with a lot of warnings because of the usage of C\++1z features)
+    - MacOS
+        - Version 902.0.39.1 (LLVM Version 9.1.0) (with a lot of warnings because of the usage of C\++1z features)
 
 The mode did not work with MSVC, because MSVC only allows nested namespaces in C\++17 and not C\++14. This 
 problem will most likely not be fixed.

@@ -239,13 +239,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::getPriority(PriorityType priority) const
 	{
-		return (priority / 100000000);
+		return static_cast<PriorityTypePart>(priority / 100000000);
 	}
 
 	template<typename T>
 	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::getPriorityId(PriorityType priority) const
 	{
-		return (priority % 10000);
+		return static_cast<PriorityTypePart>(priority % 10000);
 	}
 
 	template<typename T>
