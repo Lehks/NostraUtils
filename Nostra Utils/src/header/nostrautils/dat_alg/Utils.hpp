@@ -67,7 +67,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief Determines the length of a string.
 	*/
 	template<typename CHAR_TYPE>
-	constexpr sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
+	constexpr sizeType stringlen(const NOU_CORE::RemoveConst_t<CHAR_TYPE> *str);
 
 	/**
 	\tparam The type of the parameters.
@@ -111,7 +111,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str)
+	constexpr sizeType stringlen(const NOU_CORE::RemoveConst_t<CHAR_TYPE> *str)
 	{
 		return *str != 0 ? stringlen<CHAR_TYPE>(str + 1) + 1 : 0;
 	}
