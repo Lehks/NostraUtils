@@ -1055,8 +1055,8 @@ TEST_METHOD(Quicksort)
 
 {
 
-int arr[5] = {2,1,3,5,4};
-NOU::NOU_DAT_ALG::qsort(arr, 0, 4);
+NOU::int32 arr[5] = {2,1,3,5,4};
+NOU::NOU_DAT_ALG::qsort(arr, 0, 4,NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
 IsTrue(arr[0] == 1);
 IsTrue(arr[1] == 2);
 IsTrue(arr[2] == 3);
@@ -1064,8 +1064,13 @@ IsTrue(arr[3] == 4);
 IsTrue(arr[4] == 5);
 
 
-
-
+//Test arrTest[5] = { Test(2) ,Test(1) ,Test(3) ,Test(5) ,Test(4) };
+//NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, NOU::NOU_DAT_ALG::genericComparator<NOU::uint32>);
+//IsTrue(arrTest[0] == 1);
+//IsTrue(arrTest[1] == 2);
+//IsTrue(arrTest[2] == 3);
+//IsTrue(arrTest[3] == 4);
+//IsTrue(arrTest[4] == 5);
 }
 
 TEST_METHOD(Random)
