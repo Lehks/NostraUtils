@@ -1140,7 +1140,7 @@ namespace NOU::NOU_MATH
 
         for (sizeType i = 0; i < VectorBase<T, N>::size(); i++)
         {
-            ret.value(i) = VectorBase<T, N>::value(i) * scale;
+            ret.value(i) = static_cast<T>(VectorBase<T, N>::value(i) * scale);
         }
 
         return ret;
@@ -1151,7 +1151,7 @@ namespace NOU::NOU_MATH
     {
         for (sizeType i = 0; i < VectorBase<T, N>::size(); i++)
         {
-            VectorBase<T, N>::value(i) *= scale;
+            VectorBase<T, N>::value(i) = static_cast<T>(VectorBase<T, N>::value(i) * scale);
         }
 
         return *this;
@@ -1175,7 +1175,7 @@ namespace NOU::NOU_MATH
     template<typename T, sizeType N>
     float32 Vector<T, N>::length() const
     {
-        return NOU_MATH::sqrt(*this * *this);
+        return NOU_MATH::sqrt<float32>(static_cast<float32>(*this * *this));
     }
 
     template<typename T, sizeType N>
@@ -1395,14 +1395,15 @@ namespace NOU::NOU_MATH
     template<typename T>
     Vector<T, 2> Vector<T, 2>::scale(float64 scale) const
     {
-        return Vector<T, 2>(VectorBase<T, 2>::value(0) * scale, VectorBase<T, 2>::value(1) * scale);
+        return Vector<T, 2>(static_cast<T>(VectorBase<T, 2>::value(0) * scale), 
+			static_cast<T>(VectorBase<T, 2>::value(1) * scale));
     }
 
     template<typename T>
     Vector<T, 2>& Vector<T, 2>::scaleAssign(float64 scale)
     {
-        VectorBase<T, 2>::value(0) *= scale;
-        VectorBase<T, 2>::value(1) *= scale;
+        VectorBase<T, 2>::value(0) = static_cast<T>(VectorBase<T, 2>::value(0) * scale);
+		VectorBase<T, 2>::value(1) = static_cast<T>(VectorBase<T, 2>::value(1) * scale);
 
         return *this;
     }
@@ -1416,7 +1417,7 @@ namespace NOU::NOU_MATH
     template<typename T>
     float32 Vector<T, 2>::length() const
     {
-        return NOU_MATH::sqrt(*this * *this);
+        return NOU_MATH::sqrt<float32>(*this * *this);
     }
 
     template<typename T>
@@ -1644,15 +1645,17 @@ namespace NOU::NOU_MATH
     template<typename T>
     Vector<T, 3> Vector<T, 3>::scale(float64 scale) const
     {
-        return Vector<T, 3>(VectorBase<T, 3>::value(0) * scale, VectorBase<T, 3>::value(1) * scale, VectorBase<T, 3>::value(2) * scale);
+        return Vector<T, 3>(static_cast<T>(VectorBase<T, 3>::value(0) * scale), 
+			static_cast<T>(VectorBase<T, 3>::value(1) * scale), 
+			static_cast<T>(VectorBase<T, 3>::value(2) * scale));
     }
 
     template<typename T>
     Vector<T, 3>& Vector<T, 3>::scaleAssign(float64 scale)
     {
-        VectorBase<T, 3>::value(0) *= scale;
-        VectorBase<T, 3>::value(1) *= scale;
-        VectorBase<T, 3>::value(2) *= scale;
+        VectorBase<T, 3>::value(0) = static_cast<T>(VectorBase<T, 3>::value(0) * scale);
+		VectorBase<T, 3>::value(1) = static_cast<T>(VectorBase<T, 3>::value(1) * scale);
+		VectorBase<T, 3>::value(2) = static_cast<T>(VectorBase<T, 3>::value(2) * scale);
 
         return *this;
     }
@@ -1675,7 +1678,7 @@ namespace NOU::NOU_MATH
     template<typename T>
     float32 Vector<T, 3>::length() const
     {
-        return NOU_MATH::sqrt(*this * *this);
+        return NOU_MATH::sqrt<float32>(*this * *this);
     }
 
     template<typename T>
@@ -1947,16 +1950,19 @@ namespace NOU::NOU_MATH
     template<typename T>
     Vector<T, 4> Vector<T, 4>::scale(float64 scale) const
     {
-        return Vector<T, 4>(VectorBase<T, 4>::value(0) * scale, VectorBase<T, 4>::value(1) * scale, VectorBase<T, 4>::value(2) * scale, VectorBase<T, 4>::value(3) * scale);
+        return Vector<T, 4>(static_cast<T>(VectorBase<T, 4>::value(0) * scale), 
+			static_cast<T>(VectorBase<T, 4>::value(1) * scale), 
+			static_cast<T>(VectorBase<T, 4>::value(2) * scale), 
+			static_cast<T>(VectorBase<T, 4>::value(3) * scale));
     }
 
     template<typename T>
     Vector<T, 4>& Vector<T, 4>::scaleAssign(float64 scale)
     {
-        VectorBase<T, 4>::value(0) *= scale;
-        VectorBase<T, 4>::value(1) *= scale;
-        VectorBase<T, 4>::value(2) *= scale;
-        VectorBase<T, 4>::value(3) *= scale;
+        VectorBase<T, 4>::value(0) = static_cast<T>(VectorBase<T, 4>::value(0) * scale);
+		VectorBase<T, 4>::value(1) = static_cast<T>(VectorBase<T, 4>::value(1) * scale);
+		VectorBase<T, 4>::value(2) = static_cast<T>(VectorBase<T, 4>::value(2) * scale);
+		VectorBase<T, 4>::value(3) = static_cast<T>(VectorBase<T, 4>::value(3) * scale);
 
         return *this;
     }
@@ -1971,7 +1977,7 @@ namespace NOU::NOU_MATH
     template<typename T>
     float32 Vector<T, 4>::length() const
     {
-        return NOU_MATH::sqrt(*this * *this);
+        return NOU_MATH::sqrt<float32>(*this * *this);
     }
 
     template<typename T>

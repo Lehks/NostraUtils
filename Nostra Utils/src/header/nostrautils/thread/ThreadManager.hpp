@@ -28,7 +28,7 @@ namespace NOU::NOU_DAT_ALG
 	namespace internal
 	{
 		template<typename T>
-		class ObjectPoolChunk;
+		struct ObjectPoolChunk;
 	}
 
 	template<typename T>
