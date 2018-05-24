@@ -64,7 +64,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The same as ConstCharType, but without the const. This type is used by nostra::utils::data_alg::String.
 		*/
-		using CharType = NOU_CORE::removeConst_t<CHAR_TYPE>;
+		using CharType = NOU_CORE::RemoveConst_t<CHAR_TYPE>;
 
 		/**
 		\brief The type that is used to store the single characters. Since a string view is read only, this type is

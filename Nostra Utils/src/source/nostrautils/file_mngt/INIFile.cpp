@@ -203,14 +203,14 @@ namespace NOU::NOU_FILE_MNGT
 
 	boolean INIFile::write(const NouString & filename)
 	{
-		NOU::NOU_DAT_ALG::Vector<NouString> sectionKeys = m_dataSections.keySet();
-		NOU::NOU_DAT_ALG::Vector<int32> sectionValues = m_dataSections.entrySet();
-		NOU::NOU_DAT_ALG::Vector<NouString> stringKeys = m_dataString.keySet();
-		NOU::NOU_DAT_ALG::Vector<NouString> stringValues = m_dataString.entrySet();
-		NOU::NOU_DAT_ALG::Vector<NouString> integerKeys = m_dataInteger.keySet();
-		NOU::NOU_DAT_ALG::Vector<int32> integerValues = m_dataInteger.entrySet();
-		NOU::NOU_DAT_ALG::Vector<NouString> floatKeys = m_dataFloat.keySet();
-		NOU::NOU_DAT_ALG::Vector<float32> floatValues = m_dataFloat.entrySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> sectionKeys = m_dataSections.keySet();
+		NOU::NOU_DAT_ALG::Vector<const int32*> sectionValues = m_dataSections.entrySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> stringKeys = m_dataString.keySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> stringValues = m_dataString.entrySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> integerKeys = m_dataInteger.keySet();
+		NOU::NOU_DAT_ALG::Vector<const int32*> integerValues = m_dataInteger.entrySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> floatKeys = m_dataFloat.keySet();
+		NOU::NOU_DAT_ALG::Vector<const float32*> floatValues = m_dataFloat.entrySet();
 
 		std::ofstream inifile;
 		NouString key_section;
@@ -235,48 +235,48 @@ namespace NOU::NOU_FILE_MNGT
 			// Write section
 			if (sectionValues.at(isec) > 0) {
 			// if (sectionKeys.at(isec) != INI_DEFAULT_SECTION && sectionValues.at(isec) > 0) {
-				inifile << "[" << sectionKeys.at(isec).rawStr() << "]" << std::endl;
+				inifile << "[" << sectionKeys.at(isec)->rawStr() << "]" << std::endl;
 			}
 
 			// Save string size for later
-			pos_sec = sectionKeys.at(isec).size();
+			pos_sec = sectionKeys.at(isec)->size();
 
 			// Write string data
 			for (auto istr = 0; istr < stringKeys.size(); istr++)
 			{
-				pos_dot = stringKeys.at(istr).firstIndexOf('.');
+				pos_dot = stringKeys.at(istr)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
-				key_section = stringKeys.at(istr).substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)) continue;
+				key_section = stringKeys.at(istr)->substring(0, pos_dot);
+				if (key_section != *sectionKeys.at(isec)) continue;
 
-				inifile << stringKeys.at(istr).substring(pos_sec + 1).rawStr() << " = ";
-				inifile << "\"" << stringValues.at(istr).rawStr() << "\"" << std::endl;
+				inifile << stringKeys.at(istr)->substring(pos_sec + 1).rawStr() << " = ";
+				inifile << "\"" << stringValues.at(istr)->rawStr() << "\"" << std::endl;
 			}
 
 			// Write int data
 			for (auto iint = 0; iint < integerKeys.size(); iint++)
 			{
-				pos_dot = integerKeys.at(iint).firstIndexOf('.');
+				pos_dot = integerKeys.at(iint)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
-				key_section = integerKeys.at(iint).substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)) continue;
+				key_section = integerKeys.at(iint)->substring(0, pos_dot);
+				if (key_section != *sectionKeys.at(isec)) continue;
 
-				inifile << integerKeys.at(iint).substring(pos_sec + 1).rawStr() << " = ";
+				inifile << integerKeys.at(iint)->substring(pos_sec + 1).rawStr() << " = ";
 				inifile << integerValues.at(iint) << std::endl;
 			}
 
 			// Write float data
 			for (auto ifloat = 0; ifloat < floatKeys.size(); ifloat++)
 			{
-				pos_dot = floatKeys.at(ifloat).firstIndexOf('.');
+				pos_dot = floatKeys.at(ifloat)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
-				key_section = floatKeys.at(ifloat).substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)) continue;
+				key_section = floatKeys.at(ifloat)->substring(0, pos_dot);
+				if (key_section != *sectionKeys.at(isec)) continue;
 
-				inifile << floatKeys.at(ifloat).substring(pos_sec + 1).rawStr() << " = ";
+				inifile << floatKeys.at(ifloat)->substring(pos_sec + 1).rawStr() << " = ";
 				inifile << floatValues.at(ifloat) << std::endl;
 			}
 		}
@@ -413,11 +413,11 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		NOU::NOU_DAT_ALG::HashMap<NouString, NouString> keys = NOU::NOU_DAT_ALG::HashMap<NouString, NouString>();
 
-		NOU::NOU_DAT_ALG::Vector<NouString> sectionKeys = m_dataSections.keySet();
-		NOU::NOU_DAT_ALG::Vector<int32> sectionValues   = m_dataSections.entrySet();
-		NOU::NOU_DAT_ALG::Vector<NouString> stringKeys  = m_dataString.keySet();
-		NOU::NOU_DAT_ALG::Vector<NouString> integerKeys = m_dataInteger.keySet();
-		NOU::NOU_DAT_ALG::Vector<NouString> floatKeys   = m_dataFloat.keySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> sectionKeys = m_dataSections.keySet();
+		NOU::NOU_DAT_ALG::Vector<const int32*> sectionValues   = m_dataSections.entrySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> stringKeys  = m_dataString.keySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> integerKeys = m_dataInteger.keySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> floatKeys   = m_dataFloat.keySet();
 
 		NouString key_section;
 		int32 pos_dot;
@@ -427,42 +427,42 @@ namespace NOU::NOU_FILE_MNGT
 		for (int32 isec = (sectionKeys.size() - 1); isec >= 0; isec--)
 		{
 			// Save string size for later
-			pos_sec = sectionKeys.at(isec).size();
+			pos_sec = sectionKeys.at(isec)->size();
 
 			// Get keys from string map
 			for (auto istr = 0; istr < stringKeys.size(); istr++)
 			{
-				pos_dot = stringKeys.at(istr).firstIndexOf('.');
+				pos_dot = stringKeys.at(istr)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
-				key_section = stringKeys.at(istr).substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)) continue;
+				key_section = stringKeys.at(istr)->substring(0, pos_dot);
+				if (key_section != *sectionKeys.at(isec)) continue;
 
-				keys.map(stringKeys.at(istr).substring(pos_sec + 1).rawStr(), key_section);
+				keys.map(stringKeys.at(istr)->substring(pos_sec + 1).rawStr(), key_section);
 			}
 
 			// Get keys from int map
 			for (auto iint = 0; iint < integerKeys.size(); iint++)
 			{
-				pos_dot = integerKeys.at(iint).firstIndexOf('.');
+				pos_dot = integerKeys.at(iint)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
-				key_section = integerKeys.at(iint).substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)) continue;
+				key_section = integerKeys.at(iint)->substring(0, pos_dot);
+				if (key_section != *sectionKeys.at(isec)) continue;
 
-				keys.map(integerKeys.at(iint).substring(pos_sec + 1).rawStr(), key_section);
+				keys.map(integerKeys.at(iint)->substring(pos_sec + 1).rawStr(), key_section);
 			}
 
 			// Get keys from float data
 			for (auto ifloat = 0; ifloat < floatKeys.size(); ifloat++)
 			{
-				pos_dot = floatKeys.at(ifloat).firstIndexOf('.');
+				pos_dot = floatKeys.at(ifloat)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
-				key_section = floatKeys.at(ifloat).substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)) continue;
+				key_section = floatKeys.at(ifloat)->substring(0, pos_dot);
+				if (key_section != *sectionKeys.at(isec)) continue;
 
-				keys.map(floatKeys.at(ifloat).substring(pos_sec + 1).rawStr(), key_section);
+				keys.map(floatKeys.at(ifloat)->substring(pos_sec + 1).rawStr(), key_section);
 			}
 		}
 
@@ -494,10 +494,10 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		NOU::NOU_DAT_ALG::HashMap<NouString, NouString> otherKeySections = other.getKeys();
 
-		NOU::NOU_DAT_ALG::Vector<NouString> keys     = otherKeySections.keySet();
-		NOU::NOU_DAT_ALG::Vector<NouString> sections = otherKeySections.entrySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> keys     = otherKeySections.keySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString*> sections = otherKeySections.entrySet();
 
-		NouString key, section;
+		const NouString *key, *section;
 
 		// Loop through all the keys
 		for (int32 i = (keys.size() - 1); i >= 0; i--)
@@ -505,18 +505,18 @@ namespace NOU::NOU_FILE_MNGT
 			key     = keys.at(i);
 			section = sections.at(i);
 
-			switch (other.getDataType(key, section)) 
+			switch (other.getDataType(*key, *section)) 
 			{
 				case INI_TYPE_NouString:
-					this->setString(key, other.getString(key, section), section);
+					this->setString(*key, other.getString(*key, *section), *section);
 					break;
 
 				case INI_TYPE_INT:
-					this->setInt(key, other.getInt(key, section), section);
+					this->setInt(*key, other.getInt(*key, *section), *section);
 					break;
 
 				case INI_TYPE_FLOAT:
-					this->setFloat(key, other.getFloat(key, section), section);
+					this->setFloat(*key, other.getFloat(*key, *section), *section);
 					break;
 			}
 		}

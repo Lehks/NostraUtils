@@ -18,3 +18,7 @@
 Nostra Utils/Doc/output
 
 CMakeSettings.json
+
+# IntelliJ files
+.idea
+cmake-build-debug

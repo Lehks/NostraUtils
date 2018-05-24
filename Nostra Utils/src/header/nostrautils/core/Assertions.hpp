@@ -12,7 +12,7 @@
 */
 
 /**
-\param b The expression to check.
+\param ... The expression to check.
 
 \brief Checks whether \p b evaluates to <tt>true</tt>. If not, an ASSERT_ERROR will be set in the error
        handler.
