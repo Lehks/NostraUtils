@@ -8,6 +8,7 @@
 #include "nostrautils/dat_alg/Utils.hpp"
 #include "nostrautils/dat_alg/Quicksort.hpp"
 
+#include <type_traits>
 #include <new>
 
 /** \file dat_alg/Vector.hpp
@@ -1189,7 +1190,7 @@ namespace NOU::NOU_DAT_ALG
 		//####
 		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //copy-assign part
 		{
-			if constexpr (std::is_copy_assignable_v<T>)
+			if constexpr (std::is_copy_assignable<T>::value)
 				at(i) = other.at(i);
 			else
 			{
