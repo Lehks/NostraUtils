@@ -1055,21 +1055,21 @@ TEST_METHOD(Quicksort)
 
 {
 
-  int arrEins[5] = { 2,1,3,5,4 };
-  NOU::NOU_DAT_ALG::qsort(arrEins, 0, 4);
-  IsTrue(arrEins[0] == 1);
-  IsTrue(arrEins[1] == 2);
-  IsTrue(arrEins[2] == 3);
-  IsTrue(arrEins[3] == 4);
-  IsTrue(arrEins[4] == 5);
+  int arrFirst[5] = { 2,1,3,5,4 };
+  NOU::NOU_DAT_ALG::qsort(arrFirst, 0, 4);
+  IsTrue(arrFirst[0] == 1);
+  IsTrue(arrFirst[1] == 2);
+  IsTrue(arrFirst[2] == 3);
+  IsTrue(arrFirst[3] == 4);
+  IsTrue(arrFirst[4] == 5);
 
-NOU::int32 arrZwei[5] = {2,1,3,5,4};
-NOU::NOU_DAT_ALG::qsort(arrZwei, 0, 4,NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
-IsTrue(arrZwei[0] == 1);
-IsTrue(arrZwei[1] == 2);
-IsTrue(arrZwei[2] == 3);
-IsTrue(arrZwei[3] == 4);
-IsTrue(arrZwei[4] == 5);
+NOU::int32 arrSecond[5] = {2,1,3,5,4};
+NOU::NOU_DAT_ALG::qsort(arrSecond, 0, 4,NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
+IsTrue(arrSecond[0] == 1);
+IsTrue(arrSecond[1] == 2);
+IsTrue(arrSecond[2] == 3);
+IsTrue(arrSecond[3] == 4);
+IsTrue(arrSecond[4] == 5);
 
 
 NoCopyClass arrTest[5] = { NoCopyClass(2), NoCopyClass(1), NoCopyClass(3), NoCopyClass(5), NoCopyClass(4) };
