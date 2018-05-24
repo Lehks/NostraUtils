@@ -1106,13 +1106,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::sort()
 	{
-		qsort(m_data, 0, size()-1);
+		qsort(m_data, 0, size() - 1);
 	}
 
 	template<typename T>
 	void Vector<T>::sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
-		qsort(m_data,0,size()-1,comp);
+		qsort(m_data, 0, size() - 1, comp);
 	}
 
 	template<typename T>

@@ -105,9 +105,9 @@ namespace NOU::NOU_DAT_ALG
 		swap(array + pivot, array + rightrangelimit);
 
 		// all values smaller as pivot goes to the right side 
-		for (int64 i = leftrangelimit; comp(array[i] , array[rightrangelimit]) < 0; i++)
+		for (int64 i = leftrangelimit; i < rightrangelimit; i++)
 		{
-			if (comp(array[i], array[pv]) <= 0)
+			if (comp(array[i], pv) <= 0)
 			{
 				swap(array + pn, array + i);
 				pn++;
@@ -141,12 +141,12 @@ namespace NOU::NOU_DAT_ALG
 	T* qsort(T *a, int64 leftrangelimit, int64 rightrangelimit, Comparator <T> comp)
 	{
 
-		if (comp(a[rightrangelimit], a[leftrangelimit]) > 0) 
+		if (rightrangelimit > leftrangelimit)
 		{
 			int64 p = rightrangelimit;
-			int64 pn = partition(a, leftrangelimit, p, rightrangelimit);
-			qsort(a, leftrangelimit, pn - 1);
-			qsort(a, pn + 1, rightrangelimit );
+			int64 pn = partition(a, leftrangelimit, p, rightrangelimit, comp);
+			qsort(a, leftrangelimit, pn - 1, comp);
+			qsort(a, pn + 1, rightrangelimit, comp);
 
 		}
 		return a;
