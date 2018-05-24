@@ -6,6 +6,7 @@
 #include "nostrautils/core/Utils.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
 #include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/dat_alg/Quicksort.hpp"
 
 #include <new>
 
