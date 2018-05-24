@@ -410,6 +410,39 @@ IsTrue(NOU::DebugClass::getCounter() == 0);
 //Check if this compiles
 NOU::NOU_DAT_ALG::Vector<NotCopiable> vec;
 
+NOU::NOU_DAT_ALG::Vector<NOU::int32> vecSortTest;
+NOU::NOU_DAT_ALG::Vector<NOU::int32> vecSortTest2;
+
+vecSortTest.pushBack(5);
+vecSortTest.pushBack(8);
+vecSortTest.pushBack(2);
+vecSortTest.pushBack(4);
+vecSortTest.pushBack(9);
+
+vecSortTest.sort();
+
+IsTrue(vecSortTest[0] == 2);
+IsTrue(vecSortTest[1] == 4);
+IsTrue(vecSortTest[2] == 5);
+IsTrue(vecSortTest[3] == 8);
+IsTrue(vecSortTest[4] == 9);
+
+vecSortTest2.pushBack(5);
+vecSortTest2.pushBack(8);
+vecSortTest2.pushBack(2);
+vecSortTest2.pushBack(4);
+vecSortTest2.pushBack(9);
+
+
+
+vecSortTest2.sortComp(NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
+
+IsTrue(vecSortTest2[0] == 2);
+IsTrue(vecSortTest2[1] == 4);
+IsTrue(vecSortTest2[2] == 5);
+IsTrue(vecSortTest2[3] == 8);
+IsTrue(vecSortTest2[4] == 9);
+
 NOU_CHECK_ERROR_HANDLER;
 }
 
@@ -1022,17 +1055,30 @@ TEST_METHOD(Quicksort)
 
 {
 
-int arr[5] = {2,1,3,5,4};
-NOU::NOU_DAT_ALG::qsort(arr, 0, 4);
-IsTrue(arr[0] == 1);
-IsTrue(arr[1] == 2);
-IsTrue(arr[2] == 3);
-IsTrue(arr[3] == 4);
-IsTrue(arr[4] == 5);
+  int arrFirst[5] = { 2,1,3,5,4 };
+  NOU::NOU_DAT_ALG::qsort(arrFirst, 0, 4);
+  IsTrue(arrFirst[0] == 1);
+  IsTrue(arrFirst[1] == 2);
+  IsTrue(arrFirst[2] == 3);
+  IsTrue(arrFirst[3] == 4);
+  IsTrue(arrFirst[4] == 5);
+
+NOU::int32 arrSecond[5] = {2,1,3,5,4};
+NOU::NOU_DAT_ALG::qsort(arrSecond, 0, 4,NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
+IsTrue(arrSecond[0] == 1);
+IsTrue(arrSecond[1] == 2);
+IsTrue(arrSecond[2] == 3);
+IsTrue(arrSecond[3] == 4);
+IsTrue(arrSecond[4] == 5);
 
 
-
-
+NoCopyClass arrTest[5] = { NoCopyClass(2), NoCopyClass(1), NoCopyClass(3), NoCopyClass(5), NoCopyClass(4) };
+NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, noCopyClassComparator);
+IsTrue(arrTest[0].get() == 1);
+IsTrue(arrTest[1].get() == 2);
+IsTrue(arrTest[2].get() == 3);
+IsTrue(arrTest[3].get() == 4);
+IsTrue(arrTest[4].get() == 5);
 }
 
 TEST_METHOD(Random)
