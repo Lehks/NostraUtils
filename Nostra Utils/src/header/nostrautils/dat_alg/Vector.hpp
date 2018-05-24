@@ -1106,15 +1106,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::sort()
 	{
-		///\todo implementing a "real" sorting alg.
-		qsort(m_data);
+		qsort(m_data, 0, size()-1);
 	}
 
 	template<typename T>
 	void Vector<T>::sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
-		///\todo implementing a "real" sorting alg.
-		qsort(m_data, comp);
+		qsort(m_data,0,size()-1,comp);
 	}
 
 	template<typename T>

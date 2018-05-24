@@ -25,7 +25,7 @@ namespace NOU::NOU_DAT_ALG
 	\return the pivots
 	*/
 	template <typename T>
-	T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot);
+	int64 partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot);
 
 
 	/**
@@ -39,7 +39,7 @@ namespace NOU::NOU_DAT_ALG
 	\return the pivots
 	*/
 	template <typename T>
-	T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot, Comparator <T> comp);
+	int64 partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot, Comparator <T> comp);
 
 
 	/**
@@ -69,10 +69,10 @@ namespace NOU::NOU_DAT_ALG
 	T* qsort(T *a, int64 leftrangelimit, int64 rightrangelimit , Comparator <T> comp);
 
 	template<typename T>
-	T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot)
+	int64 partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot)
 	{
 		int64 pn = leftrangelimit;
-		int64 pv = array[pivot];
+	    T & pv = array[pivot];
 
 
 		// pivot goes to end 
@@ -95,9 +95,9 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename T>
-	T partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot , Comparator <T> comp)
+	int64 partition(T *array, int64 leftrangelimit, int64 rightrangelimit, int64 pivot , Comparator <T> comp)
 	{
-		T & pn = leftrangelimit;
+		int64 pn = leftrangelimit;
 		T & pv = array[pivot];
 
 
@@ -107,7 +107,7 @@ namespace NOU::NOU_DAT_ALG
 		// all values smaller as pivot goes to the right side 
 		for (int64 i = leftrangelimit; comp(array[i] , array[rightrangelimit]) < 0; i++)
 		{
-			if (array[i] <= pv)
+			if (comp(array[i], array[pv]) <= 0)
 			{
 				swap(array + pn, array + i);
 				pn++;
@@ -141,12 +141,12 @@ namespace NOU::NOU_DAT_ALG
 	T* qsort(T *a, int64 leftrangelimit, int64 rightrangelimit, Comparator <T> comp)
 	{
 
-		if (comp(a[rightrangelimit] > a[leftrangelimit]) < 0) 
+		if (comp(a[rightrangelimit], a[leftrangelimit]) > 0) 
 		{
 			int64 p = rightrangelimit;
 			int64 pn = partition(a, leftrangelimit, p, rightrangelimit);
-			qsort(a, leftrangelimit, pn - 1,comp);
-			qsort(a, pn + 1, rightrangelimit ,comp);
+			qsort(a, leftrangelimit, pn - 1);
+			qsort(a, pn + 1, rightrangelimit );
 
 		}
 		return a;
