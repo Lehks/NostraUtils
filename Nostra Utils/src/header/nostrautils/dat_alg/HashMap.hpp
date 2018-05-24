@@ -448,7 +448,7 @@ namespace NOU::NOU_DAT_ALG
 		NOU::sizeType size = m_data[hash].size();
 
 		if (size == 0) 
-			return false;
+			return nullptr;
 		else
 		{
 			for (auto &pair : m_data[hash])
