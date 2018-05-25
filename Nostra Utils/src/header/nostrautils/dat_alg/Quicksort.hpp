@@ -79,7 +79,7 @@ namespace NOU::NOU_DAT_ALG
 		swap(array + pivot, array + rightrangelimit);
 
 		// all values smaller as pivot goes to the right side 
-		for (int64 i = leftrangelimit; i < rightrangelimit; i++)
+		for (CompareResult i = leftrangelimit; i < rightrangelimit; i++)
 		{
 			if (array[i] <= pv)
 			{

@@ -1052,33 +1052,31 @@ IsTrue(NOU::DebugClass::getCounter() == 0);
 }
 
 TEST_METHOD(Quicksort)
-
 {
+	int arrFirst[5] = { 2,1,3,5,4 };
+	NOU::NOU_DAT_ALG::qsort(arrFirst, 0, 4);
+	IsTrue(arrFirst[0] == 1);
+	IsTrue(arrFirst[1] == 2);
+	IsTrue(arrFirst[2] == 3);
+	IsTrue(arrFirst[3] == 4);
+	IsTrue(arrFirst[4] == 5);
 
-  int arrFirst[5] = { 2,1,3,5,4 };
-  NOU::NOU_DAT_ALG::qsort(arrFirst, 0, 4);
-  IsTrue(arrFirst[0] == 1);
-  IsTrue(arrFirst[1] == 2);
-  IsTrue(arrFirst[2] == 3);
-  IsTrue(arrFirst[3] == 4);
-  IsTrue(arrFirst[4] == 5);
-
-NOU::int32 arrSecond[5] = {2,1,3,5,4};
-NOU::NOU_DAT_ALG::qsort(arrSecond, 0, 4,NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
-IsTrue(arrSecond[0] == 1);
-IsTrue(arrSecond[1] == 2);
-IsTrue(arrSecond[2] == 3);
-IsTrue(arrSecond[3] == 4);
-IsTrue(arrSecond[4] == 5);
-
-
-NoCopyClass arrTest[5] = { NoCopyClass(2), NoCopyClass(1), NoCopyClass(3), NoCopyClass(5), NoCopyClass(4) };
-NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, noCopyClassComparator);
-IsTrue(arrTest[0].get() == 1);
-IsTrue(arrTest[1].get() == 2);
-IsTrue(arrTest[2].get() == 3);
-IsTrue(arrTest[3].get() == 4);
-IsTrue(arrTest[4].get() == 5);
+	NOU::int32 arrSecond[5] = {2,1,3,5,4};
+	NOU::NOU_DAT_ALG::qsort(arrSecond, 0, 4,NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
+	IsTrue(arrSecond[0] == 1);
+	IsTrue(arrSecond[1] == 2);
+	IsTrue(arrSecond[2] == 3);
+	IsTrue(arrSecond[3] == 4);
+	IsTrue(arrSecond[4] == 5);
+	
+	
+	NoCopyClass arrTest[5] = { NoCopyClass(2), NoCopyClass(1), NoCopyClass(3), NoCopyClass(5), NoCopyClass(4) };
+	NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, noCopyClassComparator);
+	IsTrue(arrTest[0].get() == 1);
+	IsTrue(arrTest[1].get() == 2);
+	IsTrue(arrTest[2].get() == 3);
+	IsTrue(arrTest[3].get() == 4);
+	IsTrue(arrTest[4].get() == 5);
 }
 
 TEST_METHOD(Random)
