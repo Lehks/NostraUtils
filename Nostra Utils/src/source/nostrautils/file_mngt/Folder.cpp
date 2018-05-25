@@ -127,6 +127,7 @@ namespace NOU::NOU_FILE_MNGT
 			{
 				if (data.dwFileAttributes != FILE_ATTRIBUTE_DIRECTORY)
 				{
+					 
 					v.emplaceBack(data.cFileName);
 				}
 
