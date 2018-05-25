@@ -39,6 +39,7 @@
 
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/file_mngt/Path.hpp"
+#include "nostrautils/file_mngt/Folder.hpp"
 
 #include "nostrautils/mem_mngt/AllocationCallback.hpp"
 #include "nostrautils/mem_mngt/GeneralPurposeAllocator.hpp"
