@@ -4,7 +4,6 @@
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/Meta.hpp"
 
-#include "nostrautils/dat_alg/StringView.hpp"
 #include "nostrautils/dat_alg/String.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
 
@@ -20,7 +19,7 @@
 \file core/Logging.hpp
 
 \author	 Lukas Gross
-\version 0.0.1
+\version 1.0.1
 \since	 1.0.0
 
 \brief A file that contains the nostra::utils::core::Logging class.
@@ -66,9 +65,9 @@ namespace NOU::NOU_CORE
 	public:
 
 		/**
-		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
+		\brief Alias for the NOU::NOU_DAT_ALG::String8.
 		*/
-		using StringType = NOU::NOU_DAT_ALG::StringView8;
+		using StringType = NOU::NOU_DAT_ALG::String8;
 
 		/**
 		\brief A constant string that stores one of the event level codes.
@@ -275,7 +274,7 @@ namespace NOU::NOU_CORE
 		virtual ~ILogger() = default;
 
 		/**
-		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
+		\brief Alias for the NOU::NOU_DAT_ALG::String8.
 		*/
 		using StringType = Event::StringType;
 
@@ -610,7 +609,7 @@ namespace NOU::NOU_CORE
 	public:
 
 		/**
-		\brief		Alias for the NOU::NOU_DAT_ALG::StringView8.
+		\brief		Alias for the NOU::NOU_DAT_ALG::String8.
 		*/
 		using StringType = Event::StringType;
 
