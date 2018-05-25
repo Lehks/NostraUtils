@@ -2,6 +2,8 @@
 #include "nostrautils/file_mngt/Folder.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
 
+
+
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 #include <Windows.h>
 #include <stdlib.h>
@@ -109,10 +111,10 @@ namespace NOU::NOU_FILE_MNGT
 #endif
 		}
 
-	NOU_DAT_ALG::Vector<Folder> Folder::listFiles() const
+	NOU_DAT_ALG::Vector<NOU::file_mngt::File> Folder::listFiles() const
 	{
       #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
-		NOU_DAT_ALG::Vector<Folder> v;
+		NOU_DAT_ALG::Vector<NOU::file_mngt::File> v;
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
 		pattern.append("\\*");
 		WIN32_FIND_DATA data;
@@ -134,7 +136,7 @@ namespace NOU::NOU_FILE_MNGT
 		return v;
 
        #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-		NOU_DAT_ALG::Vector<Folder> v;
+		NOU_DAT_ALG::Vector<NOU::file_mngt::File> v;
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
 		DIR* dirp = opendir(pattern.rawStr());
 		struct dirent *dstruct;

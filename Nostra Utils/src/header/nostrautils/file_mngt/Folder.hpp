@@ -45,7 +45,7 @@ namespace NOU::NOU_FILE_MNGT
 		\ return all files and safes in a vector
 		*/
 												
-		NOU::NOU_DAT_ALG::Vector<Folder> listFiles() const;
+		NOU::NOU_DAT_ALG::Vector<NOU::file_mngt::File> listFiles() const;
 		
 		/*
 		\brief  A function that returns you the current path 
