@@ -6,7 +6,7 @@
 - None
 
 ### Improvements
-- None
+- Improved logging queue process.
 
 ### Fixes
 - Fixed a wrong attribute type that resulted in an incorrect display of logging messages.
