@@ -653,12 +653,14 @@ namespace NOU::NOU_CORE
 		*/
 		NOU::NOU_DAT_ALG::Vector<ILogger*> m_logger;
 
+		NOU::NOU_DAT_ALG::FastQueue<Event> m_events;
+
 		/**
 		\param events	An event object.
 
 		\brief			Calls the write function for every objects in m_logger.
 		*/
-		NOU_FUNC void logAll(Event &&events);
+		NOU_FUNC void logAll();
 
 		/**
 		\param logger	The logger to write the event to.
@@ -666,7 +668,9 @@ namespace NOU::NOU_CORE
 
 		\brief			Calls <tt>logger.write(event)</tt>. This is required for the task queue.
 		*/
-		NOU_FUNC static void callLoggingTarget(ILogger *logger, Event event);
+		NOU_FUNC static void callLoggingTarget(ILogger *logger, Event event, NOU::NOU_DAT_ALG::FastQueue<Event>* queue);
+
+		NOU_FUNC static void callSpecialEvent(ILogger *logger, Event event, NOU::NOU_DAT_ALG::FastQueue<Event>* queue);
 
 		/**
 		\brief		A TaskQueue for all multi-threaded tasks.
@@ -676,7 +680,7 @@ namespace NOU::NOU_CORE
 		*/
 		NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
 			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
-			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event>
+			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event, NOU::NOU_DAT_ALG::FastQueue<Event>*>
 			m_taskQueue;
 
 	public:

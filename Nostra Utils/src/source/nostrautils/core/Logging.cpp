@@ -419,23 +419,32 @@ namespace NOU::NOU_CORE
 		return error;
 	}
 
-	void Logger::logAll(Event&& events)
+	void Logger::logAll()
 	{
 		for (sizeType i = 0; i < m_logger.size(); i++)
 		{
 			m_taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i], 
-				NOU_CORE::move(events)));
+				m_events.peekFront(), &m_events));
 		}
+
+		m_taskQueue.pushTask(NOU_THREAD::makeTask(&callSpecialEvent, static_cast<ILogger*>(nullptr),
+			m_events.peekFront(), &m_events));
 	}
 
-	void Logger::callLoggingTarget(ILogger *logger, Event event)
+	void Logger::callLoggingTarget(ILogger *logger, Event event, NOU::NOU_DAT_ALG::FastQueue<Event>* queue)
 	{
 		logger->write(event);
 	}
 
+	void Logger::callSpecialEvent(ILogger *logger, Event event, NOU::NOU_DAT_ALG::FastQueue<Event>* queue)
+	{
+		queue->popFront();
+	}
+
 	void Logger::write(EventLevelCodes level, const StringType &msg)
 	{
-		logAll(Event(level, msg));
+		m_events.pushBack(Event(level, msg));
+		logAll();
 	}
 
 	void Logger::wait()
