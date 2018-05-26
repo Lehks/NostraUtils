@@ -423,27 +423,34 @@ namespace NOU::NOU_CORE
 	{
 		for (sizeType i = 0; i < m_logger.size(); i++)
 		{
-			m_taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i], 
-				m_events.peekFront(), &m_events));
+			m_taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i]));
 		}
 
-		m_taskQueue.pushTask(NOU_THREAD::makeTask(&callSpecialEvent, static_cast<ILogger*>(nullptr),
-			m_events.peekFront(), &m_events));
+		m_taskQueue.pushTask(NOU_THREAD::makeTask(&callSpecialEvent, static_cast<ILogger*>(nullptr)));
 	}
 
-	void Logger::callLoggingTarget(ILogger *logger, Event event, NOU::NOU_DAT_ALG::FastQueue<Event>* queue)
+	void Logger::callLoggingTarget(ILogger *logger)
 	{
-		logger->write(event);
+		NOU::NOU_THREAD::Lock lock(Logger::get().m_mutexEventQueue);
+
+		logger->write(Logger::get().m_events.peekFront());
 	}
 
-	void Logger::callSpecialEvent(ILogger *logger, Event event, NOU::NOU_DAT_ALG::FastQueue<Event>* queue)
+	void Logger::callSpecialEvent(ILogger *logger)
 	{
-		queue->popFront();
+		NOU::NOU_THREAD::Lock lock(Logger::get().m_mutexEventQueue);
+
+		Logger::get().m_events.popFront();
 	}
 
 	void Logger::write(EventLevelCodes level, const StringType &msg)
 	{
-		m_events.pushBack(Event(level, msg));
+		{
+			NOU::NOU_THREAD::Lock lock(Logger::get().m_mutexEventQueue);
+
+			m_events.pushBack(Event(level, msg));
+		}
+
 		logAll();
 	}
 

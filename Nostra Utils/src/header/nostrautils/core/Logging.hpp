@@ -653,6 +653,9 @@ namespace NOU::NOU_CORE
 		*/
 		NOU::NOU_DAT_ALG::Vector<ILogger*> m_logger;
 
+		/**
+		\brief			A fast queue that stores all created events.
+		*/
 		NOU::NOU_DAT_ALG::FastQueue<Event> m_events;
 
 		/**
@@ -664,13 +667,18 @@ namespace NOU::NOU_CORE
 
 		/**
 		\param logger	The logger to write the event to.
-		\param event	The event to write.
 
 		\brief			Calls <tt>logger.write(event)</tt>. This is required for the task queue.
 		*/
-		NOU_FUNC static void callLoggingTarget(ILogger *logger, Event event, NOU::NOU_DAT_ALG::FastQueue<Event>* queue);
+		NOU_FUNC static void callLoggingTarget(ILogger *logger);
 
-		NOU_FUNC static void callSpecialEvent(ILogger *logger, Event event, NOU::NOU_DAT_ALG::FastQueue<Event>* queue);
+		/**
+		\param logger	The logger to write the event to.
+
+		\brief			Removes the first element in the m_events queue.
+		\details		This is only called when one error is printed to all its destinations.
+		*/
+		NOU_FUNC static void callSpecialEvent(ILogger *logger);
 
 		/**
 		\brief		A TaskQueue for all multi-threaded tasks.
@@ -680,8 +688,12 @@ namespace NOU::NOU_CORE
 		*/
 		NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
 			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
-			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event, NOU::NOU_DAT_ALG::FastQueue<Event>*>
-			m_taskQueue;
+			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*> m_taskQueue;
+
+		/**
+		\brief		A mutex that is used for locking the access to the fast queue.
+		*/
+		NOU::NOU_THREAD::Mutex m_mutexEventQueue;
 
 	public:
 
