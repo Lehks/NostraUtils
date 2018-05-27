@@ -295,17 +295,22 @@ namespace NOU::NOU_FILE_MNGT
 		}
 		m_absolutePath.append(other.m_absolutePath);
 
-		return *this;
+		Path newPath = this->getAbsolutePath();
+
+		return newPath;
 	}
 	Path & Path::operator+(const NOU::NOU_DAT_ALG::StringView8 & other)
 	{
+
 		if (!m_absolutePath.endsWith("\\"))
 		{
 			m_absolutePath.append("\\");
 		}
 		m_absolutePath.append(other);
 
-		return *this;
+		Path newPath = this->getAbsolutePath();
+
+		return newPath;
 	}
 	Path & Path::operator+=(const Path & other)
 	{
