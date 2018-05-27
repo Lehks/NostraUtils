@@ -302,6 +302,13 @@ namespace NOU::NOU_CORE
 	*/
 	class NOU_CLASS ConsoleLogger : public ILogger
 	{
+	public:
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~ConsoleLogger() = default;
+
 	private:
 
 		/**
@@ -343,6 +350,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLogger(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLogger() = default;
 	};
 
 	/**
@@ -368,13 +380,18 @@ namespace NOU::NOU_CORE
 		void write(const Event& event) override;
 
 	public:
-
+		
 		/**
 		\param path		The path to the file that the log will be written to.
 
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerFatal(const NOU_FILE_MNGT::Path &path);
+		
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerFatal() = default;
 	};
 
 	/**
@@ -407,6 +424,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerError(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerError() = default;
 	};
 
 	/**
@@ -439,6 +461,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerWarning(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerWarning() = default;
 	};
 
 	/**
@@ -471,6 +498,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerInfo(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerInfo() = default;
 	};
 
 	/**
@@ -503,6 +535,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerDebug(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerDebug() = default;
 	};
 
 	/**
@@ -528,13 +565,18 @@ namespace NOU::NOU_CORE
 		void write(const Event& event) override;
 
 	public:
-
+		
 		/**
 		\param path		The path to the file that the log will be written to.
 
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerTrace(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerTrace() = default;
 	};
 
 	/**
@@ -567,6 +609,12 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerUnknown(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerUnknown() = default;
+		
 	};
 
 	/**
@@ -652,7 +700,7 @@ namespace NOU::NOU_CORE
 		\brief			Creates a new vector from ILogger pointers.
 		*/
 		NOU::NOU_DAT_ALG::Vector<ILogger*> m_logger;
-
+		
 		/**
 		\brief			A fast queue that stores all created events.
 		*/
