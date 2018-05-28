@@ -1903,6 +1903,11 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::trim()
 	{
+		if (StringView<CHAR_TYPE>::size() == 0)
+		{
+			return *this;
+		}
+
 		sizeType endofstring = StringView<CHAR_TYPE>::size() - 1;
 		sizeType minusSize = 0;
 
