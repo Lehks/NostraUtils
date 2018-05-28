@@ -985,7 +985,7 @@ TEST_METHOD(Quicksort)
 	};
 
 
-	Test arrTest[5] = { Test(2),Test(1),Test(3),Test(5),Test(4) };
+	/*Test arrTest[5] = { Test(2),Test(1),Test(3),Test(5),Test(4) };
 	NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, NOU::NOU_DAT_ALG::genericComparator<NOU::uint32>);
 	IsTrue(arrTest[0].get() == 1);
 	IsTrue(arrTest[1].get() == 2);
@@ -1000,7 +1000,7 @@ IsTrue(arr[0] == 1);
 IsTrue(arr[1] == 2);
 IsTrue(arr[2] == 3);
 IsTrue(arr[3] == 4);
-IsTrue(arr[4] == 5);
+IsTrue(arr[4] == 5);*/
 
 
 

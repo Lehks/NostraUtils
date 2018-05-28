@@ -73,6 +73,7 @@ namespace NOU::NOU_FILE_MNGT
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		NOU_DAT_ALG::Vector<Folder> v;
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
+		NOU::NOU_DAT_ALG::String8 path = m_path.getAbsolutePath().rawStr();
 		pattern.append("\\*");
 		WIN32_FIND_DATA data;
 		HANDLE hFind;
@@ -84,7 +85,7 @@ namespace NOU::NOU_FILE_MNGT
 			{
 				if (data.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
 				{
-		
+		            
 					v.emplaceBack(data.cFileName);
 				}
 			} while (FindNextFile(hFind, &data) != 0);
@@ -120,6 +121,7 @@ namespace NOU::NOU_FILE_MNGT
 		WIN32_FIND_DATA data;
 		HANDLE hFind;
 		NOU::boolean firstFolder = true;
+		
 		
 		if ((hFind = FindFirstFile(pattern.rawStr(), &data)) != INVALID_HANDLE_VALUE)
 		{
