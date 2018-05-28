@@ -218,7 +218,7 @@ namespace NOU::NOU_FILE_MNGT
 		int32 pos_sec;
 		
 		// Open file stream
-		if (!filename.size()) {
+		if (filename.size()) {
 			inifile = std::ofstream(filename.rawStr(), std::ofstream::trunc);
 		}
 		else {
