@@ -41,6 +41,10 @@
 #include "nostrautils/file_mngt/Path.hpp"
 #include "nostrautils/file_mngt/Folder.hpp"
 
+#include "nostrautils/math/Vector.hpp"
+#include "nostrautils/math/Matrix.hpp"
+#include "nostrautils/math/Utils.hpp"
+
 #include "nostrautils/mem_mngt/AllocationCallback.hpp"
 #include "nostrautils/mem_mngt/GeneralPurposeAllocator.hpp"
 #include "nostrautils/mem_mngt/Pointer.hpp"

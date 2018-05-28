@@ -24,7 +24,7 @@ namespace NOU::NOU_DAT_ALG
 
 
 	template<typename CHAR_TYPE = char8>
-	class NOU_CLASS String final : public StringView<CHAR_TYPE>
+	class String final : public StringView<CHAR_TYPE>
 	{
 	public:
 		using CharType = typename StringView<CHAR_TYPE>::CharType;
@@ -152,6 +152,13 @@ namespace NOU::NOU_DAT_ALG
 		\brief Constructs a new instance that is filled with the one character that was passed.
 		*/
 		String(CharType c);
+		/**
+		\param buffersize	the size of the buffer.
+
+		\brief Special constructor for initialise a String with a certain amount of buffer space.
+		 the CharType is necessary because of the other int, float ... constructors.
+		*/
+		String(sizeType buffersize, CharType b);
 		/**
 		\param other Another String.
 
@@ -744,6 +751,24 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		String& clear();
 		/**
+		\return A reference to the instance itself.
+
+		\brief Appends an buffer to the current String.
+		*/
+		String& appendBuffer(sizeType buffersize);
+		/**
+		\return A reference to the instance itself.
+
+		\brief Clears the empty capacity behind the null-terminator (min capacity after this operation is 1).
+		*/
+		String& removeRemainingBufferFromString();
+		/**
+		\return the capacity.
+
+		\brief get the capacity of the string.
+		*/
+		sizeType getCapacity();
+		/**
 		\return A StringIterator that points to the first character in the string.
 		\brief  Returns a StringIterator that points to the first character in the string.
 		*/
@@ -959,6 +984,11 @@ namespace NOU::NOU_DAT_ALG
 			i = i * (-1); //ABS MATH
 		}
 
+		if (i == 0)
+		{
+			str.append('0');
+		}
+
 		while (i != 0)
 		{
 			char8 c = (i % 10) + '0';
@@ -979,6 +1009,11 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericUintToString(IT i)
 	{
 		String<CHAR_TYPE> str;
+
+		if (i == 0)
+		{
+			str.append('0');
+		}
 
 		while (i != 0)
 		{
@@ -1141,6 +1176,14 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 	}
 
+    template<typename CHAR_TYPE>
+    String<CHAR_TYPE>::String(sizeType buffersize, CharType b) :
+            m_data(0),
+            StringView<CHAR_TYPE>(const_cast<ConstCharType **>(&m_data.data()), 0)
+    {
+		m_data.expandCapacity(buffersize - 2);
+    }
+
 #if NOU_COMPILER == NOU_COMPILER_CLANG
 #pragma clang diagnostic pop
 #endif
@@ -1239,11 +1282,11 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, CharType c)
 	{
-		NOU_COND_PUSH_ERROR((index > m_data.size() - 1),
+		NOU_COND_PUSH_ERROR((index > StringView<CHAR_TYPE>::m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		m_data.insert(index, c);
-		setSize(m_data.size() - 1);
+		setSize(StringView<CHAR_TYPE>::m_size + 1);
 		return *this;
 	}
 
@@ -1256,7 +1299,8 @@ namespace NOU::NOU_DAT_ALG
 			insert(index + i, str[i]);
 
 		}
-		setSize(m_data.size() - 1);
+		append(StringView<CHAR_TYPE>::NULL_TERMINATOR);
+		setSize(StringView<CHAR_TYPE>::m_size - 1);
 		return *this;
 	}
 
@@ -1265,7 +1309,6 @@ namespace NOU::NOU_DAT_ALG
 	{
 
 		insert(index, intToString(nr));
-		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1273,7 +1316,6 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, int64 nr)
 	{
 		insert(index, intToString(nr));
-		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1281,7 +1323,6 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint32 nr)
 	{
 		insert(index, intToString(nr));
-		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1289,7 +1330,6 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, uint64 nr)
 	{
 		insert(index, intToString(nr));
-		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1297,7 +1337,6 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float32 nr)
 	{
 		insert(index, floatToString(nr));
-		setSize(m_data.size() - 1);
 		return *this;
 	}
 
@@ -1305,14 +1344,13 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, float64 nr)
 	{
 		insert(index, floatToString(nr));
-		setSize(m_data.size() - 1);
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(CharType c)
 	{
-		insert(m_data.size() - 1, c);
+		insert(StringView<CHAR_TYPE>::m_size, c);
 		return *this;
 	}
 
@@ -1320,49 +1358,49 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(const StringView<CHAR_TYPE>& str)
 	{
 
-		insert(m_data.size() - 1, str);
+		insert(StringView<CHAR_TYPE>::m_size, str);
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int32 nr)
 	{
-		insert(m_data.size() - 1, intToString(nr));
+		insert(StringView<CHAR_TYPE>::m_size, intToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(int64 nr)
 	{
-		insert(m_data.size() - 1, intToString(nr));
+		insert(StringView<CHAR_TYPE>::m_size, intToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint32 nr)
 	{
-		insert(m_data.size() - 1, intToString(nr));
+		insert(StringView<CHAR_TYPE>::m_size, intToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(uint64 nr)
 	{
-		insert(m_data.size() - 1, intToString(nr));
+		insert(StringView<CHAR_TYPE>::m_size, intToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float32 nr)
 	{
-		insert(m_data.size() - 1, floatToString(nr));
+		insert(StringView<CHAR_TYPE>::m_size, floatToString(nr));
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::append(float64 nr)
 	{
-		insert(m_data.size() - 1, floatToString(nr));
+		insert(StringView<CHAR_TYPE>::m_size, floatToString(nr));
 		return *this;
 	}
 
@@ -1376,9 +1414,9 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(CharType target, CharType replacement, sizeType start, sizeType end)
 	{
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
-			end = m_data.size() - 1;
+			end = StringView<CHAR_TYPE>::m_size;
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size() - 1), 
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::m_size || end > StringView<CHAR_TYPE>::m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
@@ -1398,19 +1436,51 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = StringView<CHAR_TYPE>::size();
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() || end > m_data.size()),
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() || end > StringView<CHAR_TYPE>::size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		for (sizeType i = start; i < end - target.size(); i++)
+		for(sizeType i = start; i < end; i++)
 		{
-			if (target == substring(i, i + target.size() + 1))
-			{
-				for (sizeType j = 0; j < target.size(); j++)
-				{
-					remove(i);
-				}
+			if(target == substring(i, target.size() + i) ) {
+                if (target.size() == replacement.size()) {
+                    for (sizeType j = 0; j < target.size(); j++) {
+                        replace(i + j, replacement[j]);
+                    }
 
-				insert(i, replacement);
+                    break;
+                } else if (target.size() < replacement.size())
+                {
+                    sizeType counter = 0;
+
+                    for (sizeType j = 0; j < target.size(); j++) {
+                        replace(j + i, replacement[j]);
+                        counter++;
+                    }
+                    for (sizeType y = 0; y <= replacement.size() - counter; y++) {
+                        insert(i + counter, replacement[counter]);
+                        counter++;
+                    }
+
+                    break;
+                } else
+                {
+                    sizeType oldsize = StringView<CHAR_TYPE>::size();
+                    sizeType counter = 0;
+                    sizeType counter2 = 0;
+
+                    for (sizeType j = i; j < oldsize; j++) {
+                        if (counter < replacement.size()) {
+                            replace(j, replacement[counter]);
+                            counter++;
+                        } else {
+                            m_data[j] = m_data[(target.size() - counter) + j];
+                            counter2++;
+                        };
+                    }
+                    setSize((oldsize - target.size()) + replacement.size());
+
+                    break;
+                }
 			}
 		}
 
@@ -1421,19 +1491,55 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::replace(sizeType start, sizeType end, const StringView<CHAR_TYPE>& replacement)
 	{
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
-			end = m_data.size() - 1;
+			end = StringView<CHAR_TYPE>::size();
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
-			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() + 1 || end > StringView<CHAR_TYPE>::size() + 1),
+							NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		sizeType range = end - start;
+		if(end - start < replacement.size())
+        {
+            sizeType counter = 0;
+            for(sizeType i = start; i < end; i++)
+            {
+                replace(i, replacement[counter]);
+                counter++;
+            }
 
-		for (sizeType i = start; i < range; i++)
-		{
-			remove(start);
+            for(sizeType i = end ; i < replacement.size(); i++)
+            {
+                insert(i,replacement[counter]);
+                counter++;
+            };
+
+        } else if(end - start == replacement.size())
+        {
+            sizeType counter = 0;
+            for(sizeType i = start; i < end; i++)
+            {
+                replace(i, replacement[counter]);
+                counter++;
+            }
+        }else
+        {
+            sizeType oldsize = StringView<CHAR_TYPE>::size();
+            sizeType counter = 0;
+            sizeType counter2 = 0;
+
+            for(sizeType i = start; i <= replacement.size() ; i++)
+            {
+                    replace(i, replacement[counter]);
+                    counter++;
+            }
+
+            for(sizeType j = 0; j < StringView<CHAR_TYPE>::size() - end; j++)
+			{
+					m_data[start + replacement.size() + j] = m_data[end + counter2];
+					counter2++;
+			}
+
+			insert(end, StringView<CHAR_TYPE>::NULL_TERMINATOR);
+            setSize((oldsize - (end - start)) + replacement.size());
 		}
-
-		insert(start, replacement);
 
 		return *this;
 	}
@@ -1487,7 +1593,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::appendIf(boolean b, uint64 nr)
 	{
 		if (b)
-			appendk(intToString(nr));
+			append(intToString(nr));
 
 		return *this;
 	}
@@ -1514,7 +1620,7 @@ namespace NOU::NOU_DAT_ALG
 	void String<CHAR_TYPE>::copySubstringTo(String & target, sizeType start, sizeType end, sizeType insertIndex) const
 	{
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
-			end = m_data.size();
+			end = StringView<CHAR_TYPE>::size();
 
 		target.insert(insertIndex, substring(start, end));
 	}
@@ -1523,7 +1629,7 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::copySubstringHere(const StringView<CHAR_TYPE>& src, sizeType start, sizeType end, sizeType insertIndex)
 	{
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
-			end = m_data.size();
+			end = StringView<CHAR_TYPE>::size();
 
 		insert(insertIndex, src.logicalSubstring(start, end));
 
@@ -1550,28 +1656,31 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::remove(sizeType start, sizeType end)
 	{
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
-			end = m_data.size() - 1;
+			end = StringView<CHAR_TYPE>::size();
 
-		sizeType removeRange = end - start;
+		sizeType offset = this->size() - end;
 
-		for (sizeType i = 0; i < removeRange; i++)
+		for (sizeType i = 0; i < offset; i++)
 		{
-			m_data.remove(start);
-			setSize(m_data.size() - 1);
+			m_data[start + i] = m_data[end+i];
 		}
+
+		insert(start + offset, StringView<CHAR_TYPE>::NULL_TERMINATOR);
+
+		setSize(start + offset);
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::preserve(sizeType start, sizeType end)
 	{
-		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
-			end = m_data.size();
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end > StringView<CHAR_TYPE>::size())
+			end = StringView<CHAR_TYPE>::size();
 
-		NOU_COND_PUSH_ERROR((start > m_data.size() - 1 || end > m_data.size()),
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() || end > StringView<CHAR_TYPE>::size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
-		for (sizeType i = 0; i < m_data.size(); i++)
+		for (sizeType i = 0; i < StringView<CHAR_TYPE>::size(); i++)
 		{
 			if (i < start)
 				m_data.remove(0);
@@ -1579,17 +1688,17 @@ namespace NOU::NOU_DAT_ALG
 				m_data.remove(end);
 		}
 
-		setSize(m_data.size() - 1);
+		setSize(end - start);
 		return *this;
 	}
 
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE> String<CHAR_TYPE>::substring(sizeType start, sizeType end) const
 	{
-		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= m_data.size())
-			end = m_data.size() - 1;
+		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end >= StringView<CHAR_TYPE>::size())
+			end = StringView<CHAR_TYPE>::size();
 
-		String<CHAR_TYPE> strnew = StringView<CHAR_TYPE>::logicalSubstring(start, end);
+		String<CHAR_TYPE> strnew(StringView<CHAR_TYPE>::logicalSubstring(start, end));
 
 		return strnew;
 	}
@@ -1599,7 +1708,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		String<CHAR_TYPE> strnew;
 
-		for (sizeType i = 0; i < m_data.size(); i++)
+		for (sizeType i = 0; i < StringView<CHAR_TYPE>::size(); i++)
 		{
 			strnew.append(m_data[i]);
 		}
@@ -1744,7 +1853,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::toLowerCase()
 	{
-		for (sizeType i = 0; i < m_data.size() - 1; i++)
+		for (sizeType i = 0; i < StringView<CHAR_TYPE>::size(); i++)
 		{
 			if (m_data.at(i) >= '\u0040' && m_data.at(i) <= '\u005A') // \u0040 (A) upper letter unicode, \u005A upper letter unicode (Z) 
 			{
@@ -1759,7 +1868,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::toUpperCase()
 	{
-		for (sizeType i = 0; i < m_data.size() - 1; i++)
+		for (sizeType i = 0; i < StringView<CHAR_TYPE>::size(); i++)
 		{
 			if (m_data.at(i) >= '\u0060' && m_data.at(i) <= '\u007A') //same just vice versa toLowerCase.
 			{
@@ -1774,12 +1883,14 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::trim()
 	{
-		sizeType endofstring = m_data.size() - 2;
+		sizeType endofstring = StringView<CHAR_TYPE>::size() - 1;
+		sizeType minusSize = 0;
 
 		while (m_data.at(endofstring) == '\u0020' || m_data.at(endofstring) == '\u000A')
 		{
 			m_data.remove(endofstring);
 			endofstring--;
+			minusSize++;
 		}
 
 		sizeType startofstring = 0;
@@ -1788,9 +1899,9 @@ namespace NOU::NOU_DAT_ALG
 		{
 			m_data.remove(startofstring);
 			startofstring++;
-
+			minusSize++;
 		}
-		setSize(m_data.size() - 1);
+		setSize(StringView<CHAR_TYPE>::size() - minusSize);
 		return *this;
 	}
 
@@ -1801,6 +1912,28 @@ namespace NOU::NOU_DAT_ALG
 		m_data.pushBack(NOU::NOU_DAT_ALG::StringView<CHAR_TYPE>::NULL_TERMINATOR);
 		setSize(0);
 		return *this;
+	}
+
+    template<typename CHAR_TYPE>
+    String<CHAR_TYPE>& String<CHAR_TYPE>::appendBuffer(sizeType buffersize)
+    {
+    	sizeType previouseBuffer = getCapacity();
+    	removeRemainingBufferFromString();
+        m_data.expandCapacity(buffersize + previouseBuffer - 2);
+        return *this;
+    }
+
+    template<typename CHAR_TYPE>
+    String<CHAR_TYPE>& String<CHAR_TYPE>::removeRemainingBufferFromString()
+    {
+        m_data.reallocateData(StringView<CHAR_TYPE>::size() + 1);
+        return *this;
+    }
+
+	template<typename CHAR_TYPE>
+	sizeType String<CHAR_TYPE>::getCapacity()
+	{
+		return m_data.capacity();
 	}
 
 	template<typename CHAR_TYPE>

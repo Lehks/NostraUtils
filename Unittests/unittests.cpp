@@ -2,6 +2,7 @@
 #include "Catch/catch.hpp"
 
 #define NOU_DEBUG
+#define NOU_DLL
 
 #include "nostrautils/NostraUtils.hpp"
 
@@ -1220,8 +1221,37 @@ IsTrue(str1 == "wasgeht");
 
 str1 = "ThisIsAString";
 str1.replace("String", "Integer");
+IsTrue(str1 == "ThisIsAInteger");
 
-//IsTrue(str1 == "ThisIsAInteger");
+str1 = "ThisIsAString";
+str1.replace("String", "Intege");
+IsTrue(str1 == "ThisIsAIntege");
+
+str1 = "ThisIsAString";
+str1.replace("AString", "Intege");
+IsTrue(str1 == "ThisIsIntege");
+
+
+str1 = "ThisIsAString";
+str1.replace(0, 7, "Integer");
+IsTrue(str1 == "IntegerString");
+
+str1 = "ThisIsAString";
+str1.replace(0,13, "Integer");
+IsTrue(str1 == "Integer");
+
+str1 = "ThisIsAString";
+str1.replace(0, 5, "Integer");
+IsTrue(str1 == "IntegersAString");
+
+NOU::NOU_DAT_ALG::String8 newstr(50, 'b');
+IsTrue(newstr.getCapacity() == 50);
+
+newstr.appendBuffer(10);
+IsTrue(newstr.getCapacity() == 60);
+
+newstr.removeRemainingBufferFromString();
+IsTrue(newstr.getCapacity() == 1);
 
 NOU_CHECK_ERROR_HANDLER;
 }
@@ -1908,8 +1938,2158 @@ TEST_METHOD(Logging)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+TEST_METHOD(File)
+{	
+	{
+		NOU::NOU_DAT_ALG::String8 filename = "unittest_testfile.txt";
+		NOU::NOU_DAT_ALG::String8 output = "1. 2. 3. This is a string for testing the unittests.";
+		NOU::NOU_DAT_ALG::String8 buffer;
+
+		NOU::NOU_FILE_MNGT::Path path = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+
+		path += filename;
+
+		NOU::NOU_FILE_MNGT::File file(path);
+
+		file.createFile();
+		IsTrue(file.exists() == true);
+
+		file.open(NOU::NOU_FILE_MNGT::AccessMode::WRITE);
+		IsTrue(file.isCurrentlyOpen() == true);
+
+		file.write(output);
+
+		IsTrue(file.size() == output.size());
+
+		file.close();
+		IsTrue(file.isCurrentlyOpen() == false);
+
+		file.open(NOU::NOU_FILE_MNGT::AccessMode::READ);
+		file.read(buffer); //Reads the hole file into the buffer.
+
+		file.close();
+		IsTrue(file.isCurrentlyOpen() == false);
+
+		file.deleteFile();
+		IsTrue(file.exists() == false);
+
+		for (NOU::sizeType i = 0; i < buffer.size() - 1; i++)
+		{
+			IsTrue(output[i] == buffer[i]);
+		}
+	}
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+/*
+TEST_METHOD(INIFile)
+{
+	NOU::NOU_FILE_MNGT::INIFile parser = NOU::NOU_FILE_MNGT::INIFile("unittest.ini");
+
+	parser.setString("TEST_STR", "Testing");
+	IsTrue(parser.getString("TEST_STR") == "Testing");
+
+	parser.setInt("TEST_INT", 42);
+	IsTrue(parser.getInt("TEST_INT") == 42);
+
+	parser.setFloat("TEST_FLOAT", 13.37);
+	IsTrue(parser.getFloat("TEST_FLOAT") > 13.369);
+	IsTrue(parser.getFloat("TEST_FLOAT") < 13.381);
+
+	parser.remove("TEST_STR");
+	IsTrue(parser.getString("TEST_STR").size() == 0);
+
+	parser.remove("TEST_INT");
+	IsTrue(parser.getInt("TEST_INT") == 0);
+
+	parser.remove("TEST_FLOAT");
+	IsTrue(parser.getFloat("TEST_FLOAT") < 0.1);
+
+	parser.setString("TEST_STR", "Testing", "section");
+	IsTrue(parser.getString("TEST_STR", "section") == "Testing");
+
+	parser.setInt("TEST_INT", 42, "section");
+	IsTrue(parser.getInt("TEST_INT", "section") == 42);
+
+	parser.setFloat("TEST_FLOAT", 13.37, "section");
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369);
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+*/
+TEST_METHOD(MathVec2)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec2::nullVector().value(0) == 0.0f);
+	IsTrue(Vec2::nullVector().value(1) == 0.0f);
+
+	Vec2 vec0 = { 1.0f, 2.0f }; //check both ways of constructing
+	Vec2 vec1(1.0f, 2.0f);
+	Vec2 vec2(-1.0f, -2.0f);
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec2 vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2.0f);
+	IsTrue(vec0.value(1) == 4.0f);
+
+	Vec2 vec3(2.0f, 4.0f);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -5.0f);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec2(2.0f, 4.0f));
+
+	Vec2 vec4 = Vec2::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec2(0.0f, 0.0f));
+
+	Vec2 vec10 = Vec2::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec2 vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec2 vec6(5.0f, 10.0f);
+	Vec2 vec7(2.0f, 2.0f);
+
+	IsTrue(vec6.divideElements(vec7) == Vec2(5.0f / 2.0f, 10.0f / 2.0f));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec2(5.0f / 2.0f, 10.0f / 2.0f));
+
+	//multiplyElements
+	Vec2 vec8(5.0f, 10.0f);
+	Vec2 vec9(2.0f, 2.0f);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
+
+	Vec2 vec11(2.0f, 0.0f);
+	IsTrue(vec11.length() == 2.0);
+
+	Vec2 vec18(3.0f, 5.0f);
+	IsTrue(vec18.normalize().length() == 1.0f);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathVec2i)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec2i::nullVector().value(0) == 0);
+	IsTrue(Vec2i::nullVector().value(1) == 0);
+
+	Vec2i vec0 = { 1, 2 }; //check both ways of constructing
+	Vec2i vec1(1, 2);
+	Vec2i vec2(-1, -2);
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec2i vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2);
+	IsTrue(vec0.value(1) == 4);
+
+	Vec2i vec3(2, 4);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -5);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec2i(2, 4));
+
+	Vec2i vec4 = Vec2i::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec2i(0, 0));
+
+	Vec2i vec10 = Vec2i::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec2i vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec2i vec6(5, 10);
+	Vec2i vec7(2, 2);
+
+	IsTrue(vec6.divideElements(vec7) == Vec2i(5 / 2, 10 / 2));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec2i(5 / 2, 10 / 2));
+
+	//multiplyElements
+	Vec2i vec8(5, 10);
+	Vec2i vec9(2, 2);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec2i(5 * 2, 10 * 2));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec2i(5 * 2, 10 * 2));
+
+	Vec2i vec11(2, 0);
+	IsTrue(vec11.length() == 2.0);
+
+	//Not precise enough
+	//Vec2i vec12(3, 5);
+	//IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathVec3)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec3::nullVector().value(0) == 0.0f);
+	IsTrue(Vec3::nullVector().value(1) == 0.0f);
+	IsTrue(Vec3::nullVector().value(2) == 0.0f);
+
+	Vec3 vec0 = { 1.0f, 2.0f, 3.0f}; //check both ways of constructing
+	Vec3 vec1(1.0f, 2.0f, 3.0f);
+	Vec3 vec2(-1.0f, -2.0f, -3.0f);
+	Vec3 vec12(Vec2(1.0f, 2.0f), 3.0f);
+	Vec3 vec13(Vec2(1.0f, 2.0f), { 3.0f });
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+	IsTrue(vec0.value(2) == 3.0f);
+
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+	IsTrue(vec0.value(2) == 3.0f);
+
+	IsTrue(vec12.value(0) == 1.0f);
+	IsTrue(vec12.value(1) == 2.0f);
+	IsTrue(vec12.value(2) == 3.0f);
+
+	IsTrue(vec13.value(0) == 1.0f);
+	IsTrue(vec13.value(1) == 2.0f);
+	IsTrue(vec13.value(2) == 3.0f);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec3 vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2.0f);
+	IsTrue(vec0.value(1) == 4.0f);
+	IsTrue(vec0.value(2) == 6.0f);
+
+	Vec3 vec3(2.0f, 4.0f, 6.0f);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -14.0f);
+
+	//cross product
+	IsTrue((vec1.crossProduct(vec2)) == Vec3::nullVector());
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec3(2.0f, 4.0f, 6.0f));
+
+	Vec3 vec4 = Vec3::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec3(0.0f, 0.0f, 0.0f));
+
+	Vec3 vec10 = Vec3::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec3 vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec3 vec6(5.0f, 10.0f, 20.0f);
+	Vec3 vec7(2.0f, 2.0f, 2.0f);
+
+	IsTrue(vec6.divideElements(vec7) == Vec3(5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec3(5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f));
+
+	//multiplyElements
+	Vec3 vec8(5.0f, 10.0f, 20.0f);
+	Vec3 vec9(2.0f, 2.0f, 2.0f);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
+
+	Vec3 vec11(2.0f, 0.0f, 0.0f);
+	IsTrue(vec11.length() == 2.0);
+
+	Vec3 vec18(3.0f, 5.0f, 8.0f);
+	IsTrue(vec18.normalize().length() == 1.0f);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathVec3i)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec3i::nullVector().value(0) == 0);
+	IsTrue(Vec3i::nullVector().value(1) == 0);
+	IsTrue(Vec3i::nullVector().value(2) == 0);
+
+	Vec3i vec0 = { 1, 2, 3 }; //check both ways of constructing
+	Vec3i vec1(1, 2, 3);
+	Vec3i vec2(-1, -2, -3);
+	Vec3i vec12(Vec2i(1, 2), 3);
+	Vec3i vec13(Vec2i(1, 2), { 3 });
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+	IsTrue(vec0.value(2) == 3);
+
+	IsTrue(vec1.value(0) == 1);
+	IsTrue(vec1.value(1) == 2);
+	IsTrue(vec1.value(2) == 3);
+
+	IsTrue(vec12.value(0) == 1);
+	IsTrue(vec12.value(1) == 2);
+	IsTrue(vec12.value(2) == 3);
+
+	IsTrue(vec13.value(0) == 1);
+	IsTrue(vec13.value(1) == 2);
+	IsTrue(vec13.value(2) == 3);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec3i vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2);
+	IsTrue(vec0.value(1) == 4);
+	IsTrue(vec0.value(2) == 6);
+
+	Vec3i vec3(2, 4, 6);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -14);
+
+	//cross product
+	IsTrue((vec1.crossProduct(vec2)) == Vec3i::nullVector());
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec3i(2, 4, 6));
+
+	Vec3i vec4 = Vec3i::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec3i(0, 0, 0));
+
+	Vec3i vec10 = Vec3i::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec3i vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec3i vec6(5, 10, 20);
+	Vec3i vec7(2, 2, 2);
+
+	IsTrue(vec6.divideElements(vec7) == Vec3i(5 / 2, 10 / 2, 20 / 2));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec3i(5 / 2, 10 / 2, 20 / 2));
+
+	//multiplyElements
+	Vec3i vec8(5, 10, 20);
+	Vec3i vec9(2, 2, 2);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec3i(5 * 2, 10 * 2, 20 * 2));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec3i(5 * 2, 10 * 2, 20 * 2));
+
+	Vec3i vec11(2, 0, 0);
+	IsTrue(vec11.length() == 2.0);
+
+	//Not precise enough
+	//Vec3i vec12(3, 5, 8);
+	//IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathVec4)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec4::nullVector().value(0) == 0.0f);
+	IsTrue(Vec4::nullVector().value(1) == 0.0f);
+	IsTrue(Vec4::nullVector().value(2) == 0.0f);
+	IsTrue(Vec4::nullVector().value(3) == 0.0f);
+
+	Vec4 vec0 = { 1.0f, 2.0f, 3.0f, 4.0f }; //check both ways of constructing
+	Vec4 vec1(1.0f, 2.0f, 3.0f, 4.0f);
+	Vec4 vec2(-1.0f, -2.0f, -3.0f, -4.0f);
+	Vec4 vec12(Vec2(1.0f, 2.0f), 3.0f, 4.0f);
+	Vec4 vec13(Vec2(1.0f, 2.0f), { 3.0f, 4.0f });
+	Vec4 vec14(Vec3(1.0f, 2.0f, 3.0f), 4.0f);
+	Vec4 vec15(Vec3(1.0f, 2.0f, 3.0f), { 4.0f });
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+	IsTrue(vec0.value(2) == 3.0f);
+	IsTrue(vec0.value(3) == 4.0f);
+
+	//check if value() works
+	IsTrue(vec1.value(0) == 1.0f);
+	IsTrue(vec1.value(1) == 2.0f);
+	IsTrue(vec1.value(2) == 3.0f);
+	IsTrue(vec1.value(3) == 4.0f);
+
+	IsTrue(vec12.value(0) == 1.0f);
+	IsTrue(vec12.value(1) == 2.0f);
+	IsTrue(vec12.value(2) == 3.0f);
+	IsTrue(vec12.value(3) == 4.0f);
+
+	IsTrue(vec13.value(0) == 1.0f);
+	IsTrue(vec13.value(1) == 2.0f);
+	IsTrue(vec13.value(2) == 3.0f);
+	IsTrue(vec13.value(3) == 4.0f);
+
+	IsTrue(vec14.value(0) == 1.0f);
+	IsTrue(vec14.value(1) == 2.0f);
+	IsTrue(vec14.value(2) == 3.0f);
+	IsTrue(vec14.value(3) == 4.0f);
+
+	IsTrue(vec15.value(0) == 1.0f);
+	IsTrue(vec15.value(1) == 2.0f);
+	IsTrue(vec15.value(2) == 3.0f);
+	IsTrue(vec15.value(3) == 4.0f);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec4 vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2.0f);
+	IsTrue(vec0.value(1) == 4.0f);
+	IsTrue(vec0.value(2) == 6.0f);
+	IsTrue(vec0.value(3) == 8.0f);
+
+	Vec4 vec3(2.0f, 4.0f, 6.0f, 8.0f);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -30.0);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec4(2.0f, 4.0f, 6.0f, 8.0f));
+
+	Vec4 vec4 = Vec4::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+	Vec4 vec10 = Vec4::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec4 vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec4 vec6(5.0f, 10.0f, 20.0f, 40.0f);
+	Vec4 vec7(2.0f, 2.0f, 2.0f, 2.0f);
+
+	IsTrue(vec6.divideElements(vec7) == Vec4(5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f, 40.0f / 2.0f));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec4(5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f, 40.0f / 2.0f));
+
+	//multiplyElements
+	Vec4 vec8(5.0f, 10.0f, 20.0f, 40.0f);
+	Vec4 vec9(2.0f, 2.0f, 2.0f, 2.0f);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
+
+	Vec4 vec11(2.0f, 0.0f, 0.0f, 0.0f);
+	IsTrue(vec11.length() == 2);
+
+	Vec4 vec18(3.0f, 5.0f, 8.0f, 3.0f);
+	IsTrue(vec18.normalize().length() == 1.0f);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathVec4i)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vec4i::nullVector().value(0) == 0);
+	IsTrue(Vec4i::nullVector().value(1) == 0);
+	IsTrue(Vec4i::nullVector().value(2) == 0);
+	IsTrue(Vec4i::nullVector().value(3) == 0);
+
+	Vec4i vec0 = { 1, 2, 3, 4 }; //check both ways of constructing
+	Vec4i vec1(1, 2, 3, 4);
+	Vec4i vec2(-1, -2, -3, -4);
+	Vec4i vec12(Vec2i(1, 2), 3, 4);
+	Vec4i vec13(Vec2i(1, 2), { 3, 4 });
+	Vec4i vec14(Vec3i(1, 2, 3), 4);
+	Vec4i vec15(Vec3i(1, 2, 3), { 4 });
+
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+	IsTrue(vec0.value(2) == 3);
+	IsTrue(vec0.value(3) == 4);
+
+	IsTrue(vec12.value(0) == 1);
+	IsTrue(vec12.value(1) == 2);
+	IsTrue(vec12.value(2) == 3);
+	IsTrue(vec12.value(3) == 4);
+
+	IsTrue(vec13.value(0) == 1);
+	IsTrue(vec13.value(1) == 2);
+	IsTrue(vec13.value(2) == 3);
+	IsTrue(vec13.value(3) == 4);
+
+	IsTrue(vec14.value(0) == 1);
+	IsTrue(vec14.value(1) == 2);
+	IsTrue(vec14.value(2) == 3);
+	IsTrue(vec14.value(3) == 4);
+
+	IsTrue(vec15.value(0) == 1);
+	IsTrue(vec15.value(1) == 2);
+	IsTrue(vec15.value(2) == 3);
+	IsTrue(vec15.value(3) == 4);
+
+	//check if value() works
+	IsTrue(vec1.value(0) == 1);
+	IsTrue(vec1.value(1) == 2);
+	IsTrue(vec1.value(2) == 3);
+	IsTrue(vec1.value(3) == 4);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vec4i vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2);
+	IsTrue(vec0.value(1) == 4);
+	IsTrue(vec0.value(2) == 6);
+	IsTrue(vec0.value(3) == 8);
+
+	Vec4i vec3(2, 4, 6, 8);
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -30.0);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vec4i(2, 4, 6, 8));
+
+	Vec4i vec4 = Vec4i::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vec4i(0, 0, 0, 0));
+
+	Vec4i vec10 = Vec4i::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vec4i vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vec4i vec6(5, 10, 20, 40);
+	Vec4i vec7(2, 2, 2, 2);
+
+	IsTrue(vec6.divideElements(vec7) == Vec4i(5 / 2, 10 / 2, 20 / 2, 40 / 2));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vec4i(5 / 2, 10 / 2, 20 / 2, 40 / 2));
+
+	//multiplyElements
+	Vec4i vec8(5, 10, 20, 40);
+	Vec4i vec9(2, 2, 2, 2);
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
+
+	Vec4i vec11(2, 0, 0, 0);
+	IsTrue(vec11.length() == 2.0);
+
+	//Not precise enough
+	//Vec4i vec12(3, 5, 8, 3);
+	//IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathVec5f)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(0) == 0.0f);
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(1) == 0.0f);
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(2) == 0.0f);
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(3) == 0.0f);
+	IsTrue(Vector<NOU::float32, 5>::nullVector().value(4) == 0.0f);
+
+	Vector<NOU::float32, 5> vec0 = { 1.0f,  2.0f,  3.0f,  4.0f,  5.0f };
+	Vector<NOU::float32, 5> vec1(  { 1.0f,  2.0f,  3.0f,  4.0f,  5.0f });
+	Vector<NOU::float32, 5> vec2( { -1.0f, -2.0f, -3.0f, -4.0f, -5.0f });
+	Vector<NOU::float32, 5> vec12(Vec2(1.0f, 2.0f), { 3.0f,  4.0f,  5.0f });
+	Vector<NOU::float32, 5> vec13(Vec2(1.0f, 2.0f), { 3.0f, 4.0f, 5.0f });
+	Vector<NOU::float32, 5> vec14(Vec3(1.0f, 2.0f, 3.0f), { 4.0f,  5.0f });
+	Vector<NOU::float32, 5> vec15(Vec3(1.0f, 2.0f, 3.0f), { 4.0f, 5.0f });
+	Vector<NOU::float32, 5> vec16(Vec4(1.0f, 2.0f, 3.0f, 4.0f), { 5.0f });
+	Vector<NOU::float32, 5> vec17(Vec4(1.0f, 2.0f, 3.0f, 4.0f), { 5.0f });
+
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1.0f);
+	IsTrue(vec0.value(1) == 2.0f);
+	IsTrue(vec0.value(2) == 3.0f);
+	IsTrue(vec0.value(3) == 4.0f);
+	IsTrue(vec0.value(4) == 5.0f);
+
+	//check if value() works
+	IsTrue(vec1.value(0) == 1.0f);
+	IsTrue(vec1.value(1) == 2.0f);
+	IsTrue(vec1.value(2) == 3.0f);
+	IsTrue(vec1.value(3) == 4.0f);
+	IsTrue(vec1.value(4) == 5.0f);
+
+	IsTrue(vec12.value(0) == 1.0f);
+	IsTrue(vec12.value(1) == 2.0f);
+	IsTrue(vec12.value(2) == 3.0f);
+	IsTrue(vec12.value(3) == 4.0f);
+	IsTrue(vec12.value(4) == 5.0f);
+
+	IsTrue(vec13.value(0) == 1.0f);
+	IsTrue(vec13.value(1) == 2.0f);
+	IsTrue(vec13.value(2) == 3.0f);
+	IsTrue(vec13.value(3) == 4.0f);
+	IsTrue(vec13.value(4) == 5.0f);
+
+	IsTrue(vec14.value(0) == 1.0f);
+	IsTrue(vec14.value(1) == 2.0f);
+	IsTrue(vec14.value(2) == 3.0f);
+	IsTrue(vec14.value(3) == 4.0f);
+	IsTrue(vec14.value(4) == 5.0f);
+
+	IsTrue(vec15.value(0) == 1.0f);
+	IsTrue(vec15.value(1) == 2.0f);
+	IsTrue(vec15.value(2) == 3.0f);
+	IsTrue(vec15.value(3) == 4.0f);
+	IsTrue(vec15.value(4) == 5.0f);
+
+	IsTrue(vec16.value(0) == 1.0f);
+	IsTrue(vec16.value(1) == 2.0f);
+	IsTrue(vec16.value(2) == 3.0f);
+	IsTrue(vec16.value(3) == 4.0f);
+	IsTrue(vec16.value(4) == 5.0f);
+
+	IsTrue(vec17.value(0) == 1.0f);
+	IsTrue(vec17.value(1) == 2.0f);
+	IsTrue(vec17.value(2) == 3.0f);
+	IsTrue(vec17.value(3) == 4.0f);
+	IsTrue(vec17.value(4) == 5.0f);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vector<NOU::float32, 5> vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2.0f);
+	IsTrue(vec0.value(1) == 4.0f);
+	IsTrue(vec0.value(2) == 6.0f);
+	IsTrue(vec0.value(3) == 8.0f);
+	IsTrue(vec0.value(4) == 10.0f);
+
+	Vector<NOU::float32, 5> vec3({ 2.0f, 4.0f, 6.0f, 8.0f, 10.0f });
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -55.0);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vector<NOU::float32, 5>({ 2.0f, 4.0f, 6.0f, 8.0f, 10.0f}));
+
+	Vector<NOU::float32, 5> vec4 = Vector<NOU::float32, 5>::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vector<NOU::float32, 5>({ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f }));
+
+	Vector<NOU::float32, 5> vec10 = Vector<NOU::float32, 5>::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vector<NOU::float32, 5> vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vector<NOU::float32, 5> vec6({ 5.0f, 10.0f, 20.0f, 40.0f, 80.0f });
+	Vector<NOU::float32, 5> vec7({ 2.0f, 2.0f, 2.0f, 2.0f, 2.0f });
+
+	IsTrue(vec6.divideElements(vec7) == Vector<NOU::float32, 5>({ 5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f, 
+		40.0f / 2.0f, 80.0f / 2.0f }));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vector<NOU::float32, 5>({ 5.0f / 2.0f, 10.0f / 2.0f, 20.0f / 2.0f, 40.0f / 2.0f,  
+		80.0f / 2.0f }));
+
+	//multiplyElements
+	Vector<NOU::float32, 5> vec8({ 5.0f, 10.0f, 20.0f, 40.0f, 80.0f });
+	Vector<NOU::float32, 5> vec9({ 2.0f, 2.0f, 2.0f, 2.0f, 2.0f });
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 
+		20.0f * 2.0f, 40.0f * 2.0f, 80.0f * 2.0f }));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f, 
+		80.0f * 2.0f }));
+
+	Vector<NOU::float32, 5> vec11({ 2.0f, 0.0f, 0.0f, 0.0f, 0.0f});
+	IsTrue(vec11.length() == 2.0);
+
+	Vector<NOU::float32, 5> vec18({ 3.0f, 5.0f, 8.0f, 3.0f, 1.0f });
+	IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathVec5i)
+{
+	using namespace NOU::NOU_MATH;
+
+	//check if the null vector works
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(0) == 0);
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(1) == 0);
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(2) == 0);
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(3) == 0);
+	IsTrue(Vector<NOU::int32, 5>::nullVector().value(4) == 0);
+
+	Vector<NOU::int32, 5> vec0 = { 1,  2,  3,  4,  5 };
+	Vector<NOU::int32, 5> vec1({ 1,  2,  3,  4,  5 });
+	Vector<NOU::int32, 5> vec2({ -1, -2, -3, -4, -5 });
+	Vector<NOU::int32, 5> vec12(Vec2i(1, 2), { 3,  4,  5 });
+	Vector<NOU::int32, 5> vec13(Vec2i(1, 2), { 3, 4, 5 });
+	Vector<NOU::int32, 5> vec14(Vec3i(1, 2, 3), { 4,  5 });
+	Vector<NOU::int32, 5> vec15(Vec3i(1, 2, 3), { 4, 5 });
+	Vector<NOU::int32, 5> vec16(Vec4i(1, 2, 3, 4), { 5 });
+	Vector<NOU::int32, 5> vec17(Vec4i(1, 2, 3, 4), { 5 });
+
+
+	//check if value() works
+	IsTrue(vec0.value(0) == 1);
+	IsTrue(vec0.value(1) == 2);
+	IsTrue(vec0.value(2) == 3);
+	IsTrue(vec0.value(3) == 4);
+	IsTrue(vec0.value(4) == 5);
+
+	//check if value() works
+	IsTrue(vec1.value(0) == 1);
+	IsTrue(vec1.value(1) == 2);
+	IsTrue(vec1.value(2) == 3);
+	IsTrue(vec1.value(3) == 4);
+	IsTrue(vec1.value(4) == 5);
+
+	IsTrue(vec12.value(0) == 1);
+	IsTrue(vec12.value(1) == 2);
+	IsTrue(vec12.value(2) == 3);
+	IsTrue(vec12.value(3) == 4);
+	IsTrue(vec12.value(4) == 5);
+
+	IsTrue(vec13.value(0) == 1);
+	IsTrue(vec13.value(1) == 2);
+	IsTrue(vec13.value(2) == 3);
+	IsTrue(vec13.value(3) == 4);
+	IsTrue(vec13.value(4) == 5);
+
+	IsTrue(vec14.value(0) == 1);
+	IsTrue(vec14.value(1) == 2);
+	IsTrue(vec14.value(2) == 3);
+	IsTrue(vec14.value(3) == 4);
+	IsTrue(vec14.value(4) == 5);
+
+	IsTrue(vec15.value(0) == 1);
+	IsTrue(vec15.value(1) == 2);
+	IsTrue(vec15.value(2) == 3);
+	IsTrue(vec15.value(3) == 4);
+	IsTrue(vec15.value(4) == 5);
+
+	IsTrue(vec16.value(0) == 1);
+	IsTrue(vec16.value(1) == 2);
+	IsTrue(vec16.value(2) == 3);
+	IsTrue(vec16.value(3) == 4);
+	IsTrue(vec16.value(4) == 5);
+
+	IsTrue(vec17.value(0) == 1);
+	IsTrue(vec17.value(1) == 2);
+	IsTrue(vec17.value(2) == 3);
+	IsTrue(vec17.value(3) == 4);
+	IsTrue(vec17.value(4) == 5);
+
+	//compare
+	IsTrue(vec0 == vec1);
+	IsTrue(vec0 != vec2);
+
+	//invert
+	IsTrue(vec0 == -vec2);
+
+	Vector<NOU::int32, 5> vec2Cop = vec2;
+
+	vec2Cop.invertThis();
+	IsTrue(vec2Cop == -vec2);
+
+	//scaling
+	vec0 *= 2;
+	IsTrue(vec0.value(0) == 2);
+	IsTrue(vec0.value(1) == 4);
+	IsTrue(vec0.value(2) == 6);
+	IsTrue(vec0.value(3) == 8);
+	IsTrue(vec0.value(4) == 10);
+
+	Vector<NOU::int32, 5> vec3({ 2, 4, 6, 8, 10 });
+	IsTrue((vec1 * 2) == vec3);
+
+	//dot product
+	IsTrue((vec1 * vec2) == -55.0);
+
+	//sub
+	IsTrue((vec1 - vec2) == Vector<NOU::int32, 5>({ 2, 4, 6, 8, 10 }));
+
+	Vector<NOU::int32, 5> vec4 = Vector<NOU::int32, 5>::nullVector();
+	vec4 -= vec1;
+	IsTrue(vec4 == vec2);
+
+	//add
+	IsTrue((vec1 + vec2) == Vector<NOU::int32, 5>({ 0, 0, 0, 0, 0 }));
+
+	Vector<NOU::int32, 5> vec10 = Vector<NOU::int32, 5>::nullVector();
+	vec10 += vec1;
+	IsTrue(vec10 == vec1);
+
+	//copy
+	Vector<NOU::int32, 5> vec5 = vec1.copy();
+	IsTrue(vec5 == vec1);
+
+	//divideElements
+	Vector<NOU::int32, 5> vec6({ 5, 10, 20, 40, 80 });
+	Vector<NOU::int32, 5> vec7({ 2, 2, 2, 2, 2 });
+
+	IsTrue(vec6.divideElements(vec7) == Vector<NOU::int32, 5>({ 5 / 2, 10 / 2, 20 / 2,
+		40 / 2, 80 / 2 }));
+
+	vec6.divideElementsAssign(vec7);
+	IsTrue(vec6 == Vector<NOU::int32, 5>({ 5 / 2, 10 / 2, 20 / 2, 40 / 2,
+		80 / 2 }));
+
+	//multiplyElements
+	Vector<NOU::int32, 5> vec8({ 5, 10, 20, 40, 80 });
+	Vector<NOU::int32, 5> vec9({ 2, 2, 2, 2, 2 });
+
+	IsTrue(vec8.multiplicateElements(vec9) == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2,
+		20 * 2, 40 * 2, 80 * 2 }));
+
+	vec8.multiplicateElementsAssign(vec9);
+	IsTrue(vec8 == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2, 20 * 2, 40 * 2,
+		80 * 2 }));
+
+	Vector<NOU::int32, 5> vec11({ 2, 0, 0, 0, 0 });
+	IsTrue(vec11.length() == 2.0);
+
+	//Not precise enough
+	//Vector<NOU::int32, 5> vec12({ 3, 5, 8, 3, 1 });
+	//IsTrue(vec18.normalize().length() == 1.0);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathMat2)
+{
+	NOU::NOU_MATH::Mat2 mat0 = { { 1.0f, 2.0f },{ 3.0f, 4.0f } };
+	NOU::NOU_MATH::Mat2 mat1(1.0f, 2.0f, 3.0f, 4.0f);
+	NOU::NOU_MATH::Mat2 mat2(2.0f, 3.0f, 4.0f, 5.0f);
+
+	//Check if the values are correct
+	IsTrue(mat0.value(0, 0) == 1.0f);
+	IsTrue(mat0.value(0, 1) == 2.0f);
+	IsTrue(mat0.value(1, 0) == 3.0f);
+	IsTrue(mat0.value(1, 1) == 4.0f);
+
+	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
+	IsTrue(mat0 == mat1);
+	IsTrue(mat0 != mat2);
+	IsTrue(!(mat0 == mat2));
+	IsTrue(mat0 == mat0);
+
+	//zeroes
+	IsTrue(NOU::NOU_MATH::Mat2::zeroes() == NOU::NOU_MATH::Mat2(0.0f, 0.0f,
+		0.0f, 0.0f));
+
+	//identity
+	IsTrue(NOU::NOU_MATH::Mat2::identity() == NOU::NOU_MATH::Mat2(1.0f, 0.0f,
+		0.0f, 1.0f));
+
+	//add
+	NOU::NOU_MATH::Mat2 mat3 = mat0 + mat2;
+
+	IsTrue(mat3.value(0, 0) == 3.0f);
+	IsTrue(mat3.value(0, 1) == 5.0f);
+	IsTrue(mat3.value(1, 0) == 7.0f);
+	IsTrue(mat3.value(1, 1) == 9.0f);
+
+	IsTrue((mat0 += mat2) == mat3);
+
+	//sub
+	NOU::NOU_MATH::Mat2 mat4 = mat1 - mat2;
+
+	IsTrue(mat4.value(0, 0) == -1.0f);
+	IsTrue(mat4.value(0, 1) == -1.0f);
+	IsTrue(mat4.value(1, 0) == -1.0f);
+	IsTrue(mat4.value(1, 1) == -1.0f);
+
+	IsTrue((mat1 -= mat2) == mat4);
+
+	//mult
+	NOU::NOU_MATH::Mat2 mat5(1.0f, 2.0f, 3.0f, 4.0f);
+	NOU::NOU_MATH::Mat2 mat6(2.0f, 3.0f, 4.0f, 5.0f);
+
+	NOU::NOU_MATH::Mat2 mat7 = mat5 * mat6;
+
+	IsTrue(mat7.value(0, 0) == 10.0f);
+	IsTrue(mat7.value(0, 1) == 13.0f);
+	IsTrue(mat7.value(1, 0) == 22.0f);
+	IsTrue(mat7.value(1, 1) == 29.0f);
+
+	//mult (2x2 * 2x2 special)
+	NOU::NOU_MATH::Matrix<NOU::float32, 2, 3> mat8 = { { 1, 2, 3 },{ 4, 5, 6 } };
+	NOU::NOU_MATH::Matrix<NOU::float32, 2, 3> mat9 = mat5 * mat8;
+
+	IsTrue(mat9.value(0, 0) == 9.0f);
+	IsTrue(mat9.value(0, 1) == 12.0f);
+	IsTrue(mat9.value(0, 2) == 15.0f);
+	IsTrue(mat9.value(1, 0) == 19.0f);
+	IsTrue(mat9.value(1, 1) == 26.0f);
+	IsTrue(mat9.value(1, 2) == 33.0f);
+
+	//mult vector
+	NOU::NOU_MATH::Vec2 vec0(1.0f, 2.0f);
+
+	NOU::NOU_MATH::Vec2 vec1 = mat5 * vec0;
+	IsTrue(vec1.value(0) == 5.0f);
+	IsTrue(vec1.value(1) == 11.0f);
+
+	//mult scale
+	NOU::NOU_MATH::Mat2 mat10 = mat5 * 2;
+
+	IsTrue(mat10.value(0, 0) == 2.0f);
+	IsTrue(mat10.value(0, 1) == 4.0f);
+	IsTrue(mat10.value(1, 0) == 6.0f);
+	IsTrue(mat10.value(1, 1) == 8.0f);
+
+	NOU::NOU_MATH::Mat2 mat11 = mat5;
+	mat11 *= 2;
+
+	IsTrue(mat11 == mat10);
+
+	//transpose
+	NOU::NOU_MATH::Mat2 mat12 = mat5.transpose();
+
+	IsTrue(mat12.value(0, 0) == 1.0f);
+	IsTrue(mat12.value(0, 1) == 3.0f);
+	IsTrue(mat12.value(1, 0) == 2.0f);
+	IsTrue(mat12.value(1, 1) == 4.0f);
+
+	//copy
+	IsTrue(mat5.copy() == mat5);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathMat2i)
+{
+	NOU::NOU_MATH::Mat2i mat0 = { { 1, 2 },{ 3, 4 } };
+	NOU::NOU_MATH::Mat2i mat1(1, 2, 3, 4);
+	NOU::NOU_MATH::Mat2i mat2(2, 3, 4, 5);
+
+	//Check if the values are correct
+	IsTrue(mat0.value(0, 0) == 1);
+	IsTrue(mat0.value(0, 1) == 2);
+	IsTrue(mat0.value(1, 0) == 3);
+	IsTrue(mat0.value(1, 1) == 4);
+
+	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
+	IsTrue(mat0 == mat1);
+	IsTrue(mat0 != mat2);
+	IsTrue(!(mat0 == mat2));
+	IsTrue(mat0 == mat0);
+
+	//zeroes
+	IsTrue(NOU::NOU_MATH::Mat2i::zeroes() == NOU::NOU_MATH::Mat2i(0, 0,
+		                                                        0, 0));
+
+	//identity
+	IsTrue(NOU::NOU_MATH::Mat2i::identity() == NOU::NOU_MATH::Mat2i(1, 0,
+		                                                          0, 1));
+
+	//add
+	NOU::NOU_MATH::Mat2i mat3 = mat0 + mat2;
+
+	IsTrue(mat3.value(0, 0) == 3);
+	IsTrue(mat3.value(0, 1) == 5);
+	IsTrue(mat3.value(1, 0) == 7);
+	IsTrue(mat3.value(1, 1) == 9);
+
+	IsTrue((mat0 += mat2) == mat3);
+
+	//sub
+	NOU::NOU_MATH::Mat2i mat4 = mat1 - mat2;
+
+	IsTrue(mat4.value(0, 0) == -1);
+	IsTrue(mat4.value(0, 1) == -1);
+	IsTrue(mat4.value(1, 0) == -1);
+	IsTrue(mat4.value(1, 1) == -1);
+
+	IsTrue((mat1 -= mat2) == mat4);
+
+	//mult
+	NOU::NOU_MATH::Mat2i mat5(1, 2, 3, 4);
+	NOU::NOU_MATH::Mat2i mat6(2, 3, 4, 5);
+
+	NOU::NOU_MATH::Mat2i mat7 = mat5 * mat6;
+
+	IsTrue(mat7.value(0, 0) == 10);
+	IsTrue(mat7.value(0, 1) == 13);
+	IsTrue(mat7.value(1, 0) == 22);
+	IsTrue(mat7.value(1, 1) == 29);
+
+	//mult (2x2 * 2x2 special)
+	NOU::NOU_MATH::Matrix<NOU::int32, 2, 3> mat8 = { {1, 2, 3}, { 4, 5, 6 } };
+	NOU::NOU_MATH::Matrix<NOU::int32, 2, 3> mat9 = mat5 * mat8;
+
+	IsTrue(mat9.value(0, 0) == 9);
+	IsTrue(mat9.value(0, 1) == 12);
+	IsTrue(mat9.value(0, 2) == 15);
+	IsTrue(mat9.value(1, 0) == 19);
+	IsTrue(mat9.value(1, 1) == 26);
+	IsTrue(mat9.value(1, 2) == 33);
+
+	//mult vector
+	NOU::NOU_MATH::Vec2i vec0(1, 2);
+
+	NOU::NOU_MATH::Vec2i vec1 = mat5 * vec0;
+	IsTrue(vec1.value(0) == 5);
+	IsTrue(vec1.value(1) == 11);
+
+	//mult scale
+	NOU::NOU_MATH::Mat2i mat10 = mat5 * 2;
+
+	IsTrue(mat10.value(0, 0) == 2);
+	IsTrue(mat10.value(0, 1) == 4);
+	IsTrue(mat10.value(1, 0) == 6);
+	IsTrue(mat10.value(1, 1) == 8);
+
+	NOU::NOU_MATH::Mat2i mat11 = mat5;
+	mat11 *= 2;
+
+	IsTrue(mat11 == mat10);
+
+	//transpose
+	NOU::NOU_MATH::Mat2i mat12 = mat5.transpose();
+
+	IsTrue(mat12.value(0, 0) == 1);
+	IsTrue(mat12.value(0, 1) == 3);
+	IsTrue(mat12.value(1, 0) == 2);
+	IsTrue(mat12.value(1, 1) == 4);
+
+	//copy
+	IsTrue(mat5.copy() == mat5);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathMat3)
+{
+	NOU::NOU_MATH::Mat3 mat0 = { { 1.0f, 2.0f, 3.0f }, { 4.0f, 5.0f, 6.0f }, { 7.0f, 8.0f, 9.0f } };
+	NOU::NOU_MATH::Mat3 mat1(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+	NOU::NOU_MATH::Mat3 mat2(2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);
+
+	//Check if the values are correct
+	IsTrue(mat0.value(0, 0) == 1.0f);
+	IsTrue(mat0.value(0, 1) == 2.0f);
+	IsTrue(mat0.value(0, 2) == 3.0f);
+	IsTrue(mat0.value(1, 0) == 4.0f);
+	IsTrue(mat0.value(1, 1) == 5.0f);
+	IsTrue(mat0.value(1, 2) == 6.0f);
+	IsTrue(mat0.value(2, 0) == 7.0f);
+	IsTrue(mat0.value(2, 1) == 8.0f);
+	IsTrue(mat0.value(2, 2) == 9.0f);
+
+	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
+	IsTrue(mat0 == mat1);
+	IsTrue(mat0 != mat2);
+	IsTrue(!(mat0 == mat2));
+	IsTrue(mat0 == mat0);
+
+	//zeroes
+	IsTrue(NOU::NOU_MATH::Mat3::zeroes() == NOU::NOU_MATH::Mat3(0.0f, 0.0f, 0.0f, 
+		                                                        0.0f, 0.0f, 0.0f, 
+		                                                        0.0f, 0.0f, 0.0f));
+
+	//identity
+	IsTrue(NOU::NOU_MATH::Mat3::identity() == NOU::NOU_MATH::Mat3(1.0f, 0.0f, 0.0f,
+		                                                          0.0f, 1.0f, 0.0f,
+		                                                          0.0f, 0.0f, 1.0f));
+
+	//add
+	NOU::NOU_MATH::Mat3 mat3 = mat0 + mat2;
+
+	IsTrue(mat3.value(0, 0) == 3.0f);
+	IsTrue(mat3.value(0, 1) == 5.0f);
+	IsTrue(mat3.value(0, 2) == 7.0f);
+	IsTrue(mat3.value(1, 0) == 9.0f);
+	IsTrue(mat3.value(1, 1) == 11.0f);
+	IsTrue(mat3.value(1, 2) == 13.0f);
+	IsTrue(mat3.value(2, 0) == 15.0f);
+	IsTrue(mat3.value(2, 1) == 17.0f);
+	IsTrue(mat3.value(2, 2) == 19.0f);
+
+	IsTrue((mat0 += mat2) == mat3);
+
+	//sub
+	NOU::NOU_MATH::Mat3 mat4 = mat1 - mat2;
+
+	IsTrue(mat4.value(0, 0) == -1.0f);
+	IsTrue(mat4.value(0, 1) == -1.0f);
+	IsTrue(mat4.value(0, 2) == -1.0f);
+	IsTrue(mat4.value(1, 0) == -1.0f);
+	IsTrue(mat4.value(1, 1) == -1.0f);
+	IsTrue(mat4.value(1, 2) == -1.0f);
+	IsTrue(mat4.value(2, 0) == -1.0f);
+	IsTrue(mat4.value(2, 1) == -1.0f);
+	IsTrue(mat4.value(2, 2) == -1.0f);
+
+	IsTrue((mat1 -= mat2) == mat4);
+
+	//mult
+	NOU::NOU_MATH::Mat3 mat5(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+	NOU::NOU_MATH::Mat3 mat6(2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f);
+
+	NOU::NOU_MATH::Mat3 mat7 = mat5 * mat6;
+
+	IsTrue(mat7.value(0, 0) == 36.0f);
+	IsTrue(mat7.value(0, 1) == 42.0f);
+	IsTrue(mat7.value(0, 2) == 48.0f);
+	IsTrue(mat7.value(1, 0) == 81.0f);
+	IsTrue(mat7.value(1, 1) == 96.0f);
+	IsTrue(mat7.value(1, 2) == 111.0f);
+	IsTrue(mat7.value(2, 0) == 126.0f);
+	IsTrue(mat7.value(2, 1) == 150.0f);
+	IsTrue(mat7.value(2, 2) == 174.0f);
+
+	//mult (2x2 * 2x2 special)
+	NOU::NOU_MATH::Matrix<NOU::float32, 3, 4> mat8 = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } };
+	NOU::NOU_MATH::Matrix<NOU::float32, 3, 4> mat9 = mat5 * mat8;
+	
+	IsTrue(mat9.value(0, 0) == 38.0f);
+	IsTrue(mat9.value(0, 1) == 44.0f);
+	IsTrue(mat9.value(0, 2) == 50.0f);
+	IsTrue(mat9.value(0, 3) == 56.0f);
+	IsTrue(mat9.value(1, 0) == 83.0f);
+	IsTrue(mat9.value(1, 1) == 98.0f);
+	IsTrue(mat9.value(1, 2) == 113.0f);
+	IsTrue(mat9.value(1, 3) == 128.0f);
+	IsTrue(mat9.value(2, 0) == 128.0f);
+	IsTrue(mat9.value(2, 1) == 152.0f);
+	IsTrue(mat9.value(2, 2) == 176.0f);
+	IsTrue(mat9.value(2, 3) == 200.0f);
+
+	//mult vector
+	NOU::NOU_MATH::Vec3 vec0(1.0f, 2.0f, 3.0f);
+
+	NOU::NOU_MATH::Vec3 vec1 = mat5 * vec0;
+	IsTrue(vec1.value(0) == 14.0f);
+	IsTrue(vec1.value(1) == 32.0f);
+	IsTrue(vec1.value(2) == 50.0f);
+
+	//mult scale
+	NOU::NOU_MATH::Mat3 mat10 = mat5 * 2;
+
+	IsTrue(mat10.value(0, 0) == 2.0f);
+	IsTrue(mat10.value(0, 1) == 4.0f);
+	IsTrue(mat10.value(0, 2) == 6.0f);
+	IsTrue(mat10.value(1, 0) == 8.0f);
+	IsTrue(mat10.value(1, 1) == 10.0f);
+	IsTrue(mat10.value(1, 2) == 12.0f);
+	IsTrue(mat10.value(2, 0) == 14.0f);
+	IsTrue(mat10.value(2, 1) == 16.0f);
+	IsTrue(mat10.value(2, 2) == 18.0f);
+
+	NOU::NOU_MATH::Mat3 mat11 = mat5;
+	mat11 *= 2;
+
+	IsTrue(mat11 == mat10);
+
+	//transpose
+	NOU::NOU_MATH::Mat3 mat12 = mat5.transpose();
+
+	IsTrue(mat12.value(0, 0) == 1.0f);
+	IsTrue(mat12.value(0, 1) == 4.0f);
+	IsTrue(mat12.value(0, 2) == 7.0f);
+	IsTrue(mat12.value(1, 0) == 2.0f);
+	IsTrue(mat12.value(1, 1) == 5.0f);
+	IsTrue(mat12.value(1, 2) == 8.0f);
+	IsTrue(mat12.value(2, 0) == 3.0f);
+	IsTrue(mat12.value(2, 1) == 6.0f);
+	IsTrue(mat12.value(2, 2) == 9.0f);
+
+	//copy
+	IsTrue(mat5.copy() == mat5);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathMat3i)
+{
+	NOU::NOU_MATH::Mat3i mat0 = { { 1, 2, 3 },{ 4, 5, 6 },{ 7, 8, 9 } };
+	NOU::NOU_MATH::Mat3i mat1(1, 2, 3, 4, 5, 6, 7, 8, 9);
+	NOU::NOU_MATH::Mat3i mat2(2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+	//Check if the values are correct
+	IsTrue(mat0.value(0, 0) == 1);
+	IsTrue(mat0.value(0, 1) == 2);
+	IsTrue(mat0.value(0, 2) == 3);
+	IsTrue(mat0.value(1, 0) == 4);
+	IsTrue(mat0.value(1, 1) == 5);
+	IsTrue(mat0.value(1, 2) == 6);
+	IsTrue(mat0.value(2, 0) == 7);
+	IsTrue(mat0.value(2, 1) == 8);
+	IsTrue(mat0.value(2, 2) == 9);
+
+	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
+	IsTrue(mat0 == mat1);
+	IsTrue(mat0 != mat2);
+	IsTrue(!(mat0 == mat2));
+	IsTrue(mat0 == mat0);
+
+	//zeroes
+	IsTrue(NOU::NOU_MATH::Mat3i::zeroes() == NOU::NOU_MATH::Mat3i(0, 0, 0,
+		0, 0, 0,
+		0, 0, 0));
+
+	//identity
+	IsTrue(NOU::NOU_MATH::Mat3i::identity() == NOU::NOU_MATH::Mat3i(1, 0, 0,
+		0, 1, 0,
+		0, 0, 1));
+
+	//add
+	NOU::NOU_MATH::Mat3i mat3 = mat0 + mat2;
+
+	IsTrue(mat3.value(0, 0) == 3);
+	IsTrue(mat3.value(0, 1) == 5);
+	IsTrue(mat3.value(0, 2) == 7);
+	IsTrue(mat3.value(1, 0) == 9);
+	IsTrue(mat3.value(1, 1) == 11);
+	IsTrue(mat3.value(1, 2) == 13);
+	IsTrue(mat3.value(2, 0) == 15);
+	IsTrue(mat3.value(2, 1) == 17);
+	IsTrue(mat3.value(2, 2) == 19);
+
+	IsTrue((mat0 += mat2) == mat3);
+
+	//sub
+	NOU::NOU_MATH::Mat3i mat4 = mat1 - mat2;
+
+	IsTrue(mat4.value(0, 0) == -1);
+	IsTrue(mat4.value(0, 1) == -1);
+	IsTrue(mat4.value(0, 2) == -1);
+	IsTrue(mat4.value(1, 0) == -1);
+	IsTrue(mat4.value(1, 1) == -1);
+	IsTrue(mat4.value(1, 2) == -1);
+	IsTrue(mat4.value(2, 0) == -1);
+	IsTrue(mat4.value(2, 1) == -1);
+	IsTrue(mat4.value(2, 2) == -1);
+
+	IsTrue((mat1 -= mat2) == mat4);
+
+	//mult
+	NOU::NOU_MATH::Mat3i mat5(1, 2, 3, 4, 5, 6, 7, 8, 9);
+	NOU::NOU_MATH::Mat3i mat6(2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+	NOU::NOU_MATH::Mat3i mat7 = mat5 * mat6;
+
+	IsTrue(mat7.value(0, 0) == 36);
+	IsTrue(mat7.value(0, 1) == 42);
+	IsTrue(mat7.value(0, 2) == 48);
+	IsTrue(mat7.value(1, 0) == 81);
+	IsTrue(mat7.value(1, 1) == 96);
+	IsTrue(mat7.value(1, 2) == 111);
+	IsTrue(mat7.value(2, 0) == 126);
+	IsTrue(mat7.value(2, 1) == 150);
+	IsTrue(mat7.value(2, 2) == 174);
+
+	//mult (2x2 * 2x2 special)
+	NOU::NOU_MATH::Matrix<NOU::int32, 3, 4> mat8 = { { 1, 2, 3, 4 },{ 5, 6, 7, 8 },{ 9, 10, 11, 12 } };
+	NOU::NOU_MATH::Matrix<NOU::int32, 3, 4> mat9 = mat5 * mat8;
+
+	IsTrue(mat9.value(0, 0) == 38);
+	IsTrue(mat9.value(0, 1) == 44);
+	IsTrue(mat9.value(0, 2) == 50);
+	IsTrue(mat9.value(0, 3) == 56);
+	IsTrue(mat9.value(1, 0) == 83);
+	IsTrue(mat9.value(1, 1) == 98);
+	IsTrue(mat9.value(1, 2) == 113);
+	IsTrue(mat9.value(1, 3) == 128);
+	IsTrue(mat9.value(2, 0) == 128);
+	IsTrue(mat9.value(2, 1) == 152);
+	IsTrue(mat9.value(2, 2) == 176);
+	IsTrue(mat9.value(2, 3) == 200);
+
+	//mult vector
+	NOU::NOU_MATH::Vec3i vec0(1, 2, 3);
+
+	NOU::NOU_MATH::Vec3i vec1 = mat5 * vec0;
+	IsTrue(vec1.value(0) == 14);
+	IsTrue(vec1.value(1) == 32);
+	IsTrue(vec1.value(2) == 50);
+
+	//mult scale
+	NOU::NOU_MATH::Mat3i mat10 = mat5 * 2;
+
+	IsTrue(mat10.value(0, 0) == 2);
+	IsTrue(mat10.value(0, 1) == 4);
+	IsTrue(mat10.value(0, 2) == 6);
+	IsTrue(mat10.value(1, 0) == 8);
+	IsTrue(mat10.value(1, 1) == 10);
+	IsTrue(mat10.value(1, 2) == 12);
+	IsTrue(mat10.value(2, 0) == 14);
+	IsTrue(mat10.value(2, 1) == 16);
+	IsTrue(mat10.value(2, 2) == 18);
+
+	NOU::NOU_MATH::Mat3i mat11 = mat5;
+	mat11 *= 2;
+
+	IsTrue(mat11 == mat10);
+
+	//transpose
+	NOU::NOU_MATH::Mat3i mat12 = mat5.transpose();
+
+	IsTrue(mat12.value(0, 0) == 1);
+	IsTrue(mat12.value(0, 1) == 4);
+	IsTrue(mat12.value(0, 2) == 7);
+	IsTrue(mat12.value(1, 0) == 2);
+	IsTrue(mat12.value(1, 1) == 5);
+	IsTrue(mat12.value(1, 2) == 8);
+	IsTrue(mat12.value(2, 0) == 3);
+	IsTrue(mat12.value(2, 1) == 6);
+	IsTrue(mat12.value(2, 2) == 9);
+
+	//copy
+	IsTrue(mat5.copy() == mat5);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathMat4)
+{
+	NOU::NOU_MATH::Mat4 mat0 = { { 1.0f, 2.0f, 3.0f, 4.0f }, { 5.0f, 6.0f, 7.0f, 8.0f }, { 9.0f, 10.0f, 11.0f, 12.0f }, { 13.0f, 14.0f, 15.0f, 16.0f } };
+
+	NOU::NOU_MATH::Mat4 mat1(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f);
+	NOU::NOU_MATH::Mat4 mat2(2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f);
+
+	//Check if the values are correct
+	IsTrue(mat0.value(0, 0) == 1.0f);
+	IsTrue(mat0.value(0, 1) == 2.0f);
+	IsTrue(mat0.value(0, 2) == 3.0f);
+	IsTrue(mat0.value(0, 3) == 4.0f);
+	IsTrue(mat0.value(1, 0) == 5.0f);
+	IsTrue(mat0.value(1, 1) == 6.0f);
+	IsTrue(mat0.value(1, 2) == 7.0f);
+	IsTrue(mat0.value(1, 3) == 8.0f);
+	IsTrue(mat0.value(2, 0) == 9.0f);
+	IsTrue(mat0.value(2, 1) == 10.0f);
+	IsTrue(mat0.value(2, 2) == 11.0f);
+	IsTrue(mat0.value(2, 3) == 12.0f);
+	IsTrue(mat0.value(3, 0) == 13.0f);
+	IsTrue(mat0.value(3, 1) == 14.0f);
+	IsTrue(mat0.value(3, 2) == 15.0f);
+	IsTrue(mat0.value(3, 3) == 16.0f);
+
+	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
+	IsTrue(mat0 == mat1);
+	IsTrue(mat0 != mat2);
+	IsTrue(!(mat0 == mat2));
+	IsTrue(mat0 == mat0);
+
+	//zeroes
+	IsTrue(NOU::NOU_MATH::Mat4::zeroes() == NOU::NOU_MATH::Mat4(0.0f, 0.0f, 0.0f, 0.0f,
+		                                                        0.0f, 0.0f, 0.0f, 0.0f,
+		                                                        0.0f, 0.0f, 0.0f, 0.0f,
+		                                                        0.0f, 0.0f, 0.0f, 0.0f));
+
+	//identity
+	IsTrue(NOU::NOU_MATH::Mat4::identity() == NOU::NOU_MATH::Mat4(1.0f, 0.0f, 0.0f, 0.0f,
+		                                                          0.0f, 1.0f, 0.0f, 0.0f,
+		                                                          0.0f, 0.0f, 1.0f, 0.0f,
+		                                                          0.0f, 0.0f, 0.0f, 1.0f));
+
+	//add
+	NOU::NOU_MATH::Mat4 mat3 = mat0 + mat2;
+
+	IsTrue(mat3.value(0, 0) == 3.0f);
+	IsTrue(mat3.value(0, 1) == 5.0f);
+	IsTrue(mat3.value(0, 2) == 7.0f);
+	IsTrue(mat3.value(0, 3) == 9.0f);
+	IsTrue(mat3.value(1, 0) == 11.0f);
+	IsTrue(mat3.value(1, 1) == 13.0f);
+	IsTrue(mat3.value(1, 2) == 15.0f);
+	IsTrue(mat3.value(1, 3) == 17.0f);
+	IsTrue(mat3.value(2, 0) == 19.0f);
+	IsTrue(mat3.value(2, 1) == 21.0f);
+	IsTrue(mat3.value(2, 2) == 23.0f);
+	IsTrue(mat3.value(2, 3) == 25.0f);
+	IsTrue(mat3.value(3, 0) == 27.0f);
+	IsTrue(mat3.value(3, 1) == 29.0f);
+	IsTrue(mat3.value(3, 2) == 31.0f);
+	IsTrue(mat3.value(3, 3) == 33.0f);
+
+	IsTrue((mat0 += mat2) == mat3);
+
+	//sub
+	NOU::NOU_MATH::Mat4 mat4 = mat1 - mat2;
+
+	IsTrue(mat4.value(0, 0) == -1.0f);
+	IsTrue(mat4.value(0, 1) == -1.0f);
+	IsTrue(mat4.value(0, 2) == -1.0f);
+	IsTrue(mat4.value(0, 3) == -1.0f);
+	IsTrue(mat4.value(1, 0) == -1.0f);
+	IsTrue(mat4.value(1, 1) == -1.0f);
+	IsTrue(mat4.value(1, 2) == -1.0f);
+	IsTrue(mat4.value(1, 3) == -1.0f);
+	IsTrue(mat4.value(2, 0) == -1.0f);
+	IsTrue(mat4.value(2, 1) == -1.0f);
+	IsTrue(mat4.value(2, 2) == -1.0f);
+	IsTrue(mat4.value(2, 3) == -1.0f);
+	IsTrue(mat4.value(3, 0) == -1.0f);
+	IsTrue(mat4.value(3, 1) == -1.0f);
+	IsTrue(mat4.value(3, 2) == -1.0f);
+	IsTrue(mat4.value(3, 3) == -1.0f);
+
+	IsTrue((mat1 -= mat2) == mat4);
+
+	//mult
+	NOU::NOU_MATH::Mat4 mat5(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f);
+	NOU::NOU_MATH::Mat4 mat6(2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f, 16.0f, 17.0f);
+
+	NOU::NOU_MATH::Mat4 mat7 = mat5 * mat6;
+
+	IsTrue(mat7.value(0, 0) == 100.0f);
+	IsTrue(mat7.value(0, 1) == 110.0f);
+	IsTrue(mat7.value(0, 2) == 120.0f);
+	IsTrue(mat7.value(0, 3) == 130.0f);
+	IsTrue(mat7.value(1, 0) == 228.0f);
+	IsTrue(mat7.value(1, 1) == 254.0f);
+	IsTrue(mat7.value(1, 2) == 280.0f);
+	IsTrue(mat7.value(1, 3) == 306.0f);
+	IsTrue(mat7.value(2, 0) == 356.0f);
+	IsTrue(mat7.value(2, 1) == 398.0f);
+	IsTrue(mat7.value(2, 2) == 440.0f);
+	IsTrue(mat7.value(2, 3) == 482.0f);
+	IsTrue(mat7.value(3, 0) == 484.0f);
+	IsTrue(mat7.value(3, 1) == 542.0f);
+	IsTrue(mat7.value(3, 2) == 600.0f);
+	IsTrue(mat7.value(3, 3) == 658.0f);
+
+	//mult (2x2 * 2x2 special)
+	NOU::NOU_MATH::Matrix<NOU::float32, 4, 5> mat8 = { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 }, { 16, 17, 18, 19, 20 } };
+	NOU::NOU_MATH::Matrix<NOU::float32, 4, 5> mat9 = mat5 * mat8;
+
+	IsTrue(mat9.value(0, 0) == 110.0f);
+	IsTrue(mat9.value(0, 1) == 120.0f);
+	IsTrue(mat9.value(0, 2) == 130.0f);
+	IsTrue(mat9.value(0, 3) == 140.0f);
+	IsTrue(mat9.value(0, 4) == 150.0f);
+	IsTrue(mat9.value(1, 0) == 246.0f);
+	IsTrue(mat9.value(1, 1) == 272.0f);
+	IsTrue(mat9.value(1, 2) == 298.0f);
+	IsTrue(mat9.value(1, 3) == 324.0f);
+	IsTrue(mat9.value(1, 4) == 350.0f);
+	IsTrue(mat9.value(2, 0) == 382.0f);
+	IsTrue(mat9.value(2, 1) == 424.0f);
+	IsTrue(mat9.value(2, 2) == 466.0f);
+	IsTrue(mat9.value(2, 3) == 508.0f);
+	IsTrue(mat9.value(2, 4) == 550.0f);
+	IsTrue(mat9.value(3, 0) == 518.0f);
+	IsTrue(mat9.value(3, 1) == 576.0f);
+	IsTrue(mat9.value(3, 2) == 634.0f);
+	IsTrue(mat9.value(3, 3) == 692.0f);
+	IsTrue(mat9.value(3, 4) == 750.0f);
+
+	//mult vector
+	NOU::NOU_MATH::Vec4 vec0(1.0f, 2.0f, 3.0f, 4.0f);
+
+	NOU::NOU_MATH::Vec4 vec1 = mat5 * vec0;
+	IsTrue(vec1.value(0) == 30.0f);
+	IsTrue(vec1.value(1) == 70.0f);
+	IsTrue(vec1.value(2) == 110.0f);
+	IsTrue(vec1.value(3) == 150.0f);
+
+	//mult scale
+	NOU::NOU_MATH::Mat4 mat10 = mat5 * 2;
+
+	IsTrue(mat10.value(0, 0) == 2.0f);
+	IsTrue(mat10.value(0, 1) == 4.0f);
+	IsTrue(mat10.value(0, 2) == 6.0f);
+	IsTrue(mat10.value(0, 3) == 8.0f);
+	IsTrue(mat10.value(1, 0) == 10.0f);
+	IsTrue(mat10.value(1, 1) == 12.0f);
+	IsTrue(mat10.value(1, 2) == 14.0f);
+	IsTrue(mat10.value(1, 3) == 16.0f);
+	IsTrue(mat10.value(2, 0) == 18.0f);
+	IsTrue(mat10.value(2, 1) == 20.0f);
+	IsTrue(mat10.value(2, 2) == 22.0f);
+	IsTrue(mat10.value(2, 3) == 24.0f);
+	IsTrue(mat10.value(3, 0) == 26.0f);
+	IsTrue(mat10.value(3, 1) == 28.0f);
+	IsTrue(mat10.value(3, 2) == 30.0f);
+	IsTrue(mat10.value(3, 3) == 32.0f);
+
+	NOU::NOU_MATH::Mat4 mat11 = mat5;
+	mat11 *= 2;
+
+	IsTrue(mat11 == mat10);
+
+	//transpose
+	NOU::NOU_MATH::Mat4 mat12 = mat5.transpose();
+
+	IsTrue(mat12.value(0, 0) == 1.0f);
+	IsTrue(mat12.value(0, 1) == 5.0f);
+	IsTrue(mat12.value(0, 2) == 9.0f);
+	IsTrue(mat12.value(0, 3) == 13.0f);
+	IsTrue(mat12.value(1, 0) == 2.0f);
+	IsTrue(mat12.value(1, 1) == 6.0f);
+	IsTrue(mat12.value(1, 2) == 10.0f);
+	IsTrue(mat12.value(1, 3) == 14.0f);
+	IsTrue(mat12.value(2, 0) == 3.0f);
+	IsTrue(mat12.value(2, 1) == 7.0f);
+	IsTrue(mat12.value(2, 2) == 11.0f);
+	IsTrue(mat12.value(2, 3) == 15.0f);
+	IsTrue(mat12.value(3, 0) == 4.0f);
+	IsTrue(mat12.value(3, 1) == 8.0f);
+	IsTrue(mat12.value(3, 2) == 12.0f);
+	IsTrue(mat12.value(3, 3) == 16.0f);
+
+	//copy
+	IsTrue(mat5.copy() == mat5);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathMat4i)
+{
+	NOU::NOU_MATH::Mat4i mat0 = { { 1, 2, 3, 4 },{ 5, 6, 7, 8 },{ 9, 10, 11, 12 },{ 13, 14, 15, 16 } };
+
+	NOU::NOU_MATH::Mat4i mat1(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+	NOU::NOU_MATH::Mat4i mat2(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17);
+
+	//Check if the values are correct
+	IsTrue(mat0.value(0, 0) == 1);
+	IsTrue(mat0.value(0, 1) == 2);
+	IsTrue(mat0.value(0, 2) == 3);
+	IsTrue(mat0.value(0, 3) == 4);
+	IsTrue(mat0.value(1, 0) == 5);
+	IsTrue(mat0.value(1, 1) == 6);
+	IsTrue(mat0.value(1, 2) == 7);
+	IsTrue(mat0.value(1, 3) == 8);
+	IsTrue(mat0.value(2, 0) == 9);
+	IsTrue(mat0.value(2, 1) == 10);
+	IsTrue(mat0.value(2, 2) == 11);
+	IsTrue(mat0.value(2, 3) == 12);
+	IsTrue(mat0.value(3, 0) == 13);
+	IsTrue(mat0.value(3, 1) == 14);
+	IsTrue(mat0.value(3, 2) == 15);
+	IsTrue(mat0.value(3, 3) == 16);
+
+	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
+	IsTrue(mat0 == mat1);
+	IsTrue(mat0 != mat2);
+	IsTrue(!(mat0 == mat2));
+	IsTrue(mat0 == mat0);
+
+	//zeroes
+	IsTrue(NOU::NOU_MATH::Mat4i::zeroes() == NOU::NOU_MATH::Mat4i(0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0,
+		0, 0, 0, 0));
+
+	//identity
+	IsTrue(NOU::NOU_MATH::Mat4i::identity() == NOU::NOU_MATH::Mat4i(1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1));
+
+	//add
+	NOU::NOU_MATH::Mat4i mat3 = mat0 + mat2;
+
+	IsTrue(mat3.value(0, 0) == 3);
+	IsTrue(mat3.value(0, 1) == 5);
+	IsTrue(mat3.value(0, 2) == 7);
+	IsTrue(mat3.value(0, 3) == 9);
+	IsTrue(mat3.value(1, 0) == 11);
+	IsTrue(mat3.value(1, 1) == 13);
+	IsTrue(mat3.value(1, 2) == 15);
+	IsTrue(mat3.value(1, 3) == 17);
+	IsTrue(mat3.value(2, 0) == 19);
+	IsTrue(mat3.value(2, 1) == 21);
+	IsTrue(mat3.value(2, 2) == 23);
+	IsTrue(mat3.value(2, 3) == 25);
+	IsTrue(mat3.value(3, 0) == 27);
+	IsTrue(mat3.value(3, 1) == 29);
+	IsTrue(mat3.value(3, 2) == 31);
+	IsTrue(mat3.value(3, 3) == 33);
+
+	IsTrue((mat0 += mat2) == mat3);
+
+	//sub
+	NOU::NOU_MATH::Mat4i mat4 = mat1 - mat2;
+
+	IsTrue(mat4.value(0, 0) == -1);
+	IsTrue(mat4.value(0, 1) == -1);
+	IsTrue(mat4.value(0, 2) == -1);
+	IsTrue(mat4.value(0, 3) == -1);
+	IsTrue(mat4.value(1, 0) == -1);
+	IsTrue(mat4.value(1, 1) == -1);
+	IsTrue(mat4.value(1, 2) == -1);
+	IsTrue(mat4.value(1, 3) == -1);
+	IsTrue(mat4.value(2, 0) == -1);
+	IsTrue(mat4.value(2, 1) == -1);
+	IsTrue(mat4.value(2, 2) == -1);
+	IsTrue(mat4.value(2, 3) == -1);
+	IsTrue(mat4.value(3, 0) == -1);
+	IsTrue(mat4.value(3, 1) == -1);
+	IsTrue(mat4.value(3, 2) == -1);
+	IsTrue(mat4.value(3, 3) == -1);
+
+	IsTrue((mat1 -= mat2) == mat4);
+
+	//mult
+	NOU::NOU_MATH::Mat4i mat5(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+	NOU::NOU_MATH::Mat4i mat6(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17);
+
+	NOU::NOU_MATH::Mat4i mat7 = mat5 * mat6;
+
+	IsTrue(mat7.value(0, 0) == 100);
+	IsTrue(mat7.value(0, 1) == 110);
+	IsTrue(mat7.value(0, 2) == 120);
+	IsTrue(mat7.value(0, 3) == 130);
+	IsTrue(mat7.value(1, 0) == 228);
+	IsTrue(mat7.value(1, 1) == 254);
+	IsTrue(mat7.value(1, 2) == 280);
+	IsTrue(mat7.value(1, 3) == 306);
+	IsTrue(mat7.value(2, 0) == 356);
+	IsTrue(mat7.value(2, 1) == 398);
+	IsTrue(mat7.value(2, 2) == 440);
+	IsTrue(mat7.value(2, 3) == 482);
+	IsTrue(mat7.value(3, 0) == 484);
+	IsTrue(mat7.value(3, 1) == 542);
+	IsTrue(mat7.value(3, 2) == 600);
+	IsTrue(mat7.value(3, 3) == 658);
+
+	//mult (2x2 * 2x2 special)
+	NOU::NOU_MATH::Matrix<NOU::int32, 4, 5> mat8 = { { 1, 2, 3, 4, 5 },{ 6, 7, 8, 9, 10 },{ 11, 12, 13, 14, 15 },{ 16, 17, 18, 19, 20 } };
+	NOU::NOU_MATH::Matrix<NOU::int32, 4, 5> mat9 = mat5 * mat8;
+
+	IsTrue(mat9.value(0, 0) == 110);
+	IsTrue(mat9.value(0, 1) == 120);
+	IsTrue(mat9.value(0, 2) == 130);
+	IsTrue(mat9.value(0, 3) == 140);
+	IsTrue(mat9.value(0, 4) == 150);
+	IsTrue(mat9.value(1, 0) == 246);
+	IsTrue(mat9.value(1, 1) == 272);
+	IsTrue(mat9.value(1, 2) == 298);
+	IsTrue(mat9.value(1, 3) == 324);
+	IsTrue(mat9.value(1, 4) == 350);
+	IsTrue(mat9.value(2, 0) == 382);
+	IsTrue(mat9.value(2, 1) == 424);
+	IsTrue(mat9.value(2, 2) == 466);
+	IsTrue(mat9.value(2, 3) == 508);
+	IsTrue(mat9.value(2, 4) == 550);
+	IsTrue(mat9.value(3, 0) == 518);
+	IsTrue(mat9.value(3, 1) == 576);
+	IsTrue(mat9.value(3, 2) == 634);
+	IsTrue(mat9.value(3, 3) == 692);
+	IsTrue(mat9.value(3, 4) == 750);
+
+	//mult vector
+	NOU::NOU_MATH::Vec4i vec0(1, 2, 3, 4);
+
+	NOU::NOU_MATH::Vec4i vec1 = mat5 * vec0;
+	IsTrue(vec1.value(0) == 30);
+	IsTrue(vec1.value(1) == 70);
+	IsTrue(vec1.value(2) == 110);
+	IsTrue(vec1.value(3) == 150);
+
+	//mult scale
+	NOU::NOU_MATH::Mat4i mat10 = mat5 * 2;
+
+	IsTrue(mat10.value(0, 0) == 2);
+	IsTrue(mat10.value(0, 1) == 4);
+	IsTrue(mat10.value(0, 2) == 6);
+	IsTrue(mat10.value(0, 3) == 8);
+	IsTrue(mat10.value(1, 0) == 10);
+	IsTrue(mat10.value(1, 1) == 12);
+	IsTrue(mat10.value(1, 2) == 14);
+	IsTrue(mat10.value(1, 3) == 16);
+	IsTrue(mat10.value(2, 0) == 18);
+	IsTrue(mat10.value(2, 1) == 20);
+	IsTrue(mat10.value(2, 2) == 22);
+	IsTrue(mat10.value(2, 3) == 24);
+	IsTrue(mat10.value(3, 0) == 26);
+	IsTrue(mat10.value(3, 1) == 28);
+	IsTrue(mat10.value(3, 2) == 30);
+	IsTrue(mat10.value(3, 3) == 32);
+
+	NOU::NOU_MATH::Mat4i mat11 = mat5;
+	mat11 *= 2;
+
+	IsTrue(mat11 == mat10);
+
+	//transpose
+	NOU::NOU_MATH::Mat4i mat12 = mat5.transpose();
+
+	IsTrue(mat12.value(0, 0) == 1);
+	IsTrue(mat12.value(0, 1) == 5);
+	IsTrue(mat12.value(0, 2) == 9);
+	IsTrue(mat12.value(0, 3) == 13);
+	IsTrue(mat12.value(1, 0) == 2);
+	IsTrue(mat12.value(1, 1) == 6);
+	IsTrue(mat12.value(1, 2) == 10);
+	IsTrue(mat12.value(1, 3) == 14);
+	IsTrue(mat12.value(2, 0) == 3);
+	IsTrue(mat12.value(2, 1) == 7);
+	IsTrue(mat12.value(2, 2) == 11);
+	IsTrue(mat12.value(2, 3) == 15);
+	IsTrue(mat12.value(3, 0) == 4);
+	IsTrue(mat12.value(3, 1) == 8);
+	IsTrue(mat12.value(3, 2) == 12);
+	IsTrue(mat12.value(3, 3) == 16);
+
+	//copy
+	IsTrue(mat5.copy() == mat5);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(MathMat5)
+{
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> mat0 = { { 1.0f, 2.0f, 3.0f, 4.0f },
+	                                                   { 5.0f, 6.0f, 7.0f, 8.0f },
+	                                                   { 9.0f, 10.0f, 11.0f, 12.0f },
+	                                                   { 13.0f, 14.0f, 15.0f, 16.0f },
+	                                                   { 17.0f, 18.0f, 19.0f, 20.0f } };
+
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> mat1 = { { 1.0f, 2.0f, 3.0f, 4.0f },
+	                                                   { 5.0f, 6.0f, 7.0f, 8.0f },
+	                                                   { 9.0f, 10.0f, 11.0f, 12.0f },
+	                                                   { 13.0f, 14.0f, 15.0f, 16.0f },
+	                                                   { 17.0f, 18.0f, 19.0f, 20.0f } };
+
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> mat2 = { { 2.0f, 3.0f, 4.0f, 5.0f },
+	                                                   { 6.0f, 7.0f, 8.0f, 9.0f },
+	                                                   { 10.0f, 11.0f, 12.0f, 13.0f },
+	                                                   { 14.0f, 15.0f, 16.0f, 17.0f },
+	                                                   { 18.0f, 19.0f, 20.0f, 21.0f } };
+
+	//Check if the values are correct
+	IsTrue(mat0.value(0, 0) == 1.0f);
+	IsTrue(mat0.value(0, 1) == 2.0f);
+	IsTrue(mat0.value(0, 2) == 3.0f);
+	IsTrue(mat0.value(0, 3) == 4.0f);
+	IsTrue(mat0.value(1, 0) == 5.0f);
+	IsTrue(mat0.value(1, 1) == 6.0f);
+	IsTrue(mat0.value(1, 2) == 7.0f);
+	IsTrue(mat0.value(1, 3) == 8.0f);
+	IsTrue(mat0.value(2, 0) == 9.0f);
+	IsTrue(mat0.value(2, 1) == 10.0f);
+	IsTrue(mat0.value(2, 2) == 11.0f);
+	IsTrue(mat0.value(2, 3) == 12.0f);
+	IsTrue(mat0.value(3, 0) == 13.0f);
+	IsTrue(mat0.value(3, 1) == 14.0f);
+	IsTrue(mat0.value(3, 2) == 15.0f);
+	IsTrue(mat0.value(3, 3) == 16.0f);
+	IsTrue(mat0.value(4, 0) == 17.0f);
+	IsTrue(mat0.value(4, 1) == 18.0f);
+	IsTrue(mat0.value(4, 2) == 19.0f);
+	IsTrue(mat0.value(4, 3) == 20.0f);
+
+	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
+	IsTrue(mat0 == mat1);
+	IsTrue(mat0 != mat2);
+	IsTrue(!(mat0 == mat2));
+	IsTrue(mat0 == mat0);
+
+	//zeroes
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> matZeroes = NOU::NOU_MATH::Matrix<NOU::float32, 5, 4>::zeroes();
+
+	IsTrue(matZeroes.value(0, 0) == 0.0f);
+	IsTrue(matZeroes.value(0, 1) == 0.0f);
+	IsTrue(matZeroes.value(0, 2) == 0.0f);
+	IsTrue(matZeroes.value(0, 3) == 0.0f);
+	IsTrue(matZeroes.value(1, 0) == 0.0f);
+	IsTrue(matZeroes.value(1, 1) == 0.0f);
+	IsTrue(matZeroes.value(1, 2) == 0.0f);
+	IsTrue(matZeroes.value(1, 3) == 0.0f);
+	IsTrue(matZeroes.value(2, 0) == 0.0f);
+	IsTrue(matZeroes.value(2, 1) == 0.0f);
+	IsTrue(matZeroes.value(2, 2) == 0.0f);
+	IsTrue(matZeroes.value(2, 3) == 0.0f);
+	IsTrue(matZeroes.value(3, 0) == 0.0f);
+	IsTrue(matZeroes.value(3, 1) == 0.0f);
+	IsTrue(matZeroes.value(3, 2) == 0.0f);
+	IsTrue(matZeroes.value(3, 3) == 0.0f);
+	IsTrue(matZeroes.value(4, 0) == 0.0f);
+	IsTrue(matZeroes.value(4, 1) == 0.0f);
+	IsTrue(matZeroes.value(4, 2) == 0.0f);
+	IsTrue(matZeroes.value(4, 3) == 0.0f);
+
+	//identity
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> matIden = NOU::NOU_MATH::Matrix<NOU::float32, 5, 4>::identity();
+
+	IsTrue(matIden.value(0, 0) == 1.0f);
+	IsTrue(matIden.value(0, 1) == 0.0f);
+	IsTrue(matIden.value(0, 2) == 0.0f);
+	IsTrue(matIden.value(0, 3) == 0.0f);
+	IsTrue(matIden.value(1, 0) == 0.0f);
+	IsTrue(matIden.value(1, 1) == 1.0f);
+	IsTrue(matIden.value(1, 2) == 0.0f);
+	IsTrue(matIden.value(1, 3) == 0.0f);
+	IsTrue(matIden.value(2, 0) == 0.0f);
+	IsTrue(matIden.value(2, 1) == 0.0f);
+	IsTrue(matIden.value(2, 2) == 1.0f);
+	IsTrue(matIden.value(2, 3) == 0.0f);
+	IsTrue(matIden.value(3, 0) == 0.0f);
+	IsTrue(matIden.value(3, 1) == 0.0f);
+	IsTrue(matIden.value(3, 2) == 0.0f);
+	IsTrue(matIden.value(3, 3) == 1.0f);
+	IsTrue(matIden.value(4, 0) == 0.0f);
+	IsTrue(matIden.value(4, 1) == 0.0f);
+	IsTrue(matIden.value(4, 2) == 0.0f);
+	IsTrue(matIden.value(4, 3) == 0.0f);
+
+	//add
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> mat3 = mat0 + mat2;
+
+	IsTrue(mat3.value(0, 0) == 3.0f);
+	IsTrue(mat3.value(0, 1) == 5.0f);
+	IsTrue(mat3.value(0, 2) == 7.0f);
+	IsTrue(mat3.value(0, 3) == 9.0f);
+	IsTrue(mat3.value(1, 0) == 11.0f);
+	IsTrue(mat3.value(1, 1) == 13.0f);
+	IsTrue(mat3.value(1, 2) == 15.0f);
+	IsTrue(mat3.value(1, 3) == 17.0f);
+	IsTrue(mat3.value(2, 0) == 19.0f);
+	IsTrue(mat3.value(2, 1) == 21.0f);
+	IsTrue(mat3.value(2, 2) == 23.0f);
+	IsTrue(mat3.value(2, 3) == 25.0f);
+	IsTrue(mat3.value(3, 0) == 27.0f);
+	IsTrue(mat3.value(3, 1) == 29.0f);
+	IsTrue(mat3.value(3, 2) == 31.0f);
+	IsTrue(mat3.value(3, 3) == 33.0f);
+	IsTrue(mat3.value(4, 0) == 35.0f);
+	IsTrue(mat3.value(4, 1) == 37.0f);
+	IsTrue(mat3.value(4, 2) == 39.0f);
+	IsTrue(mat3.value(4, 3) == 41.0f);
+
+	IsTrue((mat0 += mat2) == mat3);
+
+	//sub
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> mat4 = mat1 - mat2;
+
+	IsTrue(mat4.value(0, 0) == -1.0f);
+	IsTrue(mat4.value(0, 1) == -1.0f);
+	IsTrue(mat4.value(0, 2) == -1.0f);
+	IsTrue(mat4.value(0, 3) == -1.0f);
+	IsTrue(mat4.value(1, 0) == -1.0f);
+	IsTrue(mat4.value(1, 1) == -1.0f);
+	IsTrue(mat4.value(1, 2) == -1.0f);
+	IsTrue(mat4.value(1, 3) == -1.0f);
+	IsTrue(mat4.value(2, 0) == -1.0f);
+	IsTrue(mat4.value(2, 1) == -1.0f);
+	IsTrue(mat4.value(2, 2) == -1.0f);
+	IsTrue(mat4.value(2, 3) == -1.0f);
+	IsTrue(mat4.value(3, 0) == -1.0f);
+	IsTrue(mat4.value(3, 1) == -1.0f);
+	IsTrue(mat4.value(3, 2) == -1.0f);
+	IsTrue(mat4.value(3, 3) == -1.0f);
+	IsTrue(mat4.value(4, 0) == -1.0f);
+	IsTrue(mat4.value(4, 1) == -1.0f);
+	IsTrue(mat4.value(4, 2) == -1.0f);
+	IsTrue(mat4.value(4, 3) == -1.0f);
+
+	IsTrue((mat1 -= mat2) == mat4);
+
+	//mult
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 5> mat5 = { { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f },
+	                                                   { 6.0f, 7.0f, 8.0f, 9.0f, 10.0f },
+	                                                   { 11.0f, 12.0f, 13.0f, 14.0f, 15.0f },
+	                                                   { 16.0f, 17.0f, 18.0f, 19.0f, 20.0f },
+	                                                   { 21.0f, 22.0f, 23.0f, 24.0f, 25.0f } };
+
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> mat6 = { { 2.0f, 3.0f, 4.0f, 5.0f },
+	                                                   { 6.0f, 7.0f, 8.0f, 9.0f },
+	                                                   { 10.0f, 11.0f, 12.0f, 13.0f },
+	                                                   { 14.0f, 15.0f, 16.0f, 17.0f },
+	                                                   { 18.0f, 19.0f, 20.0f, 21.0f } };
+
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> mat7 = mat5 * mat6;
+
+	IsTrue(mat7.value(0, 0) == 190.0f);
+	IsTrue(mat7.value(0, 1) == 205.0f);
+	IsTrue(mat7.value(0, 2) == 220.0f);
+	IsTrue(mat7.value(0, 3) == 235.0f);
+	IsTrue(mat7.value(1, 0) == 440.0f);
+	IsTrue(mat7.value(1, 1) == 480.0f);
+	IsTrue(mat7.value(1, 2) == 520.0f);
+	IsTrue(mat7.value(1, 3) == 560.0f);
+	IsTrue(mat7.value(2, 0) == 690.0f);
+	IsTrue(mat7.value(2, 1) == 755.0f);
+	IsTrue(mat7.value(2, 2) == 820.0f);
+	IsTrue(mat7.value(2, 3) == 885.0f);
+	IsTrue(mat7.value(3, 0) == 940.0f);
+	IsTrue(mat7.value(3, 1) == 1030.0f);
+	IsTrue(mat7.value(3, 2) == 1120.0f);
+	IsTrue(mat7.value(3, 3) == 1210.0f);
+	IsTrue(mat7.value(4, 0) == 1190.0f);
+	IsTrue(mat7.value(4, 1) == 1305.0f);
+	IsTrue(mat7.value(4, 2) == 1420.0f);
+	IsTrue(mat7.value(4, 3) == 1535.0f);
+
+	//mult vector
+	NOU::NOU_MATH::Vector<NOU::float32, 5> vec0 = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
+
+	NOU::NOU_MATH::Vector<NOU::float32, 5> vec1 = mat5 * vec0;
+	IsTrue(vec1.value(0) == 55.0f);
+	IsTrue(vec1.value(1) == 130.0f);
+	IsTrue(vec1.value(2) == 205.0f);
+	IsTrue(vec1.value(3) == 280.0f);
+	IsTrue(vec1.value(4) == 355.0f);
+
+	//mult scale
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 5> mat10 = mat5 * 2;
+
+	IsTrue(mat10.value(0, 0) == 02.0f);
+	IsTrue(mat10.value(0, 1) == 04.0f);
+	IsTrue(mat10.value(0, 2) == 06.0f);
+	IsTrue(mat10.value(0, 3) == 08.0f);
+	IsTrue(mat10.value(0, 4) == 10.0f);
+	IsTrue(mat10.value(1, 0) == 12.0f);
+	IsTrue(mat10.value(1, 1) == 14.0f);
+	IsTrue(mat10.value(1, 2) == 16.0f);
+	IsTrue(mat10.value(1, 3) == 18.0f);
+	IsTrue(mat10.value(1, 4) == 20.0f);
+	IsTrue(mat10.value(2, 0) == 22.0f);
+	IsTrue(mat10.value(2, 1) == 24.0f);
+	IsTrue(mat10.value(2, 2) == 26.0f);
+	IsTrue(mat10.value(2, 3) == 28.0f);
+	IsTrue(mat10.value(2, 4) == 30.0f);
+	IsTrue(mat10.value(3, 0) == 32.0f);
+	IsTrue(mat10.value(3, 1) == 34.0f);
+	IsTrue(mat10.value(3, 2) == 36.0f);
+	IsTrue(mat10.value(3, 3) == 38.0f);
+	IsTrue(mat10.value(3, 4) == 40.0f);
+	IsTrue(mat10.value(4, 0) == 42.0f);
+	IsTrue(mat10.value(4, 1) == 44.0f);
+	IsTrue(mat10.value(4, 2) == 46.0f);
+	IsTrue(mat10.value(4, 3) == 48.0f);
+	IsTrue(mat10.value(4, 4) == 50.0f);
+
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 5> mat11 = mat5;
+	mat11 *= 2;
+
+	IsTrue(mat11 == mat10);
+
+	//transpose
+	NOU::NOU_MATH::Matrix<NOU::float32, 5, 5> mat12 = mat5.transpose();
+
+	IsTrue(mat12.value(0, 0) == mat5.value(0, 0));
+	IsTrue(mat12.value(0, 1) == mat5.value(1, 0));
+	IsTrue(mat12.value(0, 2) == mat5.value(2, 0));
+	IsTrue(mat12.value(0, 3) == mat5.value(3, 0));
+	IsTrue(mat12.value(0, 4) == mat5.value(4, 0));
+	IsTrue(mat12.value(1, 0) == mat5.value(0, 1));
+	IsTrue(mat12.value(1, 1) == mat5.value(1, 1));
+	IsTrue(mat12.value(1, 2) == mat5.value(2, 1));
+	IsTrue(mat12.value(1, 3) == mat5.value(3, 1));
+	IsTrue(mat12.value(1, 4) == mat5.value(4, 1));
+	IsTrue(mat12.value(2, 0) == mat5.value(0, 2));
+	IsTrue(mat12.value(2, 1) == mat5.value(1, 2));
+	IsTrue(mat12.value(2, 2) == mat5.value(2, 2));
+	IsTrue(mat12.value(2, 3) == mat5.value(3, 2));
+	IsTrue(mat12.value(2, 4) == mat5.value(4, 2));
+	IsTrue(mat12.value(3, 0) == mat5.value(0, 3));
+	IsTrue(mat12.value(3, 1) == mat5.value(1, 3));
+	IsTrue(mat12.value(3, 2) == mat5.value(2, 3));
+	IsTrue(mat12.value(3, 3) == mat5.value(3, 3));
+	IsTrue(mat12.value(3, 4) == mat5.value(4, 3));
+	IsTrue(mat12.value(4, 0) == mat5.value(0, 4));
+	IsTrue(mat12.value(4, 1) == mat5.value(1, 4));
+	IsTrue(mat12.value(4, 2) == mat5.value(2, 4));
+	IsTrue(mat12.value(4, 3) == mat5.value(3, 4));
+	IsTrue(mat12.value(4, 4) == mat5.value(4, 4));
+
+	//copy
+	IsTrue(mat5.copy() == mat5);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+void callback(const char *msg, const char *fnName, NOU::sizeType line, const char *file)
+{
+	IsTrue(false);
+}
+
 int main(int argc, char** argv)
 {
+	NOU::NOU_CORE::getAssertionSettings().printOnFail = true;
+	NOU::NOU_CORE::getAssertionSettings().pushErrorOnFail = false;
+	NOU::NOU_CORE::getAssertionSettings().callbackOnFail = callback;
+
     int result = Catch::Session().run(argc, argv);
 
     std::cout << "Test run has finished. Press ENTER to return." << std::endl;

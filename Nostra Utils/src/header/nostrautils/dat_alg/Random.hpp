@@ -16,7 +16,7 @@
 */
 namespace NOU::NOU_DAT_ALG
 {
-	class NOU_CLASS Random
+	class Random
 	{
 	public:
 		using Seed = uint64;
@@ -28,19 +28,19 @@ namespace NOU::NOU_DAT_ALG
 		Seed m_seed;
 
 	public:
-		Random(Seed seed = USE_TIME_AS_SEED);
+		NOU_FUNC Random(Seed seed = USE_TIME_AS_SEED);
 
 		/**
 		\brief A function that sets a seed for the random function
 		\param seed The seed to use.
 		*/
-		void setSeed(Seed seed);
+		NOU_FUNC void setSeed(Seed seed);
 
 		/**
 		\brief A function that generates you a random number
 		\return A random number in the interval \f$\left[0, MAX_INT\right[\f$ with MAX_INT being the maximum value of a 64 bit unsigned integer.
 		*/
-		Value rand();
+		NOU_FUNC Value rand();
 
 		/**
 		\brief A function that generates you a random number in an interval.
@@ -48,7 +48,7 @@ namespace NOU::NOU_DAT_ALG
 		\param b where you interval ends (this value is included in the interval)
 		\return A random number in the interval \f$\left[a, b\right[\f$.
 		*/
-		Value rand(Value a, Value b);
+		NOU_FUNC Value rand(Value a, Value b);
 	};
 
 }

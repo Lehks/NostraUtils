@@ -6,26 +6,16 @@
 #include "nostrautils/dat_alg/Vector.hpp"
 #include "nostrautils/file_mngt/Path.hpp"
 
-//#include <stdio.h>
+#include <stdio.h>
 //#include <io.h>
 
-#include <sys/stat.h>
-
-
-
-
-
-/** \file File.hpp
+/** file_mngt/File.hpp
 \author  Leslie Marxen
+\author	 Lukas Gross
 \since   1.0.0
 \version 1.0.0
 \brief   This file provides very basic file i/o implementations
 */
-
-
-
-
-
 namespace NOU::NOU_FILE_MNGT
 {
 	/*
@@ -48,67 +38,76 @@ namespace NOU::NOU_FILE_MNGT
 	};
 
 	/**
-	\brief Class that handles very basic i/o on a single file
+	\brief Class that handles very basic i/o on a single file.
 	*/
-
 	class NOU_CLASS File
 	{
 	private:
+		const static sizeType INVALID_SIZE;
+
 		/**
 		 \param file     The file handle of the opened file. This is an output parameter.
 		 \param filename The name of the file to open.
 		 \param mode     The mode to open the file with.
 
-
 		 \brief Wraps around either fopen() on POSIX systems or fopen_s() on a Windows system.
 		*/
-		static void fopen(FILE** file, const NOU_DAT_ALG::StringView8 &filename, const NOU_DAT_ALG::StringView8 mode);
+		void openStream(const char8 *mode);
 
 		/**
-		\brief File stream of the opened File
+		\brief File stream of the opened File.
 		*/
 		FILE															*m_data;
+
 		/**
-		\brief Wether the file is in append, write, read mode or any combination of those
+		\brief Whether the file is in append, write, read mode or any combination of those.
 		*/
 		AccessMode														m_mode;
 
+		/**
+		\brief Path to the folder containing the file.
+		*/
+		Path															m_path;
 
 		/**
-		\brief Path to the folder containing the file
+		\return True if the closing was successful, false if not.
+
+		\brief This is a private function, that closes the file without checking whether it is opened or not.
 		*/
-		//NOU::NOU_DAT_ALG::StringView8							m_path
-		Path															m_path;
+		boolean closeUnchecked();
 
 	public:
 
 		/**
-		\brief Constructor of the File class
-
-		\param path Path object containing the path to the file
+		\param path Path object containing the path to the file.
+		
+		\brief Constructor of the File class.
 		*/
 		File(const Path &path);
 		
 		/**
-		\brief Copy-constructor of the File class
+		\param other The object to copy.
 
-		\param other other constructer from which this constructor will copy
+		\brief Copy-constructor of the File class.
 		*/
 		File(const File &other) = delete;
-		/**
-		\brief Move-construcor of the File class
 
-		\param other other constructer from which this constructor will move
+		/**
+		\param other The object to move.
+
+		\brief Move-constructor of the File class.
 		*/
 		File(File &&other);
+
 		/**
-		\brief destructor of the File Class
+		\brief Destructor of the File Class.
 		*/
 		~File();
-		/**
-		\brief Reads a single byte from the file
 
-		\return the read byte
+		/**
+		\return The read byte.
+
+		\brief Reads a single byte from the file.
 		*/
 		byte read();
 
@@ -118,97 +117,114 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief reads a string of given size
 		*/
-		void read(sizeType size, char8 *buffer);
+		sizeType read(sizeType size, char8 *buffer);
 
 		/**
-		\param b The byte to write
-		\brief writes a single byte into a file according to the i/o mode that is set
+		\param buffer A reference to a string where the read data will be written to.
+		\param size How many chars/bytes will be read into the String (0 = the whole File).
 
-		\return true if successfully written, false if otherwise
+		\brief reads the whole file into a string.
+		*/
+		void read(NOU::NOU_DAT_ALG::String8 &buffer, sizeType size = 0);
+
+		/**
+		\param b The byte to write.
+
+		\return True if successfully written, false if otherwise.
+
+		\brief Writes a single byte into a file according to the i/o mode that is set.
 		*/
 		boolean write(byte b);
 
 
 		/**
-		\brief Writes a string into a file
-		\param s the given string
-		\return true if successfully written, false if otherwise
+		\param s The given string.
+
+		\return True if successfully written, false if otherwise.
+
+		\brief Writes a string into a file.
 		*/
 		boolean write(const NOU::NOU_DAT_ALG::StringView8 &s);
 
 		/**
-		\brief Opens the internal filestream
+		\return True if successfully opened, false if otherwise.
 
-		\return true if successfully opened, false if otherwise
+		\brief Opens the internal file stream.
 		*/
 		boolean open(AccessMode mode = AccessMode::READ_WRITE);
 
 		/**
-		\brief Closes the internal filestream
+		\return True if successfully closed, false if otherwise.
 
-		\return true if successfully closed, false if otherwise
+		\brief Closes the internal file stream.
 		*/
 		boolean close();
 
 		/**
-		\brief Creates the file if not allready existing
+		\brief Creates the file if not already existing.
 		*/
 		void createFile();
 
 		/** 
-		\brief Checks if the Filestream is opened
+		\return True if currently opened, false if not.
 
-		\return true if currently opened, false if not
+		\brief Checks if the file stream is opened.
 		*/
 
 		boolean isCurrentlyOpen();
 
 		/**
-		\brief Getter for AccessMode
-		\return current AccessMode 
+		\return Returns the current access mode of the file.
+
+		\brief Getter for the access mode that was used the last time.
 		*/
 		const AccessMode& getMode();
 
-
-
 		/**
-		\brief Getter for Path
-		\return path
+		\return Returns the path of the object.
+
+		\brief Getter for the object path.
 		*/
 		const Path& getPath();
 
 		/**
-		\brief Getter for datastream
-		\return datastream
+		\return The data stream.
+
+		\brief Getter for data stream.
 		*/
 		FILE* getData(); 
 
 		/**
-		\brief checks if a File is allready existing according to the set Path
-		\return true if File exists, false otherwise
+		\return True if file exists, false otherwise.
+
+		\brief Checks if a file is already existing according to the set path.
 		*/
 		boolean exists();
 
 		/**
-		\brief returns the file size in bytes, pushes an error if the file is not existant
-		\return returns the file size in bytes
+		\return The size of the file in bytes.
+		
+		\brief Returns the file size in bytes, pushes an error if the file is not existent.
 		*/
 		sizeType size();
 
 		/**
-		\brief deletes the corresponding file from the permanent memory
-		\return true if successfully deleted, false if otherwise
+		\return True if successfully deleted, false if otherwise.
+		
+		\brief Deletes the corresponding file.
 		*/
 		boolean deleteFile();
 
 	private:
 
 		/**
-		\brief Setter for AccessMode
 		\param mode AccessMode of the file
+		
+		\return if mode was set successfully
+		
+		\brief Setter for AccessMode
 		*/
-		void setMode(AccessMode mode);
-
+		boolean setMode(AccessMode mode);
 	};
 }
 

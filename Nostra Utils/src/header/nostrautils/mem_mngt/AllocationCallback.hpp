@@ -27,7 +27,7 @@ namespace NOU::NOU_MEM_MNGT
 	       memory.
 	*/
 	template<typename T>
-	class NOU_CLASS AllocationCallback
+	class AllocationCallback
 	{
 	public:
 
@@ -84,7 +84,7 @@ namespace NOU::NOU_MEM_MNGT
 	any memory that was allocated by deallocateUninitialized().
 	*/
 	template<typename T>
-	class NOU_CLASS GenericAllocationCallback final : public AllocationCallback<T>
+	class GenericAllocationCallback final : public AllocationCallback<T>
 	{
 	public:
 		/**
@@ -124,7 +124,7 @@ namespace NOU::NOU_MEM_MNGT
 	       tracks the amount of allocations and deallocations.
 	*/
 	template<typename T>
-	class NOU_CLASS DebugAllocationCallback final : public AllocationCallback<T>
+	class DebugAllocationCallback final : public AllocationCallback<T>
 	{
 	private:
 		/**

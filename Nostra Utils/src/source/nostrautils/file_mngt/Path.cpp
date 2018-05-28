@@ -6,6 +6,7 @@
 #include <Windows.h>
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 #include <unistd.h>
+#include <pwd.h>
 #endif
 
 namespace NOU::NOU_FILE_MNGT
@@ -22,18 +23,18 @@ namespace NOU::NOU_FILE_MNGT
 #if NOU_OS == NOU_OS_WINDOWS
 
 		//replace all / with \ 
-		ret.replace(PATH_SEPARATOR_UNIX_LINUX, PATH_SEPARATOR_WINDOWS);
+        ret.replace(PATH_SEPARATOR_UNIX_LINUX, PATH_SEPARATOR_WINDOWS);
 
 
-		//if path starts not with *:\, it is a relative path (* is any character, like C)
-		if (!(path.at(1) == ':' && path.at(2) == PATH_SEPARATOR_WINDOWS)) 
+        //if path starts not with *:\ , it is a relative path (* is any character, like C)
+        if (ret[1] != ':')
 		{
+			if (!ret.startsWith(PATH_SEPARATOR))
+				ret.insert(0, PATH_SEPARATOR);
+
 			Path cwd = currentWorkingDirectory();
 
 			ret.insert(0, cwd.getAbsolutePath());
-
-			if(!path.startsWith(PATH_SEPARATOR))
-				ret.insert(cwd.getAbsolutePath().size(), PATH_SEPARATOR);
 		}
 
 #elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
@@ -41,12 +42,26 @@ namespace NOU::NOU_FILE_MNGT
 		//replace all \ with /
 		ret.replace(PATH_SEPARATOR_WINDOWS, PATH_SEPARATOR_UNIX_LINUX);
 
-		if (!path.startsWith(PATH_SEPARATOR_UNIX_LINUX)) //if path starts not with /, it is a relative path
-		{
-			Path cwd = currentWorkingDirectory();
+        if(ret.startsWith('~'))
+        {
+            struct passwd *pw = getpwuid(getuid());
 
-			ret.insert(0, cwd.getAbsolutePath());
-			ret.insert(cwd.getAbsolutePath().size(), PATH_SEPARATOR);
+            if (ret.at(1) != '/')
+            {
+                ret.insert(1,'/');
+            }
+
+            NOU::NOU_DAT_ALG::String8 str(pw->pw_dir);
+
+            return str + ret.substring(1,ret.size() +1);
+        }
+
+		if (!ret.startsWith(PATH_SEPARATOR_UNIX_LINUX))
+		{
+		    Path cwd = currentWorkingDirectory();
+
+		    ret.insert(0, cwd.getAbsolutePath());
+		    ret.insert(cwd.getAbsolutePath().size(), PATH_SEPARATOR);
 		}
 #endif
 

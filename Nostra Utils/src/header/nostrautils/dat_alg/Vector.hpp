@@ -41,7 +41,7 @@ namespace NOU::NOU_DAT_ALG
 	\details The most basic of our containers. It can act like a dynamic array a FIFO-Queue, LIFO-Queue or a normal Queue.
 	*/
 	template<typename T>
-	class NOU_CLASS Vector final
+	class Vector final
 	{
 
 	private:
@@ -86,14 +86,6 @@ namespace NOU::NOU_DAT_ALG
 		\see nostra::utils::mem_mngt::AllocationCallback
 		*/
 		void free(T *data);
-
-		/**
-		\brief Reallocate memory for the vector.
-
-		\details 
-		If a new element gets inserted to the vector it has to reallocate the memory for it.
-		*/
-		void reallocateData(sizeType capacity);
 
 		/**
 		\tparam ARGS The types of the arguments that will be passed to the constructor of T.
@@ -395,6 +387,14 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		Vector& replace(sizeType index, const T &replacement);
 
+        /**
+        \brief Reallocate memory for the vector.
+
+        \details
+        If a new element gets inserted to the vector it has to reallocate the memory for it.
+        */
+        void reallocateData(sizeType capacity);
+
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
 
@@ -554,7 +554,7 @@ namespace NOU::NOU_DAT_ALG
 	both const and non-const iterating). This iterator is a forward iterator.
 	*/
 	template<typename T>
-	class NOU_CLASS VectorIterator
+	class VectorIterator
 	{
 		friend class Vector<T>;
 
@@ -689,7 +689,7 @@ namespace NOU::NOU_DAT_ALG
 	both const and non-const iterating). This iterator is a reverse iterator.
 	*/
 	template<typename T>
-	class NOU_CLASS VectorReverseIterator
+	class VectorReverseIterator
 	{
 		friend class Vector<T>;
 

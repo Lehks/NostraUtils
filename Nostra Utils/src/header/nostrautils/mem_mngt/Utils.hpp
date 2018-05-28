@@ -61,7 +61,7 @@ namespace NOU::NOU_MEM_MNGT
 	         construct them).
 	*/
 	template<typename T>
-	NOU_FUNC T* allocateUninitialized(sizeType amount);
+	T* allocateUninitialized(sizeType amount);
 
 	/**
 	\tparam The type of the object.
@@ -74,7 +74,7 @@ namespace NOU::NOU_MEM_MNGT
 		   Wrapper for std::addressof.
 	*/
 	template<typename T>
-	constexpr NOU_FUNC T* addressof(T& data);
+	constexpr T* addressof(T& data);
 
 	/**
 	\param data The data to deallocate.
@@ -92,13 +92,13 @@ namespace NOU::NOU_MEM_MNGT
 	NOU_FUNC void deallocateUninitialized(void *data);
 
 	template<typename T>
-	NOU_FUNC T* allocateUninitialized(sizeType amount)
+	T* allocateUninitialized(sizeType amount)
 	{
 		return reinterpret_cast<T*>(alignedAlloc(sizeof(T) * amount, alignof(T)));
 	}
 
 	template<typename T>
-	constexpr NOU_FUNC T* addressof(T& data)
+	constexpr T* addressof(T& data)
 	{
 		return std::addressof(data);
 	}

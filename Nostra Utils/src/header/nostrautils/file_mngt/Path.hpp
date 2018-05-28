@@ -18,7 +18,7 @@ namespace NOU::NOU_FILE_MNGT
 	/**
 	\brief A path class for different path operations on different operating systems.
 	*/
-	class NOU_CLASS Path
+	class Path
 	{
 	public:
 		/**
@@ -57,7 +57,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		/see nostra:dat_alg::LazyEvaluationProperty.hpp
 		*/
-		static NOU_DAT_ALG::String8 makeAbsolutePath(const NOU_DAT_ALG::StringView8 &path);
+		NOU_FUNC static NOU_DAT_ALG::String8 makeAbsolutePath(const NOU_DAT_ALG::StringView8 &path);
 		/**
 		\param path		a constant path.
 
@@ -68,7 +68,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		/see nostra:dat_alg::LazyEvaluationProperty.hpp
 		*/
-		static NOU_DAT_ALG::String8 evaluateName(const NOU_DAT_ALG::StringView8 &path);
+		NOU_FUNC static NOU_DAT_ALG::String8 evaluateName(const NOU_DAT_ALG::StringView8 &path);
 		/**
 		\param path		a constant path.
 
@@ -79,7 +79,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		/see nostra:dat_alg::LazyEvaluationProperty.hpp
 		*/
-		static NOU_DAT_ALG::String8 evaluateExtension(const NOU_DAT_ALG::StringView8 &path);
+		NOU_FUNC static NOU_DAT_ALG::String8 evaluateExtension(const NOU_DAT_ALG::StringView8 &path);
 		/**
 		\param path		a constant path.
 
@@ -90,7 +90,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		/see nostra:dat_alg::LazyEvaluationProperty.hpp
 		*/
-		static NOU_DAT_ALG::String8 evaluateNameAndExtension(const NOU_DAT_ALG::StringView8 &path);
+		NOU_FUNC static NOU_DAT_ALG::String8 evaluateNameAndExtension(const NOU_DAT_ALG::StringView8 &path);
 		/**
 		\param path		A constant path.
 
@@ -106,7 +106,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		/see nostra:dat_alg::LazyEvaluationProperty.hpp
 		*/
-		static NOU_DAT_ALG::String8 evaluateRelativePath(const NOU_DAT_ALG::StringView8 &path);
+		NOU_FUNC static NOU_DAT_ALG::String8 evaluateRelativePath(const NOU_DAT_ALG::StringView8 &path);
 		/**
 		\param path		a constant path.
 
@@ -120,7 +120,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		/see nostra:dat_alg::LazyEvaluationProperty.hpp
 		*/
-		static NOU_DAT_ALG::String8 evaluateParentPath(const NOU_DAT_ALG::StringView8 &path);
+		NOU_FUNC static NOU_DAT_ALG::String8 evaluateParentPath(const NOU_DAT_ALG::StringView8 &path);
 
 		/**
 		\brief Stores the absolute value of the path.
@@ -158,81 +158,81 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief Returns a path object with the current working directory.
 		*/
-		static Path currentWorkingDirectory();
+		NOU_FUNC static Path currentWorkingDirectory();
 		/**
 		\brief Constructor with a char pointer as parameter (calls Path(const NOU::NOU_DAT_ALG::StringView8 & path)) constructor.
 		*/
-		Path(NOU::NOU_DAT_ALG::StringView8::ConstCharType *path);
+		NOU_FUNC Path(NOU::NOU_DAT_ALG::StringView8::ConstCharType *path);
 		/**
 		\brief Constructor with a const StringView8 reference as parameter.
 		this constructor will initialize all  LazyEvalProp variables and calls the makeAbsolutePath method as well.
 
 		\see makeAbsolutePath().
 		*/
-		Path(const NOU::NOU_DAT_ALG::StringView8 & path);
+		NOU_FUNC Path(const NOU::NOU_DAT_ALG::StringView8 & path);
 		/**
 		\brief This file calls evaluateName().
 
 		\see evaluateName()
 		*/
-		const NOU::NOU_DAT_ALG::StringView8& getName() const;
+		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getName() const;
 		/**
 		\brief This file calls evaluateExtension().
 
 		\see evaluateExtension()
 		*/
-		const NOU::NOU_DAT_ALG::StringView8& getFileExtension() const;
+		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getFileExtension() const;
 		/**
 		\brief This file calls evaluateNameAndExtension().
 
 		\see evaluateNameAndExtension()
 		*/
-		const NOU::NOU_DAT_ALG::StringView8& getNameAndExtension() const;
+		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getNameAndExtension() const;
 		/**
 		\brief This file calls evaluateRelativePath().
 
 		\see evaluateRelativePath()
 		*/
-		const NOU::NOU_DAT_ALG::StringView8& getRelativePath() const;
+		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getRelativePath() const;
 		/**
 		\brief This file returns the absolutePath variable.
 		*/
-		const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath() const;
+		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath() const;
 		/**
 		\brief This file calls evaluateParentPath().
 
 		\see evaluateParentPath()
 		*/
-		const NOU::NOU_DAT_ALG::StringView8& getParentPath() const;
+		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getParentPath() const;
 
 		/**
 		\brief Simple override of the equals operator between path's.
 		*/
-		boolean operator == (const Path &other) const;
+		NOU_FUNC boolean operator == (const Path &other) const;
 		/**
 		\brief Simple override of the not equals operator between path's.
 		*/
-		boolean operator != (const Path &other) const;
+		NOU_FUNC boolean operator != (const Path &other) const;
 		/**
 		\brief Copy the other path into this path.
 		*/
-		Path& operator = (const Path &other);
+		NOU_FUNC Path& operator = (const Path &other);
 		/**
 		\brief Appends m_absolutePath from the other Path to this one.
 		*/
-		Path& operator + (const Path &other);
+		NOU_FUNC Path& operator + (const Path &other);
 		/**
 		\brief Appends an StringView8 to the current path's m_absolutePath.
 		*/
-		Path& operator + (const NOU::NOU_DAT_ALG::StringView8 &other);
+		NOU_FUNC Path& operator + (const NOU::NOU_DAT_ALG::StringView8 &other);
 		/**
 		\brief Appends m_absolutePath from the other Path to this one.
 		*/
-		Path& operator += (const Path &other);
+		NOU_FUNC Path& operator += (const Path &other);
 		/**
 		\brief Appends an StringView8 to the current path's m_absolutePath.
 		*/
-		Path& operator += (const NOU::NOU_DAT_ALG::StringView8 &other);
+		NOU_FUNC Path& operator += (const NOU::NOU_DAT_ALG::StringView8 &other);
 	};
 }
 

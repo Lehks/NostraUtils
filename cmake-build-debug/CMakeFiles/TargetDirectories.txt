@@ -1,0 +1,18 @@
+D:/NostraUtils/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/NostraUtils/cmake-build-debug/CMakeFiles/Test.dir
+D:/NostraUtils/cmake-build-debug/CMakeFiles/install/local.dir
+D:/NostraUtils/cmake-build-debug/CMakeFiles/install.dir
+D:/NostraUtils/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/NostraUtils/cmake-build-debug/CMakeFiles/list_install_components.dir
+D:/NostraUtils/cmake-build-debug/Nostra Utils/CMakeFiles/NostraUtils.dir
+D:/NostraUtils/cmake-build-debug/Nostra Utils/CMakeFiles/install/local.dir
+D:/NostraUtils/cmake-build-debug/Nostra Utils/CMakeFiles/install.dir
+D:/NostraUtils/cmake-build-debug/Nostra Utils/CMakeFiles/edit_cache.dir
+D:/NostraUtils/cmake-build-debug/Nostra Utils/CMakeFiles/rebuild_cache.dir
+D:/NostraUtils/cmake-build-debug/Nostra Utils/CMakeFiles/list_install_components.dir
+D:/NostraUtils/cmake-build-debug/UnitTests/CMakeFiles/install/local.dir
+D:/NostraUtils/cmake-build-debug/UnitTests/CMakeFiles/install.dir
+D:/NostraUtils/cmake-build-debug/UnitTests/CMakeFiles/edit_cache.dir
+D:/NostraUtils/cmake-build-debug/UnitTests/CMakeFiles/UnitTests.dir
+D:/NostraUtils/cmake-build-debug/UnitTests/CMakeFiles/rebuild_cache.dir
+D:/NostraUtils/cmake-build-debug/UnitTests/CMakeFiles/list_install_components.dir
