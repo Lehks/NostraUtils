@@ -423,10 +423,12 @@ namespace NOU::NOU_CORE
 	{
 		for (sizeType i = 0; i < m_logger.size(); i++)
 		{
-			m_taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i]));
+			//m_taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i]));
+			callLoggingTarget(m_logger[i]);
 		}
 
-		m_taskQueue.pushTask(NOU_THREAD::makeTask(&callSpecialEvent, static_cast<ILogger*>(nullptr)));
+		//m_taskQueue.pushTask(NOU_THREAD::makeTask(&callSpecialEvent, static_cast<ILogger*>(nullptr)));
+		callSpecialEvent(static_cast<ILogger*>(nullptr));
 	}
 
 	void Logger::callLoggingTarget(ILogger *logger)
