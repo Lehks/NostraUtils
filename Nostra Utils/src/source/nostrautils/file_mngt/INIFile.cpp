@@ -174,7 +174,7 @@ namespace NOU::NOU_FILE_MNGT
 		// Open file stream
 		inifile.open(this->m_filename.rawStr());
 
-		if (!inifile) {
+		if (!inifile.good()) {
 			return false;
 		}
 
@@ -238,8 +238,9 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			// Write section
 			if (sectionValues.at(isec) > 0) {
-			// if (sectionKeys.at(isec) != INI_DEFAULT_SECTION && sectionValues.at(isec) > 0) {
-				inifile << "[" << sectionKeys.at(isec).rawStr() << "]" << std::endl;
+				if (sectionKeys.at(isec) != INI_DEFAULT_SECTION) {
+					inifile << "[" << sectionKeys.at(isec).rawStr() << "]" << std::endl;
+				}
 			}
 
 			// Save string size for later
