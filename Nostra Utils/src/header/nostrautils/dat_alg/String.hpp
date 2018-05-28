@@ -222,8 +222,15 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the character at the passed index.
 		*/
-		CharType& at(sizeType index);
+		CharType at(sizeType index);
 
+		/**
+		\param index The index of the character that will be returned.
+		\return      The character at the provided index.
+
+		\brief Returns the character at the passed index.
+		*/
+		CharType at(sizeType index) const;
 		/**
 		\param index The index at which the character will be inserted.
 		\param c     The character to insert.
@@ -957,6 +964,14 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the character at the passed index. This is equal to at().
 		*/
 		CharType& operator [] (sizeType index);
+
+		/**
+		\param index The index of the character that will be returned.
+		\return      The character at the provided index
+
+		\brief Returns the character at the passed index. This is equal to at().
+		*/
+		CharType operator [] (sizeType index) const;
 	};
 	/**
 	\brief An alias name for a String that uses a nostra::utils::char8;
@@ -1262,9 +1277,14 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>::String(float64 f) :
 		String(NOU_CORE::move(floatToString(f)))
 	{}
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::CharType String<CHAR_TYPE>::at(sizeType index)
+	{
+		return m_data.at(index);
+	}
 
 	template<typename CHAR_TYPE>
-	typename String<CHAR_TYPE>::CharType& String<CHAR_TYPE>::at(sizeType index)
+	typename String<CHAR_TYPE>::CharType String<CHAR_TYPE>::at(sizeType index) const
 	{
 		return m_data.at(index);
 	}
@@ -2069,8 +2089,15 @@ namespace NOU::NOU_DAT_ALG
 		append(f);
 		return *this;
 	}
+
 	template<typename CHAR_TYPE>
 	typename String<CHAR_TYPE>::CharType& String<CHAR_TYPE>::operator [] (sizeType index)
+	{
+		return m_data.at(index);
+	}
+
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::CharType String<CHAR_TYPE>::operator [] (sizeType index) const
 	{
 		return m_data.at(index);
 	}
