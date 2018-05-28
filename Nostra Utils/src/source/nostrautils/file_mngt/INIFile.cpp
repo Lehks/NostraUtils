@@ -186,6 +186,10 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			line = NouString(ln.c_str()).trim();
 
+			if (line.size() == 0) {
+				continue;
+			}
+
 			// Check if we have a section
 			if (line.at(0) == '[' && line.at((line.size() - 1)) == ']') {
 				section = line.substring(1, line.size() - 1).trim();
