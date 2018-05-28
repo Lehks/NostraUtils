@@ -137,7 +137,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Check if first char indicates comment
-		if (line.copy().at(0) == ';') {
+		if (static_cast<NOU::NOU_DAT_ALG::StringView<char8>>(line).at(0) == ';') {
 			return;
 		}
 
