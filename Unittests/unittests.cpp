@@ -2173,6 +2173,26 @@ TEST_METHOD(Logging)
 		}
 	}
 
+	//Checks if a string is printed correctly if the String leaves its scope before the printing happens.
+	{
+		NOU_LOG_FATAL(NOU::NOU_DAT_ALG::String8("Unittest ") + "error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::FATAL, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+	}
+
 	NOU_CHECK_ERROR_HANDLER;
 }
 
