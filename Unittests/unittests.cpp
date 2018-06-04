@@ -1960,7 +1960,7 @@ TEST_METHOD(INIFile)
 	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369);
 	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381);
 
-	IsTrue(parser.write("unittest.ini"));
+	IsTrue(parser.write("unittest2.ini"));
 	IsTrue(parser.read());
 
 
@@ -1985,6 +1985,9 @@ TEST_METHOD(INIFile)
 	IsTrue(parser.keyExists("TEST_STR2"));
 	IsTrue(parser.keyExists("TEST_INT2"));
 	IsTrue(parser.keyExists("TEST_INT2"));
+	
+	NOU::NOU_FILE_MNGT::INIFile parser3 = NOU::NOU_FILE_MNGT::INIFile("unittest3.ini");
+	IsTrue(parser3.read());
 
 	NOU_CHECK_ERROR_HANDLER;
 }

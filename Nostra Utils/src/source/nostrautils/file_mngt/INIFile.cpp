@@ -137,7 +137,7 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Check if first char indicates comment
-		if (static_cast<NOU::NOU_DAT_ALG::StringView<char8>>(line).at(0) == ';') {
+		if (line.copy().at(0) == ';') {
 			return;
 		}
 
@@ -175,6 +175,7 @@ namespace NOU::NOU_FILE_MNGT
 		inifile.open(this->m_filename.rawStr());
 
 		if (!inifile.good()) {
+			inifile.close();
 			return false;
 		}
 
@@ -184,7 +185,13 @@ namespace NOU::NOU_FILE_MNGT
 		// Parse file content line by line
 		while (std::getline(inifile, ln))
 		{
-			line = NouString(ln.c_str()).trim();
+			line = NouString(ln.c_str());
+
+			if (line.size() == 0) {
+				continue;
+			}
+			
+			line.trim();
 
 			if (line.size() == 0) {
 				continue;
@@ -198,7 +205,7 @@ namespace NOU::NOU_FILE_MNGT
 				this->parseLine(line, section);
 			}
 		}
-
+		
 		inifile.close();
 
 		return true;
