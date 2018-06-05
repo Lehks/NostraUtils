@@ -935,7 +935,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	T& Vector<T>::at(sizeType index)
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
+		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		return m_data[index];
@@ -944,7 +944,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	const T& Vector<T>::at(sizeType index) const
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
+		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		return m_data[index];
@@ -1046,10 +1046,10 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::swap(sizeType index0, sizeType index1)
 	{
-		NOU_COND_PUSH_ERROR((index0 > m_size),
+		NOU_COND_PUSH_ERROR((index0 >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
 
-		NOU_COND_PUSH_ERROR((index1 > m_size),
+		NOU_COND_PUSH_ERROR((index1 >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
 
 		NOU::NOU_DAT_ALG::swap(m_data + index0, m_data + index1);
@@ -1058,7 +1058,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::remove(sizeType index)
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
+		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
 
 		for (sizeType i = index; i < m_size - 1; i++) //shift all element to the left, until the index
@@ -1156,7 +1156,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	Vector<T>& Vector<T>::replace(sizeType index, const T& replacement)
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
+		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "No object was found at this index.");
 
 		at(index) = replacement;
