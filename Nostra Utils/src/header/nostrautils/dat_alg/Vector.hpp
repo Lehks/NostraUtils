@@ -1166,20 +1166,20 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	Vector<T>& Vector<T>::operator = (const Vector<T> &other)
 	{
-		//If capacity of this vector is smaller than the capacity of the other one, reallocate memory
-		//This also ensures, that a copy has at least a capacity as big as the other one's
-		if (m_capacity < other.m_capacity)
-		{
-			free(m_data);
-			m_capacity = other.m_capacity;
-			m_data = alloc(m_capacity);
-		}
-
 		//Delete all objects that are in the current vector, but will not overridden by elements in the other
 		//one
 		//If there are fewer elements in this vector than in the other one, nothing will happen
 		for (sizeType i = other.m_size; i < m_size; i++)
 			at(i).~T();
+
+		//If capacity of this vector is smaller than the capacity of the other one, reallocate memory
+		//This also ensures, that a copy has at least a capacity as big as the other one's
+		if (m_capacity < other.m_size)
+		{
+			free(m_data);
+			m_capacity = other.m_capacity;
+			m_data = alloc(m_capacity);
+		}
 
 		sizeType i;
 
