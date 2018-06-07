@@ -459,8 +459,11 @@ namespace NOU::NOU_DAT_ALG
 			newBuf = m_allocator.allocate(newCapacity);
 			
 			if (newBuf == nullptr)
+			{
 				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION,
 					"The allocation failed.");
+				return; //abort here
+			}
 		}
 
 		copyFromTo(m_queue.rawPtr() + m_startIndex, newBuf, size());
