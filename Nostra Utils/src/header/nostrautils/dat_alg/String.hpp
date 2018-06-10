@@ -1908,25 +1908,18 @@ namespace NOU::NOU_DAT_ALG
 			return *this;
 		}
 
-		sizeType endofstring = StringView<CHAR_TYPE>::size() - 1;
+		sizeType endofstring = StringView<CHAR_TYPE>::size();
 		sizeType minusSize = 0;
 
-		while (m_data.at(endofstring) == '\u0020' || m_data.at(endofstring) == '\u000A')
-		{
-			m_data.remove(endofstring);
-			endofstring--;
-			minusSize++;
-		}
+		sizeType first = this->firstIndexOfNot(' ');
+		sizeType last = this->lastIndexOfNot(' ');
 
-		sizeType startofstring = 0;
+		String8 str = substring(first, last + 1);
 
-		while (m_data.at(startofstring) == '\u0020' || m_data.at(startofstring) == '\u000A')
-		{
-			m_data.remove(startofstring);
-			startofstring++;
-			minusSize++;
-		}
-		setSize(StringView<CHAR_TYPE>::size() - minusSize);
+		m_data = str.m_data;
+        StringView<CHAR_TYPE>::m_dataPtr = const_cast<ConstCharType**>(&m_data.data());
+        setSize(str.size());
+
 		return *this;
 	}
 
