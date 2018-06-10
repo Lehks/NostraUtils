@@ -1908,9 +1908,6 @@ namespace NOU::NOU_DAT_ALG
 			return *this;
 		}
 
-		sizeType endofstring = StringView<CHAR_TYPE>::size();
-		sizeType minusSize = 0;
-
 		sizeType first = this->firstIndexOfNot(' ');
 		sizeType last = this->lastIndexOfNot(' ');
 
