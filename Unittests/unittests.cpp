@@ -1336,31 +1336,31 @@ cm.map(49875, 4, sizeof(49875));
 */
 NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
 
-c = cm.entrySet();
+//c = cm.entrySet();
 
 //AreEqual(c[0], 1);
 //AreEqual(c[1], 4);
 //AreEqual(c[2], 3);
 //AreEqual(c[3], 2);
 
-IsTrue(c[0] == 1);
-IsTrue(c[1] == 4);
-IsTrue(c[2] == 3);
-IsTrue(c[3] == 2);
+// IsTrue(c[0] == 1);
+// IsTrue(c[1] == 4);
+// IsTrue(c[2] == 3);
+// IsTrue(c[3] == 2);
 
 NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
 
-a = cm.keySet();
+// a = cm.keySet();
 
 //AreEqual(a[0], 5);
 //AreEqual(a[1], 49875);
 //AreEqual(a[2], 10);
 //AreEqual(a[3], 41);
 
-IsTrue(a[0] == 5);
-IsTrue(a[1] == 49875);
-IsTrue(a[2] == 10);
-IsTrue(a[3] == 41);
+// IsTrue(a[0] == 5);
+// IsTrue(a[1] == 49875);
+// IsTrue(a[2] == 10);
+// IsTrue(a[3] == 41);
 
 }
 
@@ -1929,6 +1929,7 @@ TEST_METHOD(INIFile)
 	NOU::NOU_FILE_MNGT::INIFile parser = NOU::NOU_FILE_MNGT::INIFile("unittest.ini");
 
 	parser.setString("TEST_STR", "Testing");
+	std::cout << "Test str: " << parser.getString("TEST_STR").rawStr() << std::endl;
 	IsTrue(parser.getString("TEST_STR") == "Testing");
 
 	parser.setInt("TEST_INT", 42);
