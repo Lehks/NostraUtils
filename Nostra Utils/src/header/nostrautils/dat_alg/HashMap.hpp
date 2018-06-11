@@ -487,7 +487,7 @@ namespace NOU::NOU_DAT_ALG
 		sizeType n;
 
 		Pair<K, V> tmpPair(NOU_CORE::move(key.rval()), NOU_CORE::move(value.rval()));
-
+		
 		n = hashObj(&key, 1, m_data.size());
 
 		if (m_data[n].size() == 0) 
