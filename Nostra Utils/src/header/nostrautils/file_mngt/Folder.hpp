@@ -21,7 +21,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 	private :
 
-		Path m_path;
+		NOU::NOU_FILE_MNGT::Path m_path;
 
 		NOU::NOU_DAT_ALG::String8 m_name = "."; 
 
@@ -31,7 +31,7 @@ namespace NOU::NOU_FILE_MNGT
 		\param m_path (location of you folder )
 		*/
 
-		Folder(const Path &path);
+		Folder(const NOU::NOU_DAT_ALG::String8 &path);
 
 		/*
 		\brief A function that lists you all folders in a directory and safes the result in a vector { ls commando }  
@@ -69,6 +69,7 @@ namespace NOU::NOU_FILE_MNGT
 		
 		static boolean create(const Path &path);
 
+	
  
 		
 
