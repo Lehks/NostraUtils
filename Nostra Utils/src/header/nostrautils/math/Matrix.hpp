@@ -6,92 +6,608 @@
 
 #include <initializer_list>
 
+/** \file math/Matrix.hpp
+\author	 Lukas Reichmann
+\since   1.0.0
+\version 1.0.0
+\brief   This file provides functionality to work with matrices.
+*/
+
+
 namespace NOU::NOU_MATH
 {
-	template<typename T, sizeType R, sizeType C>
-	class MatrixBase
+	/**
+	\tparam MatBase The type of the matrix base class. This is always Matrix<R, C> (or a specialization of 
+		            that class).
+
+	\brief A single row in a matrix.
+
+	\details
+	A single row in a matrix. The purpose of this class is to allow access to the elements of a matrix by 
+	using two array subscript operators.
+
+	Instances of this class are not meant to be stored.
+	*/
+	template<typename MatBase>
+	class MatrixRow
 	{
-		static_assert(R > 1, "There must be at least two rows in a matrix.");
-		static_assert(C > 1, "There must be at least two columns in a matrix.");
-
-	public:
-		template<typename U>
-		using InitializerList = std::initializer_list<U>;
-
 	private:
-		T m_data[C][R];
+		/**
+		\brief The type of the matrix base.
+		*/
+		using Type = typename MatBase::Type;
+
+		/**
+		\brief A pointer to the matrix that this row is from
+		*/
+		MatBase  *m_mat;
+
+		/**
+		\brief The index of the row in the matrix.
+		*/
+		sizeType  m_row;
 
 	public:
+		/**
+		\param mat The matrix that this row is in.
+		\param row The index of the row in the matrix.
+
+		\brief Constructs a new row from the passed parameters.
+		*/
+		MatrixRow(MatBase &mat, sizeType row);
+
+		/**
+		\param col The column of the element to return.
+
+		\return The element in the passed column in this row.
+
+		\brief Returns the element in the passed column in this row.
+		*/
+		Type& operator [] (sizeType col);
+
+		/**
+		\param col The column of the element to return.
+
+		\return The element in the passed column in this row.
+
+		\brief Returns the element in the passed column in this row.
+		*/
+		const Type& operator [] (sizeType col) const;
+	};
+
+	/**
+	\tparam T The type of the elements in the matrix.
+	\tparam R The amount of rows in the matrix.
+	\tparam C The amount of columns in the matrix.
+
+	\brief The base class of all matrix types.
+
+	\details
+	The base class of all matrix types. This class provides the storage for the matrices and access to that 
+	storage.
+
+	\note
+	This class stores all elements in row major order.
+	*/
+    template<typename T, sizeType R, sizeType C>
+    class MatrixBase
+    {
+        static_assert(R > 1, "There must be at least two rows in a matrix.");
+        static_assert(C > 1, "There must be at least two columns in a matrix.");
+
+    public:
+		/**
+		\brief The type of initializer list used by one of the constructors.
+		*/
+        template<typename U>
+        using InitializerList = std::initializer_list<U>;
+
+		/**
+		\brief The type of the elements in the matrix.
+		*/
+		using Type = T;
+
+    private:
+
+		/**
+		\brief The array in which the elements are stored in.
+		*/
+        T m_data[C][R];
+
+	protected:
+		/**
+		\brief Constructs a new instance without initializing any of the elements.
+		*/
 		MatrixBase() = default;
+
+		/**
+		\param values The elements of the matrix.
+
+		\brief Initializes all of the elements in the matrix.
+
+		\details
+		Initializes all of the elements in the matrix. The inner initializer list are the columns and the
+		outer list the rows.
+
+		That means, that such a construct of initializer lists:
+
+		\code{.cpp}
+		{{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9}}
+		\endcode
+
+		would result in such a matrix:
+
+		\f$
+		\begin{bmatrix}
+		1 & 2 & 3 \\
+		4 & 5 & 6 \\
+		7 & 8 & 9
+		\end{bmatrix}
+		\f$
+		*/
 		MatrixBase(const InitializerList<InitializerList<T>> &values);
 
+    public:
+		/**
+		\param row The row of the element.
+		\param col The column of the element.
+
+		\return The element at the specified row and column.
+
+		\brief Returns the element at the specified row and column.
+		*/
 		const T& value(sizeType row, sizeType col) const;
+
+		/**
+		\param row The row of the element.
+		\param col The column of the element.
+
+		\return The element at the specified row and column.
+
+		\brief Returns the element at the specified row and column.
+		*/
 		T& value(sizeType row, sizeType col);
 
-		sizeType rows() const;
-		sizeType columns() const;
+		/**
+		\param row The row of the element.
 
+		\return A special object (see detailed section).
+
+		\brief Allows access to the elements of a matrix using the array subscript operator.
+
+		\details
+		Allows access to the elements of a matrix using the array subscript operator.
+
+		This method returns a special object that also has the array subscript operator overloaded. Using 
+		that object, it is possible to have two array subscript operators next to each other. This is meant 
+		to be used like this:
+
+		\code{.cpp}
+		auto value = matrix[0][0]; //same as .value(0, 0)
+		\endcode
+		*/
+		MatrixRow<MatrixBase> operator [] (sizeType row);
+
+		/**
+		\param row The row of the element.
+
+		\return A special object (see detailed section).
+
+		\brief Allows access to the elements of a matrix using the array subscript operator.
+
+		\details
+		Allows access to the elements of a matrix using the array subscript operator.
+
+		This method returns a special object that also has the array subscript operator overloaded. Using
+		that object, it is possible to have two array subscript operators next to each other. This is meant
+		to be used like this:
+
+		\code{.cpp}
+		auto value = matrix[0][0]; //same as .value(0, 0)
+		\endcode
+		*/
+		const MatrixRow<const MatrixBase> operator [] (sizeType row) const;
+
+		/**
+		\return The amount of rows in the matrix.
+
+		\brief Returns the amount of rows in the matrix.
+		*/
+        sizeType rows() const;
+
+		/**
+		\return The amount of columns in the matrix.
+
+		\brief Returns the amount of columns in the matrix.
+		*/
+        sizeType columns() const;
+
+		/**
+		\return An array with all of the elements in the matrix.
+
+		\brief Returns a linear array that contains all of the elements in the matrix.
+		*/
 		const T* data() const;
+
+		/**
+		\return An array with all of the elements in the matrix.
+
+		\brief Returns a linear array that contains all of the elements in the matrix.
+		*/
 		T* data();
 	};
 
-	template<typename T, sizeType R, sizeType C>
-	class Matrix : public MatrixBase<T, R, C>
-	{
-	public:
-		using Base = MatrixBase<T, R, C>;
+	/**
+	\tparam T The type of elements in the matrix.
+	\tparam R The amount of rows in the matrix.
+	\tparam C The amount of columns in the matrix.
 
+	\brief A class that represents a matrix and supports common matrix operations.
+
+	\details
+	A class that represents a matrix and supports common matrix operations.
+
+	Using this class, a \f$M^{RxC}\f$ matrix will be constructed.
+	*/
+    template<typename T, sizeType R, sizeType C>
+    class Matrix : public MatrixBase<T, R, C>
+    {
+    public:
+		/**
+		\brief The base class of this class. Alias name for convenience.
+		*/
+        using Base = MatrixBase<T, R, C>;
+
+		/**
+		\return A matrix that has all elements set to zero.
+
+		\brief Constructs a new instance with all elements set to zero.
+		*/
 		static Matrix<T, R, C> zeroes();
+
+		/**
+		\return The identity matrix for matrices with \p R rows and \p C columns.
+
+		\brief Returns the identity matrix for matrices with \p R rows and \p C columns.
+		*/
 		static Matrix<T, R, C> identity();
 
+		/**
+		\brief Constructs a new instance with all elements being uninitialized.
+		*/
 		Matrix() = default;
+
+		/**
+		\param values The elements of the matrix.
+
+		\brief Initializes all of the elements in the matrix.
+
+		\details
+		Initializes all of the elements in the matrix. The inner initializer list are the columns and the
+		outer list the rows.
+
+		That means, that such a construct of initializer lists:
+
+		\code{.cpp}
+		{{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9}}
+		\endcode
+
+		would result in such a matrix:
+
+		\f$
+		\begin{bmatrix}
+		1 & 2 & 3 \\
+		4 & 5 & 6 \\
+		7 & 8 & 9
+		\end{bmatrix}
+		\f$
+
+		\note
+		The amount of values must match the size of the matrix. This means that the inner initializer list
+		must have \p C values and the outer one \p R values.
+		*/
 		Matrix(const typename MatrixBase<T, R, C>::template InitializerList<typename 
 			MatrixBase<T, R, C>::template InitializerList<T>> &values);
 
+		/**
+		\param other The matrix to add.
+
+		\return A matrix with the added elements.
+
+		\brief Adds two matrices into a new one.
+
+		\details
+		Adds two matrices into a new one like this:
+
+		\f$
+		Mat_{return} =
+		\begin{bmatrix}
+		this->value(0, 0) + other.value(0, 0) & this->value(0, 1) + other.value(0, 1) & this->value(0, 2) + 
+			other.value(0, 2) \\
+		this->value(1, 0) + other.value(1, 0) & this->value(1, 1) + other.value(1, 1) & this->value(1, 2) + 
+			other.value(1, 2) \\
+		this->value(2, 0) + other.value(2, 0) & this->value(2, 1) + other.value(2, 1) & this->value(2, 2) + 
+			other.value(2, 2)
+		\end{bmatrix}
+		\f$
+		*/
 		Matrix add(const Matrix &other) const;
+
+		/**
+		\param other The matrix to add.
+
+		\return A reference to the instance that this method was called on.
+
+		\brief Adds the passed matrix to the one that the methods is called on.
+
+		\details
+		Adds the passed matrix to the one that the methods is called on like this:
+
+		\f$
+		Mat_{this} =
+		\begin{bmatrix}
+		this->value(0, 0) + other.value(0, 0) & this->value(0, 1) + other.value(0, 1) & this->value(0, 2) + 
+			other.value(0, 2) \\
+		this->value(1, 0) + other.value(1, 0) & this->value(1, 1) + other.value(1, 1) & this->value(1, 2) + 
+			other.value(1, 2) \\
+		this->value(2, 0) + other.value(2, 0) & this->value(2, 1) + other.value(2, 1) & this->value(2, 2) + 
+			other.value(2, 2)
+		\end{bmatrix}
+		\f$
+		*/
 		Matrix& addAssign(const Matrix &other);
 
+		/**
+		\param other The matrix to subtract.
+
+		\return A matrix with the subtracted elements.
+
+		\brief Subtracts two matrices and stores the result into a new one.
+
+		\details
+		Subtracts two matrices and stores the result into a new one like this:
+
+		\f$
+		Mat_{return} =
+		\begin{bmatrix}
+		this->value(0, 0) - other.value(0, 0) & this->value(0, 1) - other.value(0, 1) & this->value(0, 2) -
+			other.value(0, 2) \\
+		this->value(1, 0) - other.value(1, 0) & this->value(1, 1) - other.value(1, 1) & this->value(1, 2) -
+			other.value(1, 2) \\
+		this->value(2, 0) - other.value(2, 0) & this->value(2, 1) - other.value(2, 1) & this->value(2, 2) -
+			other.value(2, 2)
+		\end{bmatrix}
+		\f$
+		*/
 		Matrix sub(const Matrix &other) const;
+
+		/**
+		\param other The matrix to subtract.
+
+		\return A reference to the instance that this method was called on.
+
+		\brief Subtracts the passed matrix from the one that the methods is called on.
+
+		\details
+		Subtracts the passed matrix from the one that the methods is called on like this:
+
+		\f$
+		Mat_{this} =
+		\begin{bmatrix}
+		this->value(0, 0) - other.value(0, 0) & this->value(0, 1) - other.value(0, 1) & this->value(0, 2) -
+		other.value(0, 2) \\
+		this->value(1, 0) - other.value(1, 0) & this->value(1, 1) - other.value(1, 1) & this->value(1, 2) -
+		other.value(1, 2) \\
+		this->value(2, 0) - other.value(2, 0) & this->value(2, 1) - other.value(2, 1) & this->value(2, 2) -
+		other.value(2, 2)
+		\end{bmatrix}
+		\f$
+		*/
 		Matrix& subAssign(const Matrix &other);
 
+		/**
+		\param other The matrix to multiply with.
+
+		\return A matrix with the result from the multiplication.
+
+		\brief Multiplies the passed matrix with the one that the methods is called on.
+
+		\details
+		Multiplies the passed matrix with the one that the methods is called on like this:
+
+		\f$
+		Mat_{return} =
+		\begin{bmatrix}
+		this->value(0, 0) * other.value(0, 0) + this->value(0, 1) * other.value(1, 0) &
+		this->value(0, 0) * other.value(0, 2) + this->value(0, 1) * other.value(1, 1) \\
+		this->value(1, 0) * other.value(0, 0) + this->value(1, 1) * other.value(1, 0) &
+		this->value(1, 0) * other.value(0, 1) + this->value(1, 1) * other.value(1, 1) \\
+		\end{bmatrix}
+		\f$
+		*/
 		template<NOU::sizeType OC>
 		Matrix<T, R, OC> mult(const Matrix<T, C, OC> &other) const;
 
+		/**
+		\param other The scalar to multiply with.
+
+		\return A with each element multiplied with \p other.
+
+		\brief Multiplies all of the elements with the passed scalar.
+
+		\details
+		Multiplies all of the elements with the passed scalar like this:
+
+		\f$
+		Mat_{this} =
+		\begin{bmatrix}
+		this->value(0, 0) * other.value(0) + this->value(0, 1) * other.value(1) \\ 
+		this->value(1, 0) * other.value(0) + this->value(1, 1) * other.value(1) 
+		\end{bmatrix}
+		\f$
+		*/
 		Vector<T, R> mult(const Vector<T, C> &other) const;
 
+		/**
+		\param other The scalar to multiply with.
+
+		\return A with each element multiplied with \p other.
+
+		\brief Multiplies all of the elements with the passed scalar.
+
+		\details
+		Multiplies all of the elements with the passed scalar like this:
+
+		\f$
+		Mat_{return} =
+		\begin{bmatrix}
+		this->value(0, 0) * other & this->value(0, 1) * other \\ 
+		this->value(1, 0) * other & this->value(1, 1) * other 
+		\end{bmatrix}
+		\f$
+		*/
 		Matrix mult(const T &other) const;
+
+		/**
+		\param other The matrix to multiply with.
+
+		\return A reference to the instance that this method was called on.
+
+		\brief Multiplies the passed matrix with the one that the methods is called on.
+
+		\details
+		Multiplies the passed matrix with the one that the methods is called on like this:
+
+		\f$
+		Mat_{this} =
+		\begin{bmatrix}
+		this->value(0, 0) * other.value(0, 0) + this->value(0, 1) * other.value(1, 0) & 
+		this->value(0, 0) * other.value(0, 2) + this->value(0, 1) * other.value(1, 1) \\
+		this->value(1, 0) * other.value(0, 0) + this->value(1, 1) * other.value(1, 0) &
+		this->value(1, 0) * other.value(0, 1) + this->value(1, 1) * other.value(1, 1) \\
+		\end{bmatrix}
+		\f$
+		*/
 		Matrix& multAssign(const T &other);
 
+		/**
+		\return The transposed matrix.
+
+		\brief Returns a new instance that contains the same elements but is transposed.
+		*/
 		Matrix<T, C, R> transpose() const;
 
+		/**
+		\return An exact copy.
+
+		\brief Returns an exact copy.
+		*/
 		Matrix copy() const;
 
+		/**
+		\return True, if the matrices are equal, false if not.
+
+		\brief Compares two matrices.
+
+		\details
+		Compares two matrices using the operator == for each element.
+		*/
 		boolean equal(const Matrix &other) const;
+
+		/**
+		\return True, if the matrices are not equal, false if they are.
+
+		\brief Compares two matrices.
+
+		\details
+		Compares two matrices using the operator == for each element (actually the inverted result of 
+		<tt>this->equal(other)</tt> is returned).
+		*/
 		boolean unequal(const Matrix &other) const;
 
+		/**
+		\return this->add(other)
+
+		\brief Returns this->add(other)
+		*/
 		Matrix operator + (const Matrix &other) const;
+
+		/**
+		\return this->addAssign(other)
+
+		\brief Returns this->addAssign(other)
+		*/
 		Matrix& operator += (const Matrix &other);
 
+		/**
+		\return this->sub(other)
+
+		\brief Returns this->sub(other)
+		*/
 		Matrix operator - (const Matrix &other) const;
+
+		/**
+		\return this->subAssign(other)
+
+		\brief Returns this->subAssign(other)
+		*/
 		Matrix& operator -= (const Matrix &other);
 
+		/**
+		\return this->mult(other)
+
+		\brief Returns this->mult(other)
+		*/
 		template<NOU::sizeType OC>
 		Matrix<T, R, OC> operator * (const Matrix<T, C, OC> &other) const;
 
+		/**
+		\return this->mult(other)
+
+		\brief Returns this->mult(other)
+		*/
 		Vector<T, R> operator * (const Vector<T, C> &other) const;
 
+		/**
+		\return this->mult(other)
+
+		\brief Returns this->mult(other)
+		*/
 		Matrix operator * (const T &other) const;
+
+		/**
+		\return this->multAssign(other)
+
+		\brief Returns this->multAssign(other)
+		*/
 		Matrix& operator *= (const T &other);
 
+		/**
+		\return this->equal(other)
+
+		\brief Returns this->equal(other)
+		*/
 		boolean operator == (const Matrix &other) const;
+
+		/**
+		\return this->unequal(other)
+
+		\brief Returns this->unequal(other)
+		*/
 		boolean operator != (const Matrix &other) const;
 	};
 
-	template<typename T>
-	class Matrix<T, 2, 2> : public MatrixBase<T, 2, 2>
-	{
-	public:
-		using Base = MatrixBase<T, 2, 2>;
+	///\cond
+
+    template<typename T>
+    class Matrix<T, 2, 2> : public MatrixBase<T, 2, 2>
+    {
+    public:
+        using Base = MatrixBase<T, 2, 2>;
 
 		static Matrix<T, 2, 2> zeroes();
 		static Matrix<T, 2, 2> identity();
@@ -142,11 +658,11 @@ namespace NOU::NOU_MATH
 		boolean operator != (const Matrix &other) const;
 	};
 
-	template<typename T>
-	class Matrix<T, 3, 3> : public MatrixBase<T, 3, 3>
-	{
-	public:
-		using Base = MatrixBase<T, 3, 3>;
+    template<typename T>
+    class Matrix<T, 3, 3> : public MatrixBase<T, 3, 3>
+    {
+    public:
+        using Base = MatrixBase<T, 3, 3>;
 
 		static Matrix<T, 3, 3> zeroes();
 		static Matrix<T, 3, 3> identity();
@@ -198,11 +714,11 @@ namespace NOU::NOU_MATH
 		boolean operator != (const Matrix &other) const;
 	};
 
-	template<typename T>
-	class Matrix<T, 4, 4> : public MatrixBase<T, 4, 4>
-	{
-	public:
-		using Base = MatrixBase<T, 4, 4>;
+    template<typename T>
+    class Matrix<T, 4, 4> : public MatrixBase<T, 4, 4>
+    {
+    public:
+        using Base = MatrixBase<T, 4, 4>;
 
 		static Matrix<T, 4, 4> zeroes();
 		static Matrix<T, 4, 4> identity();
@@ -272,10 +788,30 @@ namespace NOU::NOU_MATH
 
 
 
-	template<typename T, sizeType R, sizeType C>
-	MatrixBase<T, R, C>::MatrixBase(const InitializerList<InitializerList<T>> &values)
+	template<typename MatBase>
+	MatrixRow<MatBase>::MatrixRow(MatBase &mat, sizeType row) :
+		m_mat(&mat),
+		m_row(row)
+	{}
+
+	template<typename MatBase>
+	typename MatrixRow<MatBase>::Type& MatrixRow<MatBase>::operator [] (sizeType col)
 	{
-		NOU_ASSERT(values.size() == R);
+		return m_mat->value(m_row, col);
+	}
+
+	template<typename MatBase>
+	const typename MatrixRow<MatBase>::Type& MatrixRow<MatBase>::operator [] (sizeType col) const
+	{
+		return m_mat->value(m_row, col);
+	}
+
+
+
+    template<typename T, sizeType R, sizeType C>
+    MatrixBase<T, R, C>::MatrixBase(const InitializerList<InitializerList<T>> &values)
+    {
+        NOU_ASSERT(values.size() == R);
 
 #ifdef NOU_DEBUG
 		for (auto i = values.begin(); i != values.end(); i++)
@@ -328,18 +864,31 @@ namespace NOU::NOU_MATH
 		return reinterpret_cast<const T*>(m_data);
 	}
 
+    template<typename T, sizeType R, sizeType C>
+    T* MatrixBase<T, R, C>::data()
+    {
+        return reinterpret_cast<T*>(m_data);
+    }
+
 	template<typename T, sizeType R, sizeType C>
-	T* MatrixBase<T, R, C>::data()
+	MatrixRow<MatrixBase<T, R, C>> MatrixBase<T, R, C>::operator [] (sizeType row)
 	{
-		return reinterpret_cast<T*>(m_data);
+		return MatrixRow<MatrixBase<T, R, C>>(*this, row);
+	}
+
+	template<typename T, sizeType R, sizeType C>
+	const MatrixRow<const MatrixBase<T, R, C>> MatrixBase<T, R, C>::operator [] (sizeType row) const
+	{
+		return MatrixRow<const MatrixBase<T, R, C>>(*this, row);
 	}
 
 
 
-	template<typename T, sizeType R, sizeType C>
-	Matrix<T, R, C> Matrix<T, R, C>::zeroes()
-	{
-		Matrix<T, R, C> ret;
+
+    template<typename T, sizeType R, sizeType C>
+    Matrix<T, R, C> Matrix<T, R, C>::zeroes()
+    {
+        Matrix<T, R, C> ret;
 
 		for (sizeType i = 0; i < R * C; i++)
 			ret.data()[i] = 0;
@@ -1547,6 +2096,8 @@ namespace NOU::NOU_MATH
 	{
 		return unequal(other);
 	}
+
+	///\endcond
 }
 
 #endif

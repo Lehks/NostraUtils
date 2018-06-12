@@ -7,6 +7,8 @@
 #include "nostrautils/dat_alg/Hashing.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
 
+#include <type_traits>
+
 /** 
 \file	 dat_alg/HashMap.hpp
 \author  Leslie Marxen
@@ -15,9 +17,6 @@
 \since   1.0.0
 \version 1.0.0
 \brief   This file provides a HashMap implementation.
-\details If an object that is not immutable will be stored it will result in some false states.
-		 To fix this: Create an overloaded function of hashObj(T obj, objSize, sizeType max) 
-		 that internally passes only the immutable data to the original function.
 */
 
 namespace NOU::NOU_DAT_ALG 
@@ -178,7 +177,7 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		explicit HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<
 			NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<
-			NOU::NOU_DAT_ALG::Pair<K, V>>>::getInstance());
+			NOU::NOU_DAT_ALG::Pair<K, V>>>::get());
 
 		/**
 		\param key     The key that the passed value will be mapped to.
@@ -787,6 +786,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		return m_data.size();
 	}
+
 	///\endcond
 }
 #endif
