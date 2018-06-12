@@ -488,7 +488,7 @@ namespace NOU::NOU_DAT_ALG
 
 		Pair<K, V> tmpPair(NOU_CORE::move(key.rval()), NOU_CORE::move(value.rval()));
 		
-		n = hashObj(&key, 1, m_data.size());
+		n = hashObj(&tmpPair.dataOne, 1, m_data.size());
 
 		if (m_data[n].size() == 0) 
 		{	//if Vector at this position is empty, fill it -> O(1)
@@ -530,7 +530,7 @@ namespace NOU::NOU_DAT_ALG
 
 		Pair<K, V> tmpPair(NOU_CORE::move(key.rval()), NOU_CORE::move(value.rval()));
 
-		n = hashObj(&key, 1, m_data.size());
+		n = hashObj(&tmpPair.dataOne, 1, m_data.size());
 
 		if (m_data[n].size() == 0)
 		{	//if Vector at this position is empty, fill it -> O(1)
