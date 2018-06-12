@@ -1795,6 +1795,10 @@ NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 	p15 = "Hallo";
 	IsTrue("\\Test\\TestUser\\TestDir2\\Hallo");
 
+	NOU::NOU_FILE_MNGT::Path pOp = p12 + "Testfile.txt";
+
+	IsTrue(pOp.getAbsolutePath() == "C:\\Users\\TestUser\\TestDir\\Testfile.txt");
+
 #elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
 
 NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
@@ -1849,6 +1853,10 @@ NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 	IsTrue(p14.getParentPath() == "/Users");
 
 	IsTrue(p15.getRelativePath() == "Test/TestUser/TestDir2");
+
+	NOU::NOU_FILE_MNGT::Path pOp = p12 + "Testfile.txt";
+
+	IsTrue(pOp.getAbsolutePath() == "/Users/TestUser/TestDir/Testfile.txt");
 
 #endif
 
