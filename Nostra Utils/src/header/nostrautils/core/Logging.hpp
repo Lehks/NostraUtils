@@ -4,7 +4,6 @@
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/Meta.hpp"
 
-#include "nostrautils/dat_alg/StringView.hpp"
 #include "nostrautils/dat_alg/String.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
 
@@ -20,7 +19,7 @@
 \file core/Logging.hpp
 
 \author	 Lukas Gross
-\version 0.0.1
+\version 1.0.1
 \since	 1.0.0
 
 \brief A file that contains the nostra::utils::core::Logging class.
@@ -66,9 +65,9 @@ namespace NOU::NOU_CORE
 	public:
 
 		/**
-		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
+		\brief Alias for the NOU::NOU_DAT_ALG::String8.
 		*/
-		using StringType = NOU::NOU_DAT_ALG::StringView8;
+		using StringType = NOU::NOU_DAT_ALG::String8;
 
 		/**
 		\brief A constant string that stores one of the event level codes.
@@ -275,7 +274,7 @@ namespace NOU::NOU_CORE
 		virtual ~ILogger() = default;
 
 		/**
-		\brief Alias for the NOU::NOU_DAT_ALG::StringView8.
+		\brief Alias for the NOU::NOU_DAT_ALG::String8.
 		*/
 		using StringType = Event::StringType;
 
@@ -303,6 +302,13 @@ namespace NOU::NOU_CORE
 	*/
 	class NOU_CLASS ConsoleLogger : public ILogger
 	{
+	public:
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~ConsoleLogger() = default;
+
 	private:
 
 		/**
@@ -344,6 +350,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLogger(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLogger() = default;
 	};
 
 	/**
@@ -369,13 +380,18 @@ namespace NOU::NOU_CORE
 		void write(const Event& event) override;
 
 	public:
-
+		
 		/**
 		\param path		The path to the file that the log will be written to.
 
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerFatal(const NOU_FILE_MNGT::Path &path);
+		
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerFatal() = default;
 	};
 
 	/**
@@ -408,6 +424,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerError(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerError() = default;
 	};
 
 	/**
@@ -440,6 +461,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerWarning(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerWarning() = default;
 	};
 
 	/**
@@ -472,6 +498,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerInfo(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerInfo() = default;
 	};
 
 	/**
@@ -504,6 +535,11 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerDebug(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerDebug() = default;
 	};
 
 	/**
@@ -529,13 +565,18 @@ namespace NOU::NOU_CORE
 		void write(const Event& event) override;
 
 	public:
-
+		
 		/**
 		\param path		The path to the file that the log will be written to.
 
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerTrace(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerTrace() = default;
 	};
 
 	/**
@@ -568,6 +609,12 @@ namespace NOU::NOU_CORE
 		\brief			Constructs a new instance that will write the log to the passed file.
 		*/
 		FileLoggerUnknown(const NOU_FILE_MNGT::Path &path);
+
+		/**
+		\brief			Default constructor.
+		*/
+		virtual ~FileLoggerUnknown() = default;
+		
 	};
 
 	/**
@@ -610,7 +657,7 @@ namespace NOU::NOU_CORE
 	public:
 
 		/**
-		\brief		Alias for the NOU::NOU_DAT_ALG::StringView8.
+		\brief		Alias for the NOU::NOU_DAT_ALG::String8.
 		*/
 		using StringType = Event::StringType;
 
@@ -653,21 +700,33 @@ namespace NOU::NOU_CORE
 		\brief			Creates a new vector from ILogger pointers.
 		*/
 		NOU::NOU_DAT_ALG::Vector<ILogger*> m_logger;
+		
+		/**
+		\brief			A fast queue that stores all created events.
+		*/
+		NOU::NOU_DAT_ALG::FastQueue<Event> m_events;
 
 		/**
 		\param events	An event object.
 
 		\brief			Calls the write function for every objects in m_logger.
 		*/
-		NOU_FUNC void logAll(Event &&events);
+		NOU_FUNC void logAll();
 
 		/**
 		\param logger	The logger to write the event to.
-		\param event	The event to write.
 
 		\brief			Calls <tt>logger.write(event)</tt>. This is required for the task queue.
 		*/
-		NOU_FUNC static void callLoggingTarget(ILogger *logger, Event event);
+		NOU_FUNC static void callLoggingTarget(ILogger *logger);
+
+		/**
+		\param logger	The logger to write the event to.
+
+		\brief			Removes the first element in the m_events queue.
+		\details		This is only called when one error is printed to all its destinations.
+		*/
+		NOU_FUNC static void callSpecialEvent(ILogger *logger);
 
 		/**
 		\brief		A TaskQueue for all multi-threaded tasks.
@@ -677,8 +736,12 @@ namespace NOU::NOU_CORE
 		*/
 		NOU::NOU_THREAD::TaskQueue<void, decltype(&callLoggingTarget),
 			NOU::NOU_THREAD::TaskQueueAccumulators::FunctionPtr
-			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*, Event>
-			m_taskQueue;
+			<NOU::NOU_THREAD::TaskQueueAccumulators::Void>, ILogger*> m_taskQueue;
+
+		/**
+		\brief		A mutex that is used for locking the access to the fast queue.
+		*/
+		NOU::NOU_THREAD::Mutex m_mutexEventQueue;
 
 	public:
 
