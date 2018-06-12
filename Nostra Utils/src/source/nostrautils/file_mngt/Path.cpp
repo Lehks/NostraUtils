@@ -236,6 +236,24 @@ namespace NOU::NOU_FILE_MNGT
 		m_name(&evaluateName)
 	{}
 
+	Path::Path(const Path & other) :
+            m_absolutePath(other.m_absolutePath),
+            m_extension(other.m_extension),
+            m_nameAndExtension(other.m_nameAndExtension),
+            m_relativePath(other.m_relativePath),
+            m_parentPath(other.m_parentPath),
+            m_name(other.m_name)
+    {}
+
+    Path::Path(Path &&other) :
+            m_absolutePath(NOU_CORE::move(other.m_absolutePath)),
+            m_extension(NOU_CORE::move(other.m_extension)),
+            m_nameAndExtension(NOU_CORE::move(other.m_nameAndExtension)),
+            m_relativePath(NOU_CORE::move(other.m_relativePath)),
+            m_parentPath(NOU_CORE::move(other.m_parentPath)),
+            m_name(NOU_CORE::move(other.m_name))
+    {}
+
 	const NOU_DAT_ALG::StringView8& Path::getName() const
 	{
 		return m_name.get(m_absolutePath);
@@ -275,6 +293,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		return !(*this == other);
 	}
+
 	Path & Path::operator=(const Path & other)
 	{
 		m_absolutePath = other.m_absolutePath;
@@ -287,43 +306,88 @@ namespace NOU::NOU_FILE_MNGT
 
 		return *this;
 	}
-	Path & Path::operator+(const Path & other)
+
+	Path & Path::operator=(Path && other)
 	{
-		if (!m_absolutePath.endsWith("\\"))
-		{
-			m_absolutePath.append("\\");
-		}
-		m_absolutePath.append(other.m_absolutePath);
+		m_absolutePath = NOU_CORE::move(other.m_absolutePath);
+
+		m_name = NOU_CORE::move(other.m_name);
+		m_extension =NOU_CORE::move( other.m_extension);
+		m_nameAndExtension = NOU_CORE::move(other.m_nameAndExtension);
+		m_parentPath = NOU_CORE::move(other.m_parentPath);
+		m_relativePath = NOU_CORE::move(other.m_relativePath);
 
 		return *this;
 	}
-	Path & Path::operator+(const NOU::NOU_DAT_ALG::StringView8 & other)
-	{
-		if (!m_absolutePath.endsWith("\\"))
-		{
-			m_absolutePath.append("\\");
-		}
-		m_absolutePath.append(other);
 
-		return *this;
+	Path Path::operator+(const NOU::NOU_DAT_ALG::StringView8 & other) const
+	{
+		NOU::NOU_DAT_ALG::String8 strAbsolute = getAbsolutePath();
+		NOU::NOU_DAT_ALG::String8 strOther = other;
+
+#if NOU_OS == NOU_OS_WINDOWS
+		if (!strAbsolute.endsWith("\\"))
+		{
+			strAbsolute.append("\\");
+		}
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+		if (!strAbsolute.endsWith("/"))
+		{
+			strAbsolute.append("/");
+		}
+#endif
+
+		Path newPath(strAbsolute + strOther);
+
+		return newPath;
 	}
+
 	Path & Path::operator+=(const Path & other)
 	{
+#if NOU_OS == NOU_OS_WINDOWS
 		if (!m_absolutePath.endsWith("\\"))
 		{
 			m_absolutePath.append("\\");
 		}
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+		if (!m_absolutePath.endsWith("/"))
+		{
+			m_absolutePath.append("/");
+		}
+#endif
+
 		m_absolutePath.append(other.m_absolutePath);
+
+		m_name.needsReevaluation();
+		m_extension.needsReevaluation();
+		m_nameAndExtension.needsReevaluation();
+		m_parentPath.needsReevaluation();
+		m_relativePath.needsReevaluation();
 
 		return *this;
 	}
+
 	Path & Path::operator+=(const NOU::NOU_DAT_ALG::StringView8 & other)
 	{
+#if NOU_OS == NOU_OS_WINDOWS
 		if (!m_absolutePath.endsWith("\\"))
 		{
 			m_absolutePath.append("\\");
 		}
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+		if (!m_absolutePath.endsWith("/"))
+		{
+			m_absolutePath.append("/");
+		}
+#endif
+
 		m_absolutePath.append(other);
+
+		m_name.needsReevaluation();
+		m_extension.needsReevaluation();
+		m_nameAndExtension.needsReevaluation();
+		m_parentPath.needsReevaluation();
+		m_relativePath.needsReevaluation();
 
 		return *this;
 	}
