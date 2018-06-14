@@ -1461,13 +1461,12 @@ namespace NOU::NOU_DAT_ALG
 
 		for(sizeType i = start; i < end; i++)
 		{
-			if(target == substring(i, target.size() + i) ) {
+			if(target == this->logicalSubstring(i, target.size() + i) ) {
                 if (target.size() == replacement.size()) {
                     for (sizeType j = 0; j < target.size(); j++) {
                         replace(i + j, replacement[j]);
                     }
-
-                    break;
+                    i = i + replacement.size();
                 } else if (target.size() < replacement.size())
                 {
                     sizeType counter = 0;
@@ -1481,7 +1480,7 @@ namespace NOU::NOU_DAT_ALG
                         counter++;
                     }
 
-                    break;
+                    i = i + replacement.size();
                 } else
                 {
                     sizeType oldsize = StringView<CHAR_TYPE>::size();
@@ -1499,7 +1498,7 @@ namespace NOU::NOU_DAT_ALG
                     }
                     setSize((oldsize - target.size()) + replacement.size());
 
-                    break;
+                    i = i + replacement.size();
                 }
 			}
 		}
