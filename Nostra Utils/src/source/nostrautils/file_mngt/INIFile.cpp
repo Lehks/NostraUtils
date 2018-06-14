@@ -31,11 +31,11 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		int32 value = m_dataSections.get(section) + 1;
-		
+
 		m_dataSections.remove(section);
 		m_dataSections.map(section, value);
 	}
-	
+
 
 	void INIFile::decSection(const NouString & section)
 	{
@@ -142,8 +142,8 @@ namespace NOU::NOU_FILE_MNGT
 		}
 
 		// Split the string into a left and right part
-		lineLft   = line.substring(0, posEq);
-		lineRgt   = line.substring(posEq + 1);
+		lineLft = line.substring(0, posEq);
+		lineRgt = line.substring(posEq + 1);
 		quoteType = this->parseValueQuote(lineRgt);
 
 		if (quoteType == INI_QUOTE_NONE) {
@@ -190,7 +190,7 @@ namespace NOU::NOU_FILE_MNGT
 			if (line.size() == 0) {
 				continue;
 			}
-			
+
 			line.trim();
 
 			if (line.size() == 0) {
@@ -205,7 +205,7 @@ namespace NOU::NOU_FILE_MNGT
 				this->parseLine(line, section);
 			}
 		}
-		
+
 		inifile.close();
 
 		return true;
@@ -227,7 +227,7 @@ namespace NOU::NOU_FILE_MNGT
 		NouString key_section;
 		int32 pos_dot;
 		int32 pos_sec;
-		
+
 		// Open file stream
 		if (filename.size()) {
 			inifile = std::ofstream(filename.rawStr(), std::ofstream::trunc);
@@ -235,7 +235,7 @@ namespace NOU::NOU_FILE_MNGT
 		else {
 			inifile = std::ofstream(this->m_filename.rawStr(), std::ofstream::trunc);
 		}
-		
+
 		if (!inifile.is_open()) {
 			return false;
 		}
@@ -394,7 +394,7 @@ namespace NOU::NOU_FILE_MNGT
 	float32 INIFile::getFloat(const NouString & key, const NouString & section)
 	{
 		const NouString search = section + "." + key;
-		
+
 		if (m_dataFloat.containsKey(search)) {
 			return m_dataFloat.get(search);
 		}
@@ -426,10 +426,10 @@ namespace NOU::NOU_FILE_MNGT
 		NOU::NOU_DAT_ALG::HashMap<NouString, NouString> keys = NOU::NOU_DAT_ALG::HashMap<NouString, NouString>();
 
 		NOU::NOU_DAT_ALG::Vector<const NouString *> sectionKeys = m_dataSections.keySet();
-		NOU::NOU_DAT_ALG::Vector<const int32 *> sectionValues   = m_dataSections.entrySet();
-		NOU::NOU_DAT_ALG::Vector<const NouString *> stringKeys  = m_dataString.keySet();
+		NOU::NOU_DAT_ALG::Vector<const int32 *> sectionValues = m_dataSections.entrySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString *> stringKeys = m_dataString.keySet();
 		NOU::NOU_DAT_ALG::Vector<const NouString *> integerKeys = m_dataInteger.keySet();
-		NOU::NOU_DAT_ALG::Vector<const NouString *> floatKeys   = m_dataFloat.keySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString *> floatKeys = m_dataFloat.keySet();
 
 		NouString key_section;
 		int32 pos_dot;
@@ -506,7 +506,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		NOU::NOU_DAT_ALG::HashMap<NouString, NouString> otherKeySections = other.getKeys();
 
-		NOU::NOU_DAT_ALG::Vector<const NouString *> keys     = otherKeySections.keySet();
+		NOU::NOU_DAT_ALG::Vector<const NouString *> keys = otherKeySections.keySet();
 		NOU::NOU_DAT_ALG::Vector<const NouString *> sections = otherKeySections.entrySet();
 
 		NouString key, section;
@@ -514,22 +514,22 @@ namespace NOU::NOU_FILE_MNGT
 		// Loop through all the keys
 		for (int32 i = (keys.size() - 1); i >= 0; i--)
 		{
-			key     = keys.at(i)->rawStr();
+			key = keys.at(i)->rawStr();
 			section = sections.at(i)->rawStr();
 
-			switch (other.getDataType(key, section)) 
+			switch (other.getDataType(key, section))
 			{
-				case INI_TYPE_NouString:
-					this->setString(key, other.getString(key, section), section);
-					break;
+			case INI_TYPE_NouString:
+				this->setString(key, other.getString(key, section), section);
+				break;
 
-				case INI_TYPE_INT:
-					this->setInt(key, other.getInt(key, section), section);
-					break;
+			case INI_TYPE_INT:
+				this->setInt(key, other.getInt(key, section), section);
+				break;
 
-				case INI_TYPE_FLOAT:
-					this->setFloat(key, other.getFloat(key, section), section);
-					break;
+			case INI_TYPE_FLOAT:
+				this->setFloat(key, other.getFloat(key, section), section);
+				break;
 			}
 		}
 	}
