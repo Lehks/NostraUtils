@@ -159,6 +159,10 @@ namespace NOU::NOU_FILE_MNGT
 		\brief Returns a path object with the current working directory.
 		*/
 		NOU_FUNC static Path currentWorkingDirectory();
+        /**
+        \brief Default constructor;
+        */
+		NOU_FUNC Path();
 		/**
 		\brief Constructor with a char pointer as parameter (calls Path(const NOU::NOU_DAT_ALG::StringView8 & path)) constructor.
 		*/
