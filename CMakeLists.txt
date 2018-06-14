@@ -29,6 +29,10 @@ if (${COMPILE_AS_DEBUG})
 endif()
 #===
 
+if(MSVC)
+	add_definitions("-wd4251")
+endif()
+
 if(NOT NOU_UNITTEST_COLOR)
 	add_definitions(-DCATCH_CONFIG_COLOUR_NONE)
 endif()

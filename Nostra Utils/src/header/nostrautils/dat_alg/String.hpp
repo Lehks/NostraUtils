@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 
-/** \file Vector.hpp
+/** \file String.hpp
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \since   1.0.0
