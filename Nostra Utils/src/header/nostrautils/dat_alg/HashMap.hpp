@@ -501,7 +501,7 @@ namespace NOU::NOU_DAT_ALG
 			{
 				if (m_data[n][i].dataOne == tmpPair.dataOne) 
 				{
-					if constexpr (std::is_move_assignable_v<V>)
+					if constexpr (std::is_move_assignable<V>::value)
 					{
 						m_data[n][i].dataTwo = NOU_CORE::move(tmpPair.dataTwo);
 					}
@@ -543,7 +543,7 @@ namespace NOU::NOU_DAT_ALG
 			{
 				if (comp(m_data[n][i].dataOne, tmpPair.dataOne) == 0)
 				{
-					if constexpr (std::is_move_assignable_v<V>)
+					if constexpr (std::is_move_assignable<V>::value)
 					{
 						m_data[n][i].dataTwo = NOU_CORE::move(tmpPair.dataTwo);
 					}
