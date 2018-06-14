@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_RUNNER
-#include "Catch/catch.hpp"
 
 #define NOU_DEBUG
 #define NOU_DLL
@@ -12,6 +10,10 @@
 #include <string>
 #include <iostream>
 
+#define CATCH_CONFIG_RUNNER
+#include "Catch/catch.hpp"
+
+
 #define NOU_CHECK_ERROR_HANDLER 																		 \
 				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
 				while(NOU::NOU_CORE::getErrorHandler().getErrorCount() > 0)								 \
@@ -19,6 +21,27 @@
 					NOU::NOU_CORE::getErrorHandler().popError();										 \
 				}																						 \
 				IsTrue(errorCount == 0);
+
+namespace Catch
+{
+	template<>
+	struct StringMaker<NOU::NOU_DAT_ALG::StringView8>
+	{
+		static std::string convert(const NOU::NOU_DAT_ALG::StringView8 &value)
+		{
+			return std::string("\"") + value.rawStr() + std::string("\"");
+		}
+	};
+
+	template<>
+	struct StringMaker<NOU::NOU_DAT_ALG::String8>
+	{
+		static std::string convert(const NOU::NOU_DAT_ALG::String8 &value)
+		{
+			return StringMaker<NOU::NOU_DAT_ALG::StringView8>::convert(value);
+		}
+	};
+}
 
 void printErrors()
 {
@@ -53,6 +76,35 @@ int dummyFunc1(int)
 
 //used in test UniquePtr
 NOU::boolean testVar = false;
+
+
+class NoCopyClass
+{
+private:
+	NOU::uint32 m_id;
+
+public:
+	explicit NoCopyClass(NOU::uint32 id) :
+		m_id(id)
+	{}
+
+	NoCopyClass(const NoCopyClass &) = delete;
+
+	NoCopyClass(NoCopyClass && other) :
+		m_id(other.m_id)
+	{}
+
+	NOU::uint32 get() const
+	{
+		return m_id;
+	}
+};
+
+NOU::NOU_DAT_ALG::CompareResult noCopyClassComparator(const NoCopyClass &a, const NoCopyClass &b)
+{
+	return NOU::NOU_DAT_ALG::genericComparator(a.get(), b.get());
+}
+
 
 TEST_METHOD(TypeSizes)
 {
@@ -357,6 +409,39 @@ IsTrue(NOU::DebugClass::getCounter() == 0);
 
 //Check if this compiles
 NOU::NOU_DAT_ALG::Vector<NotCopiable> vec;
+
+NOU::NOU_DAT_ALG::Vector<NOU::int32> vecSortTest;
+NOU::NOU_DAT_ALG::Vector<NOU::int32> vecSortTest2;
+
+vecSortTest.pushBack(5);
+vecSortTest.pushBack(8);
+vecSortTest.pushBack(2);
+vecSortTest.pushBack(4);
+vecSortTest.pushBack(9);
+
+vecSortTest.sort();
+
+IsTrue(vecSortTest[0] == 2);
+IsTrue(vecSortTest[1] == 4);
+IsTrue(vecSortTest[2] == 5);
+IsTrue(vecSortTest[3] == 8);
+IsTrue(vecSortTest[4] == 9);
+
+vecSortTest2.pushBack(5);
+vecSortTest2.pushBack(8);
+vecSortTest2.pushBack(2);
+vecSortTest2.pushBack(4);
+vecSortTest2.pushBack(9);
+
+
+
+vecSortTest2.sortComp(NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
+
+IsTrue(vecSortTest2[0] == 2);
+IsTrue(vecSortTest2[1] == 4);
+IsTrue(vecSortTest2[2] == 5);
+IsTrue(vecSortTest2[3] == 8);
+IsTrue(vecSortTest2[4] == 9);
 
 NOU_CHECK_ERROR_HANDLER;
 }
@@ -967,20 +1052,31 @@ IsTrue(NOU::DebugClass::getCounter() == 0);
 }
 
 TEST_METHOD(Quicksort)
-
 {
+	int arrFirst[5] = { 2,1,3,5,4 };
+	NOU::NOU_DAT_ALG::qsort(arrFirst, 0, 4);
+	IsTrue(arrFirst[0] == 1);
+	IsTrue(arrFirst[1] == 2);
+	IsTrue(arrFirst[2] == 3);
+	IsTrue(arrFirst[3] == 4);
+	IsTrue(arrFirst[4] == 5);
 
-int arr[5] = {2,1,3,5,4};
-NOU::NOU_DAT_ALG::qsort(arr, 0, 4);
-IsTrue(arr[0] == 1);
-IsTrue(arr[1] == 2);
-IsTrue(arr[2] == 3);
-IsTrue(arr[3] == 4);
-IsTrue(arr[4] == 5);
-
-
-
-
+	NOU::int32 arrSecond[5] = {2,1,3,5,4};
+	NOU::NOU_DAT_ALG::qsort(arrSecond, 0, 4,NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
+	IsTrue(arrSecond[0] == 1);
+	IsTrue(arrSecond[1] == 2);
+	IsTrue(arrSecond[2] == 3);
+	IsTrue(arrSecond[3] == 4);
+	IsTrue(arrSecond[4] == 5);
+	
+	
+	NoCopyClass arrTest[5] = { NoCopyClass(2), NoCopyClass(1), NoCopyClass(3), NoCopyClass(5), NoCopyClass(4) };
+	NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, noCopyClassComparator);
+	IsTrue(arrTest[0].get() == 1);
+	IsTrue(arrTest[1].get() == 2);
+	IsTrue(arrTest[2].get() == 3);
+	IsTrue(arrTest[3].get() == 4);
+	IsTrue(arrTest[4].get() == 5);
 }
 
 TEST_METHOD(Random)
@@ -1067,7 +1163,8 @@ gpa.deallocateObjects(dbgVec.at(0));
 dbgVec.pop();
 gpa.deallocateObjects(dbgVec.at(0));
 
-IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 2);
+NOU::NOU_CORE::getErrorHandler().popError();
 NOU::NOU_CORE::getErrorHandler().popError();
 
 for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
@@ -1080,7 +1177,7 @@ for (HandleType &value : dbgVec)
 IsTrue(value->get() == testValue);
 }
 
-for (int i = 0; i < dbgVec.size(); i++)
+for (NOU::uint32 i = 0; i < dbgVec.size(); i++)
 {
 gpa.deallocateObjects(dbgVec.at(i));
 }
@@ -1196,8 +1293,37 @@ IsTrue(str1 == "wasgeht");
 
 str1 = "ThisIsAString";
 str1.replace("String", "Integer");
+IsTrue(str1 == "ThisIsAInteger");
 
-//IsTrue(str1 == "ThisIsAInteger");
+str1 = "ThisIsAString";
+str1.replace("String", "Intege");
+IsTrue(str1 == "ThisIsAIntege");
+
+str1 = "ThisIsAString";
+str1.replace("AString", "Intege");
+IsTrue(str1 == "ThisIsIntege");
+
+
+str1 = "ThisIsAString";
+str1.replace(0, 7, "Integer");
+IsTrue(str1 == "IntegerString");
+
+str1 = "ThisIsAString";
+str1.replace(0,13, "Integer");
+IsTrue(str1 == "Integer");
+
+str1 = "ThisIsAString";
+str1.replace(0, 5, "Integer");
+IsTrue(str1 == "IntegersAString");
+
+NOU::NOU_DAT_ALG::String8 newstr(50, 'b');
+IsTrue(newstr.getCapacity() == 50);
+
+newstr.appendBuffer(10);
+IsTrue(newstr.getCapacity() == 60);
+
+newstr.removeRemainingBufferFromString();
+IsTrue(newstr.getCapacity() == 1);
 
 NOU_CHECK_ERROR_HANDLER;
 }
@@ -1236,7 +1362,7 @@ IsTrue(b.at(2) == 4);
 IsTrue(b.at(3) == 1);
 IsTrue(b.at(4) == 4);
 
-NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> c(5);
+NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> c(true, 5);
 
 c.enqueue(1, 11);
 c.enqueue(2, 5);
@@ -1257,112 +1383,178 @@ NOU_CHECK_ERROR_HANDLER;
 }
 
 
-TEST_METHOD(Hashfunction)
+/* TEST_METHOD(Hashfunction)
 {
-NOU::int64 i1 = 243536768574;
-NOU::int64 i2 = 243536768574;
+	NOU::int64 i1 = 243536768574;
+	NOU::int64 i2 = 243536768574;
 
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, sizeof(NOU::int64), 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
+	NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
+	//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, sizeof(NOU::int64), 20));
+	IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
 
-NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
-NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
+	NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
+	NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
+	h = NOU::NOU_DAT_ALG::hashObj(&str1, 1, 20);
+	//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
+	IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 1, 20));
 
+	NOU_CHECK_ERROR_HANDLER;
+} */
 
-}
-
-TEST_METHOD(HashMap)
+/* TEST_METHOD(HashMap)
 {
-NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
-NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
-NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
-NOU::boolean b;
+	
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> map;
 
-//AreEqual(hm.isEmpty(), true);
-IsTrue(hm.isEmpty() == true);
+		IsTrue(map.bucketCount() == NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32>::LOAD_SIZE);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey(0));
 
-for (NOU::sizeType i = 0; i < str.size(); i++) {
-// b = hm.map(str.at(i), 1, sizeof(str.at(i)));
-}
+		//push values
+		map.map(0, 5);
+		map.map(1, 900);
+		map.map(2, 1337);
 
-//AreEqual(hm.isEmpty(), false);
+		IsTrue(map.containsKey(0));
+		IsTrue(map.containsKey(1));
+		IsTrue(map.containsKey(2));
 
-IsTrue(hm.isEmpty() == false);
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
 
-for (NOU::sizeType i = 0; i < str.size(); i++) {
-//AreEqual(hm.get(str.at(i)), 1);
-//IsTrue(hm.get(str.at(i), sizeof(str.at(i))) == 1);
-}
-NOU::char8 k = 'h';
+		IsTrue(map.get(0) == 5);
+		IsTrue(map.get(1) == 900);
+		IsTrue(map.get(2) == 1337);
 
-//NOU::int32 count = hm.remove(k, &out);
+		//assign new value to key
+		map.map(2, 42);
 
-NOU::boolean r = hm.remove(k);
-IsTrue(r);
+		IsTrue(map.containsKey(2));
+		IsTrue(map.get(2) == 42);
 
-//AreEqual(1, count);
+		IsTrue(map.size() == 3);
 
+		//array subscript
+		IsTrue(map.get(0) == map[0]);
+		IsTrue(map.get(1) == map[1]);
+		IsTrue(map.get(2) == map[2]);
 
-for (NOU::sizeType i = 0; i < str.size(); i++)
-{
-k = str.at(i);
-if (!hm1.containsKey(str.at(i)))
-{
-//hm1.map(k, 1, sizeof(k));
-}
-else
-{
-// hm1.map(k, hm1.get(k, sizeof(k)) + 1, sizeof(k));
-}
-}
+		//key set
+		auto keySet = map.keySet();
 
-//AreEqual(hm1.get('h'), 2);
-//AreEqual(hm1.get(' '), 8);
+		IsTrue(keySet.size() == 3);
 
-// IsTrue(hm1.get('h', sizeof('h')) == 2);
-// IsTrue(hm1.get(' ', sizeof(' ')) == 8);
+		//entry set
+		auto entrySet = map.entrySet();
 
-NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
-/*
-cm.map(5, 1, sizeof(5));
-cm.map(41, 2, sizeof(41));
-cm.map(10, 3, sizeof(10));
-cm.map(49875, 4, sizeof(49875));
-*/
-NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
+		IsTrue(entrySet.size() == 3);
 
-c = cm.entrySet();
+		//check if compiles
+		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> mapMove = NOU::NOU_CORE::move(map);
 
-//AreEqual(c[0], 1);
-//AreEqual(c[1], 4);
-//AreEqual(c[2], 3);
-//AreEqual(c[3], 2);
+		NOU_CHECK_ERROR_HANDLER;
+	}
+	
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NoCopyClass, NoCopyClass> map(50);
 
-IsTrue(c[0] == 1);
-IsTrue(c[1] == 4);
-IsTrue(c[2] == 3);
-IsTrue(c[3] == 2);
+		IsTrue(map.bucketCount() == 50);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey(NoCopyClass(0), noCopyClassComparator));
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
+		//push values
+		map.map(NoCopyClass(0), NoCopyClass(5), noCopyClassComparator);
+		map.map(NoCopyClass(1), NoCopyClass(900), noCopyClassComparator);
+		map.map(NoCopyClass(2), NoCopyClass(1337), noCopyClassComparator);
 
-a = cm.keySet();
+		IsTrue(map.containsKey(NoCopyClass(0), noCopyClassComparator));
+		IsTrue(map.containsKey(NoCopyClass(1), noCopyClassComparator));
+		IsTrue(map.containsKey(NoCopyClass(2), noCopyClassComparator));
 
-//AreEqual(a[0], 5);
-//AreEqual(a[1], 49875);
-//AreEqual(a[2], 10);
-//AreEqual(a[3], 41);
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
 
-IsTrue(a[0] == 5);
-IsTrue(a[1] == 49875);
-IsTrue(a[2] == 10);
-IsTrue(a[3] == 41);
+		IsTrue(map.get(NoCopyClass(0), noCopyClassComparator).get() == NoCopyClass(5).get());
+		IsTrue(map.get(NoCopyClass(1), noCopyClassComparator).get() == NoCopyClass(900).get());
+		IsTrue(map.get(NoCopyClass(2), noCopyClassComparator).get() == NoCopyClass(1337).get());
 
-}
+		//assign new value to key
+		map.map(NoCopyClass(2), NoCopyClass(42), noCopyClassComparator);
+
+		IsTrue(map.containsKey(NoCopyClass(2), noCopyClassComparator));
+		IsTrue(map.get(NoCopyClass(2), noCopyClassComparator).get() == NoCopyClass(42).get());
+
+		IsTrue(map.size() == 3);
+
+		//array subscript not possible, array subscript can not take 2 parameters 
+		//(which is required for the comparator)
+
+		//key set
+		auto keySet = map.keySet();
+
+		IsTrue(keySet.size() == 3);
+
+		//entry set
+		auto entrySet = map.entrySet();
+
+		IsTrue(entrySet.size() == 3);
+	}
+	
+
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NOU::NOU_DAT_ALG::String8, NOU::NOU_DAT_ALG::String8> map(50);
+
+		IsTrue(map.bucketCount() == 50);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey("test"));
+
+		//push values
+		map.map("test", "map to test");
+		map.map("another test", "map to another test");
+		map.map("yet another test", "map to yet another test");
+
+		IsTrue(map.containsKey("test"));
+		IsTrue(map.containsKey("another test"));
+		IsTrue(map.containsKey("yet another test"));
+
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
+
+		IsTrue(map.get("test") == "map to test");
+		IsTrue(map.get("another test") == "map to another test");
+		IsTrue(map.get("yet another test") == "map to yet another test");
+
+		//assign new value to key
+		map.map("yet another test", "over write");
+
+		IsTrue(map.containsKey("yet another test"));
+		IsTrue(map.get("yet another test") == "over write");
+
+		IsTrue(map.size() == 3);
+
+		//array subscript not possible, array subscript can not take 2 parameters 
+		//(which is required for the comparator)
+
+		//key set
+		auto keySet = map.keySet();
+
+		IsTrue(keySet.size() == 3);
+
+		//entry set
+		auto entrySet = map.entrySet();
+
+		IsTrue(entrySet.size() == 3);
+	}
+
+}*/ 
 
 TEST_METHOD(BinarySearch)
 {
@@ -1580,19 +1772,6 @@ objPool.giveBack(obj0);
 IsTrue(objPool.capacity() == 5);
 IsTrue(objPool.size() == 3);
 IsTrue(objPool.remainingObjects() == 2);
-NOU::int64 i1 = 243536768574;
-NOU::int64 i2 = 243536768574;
-
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
-
-NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
-NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
-
-h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
-
-
 }
 
 static void taskTestFunction1(NOU::int32 i, NOU::int32 *out)
@@ -1843,84 +2022,211 @@ TEST_METHOD(IsBaseOf)
 
 TEST_METHOD(Logging)
 {
-	static NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
-
-	static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
 	static NOU::NOU_DAT_ALG::String8 writeOutput;
 
-	NOU::NOU_CORE::Logger* log = NOU::NOU_CORE::Logger::instance();
-
-	static NOU::NOU_THREAD::Mutex mutex;
-	static NOU::NOU_THREAD::ConditionVariable variable;
+	NOU::NOU_CORE::Logger& log = NOU::NOU_CORE::Logger::get();
 
 	class TestLogger : public NOU::NOU_CORE::ILogger
 	{
-		void write(const NOU::NOU_CORE::Event& event, StringType filename)
+		void write(const NOU::NOU_CORE::Event& event) override
 		{
 			writeOutput = NOU::NOU_CORE::Logger::print(event);
-			variable.notifyAll();
 		}
 	};
 
-	log->pushLogger<TestLogger>();
-	log->write(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+	log.pushLogger<TestLogger>();
 
-	//Wait until the logger has actually printed the message
-	NOU::NOU_THREAD::UniqueLock lock(mutex);
-	variable.wait(lock);
-
-	if (testOutput.size() == writeOutput.size()) //For better error message
 	{
-		for (int i = 0; i < testOutput.size(); i++)
+		NOU_LOG_FATAL("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::FATAL, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
 		{
-			IsTrue(testOutput.at(i) == writeOutput.at(i));
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
 		}
 	}
-	else
+
 	{
-		IsTrue(false);
+#define ERROR_RENAME ERROR
+#undef ERROR
+
+		NOU_LOG_ERROR("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::ERROR, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+
+#define ERROR ERROR_RENAME
+#undef ERROR_RENAME
+	}
+
+	{
+		NOU_LOG_WARNING("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::WARNING, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+	}
+
+	{
+#define INFO_RENAME INFO
+#undef INFO
+
+		NOU_LOG_INFO("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::INFO, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+
+#define INFO INFO_RENAME
+#undef INFO_RENAME
+	}
+
+	{
+		NOU_LOG_DEBUG("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+	}
+
+	{
+		NOU_LOG_TRACE("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::TRACE, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+	}
+
+	//Checks if a string is printed correctly if the String leaves its scope before the printing happens.
+	{
+		NOU_LOG_FATAL(NOU::NOU_DAT_ALG::String8("Unittest ") + "error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::FATAL, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
 	}
 
 	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(File)
-{
-	NOU::NOU_FILE_MNGT::File f("UnitTestFile");
-	NOU::NOU_DAT_ALG::StringView8 testString = "Nostra";
-	NOU::char8 *buff;
-	NOU::char8 firstIn[6];
-	NOU::boolean errBit;
-
-
-
-	// Creating file and testing if it exists
-	IsTrue(!f.exists());
-	f.createFile();
-	IsTrue(f.exists());
-	NOU::sizeType s;
-
-	// Read/Write
-	f.open();
-	buff = firstIn;
-	errBit = f.write(testString);
-	IsTrue(errBit);
-	f.close();
-	s = f.size();
-	f.open(NOU::NOU_FILE_MNGT::AccessMode::READ);
-	f.read(s, buff);
-
-	for(NOU::sizeType i = 0; i < s; i++)
+{	
 	{
-		IsTrue(buff[i] == testString[i]);
+		NOU::NOU_DAT_ALG::String8 filename = "unittest_testfile.txt";
+		NOU::NOU_DAT_ALG::String8 output = "1. 2. 3. This is a string for testing the unittests.";
+		NOU::NOU_DAT_ALG::String8 buffer;
+
+		NOU::NOU_FILE_MNGT::Path path = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+
+		path += filename;
+
+		NOU::NOU_FILE_MNGT::File file(path);
+
+		file.createFile();
+		IsTrue(file.exists() == true);
+
+		file.open(NOU::NOU_FILE_MNGT::AccessMode::WRITE);
+		IsTrue(file.isCurrentlyOpen() == true);
+
+		file.write(output);
+
+		IsTrue(file.size() == output.size());
+
+		file.close();
+		IsTrue(file.isCurrentlyOpen() == false);
+
+		file.open(NOU::NOU_FILE_MNGT::AccessMode::READ);
+		file.read(buffer); //Reads the hole file into the buffer.
+
+		file.close();
+		IsTrue(file.isCurrentlyOpen() == false);
+
+		file.deleteFile();
+		IsTrue(file.exists() == false);
+
+		for (NOU::sizeType i = 0; i < buffer.size() - 1; i++)
+		{
+			IsTrue(output[i] == buffer[i]);
+		}
 	}
 
-
-
-	// Deleting File
-	f.close();
-	IsTrue(f.deleteFile());
-	IsTrue(!f.exists());
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 
@@ -2046,6 +2352,12 @@ TEST_METHOD(MathVec2)
 	IsTrue(vec0.value(0) == 1.0f);
 	IsTrue(vec0.value(1) == 2.0f);
 
+	//array subscript
+	Vec2 vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+
 	//compare
 	IsTrue(vec0 == vec1);
 	IsTrue(vec0 != vec2);
@@ -2100,9 +2412,9 @@ TEST_METHOD(MathVec2)
 	Vec2 vec8(5.0f, 10.0f);
 	Vec2 vec9(2.0f, 2.0f);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
+	IsTrue(vec8.multiplyElements(vec9) == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec2(5.0f * 2.0f, 10.0f * 2.0f));
 
 	Vec2 vec11(2.0f, 0.0f);
@@ -2132,6 +2444,12 @@ TEST_METHOD(MathVec2i)
 
 	IsTrue(vec0.value(0) == 1);
 	IsTrue(vec0.value(1) == 2);
+
+	//array subscript
+	Vec2i vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2187,9 +2505,9 @@ TEST_METHOD(MathVec2i)
 	Vec2i vec8(5, 10);
 	Vec2i vec9(2, 2);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec2i(5 * 2, 10 * 2));
+	IsTrue(vec8.multiplyElements(vec9) == Vec2i(5 * 2, 10 * 2));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec2i(5 * 2, 10 * 2));
 
 	Vec2i vec11(2, 0);
@@ -2233,6 +2551,13 @@ TEST_METHOD(MathVec3)
 	IsTrue(vec13.value(0) == 1.0f);
 	IsTrue(vec13.value(1) == 2.0f);
 	IsTrue(vec13.value(2) == 3.0f);
+
+	//array subscript
+	Vec3 vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2292,9 +2617,9 @@ TEST_METHOD(MathVec3)
 	Vec3 vec8(5.0f, 10.0f, 20.0f);
 	Vec3 vec9(2.0f, 2.0f, 2.0f);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
+	IsTrue(vec8.multiplyElements(vec9) == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec3(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f));
 
 	Vec3 vec11(2.0f, 0.0f, 0.0f);
@@ -2337,6 +2662,13 @@ TEST_METHOD(MathVec3i)
 	IsTrue(vec13.value(0) == 1);
 	IsTrue(vec13.value(1) == 2);
 	IsTrue(vec13.value(2) == 3);
+
+	//array subscript
+	Vec3i vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
 
 	//compare
 	IsTrue(vec0 == vec1);
@@ -2396,9 +2728,9 @@ TEST_METHOD(MathVec3i)
 	Vec3i vec8(5, 10, 20);
 	Vec3i vec9(2, 2, 2);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec3i(5 * 2, 10 * 2, 20 * 2));
+	IsTrue(vec8.multiplyElements(vec9) == Vec3i(5 * 2, 10 * 2, 20 * 2));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec3i(5 * 2, 10 * 2, 20 * 2));
 
 	Vec3i vec11(2, 0, 0);
@@ -2461,6 +2793,14 @@ TEST_METHOD(MathVec4)
 	IsTrue(vec15.value(2) == 3.0f);
 	IsTrue(vec15.value(3) == 4.0f);
 
+	//array subscript
+	Vec4 vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
+	IsTrue(vecsub[3] == vec1[3]);
+
 	//compare
 	IsTrue(vec0 == vec1);
 	IsTrue(vec0 != vec2);
@@ -2517,9 +2857,9 @@ TEST_METHOD(MathVec4)
 	Vec4 vec8(5.0f, 10.0f, 20.0f, 40.0f);
 	Vec4 vec9(2.0f, 2.0f, 2.0f, 2.0f);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
+	IsTrue(vec8.multiplyElements(vec9) == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec4(5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f));
 
 	Vec4 vec11(2.0f, 0.0f, 0.0f, 0.0f);
@@ -2582,6 +2922,14 @@ TEST_METHOD(MathVec4i)
 	IsTrue(vec1.value(2) == 3);
 	IsTrue(vec1.value(3) == 4);
 
+	//array subscript
+	Vec4i vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
+	IsTrue(vecsub[3] == vec1[3]);
+
 	//compare
 	IsTrue(vec0 == vec1);
 	IsTrue(vec0 != vec2);
@@ -2638,9 +2986,9 @@ TEST_METHOD(MathVec4i)
 	Vec4i vec8(5, 10, 20, 40);
 	Vec4i vec9(2, 2, 2, 2);
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
+	IsTrue(vec8.multiplyElements(vec9) == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vec4i(5 * 2, 10 * 2, 20 * 2, 40 * 2));
 
 	Vec4i vec11(2, 0, 0, 0);
@@ -2725,6 +3073,15 @@ TEST_METHOD(MathVec5f)
 	IsTrue(vec17.value(3) == 4.0f);
 	IsTrue(vec17.value(4) == 5.0f);
 
+	//array subscript
+	Vector<NOU::float32, 5> vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
+	IsTrue(vecsub[3] == vec1[3]);
+	IsTrue(vecsub[4] == vec1[4]);
+
 	//compare
 	IsTrue(vec0 == vec1);
 	IsTrue(vec0 != vec2);
@@ -2784,10 +3141,10 @@ TEST_METHOD(MathVec5f)
 	Vector<NOU::float32, 5> vec8({ 5.0f, 10.0f, 20.0f, 40.0f, 80.0f });
 	Vector<NOU::float32, 5> vec9({ 2.0f, 2.0f, 2.0f, 2.0f, 2.0f });
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 
+	IsTrue(vec8.multiplyElements(vec9) == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 
 		20.0f * 2.0f, 40.0f * 2.0f, 80.0f * 2.0f }));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vector<NOU::float32, 5>({ 5.0f * 2.0f, 10.0f * 2.0f, 20.0f * 2.0f, 40.0f * 2.0f, 
 		80.0f * 2.0f }));
 
@@ -2872,6 +3229,15 @@ TEST_METHOD(MathVec5i)
 	IsTrue(vec17.value(3) == 4);
 	IsTrue(vec17.value(4) == 5);
 
+	//array subscript
+	Vector<NOU::int32, 5> vecsub = vec1;
+
+	IsTrue(vecsub[0] == vec1[0]);
+	IsTrue(vecsub[1] == vec1[1]);
+	IsTrue(vecsub[2] == vec1[2]);
+	IsTrue(vecsub[3] == vec1[3]);
+	IsTrue(vecsub[4] == vec1[4]);
+
 	//compare
 	IsTrue(vec0 == vec1);
 	IsTrue(vec0 != vec2);
@@ -2931,10 +3297,10 @@ TEST_METHOD(MathVec5i)
 	Vector<NOU::int32, 5> vec8({ 5, 10, 20, 40, 80 });
 	Vector<NOU::int32, 5> vec9({ 2, 2, 2, 2, 2 });
 
-	IsTrue(vec8.multiplicateElements(vec9) == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2,
+	IsTrue(vec8.multiplyElements(vec9) == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2,
 		20 * 2, 40 * 2, 80 * 2 }));
 
-	vec8.multiplicateElementsAssign(vec9);
+	vec8.multiplyElementsAssign(vec9);
 	IsTrue(vec8 == Vector<NOU::int32, 5>({ 5 * 2, 10 * 2, 20 * 2, 40 * 2,
 		80 * 2 }));
 
@@ -2959,6 +3325,14 @@ TEST_METHOD(MathMat2)
 	IsTrue(mat0.value(0, 1) == 2.0f);
 	IsTrue(mat0.value(1, 0) == 3.0f);
 	IsTrue(mat0.value(1, 1) == 4.0f);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat2 matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3061,6 +3435,14 @@ TEST_METHOD(MathMat2i)
 	IsTrue(mat0.value(0, 1) == 2);
 	IsTrue(mat0.value(1, 0) == 3);
 	IsTrue(mat0.value(1, 1) == 4);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat2i matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3168,6 +3550,19 @@ TEST_METHOD(MathMat3)
 	IsTrue(mat0.value(2, 0) == 7.0f);
 	IsTrue(mat0.value(2, 1) == 8.0f);
 	IsTrue(mat0.value(2, 2) == 9.0f);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat3 matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3309,6 +3704,19 @@ TEST_METHOD(MathMat3i)
 	IsTrue(mat0.value(2, 0) == 7);
 	IsTrue(mat0.value(2, 1) == 8);
 	IsTrue(mat0.value(2, 2) == 9);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat3i matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3458,6 +3866,26 @@ TEST_METHOD(MathMat4)
 	IsTrue(mat0.value(3, 1) == 14.0f);
 	IsTrue(mat0.value(3, 2) == 15.0f);
 	IsTrue(mat0.value(3, 3) == 16.0f);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat4 matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[0][3] == mat1[0][3]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[1][3] == mat1[1][3]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
+	IsTrue(matsub[2][3] == mat1[2][3]);
+	IsTrue(matsub[3][0] == mat1[3][0]);
+	IsTrue(matsub[3][1] == mat1[3][1]);
+	IsTrue(matsub[3][2] == mat1[3][2]);
+	IsTrue(matsub[3][3] == mat1[3][3]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3653,6 +4081,26 @@ TEST_METHOD(MathMat4i)
 	IsTrue(mat0.value(3, 1) == 14);
 	IsTrue(mat0.value(3, 2) == 15);
 	IsTrue(mat0.value(3, 3) == 16);
+
+	//array subscript
+	const NOU::NOU_MATH::Mat4i matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[0][3] == mat1[0][3]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[1][3] == mat1[1][3]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
+	IsTrue(matsub[2][3] == mat1[2][3]);
+	IsTrue(matsub[3][0] == mat1[3][0]);
+	IsTrue(matsub[3][1] == mat1[3][1]);
+	IsTrue(matsub[3][2] == mat1[3][2]);
+	IsTrue(matsub[3][3] == mat1[3][3]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -3865,6 +4313,30 @@ TEST_METHOD(MathMat5)
 	IsTrue(mat0.value(4, 1) == 18.0f);
 	IsTrue(mat0.value(4, 2) == 19.0f);
 	IsTrue(mat0.value(4, 3) == 20.0f);
+
+	//array subscript
+	const NOU::NOU_MATH::Matrix<NOU::float32, 5, 4> matsub = mat1;
+
+	IsTrue(matsub[0][0] == mat1[0][0]);
+	IsTrue(matsub[0][1] == mat1[0][1]);
+	IsTrue(matsub[0][2] == mat1[0][2]);
+	IsTrue(matsub[0][3] == mat1[0][3]);
+	IsTrue(matsub[1][0] == mat1[1][0]);
+	IsTrue(matsub[1][1] == mat1[1][1]);
+	IsTrue(matsub[1][2] == mat1[1][2]);
+	IsTrue(matsub[1][3] == mat1[1][3]);
+	IsTrue(matsub[2][0] == mat1[2][0]);
+	IsTrue(matsub[2][1] == mat1[2][1]);
+	IsTrue(matsub[2][2] == mat1[2][2]);
+	IsTrue(matsub[2][3] == mat1[2][3]);
+	IsTrue(matsub[3][0] == mat1[3][0]);
+	IsTrue(matsub[3][1] == mat1[3][1]);
+	IsTrue(matsub[3][2] == mat1[3][2]);
+	IsTrue(matsub[3][3] == mat1[3][3]);
+	IsTrue(matsub[3][0] == mat1[3][0]);
+	IsTrue(matsub[4][1] == mat1[4][1]);
+	IsTrue(matsub[4][2] == mat1[4][2]);
+	IsTrue(matsub[4][3] == mat1[4][3]);
 
 	//Matrices have the same values; check if equal and unequal work and check if the 2. constructor works
 	IsTrue(mat0 == mat1);
@@ -4083,6 +4555,316 @@ TEST_METHOD(MathMat5)
 
 	//copy
 	IsTrue(mat5.copy() == mat5);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(ColorStorageLayout)
+{
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::RGBA == NOU::NOU_MATH::ColorStorageLayout::RGBA);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::RGAB == NOU::NOU_MATH::ColorStorageLayout::RGAB);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::RBGA == NOU::NOU_MATH::ColorStorageLayout::RBGA);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::RBAG == NOU::NOU_MATH::ColorStorageLayout::RBAG);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::RAGB == NOU::NOU_MATH::ColorStorageLayout::RAGB);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::RABG == NOU::NOU_MATH::ColorStorageLayout::RABG);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::GRBA == NOU::NOU_MATH::ColorStorageLayout::GRBA);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::GRAB == NOU::NOU_MATH::ColorStorageLayout::GRAB);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::GBRA == NOU::NOU_MATH::ColorStorageLayout::GBRA);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::GBAR == NOU::NOU_MATH::ColorStorageLayout::GBAR);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::GARB == NOU::NOU_MATH::ColorStorageLayout::GARB);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::GABR == NOU::NOU_MATH::ColorStorageLayout::GABR);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::BRGA == NOU::NOU_MATH::ColorStorageLayout::BRGA);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::BRAG == NOU::NOU_MATH::ColorStorageLayout::BRAG);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::BGRA == NOU::NOU_MATH::ColorStorageLayout::BGRA);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::BGAR == NOU::NOU_MATH::ColorStorageLayout::BGAR);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::BARG == NOU::NOU_MATH::ColorStorageLayout::BARG);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::BAGR == NOU::NOU_MATH::ColorStorageLayout::BAGR);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::ARGB == NOU::NOU_MATH::ColorStorageLayout::ARGB);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::ARBG == NOU::NOU_MATH::ColorStorageLayout::ARBG);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::AGRB == NOU::NOU_MATH::ColorStorageLayout::AGRB);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::AGBR == NOU::NOU_MATH::ColorStorageLayout::AGBR);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::ABRG == NOU::NOU_MATH::ColorStorageLayout::ABRG);
+	IsTrue(NOU::NOU_MATH::ColorStorageLayout::ABGR == NOU::NOU_MATH::ColorStorageLayout::ABGR);
+}
+
+TEST_METHOD(ColorConfiguration)
+{
+	IsTrue(NOU::NOU_CORE::AreSame<typename NOU::NOU_MATH::ColorConfigFloat::ChannelType, 
+		NOU::float32>::value);
+	IsTrue(NOU::NOU_MATH::ColorConfigFloat::CHANNEL_MIN == 0.0f);
+	IsTrue(NOU::NOU_MATH::ColorConfigFloat::CHANNEL_MAX == 1.0f);
+
+	IsTrue(NOU::NOU_CORE::AreSame<typename NOU::NOU_MATH::ColorConfigByte::ChannelType,
+		NOU::uint8>::value);
+	IsTrue(NOU::NOU_MATH::ColorConfigByte::CHANNEL_MIN == 0);
+	IsTrue(NOU::NOU_MATH::ColorConfigByte::CHANNEL_MAX == 255);
+}
+
+TEST_METHOD(Color)
+{
+	constexpr NOU::NOU_MATH::Color32f color0(1.0f, 0.5f, 0.3f);
+
+	//color with some other storage layout
+	constexpr NOU::NOU_MATH::Color32f color1(1.0f, 0.5f, 0.3f, 1.0f, NOU::NOU_MATH::ColorStorageLayout::ABGR);
+
+	//color that is not color0 or color1
+	constexpr NOU::NOU_MATH::Color32f color2(0.5f, 0.5f, 1.0f, 0.0f);
+
+	constexpr NOU::float32 red   = color0.getRed();
+	constexpr NOU::float32 green = color0.getGreen();
+	constexpr NOU::float32 blue  = color0.getBlue();
+	constexpr NOU::float32 alpha = color0.getAlpha();
+
+	IsTrue(red == 1.0f);
+	IsTrue(green == 0.5f);
+	IsTrue(blue == 0.3f);
+	IsTrue(alpha == 1.0f);
+
+	IsTrue(color2.getRed() == 0.5f);
+	IsTrue(color2.getGreen() == 0.5f);
+	IsTrue(color2.getBlue() == 1.0f);
+	IsTrue(color2.getAlpha() == 0.0f);
+
+	//Check if clamping works
+	constexpr NOU::NOU_MATH::Color32f color3(2.0f, -1.0f, 0.5f);
+
+	IsTrue(color3.getRed() == 1.0f);
+	IsTrue(color3.getGreen() == 0.0f);
+	IsTrue(color3.getBlue() == 0.5f);
+
+
+	//equal / unequal
+
+	constexpr NOU::boolean equal = color0 == color1;
+	constexpr NOU::boolean unequal = color0 != color2;
+
+	IsTrue(equal);
+	IsTrue(unequal);
+
+	//predefined colors
+	constexpr NOU::NOU_MATH::Color32f black = NOU::NOU_MATH::Color32f::black();
+
+	IsTrue(black.getRed() == 0.0f);
+	IsTrue(black.getGreen() == 0.0f);
+	IsTrue(black.getBlue() == 0.0f);
+	IsTrue(black.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color32f black1 = NOU::NOU_MATH::Color32f::black(0.5f, 
+		NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(black1.getRed() == 0.0f);
+	IsTrue(black1.getGreen() == 0.0f);
+	IsTrue(black1.getBlue() == 0.0f);
+	IsTrue(black1.getAlpha() == 0.5f);
+	IsTrue(black1.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	constexpr NOU::NOU_MATH::Color32f grey = NOU::NOU_MATH::Color32f::grey();
+
+	IsTrue(grey.getRed() == 0.5f);
+	IsTrue(grey.getGreen() == 0.5f);
+	IsTrue(grey.getBlue() == 0.5f);
+	IsTrue(grey.getAlpha() == 1.0f);
+
+
+	constexpr NOU::NOU_MATH::Color32f grey1 = NOU::NOU_MATH::Color32f::grey(0.3f);
+
+	IsTrue(grey1.getRed() == 0.3f);
+	IsTrue(grey1.getGreen() == 0.3f);
+	IsTrue(grey1.getBlue() == 0.3f);
+	IsTrue(grey1.getAlpha() == 1.0f);
+
+
+	constexpr NOU::NOU_MATH::Color32f grey2 = NOU::NOU_MATH::Color32f::grey(0.7f, 0.3f,
+		NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(grey2.getRed() == 0.7f);
+	IsTrue(grey2.getGreen() == 0.7f);
+	IsTrue(grey2.getBlue() == 0.7f);
+	IsTrue(grey2.getAlpha() == 0.3f);
+	IsTrue(grey2.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	constexpr NOU::NOU_MATH::Color32f red0 = NOU::NOU_MATH::Color32f::red();
+
+	IsTrue(red0.getRed() == 1.0f);
+	IsTrue(red0.getGreen() == 0.0f);
+	IsTrue(red0.getBlue() == 0.0f);
+	IsTrue(red0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color32f red1 = NOU::NOU_MATH::Color32f::red(0.5f,
+		NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(red1.getRed() == 1.0f);
+	IsTrue(red1.getGreen() == 0.0f);
+	IsTrue(red1.getBlue() == 0.0f);
+	IsTrue(red1.getAlpha() == 0.5f);
+	IsTrue(red1.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	constexpr NOU::NOU_MATH::Color32f yellow0 = NOU::NOU_MATH::Color32f::yellow();
+
+	IsTrue(yellow0.getRed() == 1.0f);
+	IsTrue(yellow0.getGreen() == 1.0f);
+	IsTrue(yellow0.getBlue() == 0.0f);
+	IsTrue(yellow0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color32f yellow1 = NOU::NOU_MATH::Color32f::yellow(0.5f,
+		NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(yellow1.getRed() == 1.0f);
+	IsTrue(yellow1.getGreen() == 1.0f);
+	IsTrue(yellow1.getBlue() == 0.0f);
+	IsTrue(yellow1.getAlpha() == 0.5f);
+	IsTrue(yellow1.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	constexpr NOU::NOU_MATH::Color32f green0 = NOU::NOU_MATH::Color32f::green();
+
+	IsTrue(green0.getRed() == 0.0f);
+	IsTrue(green0.getGreen() == 1.0f);
+	IsTrue(green0.getBlue() == 0.0f);
+	IsTrue(green0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color32f green1 = NOU::NOU_MATH::Color32f::green(0.5f,
+		NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(green1.getRed() == 0.0f);
+	IsTrue(green1.getGreen() == 1.0f);
+	IsTrue(green1.getBlue() == 0.0f);
+	IsTrue(green1.getAlpha() == 0.5f);
+	IsTrue(green1.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	constexpr NOU::NOU_MATH::Color32f cyan0 = NOU::NOU_MATH::Color32f::cyan();
+
+	IsTrue(cyan0.getRed() == 0.0f);
+	IsTrue(cyan0.getGreen() == 1.0f);
+	IsTrue(cyan0.getBlue() == 1.0f);
+	IsTrue(cyan0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color32f cyan1 = NOU::NOU_MATH::Color32f::cyan(0.5f,
+		NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(cyan1.getRed() == 0.0f);
+	IsTrue(cyan1.getGreen() == 1.0f);
+	IsTrue(cyan1.getBlue() == 1.0f);
+	IsTrue(cyan1.getAlpha() == 0.5f);
+	IsTrue(cyan1.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	constexpr NOU::NOU_MATH::Color32f blue0 = NOU::NOU_MATH::Color32f::blue();
+
+	IsTrue(blue0.getRed() == 0.0f);
+	IsTrue(blue0.getGreen() == 0.0f);
+	IsTrue(blue0.getBlue() == 1.0f);
+	IsTrue(blue0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color32f blue1 = NOU::NOU_MATH::Color32f::blue(0.5f,
+		NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(blue1.getRed() == 0.0f);
+	IsTrue(blue1.getGreen() == 0.0f);
+	IsTrue(blue1.getBlue() == 1.0f);
+	IsTrue(blue1.getAlpha() == 0.5f);
+	IsTrue(blue1.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	constexpr NOU::NOU_MATH::Color32f purple0 = NOU::NOU_MATH::Color32f::purple();
+
+	IsTrue(purple0.getRed() == 1.0f);
+	IsTrue(purple0.getGreen() == 0.0f);
+	IsTrue(purple0.getBlue() == 1.0f);
+	IsTrue(purple0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color32f purple1 = NOU::NOU_MATH::Color32f::purple(0.5f,
+		NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(purple1.getRed() == 1.0f);
+	IsTrue(purple1.getGreen() == 0.0f);
+	IsTrue(purple1.getBlue() == 1.0f);
+	IsTrue(purple1.getAlpha() == 0.5f);
+	IsTrue(purple1.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	constexpr NOU::NOU_MATH::Color32f white0 = NOU::NOU_MATH::Color32f::white();
+
+	IsTrue(white0.getRed() == 1.0f);
+	IsTrue(white0.getGreen() == 1.0f);
+	IsTrue(white0.getBlue() == 1.0f);
+	IsTrue(white0.getAlpha() == 1.0f);
+
+	constexpr NOU::NOU_MATH::Color32f white1 = NOU::NOU_MATH::Color32f::white(0.5f,
+		NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(white1.getRed() == 1.0f);
+	IsTrue(white1.getGreen() == 1.0f);
+	IsTrue(white1.getBlue() == 1.0f);
+	IsTrue(white1.getAlpha() == 0.5f);
+	IsTrue(white1.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	//set/getStorageLayout
+	//color0 has layout RGBA
+	NOU::NOU_MATH::Color32f color4 = color0;
+	
+	IsTrue(color4.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::RGBA);
+
+	color4.setStorageLayout(NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(color4.getStorageLayout() == NOU::NOU_MATH::ColorStorageLayout::BARG);
+
+	IsTrue(color0 == color4);
+
+	//invert	
+	NOU::NOU_MATH::Color32f color5 = color0;
+	color5.invert();
+
+	IsTrue(color5.getRed() == 1.0f - color0.getRed());
+	IsTrue(color5.getGreen() == 1.0f - color0.getGreen());
+	IsTrue(color5.getBlue() == 1.0f - color0.getBlue());
+	IsTrue(color5.getAlpha() == color0.getAlpha());
+
+	//add
+	constexpr NOU::NOU_MATH::Color32f color6 = color0 + color0;
+
+	IsTrue(color6.getRed() == 1.0f);
+	IsTrue(color6.getGreen() == 1.0f);
+	IsTrue(color6.getBlue() == 0.6f);
+	IsTrue(color6.getAlpha() == 1.0f);
+
+	NOU::NOU_MATH::Color32f color7 = color0;
+	color7 += color0;
+
+	IsTrue(color7 == color6);
+
+	//sub
+	constexpr NOU::NOU_MATH::Color32f color8 = color0 - NOU::NOU_MATH::Color32f(1.0f, 1.0f, 0.2f, 0.5f);
+
+	IsTrue(color8.getRed() == 0.0f);
+	IsTrue(color8.getGreen() == 0.0f);
+	IsTrue(color8.getBlue() == 0.3f - 0.2f);
+	IsTrue(color8.getAlpha() == 0.5f);
+
+	NOU::NOU_MATH::Color32f color9 = color0;
+	color9 -= NOU::NOU_MATH::Color32f(1.0f, 1.0f, 0.2f, 0.5f);
+
+	IsTrue(color8 == color9);
+
+	//sub
+	constexpr NOU::NOU_MATH::Color32f color10 = color0 * NOU::NOU_MATH::Color32f(1.0f, 0.5f, 0.5f, 0.5f);
+
+	IsTrue(color10.getRed() == 1.0f);
+	IsTrue(color10.getGreen() == 0.25f);
+	IsTrue(color10.getBlue() == 0.3f * 0.5f);
+	IsTrue(color10.getAlpha() == 0.5f);
+
+	NOU::NOU_MATH::Color32f color11 = color0;
+	color11 *= NOU::NOU_MATH::Color32f(1.0f, 0.5f, 0.5f, 0.5f);
+
+	IsTrue(color10 == color11);
+
+
+	//copy
+	IsTrue(color0.copy() == color0);
+
+	constexpr NOU::NOU_MATH::Color8i color12 = static_cast<NOU::NOU_MATH::Color8i>(color0);
+
+	IsTrue(color12.getRed() == static_cast<NOU::uint8>(1.0f * 255));
+	IsTrue(color12.getGreen() == static_cast<NOU::uint8>(0.5f * 255));
+	IsTrue(color12.getBlue() == static_cast<NOU::uint8>(0.3f * 255));
+	IsTrue(color12.getAlpha() == static_cast<NOU::uint8>(1.0f * 255));
 
 	NOU_CHECK_ERROR_HANDLER;
 }

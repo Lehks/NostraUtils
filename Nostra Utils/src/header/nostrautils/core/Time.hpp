@@ -2,7 +2,7 @@
 #define NOU_CORE_TIME_HPP
 #include "nostrautils/core/StdIncludes.hpp"
 
-/** \file Vector.hpp
+/** \file Time.hpp
 \author  Leslie Marxen
 \brief   This file provides some functionallity to work with time values and constants.
 */

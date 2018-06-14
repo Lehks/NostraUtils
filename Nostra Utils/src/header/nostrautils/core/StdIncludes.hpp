@@ -435,6 +435,34 @@ and replace * with the compiler name.
 #endif
 
 /**
+\brief A macro that is used to export classes into shared libraries.
+
+\todo Add support for all compilers.
+*/
+#ifndef NOU_EXPORT_CLASS
+
+#	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
+#		define NOU_EXPORT_CLASS __declspec(dllexport)
+#	elif NOU_COMPILER == NOU_COMPILER_GCC
+#	define NOU_EXPORT_CLASS __attribute__ ((visibility ("default")))
+
+#	else
+#	define NOU_EXPORT_CLASS
+
+#	endif
+
+#endif
+
+/**
+\brief A macro that is used to export functions into shared libraries.
+
+\todo Add support for all compilers.
+*/
+#ifndef NOU_EXPORT_FUNC
+#define NOU_EXPORT_FUNC NOU_EXPORT_CLASS
+#endif
+
+/**
 \brief A macro that is used to add compiler specific attributes to classes.
 
 \todo Add support for all compilers.
@@ -607,7 +635,7 @@ static_cast<NOU::uint32> 									 \
 #endif
 
 /**
-\param str The expression to convert.
+\param ... The expression to convert.
 
 \brief Converts any expression into a const char*.
 */

@@ -6,10 +6,12 @@
 #include "nostrautils/core/Utils.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
 #include "nostrautils/dat_alg/Utils.hpp"
+#include "nostrautils/dat_alg/Quicksort.hpp"
 
+#include <type_traits>
 #include <new>
 
-/** \file Vector.hpp
+/** \file dat_alg/Vector.hpp
 \author  Dennis Franz
 \author  Lukas Reichmann
 \since   1.0.0
@@ -88,14 +90,6 @@ namespace NOU::NOU_DAT_ALG
 		void free(T *data);
 
 		/**
-		\brief Reallocate memory for the vector.
-
-		\details 
-		If a new element gets inserted to the vector it has to reallocate the memory for it.
-		*/
-		void reallocateData(sizeType capacity);
-
-		/**
 		\tparam ARGS The types of the arguments that will be passed to the constructor of T.
 
 		\param index The index at which the instance will be inserted at.
@@ -121,7 +115,7 @@ namespace NOU::NOU_DAT_ALG
 		\see   nostra::utils::mem_mngt::GenericAllocationCallback
 		*/
 		Vector<T>(sizeType size = MIN_CAPACITY, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = 
-			NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance());
+			NOU_MEM_MNGT::GenericAllocationCallback<T>::get());
 
 		/**
 		\param other Takes an other vector for moving.
@@ -394,6 +388,14 @@ namespace NOU::NOU_DAT_ALG
 		\brief replaces the data at the index with the passed data.
 		*/
 		Vector& replace(sizeType index, const T &replacement);
+
+        /**
+        \brief Reallocate memory for the vector.
+
+        \details
+        If a new element gets inserted to the vector it has to reallocate the memory for it.
+        */
+        void reallocateData(sizeType capacity);
 
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
@@ -933,7 +935,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	T& Vector<T>::at(sizeType index)
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
+		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		return m_data[index];
@@ -942,7 +944,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	const T& Vector<T>::at(sizeType index) const
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
+		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		return m_data[index];
@@ -1044,10 +1046,10 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::swap(sizeType index0, sizeType index1)
 	{
-		NOU_COND_PUSH_ERROR((index0 > m_size),
+		NOU_COND_PUSH_ERROR((index0 >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
 
-		NOU_COND_PUSH_ERROR((index1 > m_size),
+		NOU_COND_PUSH_ERROR((index1 >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
 
 		NOU::NOU_DAT_ALG::swap(m_data + index0, m_data + index1);
@@ -1056,7 +1058,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::remove(sizeType index)
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
+		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
 
 		for (sizeType i = index; i < m_size - 1; i++) //shift all element to the left, until the index
@@ -1106,15 +1108,13 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	void Vector<T>::sort()
 	{
-		///\todo implementing a "real" sorting alg.
-		qsort(m_data, m_size);
+		qsort(m_data, 0, size() - 1);
 	}
 
 	template<typename T>
 	void Vector<T>::sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
-		///\todo implementing a "real" sorting alg.
-		qsort(m_data, m_size, comp);
+		qsort(m_data, 0, size() - 1, comp);
 	}
 
 	template<typename T>
@@ -1156,7 +1156,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	Vector<T>& Vector<T>::replace(sizeType index, const T& replacement)
 	{
-		NOU_COND_PUSH_ERROR((index > m_size),
+		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "No object was found at this index.");
 
 		at(index) = replacement;
@@ -1166,20 +1166,20 @@ namespace NOU::NOU_DAT_ALG
 	template<typename T>
 	Vector<T>& Vector<T>::operator = (const Vector<T> &other)
 	{
-		//If capacity of this vector is smaller than the capacity of the other one, reallocate memory
-		//This also ensures, that a copy has at least a capacity as big as the other one's
-		if (m_capacity < other.m_capacity)
-		{
-			free(m_data);
-			m_capacity = other.m_capacity;
-			m_data = alloc(m_capacity);
-		}
-
 		//Delete all objects that are in the current vector, but will not overridden by elements in the other
 		//one
 		//If there are fewer elements in this vector than in the other one, nothing will happen
 		for (sizeType i = other.m_size; i < m_size; i++)
 			at(i).~T();
+
+		//If capacity of this vector is smaller than the capacity of the other one, reallocate memory
+		//This also ensures, that a copy has at least a capacity as big as the other one's
+		if (m_capacity < other.m_size)
+		{
+			free(m_data);
+			m_capacity = other.m_capacity;
+			m_data = alloc(m_capacity);
+		}
 
 		sizeType i;
 
@@ -1189,7 +1189,15 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		//####
 		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //copy-assign part
-			at(i) = other.at(i);
+		{
+			if constexpr (std::is_copy_assignable<T>::value)
+				at(i) = other.at(i);
+			else
+			{
+				at(i).~T();
+				new (m_data + i) T(at(i));
+			}
+		}
 
 		for (; i < other.m_size; i++) //copy-constr part
 			new (m_data + i) T(other.at(i));
