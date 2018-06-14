@@ -93,8 +93,8 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief The arguments that will be passed to the invocable.
 		*/
-		//removeConst b/c otherwise it is not possible to pass const objects to the constructor
-		std::tuple<NOU_CORE::removeConst_t<ARGS>...> m_args;
+		//RemoveConst b/c otherwise it is not possible to pass const objects to the constructor
+		std::tuple<NOU_CORE::RemoveConst_t<ARGS>...> m_args;
 
 		/**
 		\brief The invocable.
@@ -178,7 +178,7 @@ namespace NOU::NOU_THREAD
 		using InvocableType = I;
 
 	private:
-		std::tuple<NOU_CORE::removeConst_t<ARGS>...> m_args;
+		std::tuple<NOU_CORE::RemoveConst_t<ARGS>...> m_args;
 		InvocableType m_invocable;
 
 	public:

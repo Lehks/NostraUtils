@@ -92,7 +92,7 @@ namespace NOU::NOU_MEM_MNGT
 		*/
 		explicit PoolAllocator(sizeType size = POOL_ALLOCATOR_DEFAULT_SIZE, 
 			AllocationCallback<PoolBlock<T>*> &allocator = 
-			GenericAllocationCallback<PoolBlock<T>*>::getInstance());
+			GenericAllocationCallback<PoolBlock<T>*>::get());
 
 		/**
 		\brief Deleted copy constructor.

@@ -9,7 +9,7 @@
 
 #include <new>
 
-/** \file Vector.hpp
+/** \file dat_alg/Vector.hpp
 \author  Dennis Franz
 \author  Lukas Reichmann
 \since   1.0.0
@@ -113,7 +113,7 @@ namespace NOU::NOU_DAT_ALG
 		\see   nostra::utils::mem_mngt::GenericAllocationCallback
 		*/
 		Vector<T>(sizeType size = MIN_CAPACITY, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = 
-			NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance());
+			NOU_MEM_MNGT::GenericAllocationCallback<T>::get());
 
 		/**
 		\param other Takes an other vector for moving.

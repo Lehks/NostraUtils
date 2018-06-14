@@ -1,16 +1,5 @@
 # Changelog
 
-## Version 1.0.1
-
-### Features
-- None
-
-### Improvements
-- Improved logging queue process.
-
-### Fixes
-- Fixed a wrong attribute type that resulted in an incorrect display of logging messages.
-
 ## Version 1.0.0
 
 ### Features
