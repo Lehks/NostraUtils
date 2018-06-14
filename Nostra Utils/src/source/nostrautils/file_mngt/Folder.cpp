@@ -91,12 +91,13 @@ namespace NOU::NOU_FILE_MNGT
 					NOU::NOU_DAT_ALG::String8 tempstr(data.cFileName);
 					NOU::NOU_DAT_ALG::String8 tempstr2 = m_path.getAbsolutePath().rawStr();
 
-					tempstr2.append("\\");
+					//tempstr2.append("\\");
 
-					tempstr2 = tempstr2 + tempstr;
+					//tempstr2 = tempstr2 + tempstr;
 
-					Folder f1(tempstr2);
-					//Folder f1(m_path + data.cFileName);
+					//Folder f1(tempstr2);
+
+					Folder f1(tempstr2 + tempstr);
 					v.emplaceBack(f1);
 				}
 			} while (FindNextFile(hFind, &data) != 0);
@@ -176,39 +177,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	void EnumerateDir(const char* pszDir)
-	{
-		char szBuffer[MAX_PATH];
-		DWORD dwRet = GetCurrentDirectory(MAX_PATH, szBuffer);
-
-		SetCurrentDirectory(pszDir);
-
-		WIN32_FIND_DATA fd;
-		HANDLE hFind = ::FindFirstFile("*.", &fd);
-
-		// Get all sub-folders:
-		if (hFind != INVALID_HANDLE_VALUE)
-		{
-			do
-			{
-				char* pszName = fd.cFileName;
-
-				if (_stricmp(pszName, ".") != 0 && _stricmp(pszName, "..") != 0)
-				{
-					// TO DO:
-					//
-					//		*** assign dir name to list ***
-					//
-				}
-
-			} while (::FindNextFile(hFind, &fd));
-
-			::FindClose(hFind);
-		}
-
-		// Set the current folder back to what it was:
-		SetCurrentDirectory(szBuffer);
-	}
+	
 }
 
 
