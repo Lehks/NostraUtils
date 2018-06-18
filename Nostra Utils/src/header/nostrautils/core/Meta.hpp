@@ -1,9 +1,17 @@
 #ifndef NOU_CORE_META_HPP
 #define NOU_CORE_META_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
 
 #include <type_traits>
+#include <utility>
+
+/** \file Meta.hpp
+\author	 Lukas Reichmann
+\since   1.0.0
+\version 1.0.0
+\brief   This file provides a collection of meta functions.
+*/
 
 namespace NOU::NOU_CORE
 {
@@ -18,7 +26,7 @@ namespace NOU::NOU_CORE
 	frequently used in combination with inheritance when writing other meta functions.
 	*/
 	template<typename T>
-	struct NOU_CLASS IdentityType
+	struct IdentityType
 	{
 		using type = T;
 	};
@@ -44,13 +52,13 @@ namespace NOU::NOU_CORE
 	int&& | int
 	*/
 	template<typename T>
-	struct remove_reference : public IdentityType<std::remove_reference_t<T>> {};
+	struct RemoveReference : public IdentityType<std::remove_reference_t<T>> {};
 
 	/**
-	\brief The result of a call to remove_reference.
+	\brief The result of a call to RemoveReference.
 	*/
 	template<typename T>
-	using remove_reference_t = typename remove_reference<T>::type;
+	using RemoveReference_t = typename RemoveReference<T>::type;
 
 	/**
 	\tparam t The type of the returned value.
@@ -64,13 +72,16 @@ namespace NOU::NOU_CORE
 	is frequently used in combination with inheritance when writing other meta functions.
 	*/
 	template<typename T, T v>
-	struct NOU_CLASS Constant
+	struct Constant
 	{
 		/**
 		\brief The stored value.
 		*/
 		static constexpr T value = v;
 	};
+
+	template<typename T, T v>
+	constexpr T Constant<T, v>::value;
 
 	/**
 	\tparam B The value of the boolean.
@@ -95,30 +106,30 @@ namespace NOU::NOU_CORE
 
 
 	/**
-	\tparam B  The boolean that determines which type will be choosen.
+	\tparam B  The boolean that determines which type will be chosen.
 	\tparam T1 The first type.
 	\tparam T2 The second type.
-	\return    The choosen type according to B.
+	\return    The chosen type according to B.
 
 	\brief A function that chooses between two types.
 
 	\details
-	This functions chooses one of two types. If B is true, the first type will be choosen, otherwise the 
+	This functions chooses one of two types. If B is true, the first type will be chosen, otherwise the 
 	second one.
 	*/
 	template<boolean B, typename T1, typename T2>
-	struct NOU_CLASS typeIf : IdentityType<T1>{};
+	struct TypeIf : IdentityType<T1>{};
 
 	///\cond
 	template<typename T1, typename T2>
-	struct NOU_CLASS typeIf<false, T1, T2> : IdentityType<T2> {};
+	struct TypeIf<false, T1, T2> : IdentityType<T2> {};
 	///\endcond
 
 	/**
-	\brief The result of a call to typeIf.
+	\brief The result of a call to TypeIf.
 	*/
 	template<boolean B, typename T1, typename T2>
-	using typeIf_t = typename typeIf<B, T1, T2>::type;
+	using TypeIf_t = typename TypeIf<B, T1, T2>::type;
 
 	/**
 	\tparam T The type to remove const from.
@@ -136,26 +147,26 @@ namespace NOU::NOU_CORE
 	const int | int
 	*/
 	template<typename T>
-	struct NOU_CLASS removeConst : IdentityType<T>{};
+	struct RemoveConst : IdentityType<T>{};
 
 	///\cond
 	template<typename T>
-	struct NOU_CLASS removeConst<const T> : IdentityType<T> {};
+	struct RemoveConst<const T> : IdentityType<T> {};
 	///\endcond
 
 	/**
-	\brief The result of a call to removeConst.
+	\brief The result of a call to RemoveConst.
 	*/
 	template<typename T>
-	using removeConst_t = typename removeConst<T>::type;
+	using RemoveConst_t = typename RemoveConst<T>::type;
 
 	/**
-	\tparam The enum the the underlying type should be determined for.
+	\tparam The enum the underlying type should be determined for.
 
 	\brief Determines the underlying type of an enum.
 	*/
 	template<typename T>
-	struct NOU_CLASS UnderlyingType : std::underlying_type<T> {};
+	struct UnderlyingType : std::underlying_type<T> {};
 
 	/**
 	\brief The result of a call to UnderlyingType.
@@ -165,27 +176,67 @@ namespace NOU::NOU_CORE
 
 	/**
 	\tparam T0 The type to compare the other types to.
-	\tparam T1 The second (requiered) type.
+	\tparam T1 The second (required) type.
 	\tparam T2 Other types that may also be passed and that also need to be the same as \p T0 in order for the
-	           function to retun TrueType.
+	           function to return TrueType.
 
 	\return TrueType, if all passed types are the same, FalseType if not.
 
 	\brief Checks if one or more types are the same.
 	*/
 	template<typename T0, typename T1, typename... T2>
-	struct NOU_CLASS AreSame : FalseType {};
+	struct AreSame : FalseType {};
 
 	///\cond
 	template<typename T0, typename... T2>
-	struct NOU_CLASS AreSame<T0, T0, T2...> : AreSame<T0, T2...> {};
+	struct AreSame<T0, T0, T2...> : AreSame<T0, T2...> {};
 
 	template<typename T0, typename T1>
-	struct NOU_CLASS AreSame<T0, T1> : FalseType {};
+	struct AreSame<T0, T1> : FalseType {};
 
 	template<typename T>
-	struct NOU_CLASS AreSame<T, T> : TrueType {};
+	struct AreSame<T, T> : TrueType {};
 	///\endcond
+
+	/**
+	\tparam T The invocable to check the result of.
+
+	\return The result type of the passed invocable.
+
+	\brief Returns the result type of the passed invocable.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_INVOKE_RESULT
+	is defined.
+	*/
+#ifndef NOU_CPP14_COMPATIBILITY
+	template<typename T, typename...ARGS>
+	struct InvokeResult : IdentityType<std::invoke_result_t<T, ARGS...>> {};
+	#define NOU_EXISTS_FEATURE_INVOKE_RESULT
+#else
+	namespace internal
+	{
+		template<boolean IS_PTR, typename T, typename...ARGS>
+		struct InvokeResultImpl : IdentityType<std::result_of_t<T(ARGS...)>> {};
+
+		template<typename T, typename...ARGS>
+		struct InvokeResultImpl<false, T, ARGS...> : IdentityType<
+			std::result_of_t<std::add_pointer_t<T>(ARGS...)>> {};
+	}
+
+	template<typename T, typename...ARGS>
+	struct InvokeResult : internal::InvokeResultImpl<std::is_pointer<T>::value, T, ARGS...> {};
+#endif
+
+	/**
+	\brief The result of a call to InvokeResult.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_INVOKE_RESULT
+	is defined.
+	*/
+	template<typename T, typename...ARGS>
+	using InvokeResult_t = typename InvokeResult<T, ARGS...>::type;
 
 	/**
 	\tparam T    The type to check if it is invocable.
@@ -194,12 +245,18 @@ namespace NOU::NOU_CORE
 	\return TrueType, if the type \p T is invocable with the parameters \p ARGS, FalseType if not.
 
 	\brief Checks if a type is invocable using the passed parameter types.
-	*/
-	template<typename T, typename... ARGS>
-	struct IsInvocable : typeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
 
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_IS_INVOCABLE
+	is defined.
+	*/
+#ifndef NOU_CPP14_COMPATIBILITY
+	template<typename T, typename... ARGS>
+	struct IsInvocable : TypeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
+	#define NOU_EXISTS_FEATURE_IS_INVOCABLE
+#endif
 	/**
-	\tparma R    The return type.
+	\tparam R    The return type.
 	\tparam T    The type to check if it is invocable.
 	\tparam ARGS The types that \p T needs to be invoked with.
 
@@ -208,36 +265,38 @@ namespace NOU::NOU_CORE
 
 	\brief Checks if a type is invocable using the passed parameter types and it's return type is convertible 
 	       to \p R.
+
+	\warning 
+	This feature only exists if the C++ version is >= C++17. If the features exists, NOU_EXISTS_FEATURE_IS_INVOCABLE_R
+	is defined.
 	*/
+#ifndef NOU_CPP14_COMPATIBILITY
 	template<typename R, typename T, typename... ARGS>
-	struct IsInvocableR : typeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
+	struct IsInvocableR : TypeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
+	#define NOU_EXISTS_FEATURE_IS_INVOCABLE_R
+#endif
 
 	/**
 	\tparam T    The type to check.
 
 	\return TrueType, if the type \p T is default constructible, FalseType if not.
 
-	\brief Checks wether a type is default constructible or not.
+	\brief Checks whether a type is default constructible or not.
 	*/
 	template<typename T>
-	struct IsDefaultConstructible : typeIf_t<std::is_default_constructible<T>::value, 
+	struct IsDefaultConstructible : TypeIf_t<std::is_default_constructible<T>::value, 
 		TrueType, FalseType> {};
 
 	/**
-	\tparam The invocable to check the result of.
+	\tparam B The type to check.
+	\tparam D The class that \p B is supposed to derive from.
 
-	\return The result type of the passed invocable.
+	\return True, if \p B is a parent of \p D, false if not.
 
-	\brief Returns the result type of the passed invocable.
+	\brief Checks whether \p B is a base class of \p D.
 	*/
-	template<typename T, typename...ARGS>
-	struct InvokeResult : IdentityType<std::invoke_result_t<T, ARGS...>> {};
-
-	/**
-	\brief The result of a call to InvokeResult.
-	*/
-	template<typename T, typename...ARGS>
-	using InvokeResult_t = typename InvokeResult<T, ARGS...>::type;
+	template<typename B, typename D>
+	struct IsBaseOf : BooleanConstant<std::is_base_of<B, D>::value> {};
 }
 
 #endif

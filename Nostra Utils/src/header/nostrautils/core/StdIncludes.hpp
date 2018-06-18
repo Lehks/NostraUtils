@@ -32,7 +32,7 @@
 #endif
 
 /**
-\brief The name of the namespace that contains all components that are related to datastructures and/or 
+\brief The name of the namespace that contains all components that are related to data structures and/or 
        algorithms.
 */
 #ifndef NOU_DAT_ALG
@@ -134,13 +134,13 @@ operating system is Macintosh, use
 
 \details
 The operating system identifier for an unknown system. This macro is always defined, to check if the current 
-operating system is unknwon, use
+operating system is unknown, use
 
 \code{.cpp}
 #if NOU_OS == NOU_OS_UNKNOWN
 \endcode
 
-An unknown operating system does not cause an error per se, however, it may cause major problems (e.g. the
+An unknown operating system does not cause an error per-se, however, it may cause major problems (e.g. the
 value for NOU_OS_LIBRARY will not be set properly).
 */
 #ifndef NOU_OS_UNKNOWN
@@ -163,7 +163,7 @@ identifier.
 \brief Defined as the identifier of the current operating system.
 
 \details
-This macro is defined as the identifier of the current operating system. To check for a certain opeating 
+This macro is defined as the identifier of the current operating system. To check for a certain operating 
 system, use
 
 \code{.cpp}
@@ -186,7 +186,7 @@ value for NOU_OS_LIBRARY will not be set properly).
 #    elif defined __unix__
 #    define NOU_OS NOU_OS_UNIX
 
-#    elif defined macintosh
+#    elif defined __APPLE__
 #    define NOU_OS NOU_OS_MAC
 
 #    elif defined __DOXYGEN__ //__DOXYGEN__ is defined in the Doxyfile
@@ -203,7 +203,7 @@ value for NOU_OS_LIBRARY will not be set properly).
 (<tt>.dll</tt>) on MS Windows.
 
 \details
-For optimisation purposes, functions that will be imported from a DLL should be marked with
+For optimization purposes, functions that will be imported from a DLL should be marked with
 <tt>__declspec(dllimport)</tt> on MS Windows when using the Visual C++ compiler. If this macro is defined, all
 symbols that were exported into a DLL will be marked for import.
 
@@ -416,12 +416,12 @@ and replace * with the compiler name.
 */
 #ifndef NOU_COMPILER
 
-#    ifdef _MSC_VER
-#    define NOU_COMPILER NOU_COMPILER_VISUAL_CPP
-#    elif defined __GNUC__
-#    define NOU_COMPILER NOU_COMPILER_GCC
-#    elif defined __clang__
+#    ifdef __clang__ //This has to be placed first (b/c Clang also defines __GNUC__ and _MSC_VER)
 #    define NOU_COMPILER NOU_COMPILER_CLANG
+#    elif defined _MSC_VER
+#    define NOU_COMPILER NOU_COMPILER_VISUAL_CPP
+#    elif defined __GNUC__ 
+#    define NOU_COMPILER NOU_COMPILER_GCC
 #    elif defined __INTEL_COMPILER
 #    define NOU_COMPILER NOU_COMPILER_INTEL_CPP
 #    elif defined __MINGW32__
@@ -432,6 +432,34 @@ and replace * with the compiler name.
 #    define NOU_COMPILER NOU_COMPILER_UNKNOWN
 #    endif
 
+#endif
+
+/**
+\brief A macro that is used to export classes into shared libraries.
+
+\todo Add support for all compilers.
+*/
+#ifndef NOU_EXPORT_CLASS
+
+#	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
+#		define NOU_EXPORT_CLASS __declspec(dllexport)
+#	elif NOU_COMPILER == NOU_COMPILER_GCC
+#	define NOU_EXPORT_CLASS __attribute__ ((visibility ("default")))
+
+#	else
+#	define NOU_EXPORT_CLASS
+
+#	endif
+
+#endif
+
+/**
+\brief A macro that is used to export functions into shared libraries.
+
+\todo Add support for all compilers.
+*/
+#ifndef NOU_EXPORT_FUNC
+#define NOU_EXPORT_FUNC NOU_EXPORT_CLASS
 #endif
 
 /**
@@ -607,12 +635,12 @@ static_cast<NOU::uint32> 									 \
 #endif
 
 /**
-\param str The expression to convert.
+\param ... The expression to convert.
 
 \brief Converts any expression into a const char*.
 */
 #ifndef NOU_STRINGIFY
-#define NOU_STRINGIFY(str) #str
+#define NOU_STRINGIFY(...) #__VA_ARGS__
 #endif 
 
 /**
@@ -624,18 +652,20 @@ static_cast<NOU::uint32> 									 \
 #endif
 
 /**
-\brief The macro which is used for getting the function name.
+\brief Expands to a string literal with the function signature of the function that this macro was placed in.
 
-\todo Verify!
+\note
+Although this macro is platform independent, it is not guaranteed that using this macro in the same function
+on different platforms also produces the same result.
 */
 #ifndef NOU_FUNC_NAME
 
 #	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
 #	define NOU_FUNC_NAME __FUNCSIG__
 #	elif NOU_COMPILER == NOU_COMPILER_GCC
-#	define NOU_FUNC_NAME __PRETTY__FUNCTION__
+#	define NOU_FUNC_NAME NOU_STRINGIFY(__PRETTY_FUNCTION__)
 #	elif NOU_COMPILER == NOU_COMPILER_CLANG
-#	define NOU_FUNC_NAME __func__ ///\Todo check
+#	define NOU_FUNC_NAME NOU_STRINGIFY(__PRETTY_FUNCTION__)
 #	elif NOU_COMPILER == NOU_COMPILER_INTEL_CPP
 #	define NOU_FUNC_NAME __func__ ///\Todo check
 #	elif NOU_COMPILER == NOU_COMPILER_MIN_GW
@@ -643,10 +673,23 @@ static_cast<NOU::uint32> 									 \
 #	elif NOU_COMPILER == NOU_COMPILER_DOXYGEN
 #	define NOU_FUNC_NAME __FUNCSIG__
 #	else
-#	define NOU_COMPILER_NAME __func__
+#	define NOU_FUNC_NAME __func__
 #	endif
 
 #endif
+
+/**
+\brief A macro that is only defined if the library should be compiled in C++14 compatiblity mode.
+
+\details 
+A macro that is only defined if the library should be compiled in C++14 compatiblity mode.
+
+Usually, this is defined by CMake.
+*/
+#if NOU_COMPILER == NOU_COMPILER_DOXYGEN //Only present for Doxygen
+#define NOU_CPP14_COMPATIBILITY
+#endif
+
 
 namespace NOU::NOU_CORE
 {
@@ -757,17 +800,17 @@ namespace NOU
 	using char32 = char32_t;
 
 	/**
-	\brief A floating point type with a widht of 32 bit.
+	\brief A floating point type with a width of 32 bit.
 
-	\note If the compiler does not support a 32 bit float, this will be the larget floating point type 
+	\note If the compiler does not support a 32 bit float, this will be the largest floating point type 
 	      available.
 	*/
 	using float32 = NOU_CORE::ChooseFloat32::type;
 
 	/**
-	\brief A floating point type with a widht of 64 bit.
+	\brief A floating point type with a width of 64 bit.
 
-	\note If the compiler does not support a 64 bit float, this will be the larget floating point type
+	\note If the compiler does not support a 64 bit float, this will be the largest floating point type
 	available.
 	*/
 	using float64 = NOU_CORE::ChooseFloat64::type;

@@ -1,8 +1,8 @@
 #ifndef	NOU_CORE_VERSION_HPP
 #define	NOU_CORE_VERSION_HPP
 
-#include "nostrautils\core\StdIncludes.hpp"
-#include "nostrautils\core\Utils.hpp"
+#include "nostrautils/core/StdIncludes.hpp"
+#include "nostrautils/core/Utils.hpp"
 
 /**
 \file core/Version.hpp
@@ -23,7 +23,7 @@ namespace NOU::NOU_CORE
 	       (like NOU_MAKE_VERSION). However, this struct does not have problems with overflowing the single 
 		   parts.
 	*/
-	struct NOU_CLASS Version final
+	struct Version final
 	{
 	public:
 		/**
