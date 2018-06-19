@@ -3,11 +3,11 @@
 ## Version 1.0.1
 
 ### Features
-- None
+- Hashfunctions now support arrays.
 
 ### Improvements
 - Improved logging queue process.
-- Hashfunctions now support arrays.
+- HashMap can now also use only movable/copyable classes.
 
 ### Fixes
 - Fixed a wrong attribute type that resulted in an incorrect display of logging messages.
