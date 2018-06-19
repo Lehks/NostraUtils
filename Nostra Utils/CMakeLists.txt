@@ -1,16 +1,36 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.8.2 FATAL_ERROR)
 
-find_package(Threads)
+project(NostraUtils CXX)
+
+find_package(Threads REQUIRED)
 
 file(GLOB_RECURSE NOU_SOURCE_FILES "src/source/nostrautils/*.cpp")
 
-include_directories("${NOU_INCLUDE_DIR}")
+add_library(NostraUtils SHARED "${NOU_SOURCE_FILES}")
+add_library(Nostra::Utils ALIAS NostraUtils)
 
-add_library("${NOU_LIB_NAME}" SHARED "${NOU_SOURCE_FILES}")
+target_link_libraries(NostraUtils
+	PRIVATE 
+		Threads::Threads)
 
-target_link_libraries("${NOU_LIB_NAME}" "${CMAKE_THREAD_LIBS_INIT}")
+target_include_directories(NostraUtils
+	PUBLIC 
+		"src/header")
 
-install(TARGETS "${NOU_LIB_NAME}" DESTINATION "bin")
+target_compile_definitions(NostraUtils
+	INTERFACE
+		"NOU_DLL")
 
-# Append / to avoid having installed src/header instead of src/header/nostrautils
-install(DIRECTORY "${NOU_INCLUDE_DIR}/" DESTINATION "include")
+target_compile_features(NostraUtils
+	PUBLIC 
+		cxx_std_17)
+
+target_compile_options(NostraUtils
+	PRIVATE
+		"-wd4251")
+
+install(TARGETS NostraUtils
+	RUNTIME DESTINATION "bin"
+	LIBRARY DESTINATION "bin"
+	ARCHIVE DESTINATION "lib"
+	INCLUDES DESTINATION "include")
