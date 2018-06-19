@@ -1398,7 +1398,7 @@ h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
 //AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
-
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(HashMap)
@@ -1551,7 +1551,6 @@ TEST_METHOD(HashMap)
 		IsTrue(entrySet.size() == 3);
 	}
 
-	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(BinarySearch)
