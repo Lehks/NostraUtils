@@ -8,13 +8,6 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	constexpr const NOU::char8 *INIFile::INI_DEFAULT_SECTION;
-	const int32 INIFile::INI_QUOTE_NONE = 0;
-	const int32 INIFile::INI_QUOTE_DOUBLE = 1;
-	const int32 INIFile::INI_QUOTE_SINGLE = 2;
-	const int32 INIFile::INI_TYPE_NouString = 1;
-	const int32 INIFile::INI_TYPE_INT = 2;
-	const int32 INIFile::INI_TYPE_FLOAT = 3;
 
 	INIFile::INIFile(const NouString & filename)
 	{

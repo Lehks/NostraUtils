@@ -22,7 +22,7 @@ namespace NOU::NOU_THREAD
 	\brief A class that stores a reference to a mutex. Upon construction, the mutex will be locked and upon 
 	       destruction it will be unlocked.
 	*/
-	class NOU_CLASS Lock final //implement way to manage multiple mutexes at once.
+	class Lock final //implement way to manage multiple mutexes at once.
 	{
 	private:
 		/**
@@ -39,17 +39,17 @@ namespace NOU::NOU_THREAD
 
 		\brief If not already locked, this will lock the mutex.
 		*/
-		Lock(Mutex &mutex, boolean lock = true);
+		NOU_FUNC Lock(Mutex &mutex, boolean lock = true);
 
 		/**
 		\brief Not copy construct-able.
 		*/
-		Lock(const Lock&) = delete;
+		NOU_FUNC Lock(const Lock&) = delete;
 
 		/**
 		\brief This will unlock the mutex.
 		*/
-		~Lock();
+		NOU_FUNC ~Lock();
 	};
 
 	/**
@@ -60,7 +60,7 @@ namespace NOU::NOU_THREAD
 	For implementation specific reasons, this lock is necessary when using ConditionVariable. Unless 
 	explicitly needed for such variable, Lock is a better alternative.
 	*/
-	class NOU_CLASS UniqueLock final
+	class UniqueLock final
 	{
 	public:
 		/**
@@ -85,7 +85,7 @@ namespace NOU::NOU_THREAD
 
 		\brief Constructs an instance with the passed mutex.
 		*/
-		UniqueLock(Mutex &mutex);
+		NOU_FUNC UniqueLock(Mutex &mutex);
 
 		/**
 		\brief other the lock to move.
@@ -104,14 +104,14 @@ namespace NOU::NOU_THREAD
 
 		\brief Returns the underlying lock.
 		*/
-		UnderlyingType& getUnderlying();
+		NOU_FUNC UnderlyingType& getUnderlying();
 
 		/**
 		\return The underlying lock.
 
 		\brief Returns the underlying lock.
 		*/
-		const UnderlyingType& getUnderlying() const;
+		NOU_FUNC const UnderlyingType& getUnderlying() const;
 	};
 }
 

@@ -35,7 +35,7 @@ namespace NOU::NOU_THREAD
 		A parent class of the Task class that does not take or need any template types. This abstract task
 		however, can only execute the stored functionality and not access the results.
 		*/
-		class NOU_CLASS AbstractTask
+		class AbstractTask
 		{
 		public:
 			virtual ~AbstractTask() = default;

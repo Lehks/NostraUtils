@@ -250,7 +250,7 @@ NOU_CHECK_ERROR_HANDLER;
 }
 
 
-struct NOU_CLASS Foo
+struct Foo
 {
 public:
     int m_i;

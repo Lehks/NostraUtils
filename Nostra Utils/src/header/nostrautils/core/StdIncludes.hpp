@@ -382,8 +382,8 @@ compiler is unknown, use
 #if NOU_COMPILER == NOU_COMPILER_UNKNOWN
 \endcode
 
-An unknown compiler does not cause an error per se, however, it may cause major problems (e.g. the
-values for NOU_CLASS and NOU_FUNC will not be set properly).
+An unknown compiler does not cause an error per-se, however, it may cause major problems (e.g. the
+value of NOU_FUNC will not be set properly).
 */
 #ifndef NOU_COMPILER_UNKNOWN    
 #define NOU_COMPILER_UNKNOWN    5
@@ -435,61 +435,50 @@ and replace * with the compiler name.
 #endif
 
 /**
-\brief A macro that is used to export classes into shared libraries.
+\brief A macro that is used to export functions into libraries.
 
-\todo Add support for all compilers.
-*/
-#ifndef NOU_EXPORT_CLASS
-
-#	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
-#		define NOU_EXPORT_CLASS __declspec(dllexport)
-#	elif NOU_COMPILER == NOU_COMPILER_GCC
-#	define NOU_EXPORT_CLASS __attribute__ ((visibility ("default")))
-
-#	else
-#	define NOU_EXPORT_CLASS
-
-#	endif
-
-#endif
-
-/**
-\brief A macro that is used to export functions into shared libraries.
-
-\todo Add support for all compilers.
+\todo Verify (esp. with other compilers)
 */
 #ifndef NOU_EXPORT_FUNC
-#define NOU_EXPORT_FUNC NOU_EXPORT_CLASS
-#endif
-
-/**
-\brief A macro that is used to add compiler specific attributes to classes.
-
-\todo Add support for all compilers.
-*/
-#ifndef NOU_CLASS
 
 #	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
-#		if defined NOU_DLL
-#		define NOU_CLASS __declspec(dllimport) //optimize for import
-#		else
-#		define NOU_CLASS __declspec(dllexport)
-#		endif
-#	elif NOU_COMPILER == NOU_COMPILER_GCC
-#	define NOU_CLASS __attribute__ ((visibility ("default")))
-
+#		define NOU_EXPORT_FUNC __declspec(dllexport)
 #	else
-#	define NOU_CLASS
-
+#	    define NOU_EXPORT_FUNC
 #	endif
 
 #endif
 
 /**
-\brief A macro that is used to add compiler specific attributes to functions.
+\brief A macro that is used to import functions a function from a library.
+
+\todo Verify (esp. with other compilers)
+*/
+#ifndef NOU_IMPORT_FUNC
+
+#	if NOU_COMPILER == NOU_COMPILER_VISUAL_CPP
+#		define NOU_IMPORT_FUNC __declspec(dllimport)
+#	else
+#	    define NOU_IMPORT_FUNC
+#	endif
+
+#endif
+
+/**
+\brief A macro that either exports or imports a function from a library. 
+
+\details
+A macro that either exports or imports a function from a library.
+
+This macro will import, if NOU_DLL is defined and export if it is not. NOU_DLL definitions should always be
+correctly handled by CMake and does not need user-interaction.
 */
 #ifndef NOU_FUNC
-#define NOU_FUNC NOU_CLASS
+#    ifdef NOU_DLL
+#        define NOU_FUNC NOU_IMPORT_FUNC
+#    else
+#        define NOU_FUNC NOU_EXPORT_FUNC
+#    endif
 #endif
 
 /**
@@ -700,7 +689,7 @@ namespace NOU::NOU_CORE
 	       double</tt> one that has a size of 32 bit. If none of the have a size of 32 bit, long double will 
 		   be chosen.
 	*/
-	struct NOU_CLASS ChooseFloat32 :
+	struct ChooseFloat32 :
 		std::conditional<sizeof(float) == 4,
 		float,
 		typename std::conditional_t<sizeof(double) == 4,
@@ -716,7 +705,7 @@ namespace NOU::NOU_CORE
 		   double</tt> one that has a size of 64 bit. If none of the have a size of 32 bit, long double will
 		   be chosen.
 	*/
-	struct NOU_CLASS ChooseFloat64 :
+	struct ChooseFloat64 :
 		std::conditional<sizeof(float) == 8,
 		float,
 		typename std::conditional_t<sizeof(double) == 8,

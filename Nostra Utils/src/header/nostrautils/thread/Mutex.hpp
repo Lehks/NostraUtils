@@ -21,7 +21,7 @@ namespace NOU::NOU_THREAD
 	\brief A mutex with very little overhead, but also limited capabilities. This mutex can only be locked and
 	       unlocked. As of now, this class is merely a wrapper for std::mutex.
 	*/
-	class NOU_CLASS Mutex
+	class Mutex
 	{
 	public:
 		/**
@@ -39,33 +39,33 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief Locks the mutex.
 		*/
-		void lock();
+		NOU_FUNC void lock();
 
 		/**
 		\brief Unlocks the mutex.
 		*/
-		void unlock();
+		NOU_FUNC void unlock();
 
 		/**
 		\return True, if the mutex was locked, false if not (it was already locked in that case).
 
 		\brief If the mutex is unlocked, it will be locked. Otherwise nothing will happen.
 		*/
-		boolean tryLock();
+		NOU_FUNC boolean tryLock();
 
 		/**
 		\return The underlying mutex.
 
 		\brief Returns the underlying mutex.
 		*/
-		UnderlyingType& getUnderlying();
+		NOU_FUNC UnderlyingType& getUnderlying();
 
 		/**
 		\return The underlying mutex.
 
 		\brief Returns the underlying mutex.
 		*/
-		const UnderlyingType& getUnderlying() const;
+		NOU_FUNC const UnderlyingType& getUnderlying() const;
 	};
 }
 
