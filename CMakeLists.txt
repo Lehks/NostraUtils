@@ -35,3 +35,4 @@ endif()
 # Have the README.md in the install directory
 install(FILES "README.md" DESTINATION ".")
 install(FILES "CHANGELOG.md" DESTINATION ".")
+install(FILES "LICENSE.md" DESTINATION ".")
