@@ -32,9 +32,11 @@ target_compile_features(NostraUtils
 	PUBLIC 
 		cxx_std_17)
 
-target_compile_options(NostraUtils
-	PRIVATE
-		"-wd4251")
+if(MSVC)
+	target_compile_options(NostraUtils
+		PRIVATE
+			"-wd4251")
+endif()
 
 install(TARGETS NostraUtils
 	RUNTIME DESTINATION "bin"
