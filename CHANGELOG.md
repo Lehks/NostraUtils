@@ -10,6 +10,7 @@
 
 ### Fixes
 - Fixed a wrong attribute type that resulted in an incorrect display of logging messages.
+- Fixed pure virtual method call when terminating all applications using the logging system.
 
 ## Version 1.0.0
 
