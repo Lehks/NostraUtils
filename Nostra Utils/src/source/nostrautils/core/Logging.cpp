@@ -379,6 +379,7 @@ namespace NOU::NOU_CORE
 		{
 			delete element;
 		}
+		m_logger.clear();
 	}
 
 	NOU::NOU_DAT_ALG::String8 Logger::print(const Event& event)
