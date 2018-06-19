@@ -1338,7 +1338,7 @@ NOU_CHECK_ERROR_HANDLER;
 }
 
 
-/* TEST_METHOD(Hashfunction)
+TEST_METHOD(Hashfunction)
 {
 	NOU::int64 i1 = 243536768574;
 	NOU::int64 i2 = 243536768574;
@@ -1355,9 +1355,9 @@ NOU_CHECK_ERROR_HANDLER;
 	IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 1, 20));
 
 	NOU_CHECK_ERROR_HANDLER;
-} */
+}
 
-/* TEST_METHOD(HashMap)
+TEST_METHOD(HashMap)
 {
 	
 	{
@@ -1509,7 +1509,7 @@ NOU_CHECK_ERROR_HANDLER;
 		IsTrue(entrySet.size() == 3);
 	}
 
-}*/ 
+}
 
 TEST_METHOD(BinarySearch)
 {
