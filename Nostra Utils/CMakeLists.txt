@@ -5,6 +5,9 @@ project(NostraUtils
 	DESCRIPTION "A utility library for the Nostra GameEngine."
 	#HOMEPAGE_URL "https://github.com/Lehks/NostraUtils"
 	LANGUAGES CXX)
+	
+#Generate doc
+add_subdirectory("doc")
 
 find_package(Threads REQUIRED)
 
