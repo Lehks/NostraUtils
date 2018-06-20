@@ -46,3 +46,5 @@ install(TARGETS NostraUtils
 	LIBRARY DESTINATION "bin"
 	ARCHIVE DESTINATION "lib"
 	INCLUDES DESTINATION "include")
+
+install(DIRECTORY "src/header/" DESTINATION "include")
