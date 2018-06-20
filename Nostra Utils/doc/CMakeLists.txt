@@ -16,7 +16,7 @@ if(${NOU_GENERATE_DOC})
 
 
 
-		add_custom_target("Documentation" 
+		add_custom_target(NostraUtilsDoc
 			ALL COMMAND Doxygen::doxygen "Doxyfile"
 			WORKING_DIRECTORY "."
 			COMMENT "Generating Doxygen-Documentation"
