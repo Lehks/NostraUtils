@@ -9,6 +9,8 @@ project(NostraUtils
 #Generate doc
 add_subdirectory("doc")
 
+option(NOU_CPP14_COMPATIBILITY "If true, some C++17 STL features will be disabled (useful on Mac)." OFF)
+
 find_package(Threads REQUIRED)
 
 file(GLOB_RECURSE NOU_SOURCE_FILES "src/source/nostrautils/*.cpp")
@@ -47,9 +49,9 @@ if(MSVC)
 			"-wd4251")
 endif()
 
-if(APPLE)
-	target_compile_definitions(
-		PRIVATE
+if(${NOU_CPP14_COMPATIBILITY})
+	target_compile_definitions(NostraUtils
+		PUBLIC
 			NOU_CPP14_COMPATIBILITY)
 endif()
 
