@@ -16,7 +16,7 @@ file(GLOB_RECURSE NOU_SOURCE_FILES "src/source/nostrautils/*.cpp")
 configure_file("src/header/nostrautils/core/Config.hpp.in" 
 										"${PROJECT_SOURCE_DIR}/src/header/nostrautils/core/Config.hpp" @ONLY)
 
-add_library(NostraUtils SHARED "${NOU_SOURCE_FILES}")
+add_library(NostraUtils SHARED ${NOU_SOURCE_FILES})
 add_library(Nostra::Utils ALIAS NostraUtils)
 
 target_link_libraries(NostraUtils
@@ -30,6 +30,12 @@ target_include_directories(NostraUtils
 target_compile_definitions(NostraUtils
 	INTERFACE
 		"NOU_DLL")
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+	target_compile_definitions(NostraUtils
+		PUBLIC
+			"NOU_DEBUG")
+endif()
 
 target_compile_features(NostraUtils
 	PUBLIC 
