@@ -21,7 +21,7 @@ if(${NOU_GENERATE_TESTS})
 	message(STATUS "NOU:  Test-executable will be generated.")
 
 	#Create testmain.cpp if it does not exist
-	if(EXISTS "${CMAKE_SOURCE_DIR}/${NOU_TEST_EXECUTABLE_SOURCE}")
+	if(EXISTS main.cpp)
 		add_executable(NostraUtilsTest main.cpp)
 		target_link_libraries(NostraUtilsTest Nostra::Utils)
 
