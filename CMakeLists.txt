@@ -1,12 +1,5 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
-#=== Set RPATH
-#set(CMAKE_SKIP_BUILD_RPATH FALSE)
-#set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-#set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/bin")
-#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-#===
-
 #Build NostraUtils library
 add_subdirectory("Nostra Utils")
 
