@@ -3,14 +3,18 @@
 ## Version 1.0.1
 
 ### Features
-- None
+- Removed NOU_CLASS
+- Added NOU_EXPORT_FUNC and NOU_IMPORT_FUNC
 
 ### Improvements
 - Improved logging queue process.
+- Improved CMake build process. The library should now work better when build as a sub-project of another 
+  project.
 
 ### Fixes
 - Fixed a wrong attribute type that resulted in an incorrect display of logging messages.
 - Fixed pure virtual method call when terminating all applications using the logging system.
+- Fixed an issue where the fast queue would crash when memory allocation failed.
 
 ## Version 1.0.0
 

@@ -13,7 +13,7 @@
 \file thread/Task.hpp
 
 \author  Lukas Reichmann
-\version 1.0.0
+\version 1.0.1
 \since   1.0.0
 
 \brief This file contains the task class(es).

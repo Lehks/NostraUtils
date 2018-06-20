@@ -7,8 +7,8 @@
 #include "nostrautils/dat_alg/StringView.hpp"
 /** \file Folder.hpp
 \author  Mahan Karimi
-\since   0.0.1
-\version 0.0.1
+\since   1.0.0
+\version 1.0.1
 \brief    This class provides an implementation for a simple folder system.
 */
 

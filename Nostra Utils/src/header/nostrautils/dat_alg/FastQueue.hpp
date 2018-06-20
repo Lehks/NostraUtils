@@ -14,7 +14,7 @@
 
 \author  Lukas Gross
 \author  Lukas Reichmann
-\version 1.0.0
+\version 1.0.1
 \since   1.0.0
 
 \brief A file that contains the nostra::utils::core::FastQueue class.

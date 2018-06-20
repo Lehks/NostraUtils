@@ -6,6 +6,12 @@
 #include "nostrautils/dat_alg/Hashing.hpp"
 #include "nostrautils/dat_alg/HashMap.hpp"
 
+/** \file INIFile.hpp
+\author	 Tobias Kuhn
+\since   1.0.0
+\version 1.0.1
+\brief   This file provides a class to parse .ini files.
+*/
 
 namespace NOU::NOU_FILE_MNGT
 {
