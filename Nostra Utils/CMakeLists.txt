@@ -47,6 +47,12 @@ if(MSVC)
 			"-wd4251")
 endif()
 
+if(APPLE)
+	target_compile_definitions(
+		PRIVATE
+			NOU_CPP14_COMPATIBILITY)
+endif()
+
 install(TARGETS NostraUtils
 	RUNTIME DESTINATION "bin"
 	LIBRARY DESTINATION "bin"
