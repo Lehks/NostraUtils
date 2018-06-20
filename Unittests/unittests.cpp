@@ -1,7 +1,4 @@
 
-#define NOU_DEBUG
-#define NOU_DLL
-
 #include "nostrautils/NostraUtils.hpp"
 
 #include "DebugClass.hpp"

@@ -39,35 +39,35 @@ namespace NOU
 
 		\brief Returns s_counter.
 		*/
-		NOU_FUNC static int64 getCounter();
+		static int64 getCounter();
 
 		/**
 		\param value The value that is stored with the instance.
 
 		\brief Constructs a new instance with the passed value.
 		*/
-		NOU_FUNC explicit DebugClass(int32 value = 0);
-		NOU_FUNC DebugClass(const DebugClass &other);
-		NOU_FUNC DebugClass(DebugClass &&other);
+		explicit DebugClass(int32 value = 0);
+		DebugClass(const DebugClass &other);
+		DebugClass(DebugClass &&other);
 
-		NOU_FUNC ~DebugClass();
+		~DebugClass();
 
 		/**
 		\return m_value
 
 		\brief Returns m_value.
 		*/
-		NOU_FUNC int32 get() const;
+		int32 get() const;
 
 		/**
 		\brief Does nothing, this is just here to avoid deletion of this operator.
 		*/
-		NOU_FUNC DebugClass& operator = (const DebugClass &other);
+		DebugClass& operator = (const DebugClass &other);
 
 		/**
 		\brief Does nothing, this is just here to avoid deletion of this operator.
 		*/
-		NOU_FUNC DebugClass& operator = (DebugClass &&other);
+		DebugClass& operator = (DebugClass &&other);
 
 		/**
 		\param other The instance to compare against.
@@ -76,7 +76,7 @@ namespace NOU
 
 		\brief Checks if get() > other.get().
 		*/
-		NOU_FUNC boolean operator > (const DebugClass &other) const;
+		boolean operator > (const DebugClass &other) const;
 
 		/**
 		\param other The instance to compare against.
@@ -85,7 +85,7 @@ namespace NOU
 
 		\brief Checks if get() < other.get().
 		*/
-		NOU_FUNC boolean operator < (const DebugClass &other) const;
+		boolean operator < (const DebugClass &other) const;
 
 		/**
 		\param other The instance to compare against.
@@ -94,7 +94,7 @@ namespace NOU
 
 		\brief Checks if get() => other.get().
 		*/
-		NOU_FUNC boolean operator >= (const DebugClass &other) const;
+		boolean operator >= (const DebugClass &other) const;
 
 		/**
 		\param other The instance to compare against.
@@ -103,7 +103,7 @@ namespace NOU
 
 		\brief Checks if get() <= other.get().
 		*/
-		NOU_FUNC boolean operator <= (const DebugClass &other) const;
+		boolean operator <= (const DebugClass &other) const;
 
 		/**
 		\param other The instance to compare against.
@@ -112,7 +112,7 @@ namespace NOU
 
 		\brief Checks if get() == other.get().
 		*/
-		NOU_FUNC boolean operator == (const DebugClass &other) const;
+		boolean operator == (const DebugClass &other) const;
 
 		/**
 		\param other The instance to compare against.
@@ -121,7 +121,7 @@ namespace NOU
 
 		\brief Checks if get() != other.get().
 		*/
-		NOU_FUNC boolean operator != (const DebugClass &other) const;
+		boolean operator != (const DebugClass &other) const;
 	};
 }
 
