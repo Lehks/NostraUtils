@@ -237,7 +237,7 @@ namespace NOU::NOU_FILE_MNGT
 		for (int32 isec = (sectionKeys.size() - 1); isec >= 0; isec--)
 		{
 			// Write section
-			if (sectionValues.at(isec) > 0) {
+			if (*sectionValues.at(isec) > 0) {
 				if (sectionKeys.at(isec)->rawStr() != INI_DEFAULT_SECTION) {
 					inifile << "[" << sectionKeys.at(isec)->rawStr() << "]" << std::endl;
 				}
