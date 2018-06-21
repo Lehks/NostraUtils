@@ -6,6 +6,9 @@
 
 - **Additions**
     - Added NOU_EXPORT_FUNC and NOU_IMPORT_FUNC.
+    - Added folder class in the file-mngt folder. 
+ 
+   
 
 - **Deletions**
     - Removed NOU_CLASS.
@@ -29,7 +32,8 @@
 - Fixed an issue where the fast queue would crash when memory allocation failed.
 - Fixed an issue where the replace function didn't do what it supposed to do.
 - Fixed an issue where the trim method in the string didn't recognized some spaces.
-
+- Fixed an issue where the path in the Folder wasn't correct 
+- Fixed an issue where the quicksort wouldn't work with comparators.
 ## Version 1.0.0
 
 ### Features

@@ -1417,7 +1417,7 @@ namespace NOU::NOU_MATH
     template<typename T>
     float32 Vector<T, 2>::length() const
     {
-        return NOU_MATH::sqrt<float32>(*this * *this);
+        return NOU_MATH::sqrt<float32>(float32(*this * *this));
     }
 
     template<typename T>
@@ -1678,7 +1678,7 @@ namespace NOU::NOU_MATH
     template<typename T>
     float32 Vector<T, 3>::length() const
     {
-        return NOU_MATH::sqrt<float32>(*this * *this);
+        return NOU_MATH::sqrt<float32>(float32(*this * *this));
     }
 
     template<typename T>
@@ -1977,7 +1977,7 @@ namespace NOU::NOU_MATH
     template<typename T>
     float32 Vector<T, 4>::length() const
     {
-        return NOU_MATH::sqrt<float32>(*this * *this);
+        return NOU_MATH::sqrt<float32>(float32(*this * *this));
     }
 
     template<typename T>
