@@ -2244,9 +2244,9 @@ TEST_METHOD(INIFile)
 	parser.setInt("TEST_INT", 42);
 	IsTrue(parser.getInt("TEST_INT") == 42);
 
-	parser.setFloat("TEST_FLOAT", 13.37);
-	IsTrue(parser.getFloat("TEST_FLOAT") > 13.369);
-	IsTrue(parser.getFloat("TEST_FLOAT") < 13.381);
+	parser.setFloat("TEST_FLOAT", 13.37f);
+	IsTrue(parser.getFloat("TEST_FLOAT") > 13.369f);
+	IsTrue(parser.getFloat("TEST_FLOAT") < 13.381f);
 
 	parser.remove("TEST_STR");
 	IsTrue(parser.getString("TEST_STR").size() == 0);
@@ -2258,7 +2258,7 @@ TEST_METHOD(INIFile)
 
 	parser.remove("TEST_FLOAT");
 	IsTrue(parser.getFloat("TEST_FLOAT") < 0.1);
-	parser.setFloat("DEFAULT_TEST_FLOAT", 13.37);
+	parser.setFloat("DEFAULT_TEST_FLOAT", 13.37f);
 
 	parser.setString("TEST_STR", "Testing", "section");
 	IsTrue(parser.getString("TEST_STR", "section") == "Testing");
@@ -2266,9 +2266,9 @@ TEST_METHOD(INIFile)
 	parser.setInt("TEST_INT", 42, "section");
 	IsTrue(parser.getInt("TEST_INT", "section") == 42);
 
-	parser.setFloat("TEST_FLOAT", 13.37, "section");
-	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369);
-	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381);
+	parser.setFloat("TEST_FLOAT", 13.37f, "section");
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369f);
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381f);
 
 	IsTrue(parser.write("unittest.ini"));
 	IsTrue(parser.read());
@@ -2278,7 +2278,7 @@ TEST_METHOD(INIFile)
 
 	parser2.setString("TEST_STR2", "Testing");
 	parser2.setInt("TEST_INT2", 42);
-	parser2.setFloat("TEST_FLOAT2", 13.37);
+	parser2.setFloat("TEST_FLOAT2", 13.37f);
 
 	IsTrue(parser2.getDataType("TEST_STR2") == parser2.INI_TYPE_NouString);
 	IsTrue(parser2.getDataType("TEST_INT2") == parser2.INI_TYPE_INT);
