@@ -1158,11 +1158,18 @@ IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 dbgVec.push(gpa.allocateObjects<NOU::DebugClass>(1, testValue));
 gpa.deallocateObjects(dbgVec.at(0));
 dbgVec.pop();
+
+#ifdef NOU_DEBUG 
+
 gpa.deallocateObjects(dbgVec.at(0));
 
 IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 2);
 NOU::NOU_CORE::getErrorHandler().popError();
 NOU::NOU_CORE::getErrorHandler().popError();
+
+#else
+IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+#endif
 
 for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
 {

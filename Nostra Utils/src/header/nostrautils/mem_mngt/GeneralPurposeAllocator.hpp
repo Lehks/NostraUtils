@@ -347,6 +347,8 @@ namespace NOU::NOU_MEM_MNGT
 		\param pointer	A  pointer to the object which will be deallocated.
 
 		\brief			Deallocated the object at the location the pointer points to.
+
+		\attention		The checks for a double deallocation are only activated if NOU_DEBUG is defined.
 		*/
 		template <typename T>
 		void deallocateObjects(GeneralPurposeAllocatorPointer<T> pointer);
