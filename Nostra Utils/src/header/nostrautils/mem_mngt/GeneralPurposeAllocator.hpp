@@ -361,7 +361,7 @@ namespace NOU::NOU_MEM_MNGT
 								insertion index where you want to insert a new element.
 		*/
 		template<typename T>
-		void getNeigbors(T*& left, T*& right, sizeType insertionIndex);
+		void getNeigbors(T*& left, T*& right, int64 insertionIndex);
 	};
 
 	template <typename T, typename... ARGS>
@@ -528,7 +528,7 @@ namespace NOU::NOU_MEM_MNGT
 
 		internal::GeneralPurposeAllocatorFreeChunk gpafc(bytePointer - offset, amountOfBytes + offset);
 
-		sizeType insertionIndex;
+		int64 insertionIndex;
 		NOU_DAT_ALG::binarySearch(m_freeChunks, gpafc, 0, -1, &insertionIndex);
 
 		internal::GeneralPurposeAllocatorFreeChunk* p_gpafc = &gpafc;
@@ -556,7 +556,7 @@ namespace NOU::NOU_MEM_MNGT
 				if (didMerge)
 				{
 					p_gpafc->m_size += right->m_size;
-					m_freeChunks.remove(insertionIndex);
+					m_freeChunks.remove(static_cast<sizeType>(insertionIndex));
 				}
 				else
 				{
@@ -575,7 +575,7 @@ namespace NOU::NOU_MEM_MNGT
 	}
 
 	template<typename T>
-	void GeneralPurposeAllocator::getNeigbors(T*& left, T*& right, sizeType insertionIndex)
+	void GeneralPurposeAllocator::getNeigbors(T*& left, T*& right, int64 insertionIndex)
 	{
 		left = reinterpret_cast<T*>(m_freeChunks.data() + insertionIndex - 1);
 		right = reinterpret_cast<T*>(m_freeChunks.data() + insertionIndex);

@@ -1552,7 +1552,7 @@ TEST_METHOD(HashMap)
 
 TEST_METHOD(BinarySearch)
 {
-NOU::NOU_DAT_ALG::Vector<NOU::sizeType> vec;
+NOU::NOU_DAT_ALG::Vector<NOU::int64> vec;
 vec.pushBack(1);
 vec.pushBack(5);
 vec.pushBack(13);
@@ -1561,7 +1561,7 @@ vec.pushBack(21);
 vec.pushBack(43);
 vec.pushBack(92);
 
-NOU::sizeType search_vals[] = { 1, 5, 19, 21, 92, 43, 103, 0};
+NOU::int64 search_vals[] = { 1, 5, 19, 21, 92, 43, 103, 0};
 
 
 IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[0], 0, vec.size() - 1) == 0);
@@ -1580,7 +1580,7 @@ IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[4], 0, -1) == 6);
 IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[5], 0, -1) == 5);
 IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[6], 0, -1) == -1);
 
-NOU::sizeType insertionIndex;
+NOU::int64 insertionIndex;
 
 NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1, &insertionIndex);
 IsTrue(insertionIndex == 4);
