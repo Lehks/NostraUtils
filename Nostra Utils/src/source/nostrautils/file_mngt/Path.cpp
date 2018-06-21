@@ -227,6 +227,15 @@ namespace NOU::NOU_FILE_MNGT
 		Path(NOU_DAT_ALG::StringView8(path))
 	{}
 
+	Path::Path() :
+        m_absolutePath(currentWorkingDirectory().getAbsolutePath()),
+        m_extension(evaluateExtension),
+        m_nameAndExtension(evaluateNameAndExtension),
+        m_relativePath(evaluateRelativePath),
+        m_parentPath(evaluateParentPath),
+        m_name(&evaluateName)
+    {}
+
 	Path::Path(const NOU_DAT_ALG::StringView8 &path) :
 		m_absolutePath(makeAbsolutePath(path)),
 		m_extension(evaluateExtension),
