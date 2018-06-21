@@ -169,7 +169,7 @@ namespace NOU::NOU_DAT_ALG
 
 		rotations = rotations % 8;
 		byte c;
-		for (sizeType i = 0; i < rotations; i++)
+		for (int32 i = 0; i < rotations; i++)
 		{
 			c = b & r;
 			if (c != 0)

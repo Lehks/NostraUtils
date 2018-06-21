@@ -78,6 +78,14 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		void setSize(sizeType size);
 
+        /**
+        \param size The new size (without the null-terminator).
+
+        \brief Since the size is stored in StringView's m_size and \c m_data's internal size, both need to be set when
+        the string changes size. This method sets both sizes.
+        */
+		static const NOU::NOU_DAT_ALG::String m_emptyString;
+
 	public:
 		/**
 		\param b The boolean to convert.
@@ -1314,13 +1322,33 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, const StringView<CHAR_TYPE>& str)
 	{
 
-		for (sizeType i = 0; i < str.size(); i++)
-		{
-			insert(index + i, str[i]);
+		NOU_COND_PUSH_ERROR((index > StringView<CHAR_TYPE>::m_size),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
+		sizeType counter = 0;
+
+		String8 tmpstr = StringView<CHAR_TYPE>::logicalSubstring(index);
+
+		for (sizeType i = index; i < str.size() + index; i++)
+		{
+			if (i < m_data.size() - 1)
+			{
+				m_data[i] = str[counter];
+				counter++;
+			}
+			else {
+				m_data.insert(i,str[counter]);
+				counter++;
+			}
 		}
-		append(StringView<CHAR_TYPE>::NULL_TERMINATOR);
-		setSize(StringView<CHAR_TYPE>::m_size - 1);
+
+		for (sizeType j = 0; j < tmpstr.size(); j++)
+		{
+			m_data.insert(m_data.size() - 1, tmpstr[j]);
+		}
+
+
+		setSize(StringView<CHAR_TYPE>::m_size + str.size());
 		return *this;
 	}
 
