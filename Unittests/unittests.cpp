@@ -1106,8 +1106,8 @@ IsTrue(str[0] == 'A');
 str.appendIf(1, 'T');
 IsTrue(str[str.size() - 1] == 'T');
 
-str.append(1);
-IsTrue(str[str.size() - 1] == '1');
+str.append(2);
+IsTrue(str[str.size() - 1] == '2');
 
 str.append(-1);
 IsTrue(str[str.size() - 2] == '-');
