@@ -46,7 +46,12 @@ target_compile_features(NostraUtils
 if(MSVC)
 	target_compile_options(NostraUtils
 		PRIVATE
-			"-wd4251")
+			"/wd4251"
+			"/WX")
+else()
+	target_compile_options(NostraUtils
+		PRIVATE
+			"-Werror")
 endif()
 
 if(${NOU_CPP14_COMPATIBILITY})
