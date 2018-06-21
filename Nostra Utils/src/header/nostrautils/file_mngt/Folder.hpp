@@ -27,11 +27,19 @@ namespace NOU::NOU_FILE_MNGT
 
 	public :
 		/*
-		\brief Constructor of the class 
+		\ brief Constructor of the class Folder with two parameters
+		\@param m_path (location of you folder )
+		\@param filenames
+		*/
+
+		Folder(Path m_path);
+
+		/*
+		\brief Constructor of the class Folder with one parameter
 		\param m_path (location of you folder )
 		*/
 
-		Folder(const NOU::NOU_DAT_ALG::String8 &path);
+		Folder(NOU::NOU_DAT_ALG::String8 &path);
 
 		/*
 		\brief A function that lists you all folders in a directory and safes the result in a vector { ls commando }  

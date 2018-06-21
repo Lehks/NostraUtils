@@ -16,7 +16,10 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	Folder::Folder(const NOU::NOU_DAT_ALG::String8 &path) :
+
+	
+
+	Folder::Folder( NOU::NOU_DAT_ALG::String8 &path) :
 		m_path(path)
 	{
 #if (NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H)
@@ -87,17 +90,7 @@ namespace NOU::NOU_FILE_MNGT
 			{
 				if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 				{
-
-					NOU::NOU_DAT_ALG::String8 tempstr(data.cFileName);
-					NOU::NOU_DAT_ALG::String8 tempstr2 = m_path.getAbsolutePath().rawStr();
-
-					//tempstr2.append("\\");
-
-					//tempstr2 = tempstr2 + tempstr;
-
-					//Folder f1(tempstr2);
-
-					Folder f1(tempstr2 + tempstr);
+					Folder f1(m_path + data.cFileName);
 					v.emplaceBack(f1);
 				}
 			} while (FindNextFile(hFind, &data) != 0);
@@ -142,13 +135,7 @@ namespace NOU::NOU_FILE_MNGT
 			{
 				if (data.dwFileAttributes != FILE_ATTRIBUTE_DIRECTORY)
 				{
-					NOU::NOU_DAT_ALG::String8 tempstr(data.cFileName);
-					NOU::NOU_DAT_ALG::String8 tempstr2 = m_path.getAbsolutePath().rawStr();
-
-					tempstr2.append("\\");
-					tempstr2 = tempstr2 + tempstr;
-
-					File f1(tempstr2);
+					File f1(m_path + data.cFileName);
 					v.emplaceBack(NOU::NOU_CORE::move(f1));
 				}
 
