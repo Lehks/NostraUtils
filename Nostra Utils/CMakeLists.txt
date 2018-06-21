@@ -27,7 +27,8 @@ target_link_libraries(NostraUtils
 
 target_include_directories(NostraUtils
 	PUBLIC 
-		"src/header")
+		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/header/src>"
+		"$<INSTALL_INTERFACE:include>")
 
 target_compile_definitions(NostraUtils
 	INTERFACE
@@ -60,10 +61,51 @@ if(${NOU_CPP14_COMPATIBILITY})
 			NOU_CPP14_COMPATIBILITY)
 endif()
 
-install(TARGETS NostraUtils
-	RUNTIME DESTINATION "bin"
-	LIBRARY DESTINATION "lib"
-	ARCHIVE DESTINATION "lib"
+include(GenerateExportHeader)
+
+generate_export_header(NostraUtils)
+
+install(TARGETS NostraUtils EXPORT NostraUtilsTargets
+	RUNTIME  DESTINATION "bin"
+	LIBRARY  DESTINATION "lib"
+	ARCHIVE  DESTINATION "lib"
 	INCLUDES DESTINATION "include")
 
-install(DIRECTORY "src/header/" DESTINATION "include")
+install(DIRECTORY "src/header/" 
+	DESTINATION 
+		"include" 
+	COMPONENT 
+		Develop)
+
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfigVersion.cmake"
+	VERSION "${PROJECT_VERSION}"
+	COMPATIBILITY AnyNewerVersion)
+
+export(EXPORT NostraUtilsTargets
+	FILE "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake"
+	NAMESPACE Nostra::)
+
+configure_file("cmake/NostraUtilsConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake" COPYONLY)
+
+set(ConfigPackageLocation "lib/cmake/ClimbingStats")
+
+install(EXPORT NostraUtilsTargets
+	FILE
+		NostraUtilsConfig.cmake
+	NAMESPACE
+		Nostra::
+	DESTINATION
+		${ConfigPackageLocation})
+
+install(
+  FILES
+    cmake/NostraUtilsConfig.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake"
+  DESTINATION
+    ${ConfigPackageLocation}
+  COMPONENT
+    Develop
+)
+	
