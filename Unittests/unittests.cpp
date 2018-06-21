@@ -1825,9 +1825,12 @@ auto task2 = NOU::NOU_THREAD::makeTask(&taskTestFunction2, i2);
 
 task2.getResult();
 
+//error is only pushed in Debug
+#ifdef NOU_DEBUG
 IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
 IsTrue(NOU::NOU_CORE::getErrorHandler().popError().getID() ==
        NOU::NOU_CORE::ErrorCodes::INVALID_OBJECT);
+#endif
 
 task2.execute();
 
