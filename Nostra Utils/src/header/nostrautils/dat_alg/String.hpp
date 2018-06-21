@@ -78,15 +78,12 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		void setSize(sizeType size);
 
-        /**
-        \param size The new size (without the null-terminator).
-
-        \brief Since the size is stored in StringView's m_size and \c m_data's internal size, both need to be set when
-        the string changes size. This method sets both sizes.
-        */
-		static const NOU::NOU_DAT_ALG::String m_emptyString;
-
 	public:
+	    /**
+        \brief An empty static const String member variable.
+        */
+        static const String<CHAR_TYPE> EMPTY_STRING;
+
 		/**
 		\param b The boolean to convert.
 		\return  Either \"true\" or \"false\".
@@ -995,6 +992,9 @@ namespace NOU::NOU_DAT_ALG
 	using String32 = String<char32>;
 
 	template<typename CHAR_TYPE>
+	const String<CHAR_TYPE> String<CHAR_TYPE>::EMPTY_STRING = "";
+
+    template<typename CHAR_TYPE>
 	template<typename IT>
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)
 	{
