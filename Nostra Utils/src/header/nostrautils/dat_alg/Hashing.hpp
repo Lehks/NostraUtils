@@ -70,7 +70,7 @@ namespace NOU::NOU_DAT_ALG
 	constexpr sizeType hashObj(const NOU_DAT_ALG::StringView<T> *str, sizeType inputObjectCount = 1, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
 	{
 		NOU::NOU_DAT_ALG::Vector<T> b;
-		NOU::sizeType s;
+		NOU::sizeType s = 0;
 		T tmp;
 		NOU_DAT_ALG::String<T> tmpStr;
 		for(sizeType i = 0; i < inputObjectCount; i++)
@@ -99,7 +99,7 @@ namespace NOU::NOU_DAT_ALG
 	constexpr sizeType hashObj(const NOU_DAT_ALG::String<T> *str, sizeType inputObjectCount = 1, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
 	{
 		NOU::NOU_DAT_ALG::Vector<T> b;
-		NOU::sizeType s;
+		NOU::sizeType s = 0;
 		T tmp;
 		NOU_DAT_ALG::String<T> tmpStr;
 		for(sizeType i = 0; i < inputObjectCount; i++)

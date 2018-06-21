@@ -1,7 +1,4 @@
 
-#define NOU_DEBUG
-#define NOU_DLL
-
 #include "nostrautils/NostraUtils.hpp"
 
 #include "DebugClass.hpp"
@@ -250,7 +247,7 @@ NOU_CHECK_ERROR_HANDLER;
 }
 
 
-struct NOU_CLASS Foo
+struct Foo
 {
 public:
     int m_i;

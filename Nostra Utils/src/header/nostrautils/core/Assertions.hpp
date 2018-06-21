@@ -7,7 +7,7 @@
 /** \file Assertions.hpp
 \author	 Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides functionality to use dynamic assertions.
 */
 
@@ -36,7 +36,7 @@ namespace NOU::NOU_CORE
 	A struct with variables that control the behavior of NOU_ASSERT. This struct does not need instantiation, 
 	the instance that will be used by NOU_ASSERT can be obtained by using getAssertionSettings().
 	*/
-	struct NOU_CLASS AssertionSettings
+	struct AssertionSettings
 	{
 		/**
 		\brief The type of \p callbackType. See the documentation of that member for further information.
