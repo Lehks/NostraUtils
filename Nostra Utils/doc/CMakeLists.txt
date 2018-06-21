@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.8.2 FATAL_ERROR)
 
-option(NOU_GENERATE_DOC "If enabled, and doxygen is installed, the documentation will be generated" ON)
+option(NOU_GENERATE_DOC "If enabled, and Doxygen is installed, the documentation will be generated" ON)
 
 if(${NOU_GENERATE_DOC})
 	
 	message(STATUS "NOU:  Attempting to generate Doxygen-Doc.")
 
-	find_package(Doxygen REQUIRED dot)
+	find_package(Doxygen OPTIONAL_COMPONENTS dot)
 
 	if(${DOXYGEN_FOUND})
 
