@@ -117,7 +117,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		T diff = t0 - t1;
 		T abs = (diff < static_cast<T>(0) ? -diff : diff);
-		return !(abs <= epsilon) * (diff < static_cast<T>(0) ? -1 : 1);
+		return !(abs <= epsilon) * (diff < T(0) ? T(-1): T(1));
 	}
 
 
