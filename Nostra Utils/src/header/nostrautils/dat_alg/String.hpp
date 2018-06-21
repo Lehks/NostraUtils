@@ -11,11 +11,11 @@
 #include <stdlib.h>
 
 
-/** \file Vector.hpp
+/** \file String.hpp
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides a String implementation.
 */
 

@@ -6,6 +6,7 @@
 #include <Windows.h>
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 #include <unistd.h>
+#include <pwd.h>
 #endif
 
 namespace NOU::NOU_FILE_MNGT
@@ -22,18 +23,18 @@ namespace NOU::NOU_FILE_MNGT
 #if NOU_OS == NOU_OS_WINDOWS
 
 		//replace all / with \ 
-		ret.replace(PATH_SEPARATOR_UNIX_LINUX, PATH_SEPARATOR_WINDOWS);
+        ret.replace(PATH_SEPARATOR_UNIX_LINUX, PATH_SEPARATOR_WINDOWS);
 
 
-		//if path starts not with *:\, it is a relative path (* is any character, like C)
-		if (!(path.at(1) == ':' && path.at(2) == PATH_SEPARATOR_WINDOWS)) 
+        //if path starts not with *:\ , it is a relative path (* is any character, like C)
+        if (ret[1] != ':')
 		{
+			if (!ret.startsWith(PATH_SEPARATOR))
+				ret.insert(0, PATH_SEPARATOR);
+
 			Path cwd = currentWorkingDirectory();
 
 			ret.insert(0, cwd.getAbsolutePath());
-
-			if(!path.startsWith(PATH_SEPARATOR))
-				ret.insert(cwd.getAbsolutePath().size(), PATH_SEPARATOR);
 		}
 
 #elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
@@ -41,12 +42,26 @@ namespace NOU::NOU_FILE_MNGT
 		//replace all \ with /
 		ret.replace(PATH_SEPARATOR_WINDOWS, PATH_SEPARATOR_UNIX_LINUX);
 
-		if (!path.startsWith(PATH_SEPARATOR_UNIX_LINUX)) //if path starts not with /, it is a relative path
-		{
-			Path cwd = currentWorkingDirectory();
+        if(ret.startsWith('~'))
+        {
+            struct passwd *pw = getpwuid(getuid());
 
-			ret.insert(0, cwd.getAbsolutePath());
-			ret.insert(cwd.getAbsolutePath().size(), PATH_SEPARATOR);
+            if (ret.at(1) != '/')
+            {
+                ret.insert(1,'/');
+            }
+
+            NOU::NOU_DAT_ALG::String8 str(pw->pw_dir);
+
+            return str + ret.substring(1,ret.size() +1);
+        }
+
+		if (!ret.startsWith(PATH_SEPARATOR_UNIX_LINUX))
+		{
+		    Path cwd = currentWorkingDirectory();
+
+		    ret.insert(0, cwd.getAbsolutePath());
+		    ret.insert(cwd.getAbsolutePath().size(), PATH_SEPARATOR);
 		}
 #endif
 
@@ -212,6 +227,15 @@ namespace NOU::NOU_FILE_MNGT
 		Path(NOU_DAT_ALG::StringView8(path))
 	{}
 
+	Path::Path() :
+        m_absolutePath(currentWorkingDirectory().getAbsolutePath()),
+        m_extension(evaluateExtension),
+        m_nameAndExtension(evaluateNameAndExtension),
+        m_relativePath(evaluateRelativePath),
+        m_parentPath(evaluateParentPath),
+        m_name(&evaluateName)
+    {}
+
 	Path::Path(const NOU_DAT_ALG::StringView8 &path) :
 		m_absolutePath(makeAbsolutePath(path)),
 		m_extension(evaluateExtension),
@@ -220,6 +244,24 @@ namespace NOU::NOU_FILE_MNGT
 		m_parentPath(evaluateParentPath),
 		m_name(&evaluateName)
 	{}
+
+	Path::Path(const Path & other) :
+            m_absolutePath(other.m_absolutePath),
+            m_extension(other.m_extension),
+            m_nameAndExtension(other.m_nameAndExtension),
+            m_relativePath(other.m_relativePath),
+            m_parentPath(other.m_parentPath),
+            m_name(other.m_name)
+    {}
+
+    Path::Path(Path &&other) :
+            m_absolutePath(NOU_CORE::move(other.m_absolutePath)),
+            m_extension(NOU_CORE::move(other.m_extension)),
+            m_nameAndExtension(NOU_CORE::move(other.m_nameAndExtension)),
+            m_relativePath(NOU_CORE::move(other.m_relativePath)),
+            m_parentPath(NOU_CORE::move(other.m_parentPath)),
+            m_name(NOU_CORE::move(other.m_name))
+    {}
 
 	const NOU_DAT_ALG::StringView8& Path::getName() const
 	{
@@ -260,6 +302,7 @@ namespace NOU::NOU_FILE_MNGT
 	{
 		return !(*this == other);
 	}
+
 	Path & Path::operator=(const Path & other)
 	{
 		m_absolutePath = other.m_absolutePath;
@@ -272,43 +315,88 @@ namespace NOU::NOU_FILE_MNGT
 
 		return *this;
 	}
-	Path & Path::operator+(const Path & other)
+
+	Path & Path::operator=(Path && other)
 	{
-		if (!m_absolutePath.endsWith("\\"))
-		{
-			m_absolutePath.append("\\");
-		}
-		m_absolutePath.append(other.m_absolutePath);
+		m_absolutePath = NOU_CORE::move(other.m_absolutePath);
+
+		m_name = NOU_CORE::move(other.m_name);
+		m_extension =NOU_CORE::move( other.m_extension);
+		m_nameAndExtension = NOU_CORE::move(other.m_nameAndExtension);
+		m_parentPath = NOU_CORE::move(other.m_parentPath);
+		m_relativePath = NOU_CORE::move(other.m_relativePath);
 
 		return *this;
 	}
-	Path & Path::operator+(const NOU::NOU_DAT_ALG::StringView8 & other)
-	{
-		if (!m_absolutePath.endsWith("\\"))
-		{
-			m_absolutePath.append("\\");
-		}
-		m_absolutePath.append(other);
 
-		return *this;
+	Path Path::operator+(const NOU::NOU_DAT_ALG::StringView8 & other) const
+	{
+		NOU::NOU_DAT_ALG::String8 strAbsolute = getAbsolutePath();
+		NOU::NOU_DAT_ALG::String8 strOther = other;
+
+#if NOU_OS == NOU_OS_WINDOWS
+		if (!strAbsolute.endsWith("\\"))
+		{
+			strAbsolute.append("\\");
+		}
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+		if (!strAbsolute.endsWith("/"))
+		{
+			strAbsolute.append("/");
+		}
+#endif
+
+		Path newPath(strAbsolute + strOther);
+
+		return newPath;
 	}
+
 	Path & Path::operator+=(const Path & other)
 	{
+#if NOU_OS == NOU_OS_WINDOWS
 		if (!m_absolutePath.endsWith("\\"))
 		{
 			m_absolutePath.append("\\");
 		}
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+		if (!m_absolutePath.endsWith("/"))
+		{
+			m_absolutePath.append("/");
+		}
+#endif
+
 		m_absolutePath.append(other.m_absolutePath);
+
+		m_name.needsReevaluation();
+		m_extension.needsReevaluation();
+		m_nameAndExtension.needsReevaluation();
+		m_parentPath.needsReevaluation();
+		m_relativePath.needsReevaluation();
 
 		return *this;
 	}
+
 	Path & Path::operator+=(const NOU::NOU_DAT_ALG::StringView8 & other)
 	{
+#if NOU_OS == NOU_OS_WINDOWS
 		if (!m_absolutePath.endsWith("\\"))
 		{
 			m_absolutePath.append("\\");
 		}
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+		if (!m_absolutePath.endsWith("/"))
+		{
+			m_absolutePath.append("/");
+		}
+#endif
+
 		m_absolutePath.append(other);
+
+		m_name.needsReevaluation();
+		m_extension.needsReevaluation();
+		m_nameAndExtension.needsReevaluation();
+		m_parentPath.needsReevaluation();
+		m_relativePath.needsReevaluation();
 
 		return *this;
 	}

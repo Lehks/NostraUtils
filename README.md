@@ -15,39 +15,47 @@ or download the ZIP-compressed directly from GitHub using the link above.
 
 ## Requirements
 
-Nostra Utils was written for the C\++17 standard and uses a lot of C\++17 features. **Officially, C\++17 is the 
-minimum required C\++ standard.** There is however a so-called C\++14 compatibility mode which disables or 
-modifies some features in the library to try to enable C\++14 support. There are still a lot of C\++14 features 
-left (like static_assert without a message or nested namespace definitions) so it is not guaranteed that the 
-compiler actually supports those features.
+Nostra Utils was written for the C\++17 standard and uses a lot of C\++17 features. **Officially, C\++17 is 
+the minimum required C\++ standard.** There is however a so-called C\++14 compatibility mode, which disables, 
+or modifies, some features in the library to try to enable C\++14 support. There are still a lot of C\++17 
+features left (like static_assert without a message, or nested namespace definitions), so it is not guaranteed
+that the compiler actually supports those features.
+
+Note that backwards compatibility is not guaranteed for the C++14 compatibility mode and it may be removed in 
+the future.
 
 Tests for the C\++14 compatibility mode were run and succeeded on:
 - GCC
     - Linux
         - Version 7.2.0
-        - Version 6.3.1
+        - ~~Version 6.3.1~~*
 - Clang
     - Linux
         - Version 4.0.1 (with a lot of warnings because of the usage of C\++1z features)
+    - MacOS
+        - Version 902.0.39.1 (LLVM Version 9.1.0) (with a lot of warnings because of the usage of C\++1z 
+          features)
 
-The mode did not work with MSVC, because MSVC only allows nested namespaces in C\++17 and not C\++14. This 
-problem will most likely not be fixed.
+*As of 1.0.1, this test failed
+
+The compatibility mode failed on MSVC entirely.
 
 ## Building the Project
 To build this project, CMake is required. See this (https://cmake.org/install/) link for an explanation on how
-to install CMake.
+to install CMake. The minimum required version of CMake is 3.8.2.
 On Windows, Visual Studio (https://www.visualstudio.com) is also a requirement.
 
 Building the project is done in two steps: 
-1. Generating platform dependent configuration (like a Makefile or Visual Studio Solution) using CMake 
+1. Generating platform dependent configuration files (like a Makefile or Visual Studio Solution) using CMake 
    (Chapter [Calling CMake](#Calling-CMake)).
-2. Compiling the code from those configurations (Chapter [Building the Binaries](#Building-the-Binaries)).
+2. Compiling the code from those configuration files (Chapter 
+   [Building the Binaries](#Building-the-Binaries)).
 
 ### Calling CMake
 Calling CMake can be done using the terminal or CMake\'s graphical user interface CMake-GUI.
 
 #### Terminal 
-It is assumed, that the command ```cmake``` is in the system\'s PATH variable. Otherwise the entire path to 
+It is assumed, that the command ```cmake``` is in the system\'s PATH variable. Otherwise, the entire path to 
 the CMake executable must be given instead of just ```cmake```.
 
 0. Navigate to the root directory of the source code.

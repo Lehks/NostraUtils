@@ -6,7 +6,7 @@
 #include "nostrautils/dat_alg/String.hpp"
 #include "nostrautils/dat_alg/LazyEvaluationProperty.hpp"
 
-/** \file Vector.hpp
+/** \file dat_alg\Path.hpp
 \author  Dennis Franz
 \since   1.0.0
 \version 1.0.0
@@ -159,6 +159,10 @@ namespace NOU::NOU_FILE_MNGT
 		\brief Returns a path object with the current working directory.
 		*/
 		NOU_FUNC static Path currentWorkingDirectory();
+        /**
+        \brief Default constructor;
+        */
+		NOU_FUNC Path();
 		/**
 		\brief Constructor with a char pointer as parameter (calls Path(const NOU::NOU_DAT_ALG::StringView8 & path)) constructor.
 		*/
@@ -171,35 +175,43 @@ namespace NOU::NOU_FILE_MNGT
 		*/
 		NOU_FUNC Path(const NOU::NOU_DAT_ALG::StringView8 & path);
 		/**
-		\brief This file calls evaluateName().
+		\brief Copy-Constructor.
+		*/
+		NOU_FUNC Path(const Path &other);
+		/**
+		\brief Move-Constructor.
+		*/
+		NOU_FUNC Path(Path &&other);
+		/**
+		\brief This method calls evaluateName().
 
 		\see evaluateName()
 		*/
 		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getName() const;
 		/**
-		\brief This file calls evaluateExtension().
+		\brief This method calls evaluateExtension().
 
 		\see evaluateExtension()
 		*/
 		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getFileExtension() const;
 		/**
-		\brief This file calls evaluateNameAndExtension().
+		\brief This method calls evaluateNameAndExtension().
 
 		\see evaluateNameAndExtension()
 		*/
 		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getNameAndExtension() const;
 		/**
-		\brief This file calls evaluateRelativePath().
+		\brief This method calls evaluateRelativePath().
 
 		\see evaluateRelativePath()
 		*/
 		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getRelativePath() const;
 		/**
-		\brief This file returns the absolutePath variable.
+		\brief This method returns the absolutePath variable.
 		*/
 		NOU_FUNC const NOU::NOU_DAT_ALG::StringView8& getAbsolutePath() const;
 		/**
-		\brief This file calls evaluateParentPath().
+		\brief This method calls evaluateParentPath().
 
 		\see evaluateParentPath()
 		*/
@@ -217,14 +229,14 @@ namespace NOU::NOU_FILE_MNGT
 		\brief Copy the other path into this path.
 		*/
 		NOU_FUNC Path& operator = (const Path &other);
-		/**
-		\brief Appends m_absolutePath from the other Path to this one.
-		*/
-		NOU_FUNC Path& operator + (const Path &other);
+        /**
+        \brief Copy the other path into this path.
+        */
+        NOU_FUNC Path& operator = (Path &&other);
 		/**
 		\brief Appends an StringView8 to the current path's m_absolutePath.
 		*/
-		NOU_FUNC Path& operator + (const NOU::NOU_DAT_ALG::StringView8 &other);
+		NOU_FUNC Path operator + (const NOU::NOU_DAT_ALG::StringView8 &other) const;
 		/**
 		\brief Appends m_absolutePath from the other Path to this one.
 		*/

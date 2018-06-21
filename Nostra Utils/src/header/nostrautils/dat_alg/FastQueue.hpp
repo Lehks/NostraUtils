@@ -14,7 +14,7 @@
 
 \author  Lukas Gross
 \author  Lukas Reichmann
-\version 1.0.0
+\version 1.0.1
 \since   1.0.0
 
 \brief A file that contains the nostra::utils::core::FastQueue class.
@@ -91,7 +91,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief					Constructs a new FastQueue.
 		*/
 		FastQueue(sizeType initialCapacity = MIN_CAPACITY, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
-			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::getInstance());
+			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::get());
 		
 		/**
 		\brief Destructs an instance of FastQueue.
@@ -459,8 +459,11 @@ namespace NOU::NOU_DAT_ALG
 			newBuf = m_allocator.allocate(newCapacity);
 			
 			if (newBuf == nullptr)
+			{
 				NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION,
 					"The allocation failed.");
+				return; //abort here
+			}
 		}
 
 		copyFromTo(m_queue.rawPtr() + m_startIndex, newBuf, size());

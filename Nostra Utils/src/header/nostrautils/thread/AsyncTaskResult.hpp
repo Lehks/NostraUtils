@@ -9,7 +9,7 @@
 /** \file thread\AsyncTaskResult.hpp
 \author	 Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides a the class AsyncTaskResult
 
 \see AsyncTaskResult
@@ -63,7 +63,7 @@ namespace NOU::NOU_THREAD
 		\note
 		This class is not meant to be used by a user, instead AsyncTaskResult is supposed to be used instead.
 		*/
-		class NOU_CLASS AbstractAsyncTaskResult
+		class AbstractAsyncTaskResult
 		{
 		public:
 			using State = AsyncTaskResultState;
@@ -84,7 +84,8 @@ namespace NOU::NOU_THREAD
 
 			A further description why this is needed is given in the details section of the class.
 			*/
-			static void executeTask(AbstractTask *task, AbstractAsyncTaskResult *taskResult, Mutex *mutex);
+			NOU_FUNC static void executeTask(AbstractTask *task, AbstractAsyncTaskResult *taskResult, 
+				Mutex *mutex);
 
 			/**
 			\brief The type of the member \p m_executionTask.
@@ -143,7 +144,7 @@ namespace NOU::NOU_THREAD
 			
 			\brief Sets the member \p m_state in a thread safe way.
 			*/
-			void setState(State state);
+			NOU_FUNC void setState(State state);
 
 		protected:
 			/**
@@ -151,7 +152,7 @@ namespace NOU::NOU_THREAD
 
 			\brief Constructs a new instance with the passed task.
 			*/
-			AbstractAsyncTaskResult(AbstractTask *task);
+			NOU_FUNC AbstractAsyncTaskResult(AbstractTask *task);
 
 			/**
 			\brief Pushes the task to the thread manager.
@@ -161,7 +162,7 @@ namespace NOU::NOU_THREAD
 			classes. This is to make sure that all members could be initialized before the task is pushed to
 			the thread manager.
 			*/
-			void push();
+			NOU_FUNC void push();
 
 		public:
 			/**
@@ -174,13 +175,13 @@ namespace NOU::NOU_THREAD
 			if the state is State::EXECUTING_ASYNC, the task may be done executing right after this method has
 			returned and before any other methods are getting called.
 			*/
-			State getState() const;
+			NOU_FUNC State getState() const;
 
 			/**
 			\brief Forces the execution of the result. If this method returns, the state will always be 
 			       State::DONE and the task will have finished execution.
 			*/
-			void makeResult();
+			NOU_FUNC void makeResult();
 
 			/**
 			\brief Not copy construct-able.
