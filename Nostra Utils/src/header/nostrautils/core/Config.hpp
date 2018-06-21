@@ -2,7 +2,7 @@
 #define NOU_CORE_CONFIG_HPP
 
 /** 
-\file Config.hpp.in
+\file Config.hpp
 \author	 Lukas Reichmann
 \since   1.0.1
 \version 1.0.1
