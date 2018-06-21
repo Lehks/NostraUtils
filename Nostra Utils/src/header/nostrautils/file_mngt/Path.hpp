@@ -9,7 +9,7 @@
 /** \file dat_alg\Path.hpp
 \author  Dennis Franz
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides a Path implementation.
 */
 
