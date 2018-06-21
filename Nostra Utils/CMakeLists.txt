@@ -33,7 +33,7 @@ target_compile_definitions(NostraUtils
 	INTERFACE
 		"NOU_DLL")
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 	target_compile_definitions(NostraUtils
 		PUBLIC
 			"NOU_DEBUG")
