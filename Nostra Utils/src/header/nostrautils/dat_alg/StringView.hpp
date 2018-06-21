@@ -633,7 +633,7 @@ namespace NOU::NOU_DAT_ALG
 		}
 
 		//to avoid compile warning
-		if constexpr(std::is_unsigned_v<OT>)
+		if constexpr(!std::is_unsigned_v<OT>)
 		{
 			if (isNegative)
 				ret = -ret;
