@@ -1082,9 +1082,9 @@ NOU::NOU_DAT_ALG::Random random;
 
 for (NOU::uint32 i = 0; i < 100; i++)
 {
-typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(0, 10);
+typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(3, 10);
 
-bool condition = rand >= 0 && rand <= 10;
+bool condition = rand >= 3 && rand <= 10;
 IsTrue(condition);
 }
 }
