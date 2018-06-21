@@ -1160,7 +1160,8 @@ gpa.deallocateObjects(dbgVec.at(0));
 dbgVec.pop();
 gpa.deallocateObjects(dbgVec.at(0));
 
-IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 2);
+NOU::NOU_CORE::getErrorHandler().popError();
 NOU::NOU_CORE::getErrorHandler().popError();
 
 for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
