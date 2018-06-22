@@ -22,7 +22,9 @@ if(${NOU_GENERATE_DOC})
 			COMMENT "Generating Doxygen-Documentation"
 			VERBATIM)
 
-		install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html/" DESTINATION "doc/NostraUtils")
+		install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html/"
+			DESTINATION 
+				"doc/NostraUtils")
 
 	else()
 	

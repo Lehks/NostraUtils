@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
+if(NOT DEFINED "${CMAKE_BUILD_TYPE}")
+	set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+message(STATUS "NOU:  Building in configuration \"${CMAKE_BUILD_TYPE}\".")
+
 #Build NostraUtils library
 add_subdirectory("Nostra Utils")
 
@@ -29,3 +35,44 @@ endif()
 install(FILES "README.md" DESTINATION ".")
 install(FILES "CHANGELOG.md" DESTINATION ".")
 install(FILES "LICENSE.md" DESTINATION ".")
+
+
+
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfigVersion.cmake"
+	VERSION "${NostraUtils_VERSION}"
+	COMPATIBILITY AnyNewerVersion)
+
+export(EXPORT NostraUtilsTargets
+	FILE "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake"
+	NAMESPACE Nostra::)
+
+configure_file("cmake/NostraUtilsConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake" COPYONLY)
+
+set(ConfigPackageLocation "lib/cmake/NostraUtils")
+
+install(EXPORT NostraUtilsTargets
+	FILE
+		NostraUtilsConfig.cmake
+	NAMESPACE
+		Nostra::
+	DESTINATION
+		${ConfigPackageLocation})
+
+install(
+  FILES
+    cmake/NostraUtilsConfig.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake"
+  DESTINATION
+    ${ConfigPackageLocation}
+  COMPONENT
+    Develop
+)
+
+
+configure_file("cmake/CPackConfig.cmake" "cmake/CPackConfig.cmake" @ONLY)
+
+include("${CMAKE_BINARY_DIR}/cmake/CPackConfig.cmake")
+
+include(CPack)

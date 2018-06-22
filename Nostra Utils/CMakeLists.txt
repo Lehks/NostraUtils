@@ -6,6 +6,13 @@ project(NostraUtils
 	#HOMEPAGE_URL "https://github.com/Lehks/NostraUtils"
 	LANGUAGES CXX)
 	
+set(NostraUtils_VERSION_MAJOR ${NostraUtils_VERSION_MAJOR} PARENT_SCOPE)
+set(NostraUtils_VERSION_MINOR ${NostraUtils_VERSION_MINOR} PARENT_SCOPE)
+set(NostraUtils_VERSION_PATCH ${NostraUtils_VERSION_PATCH} PARENT_SCOPE)
+set(NostraUtils_VERSION       ${NostraUtils_VERSION}       PARENT_SCOPE)
+set(NostraUtils_DESCRIPTION   ${NostraUtils_DESCRIPTION}   PARENT_SCOPE)
+set(NostraUtils_HOMEPAGE_URL  ${NostraUtils_HOMEPAGE_URL}  PARENT_SCOPE)
+
 #Generate doc
 add_subdirectory("doc")
 
@@ -18,6 +25,8 @@ file(GLOB_RECURSE NOU_SOURCE_FILES "src/source/nostrautils/*.cpp")
 configure_file("src/header/nostrautils/core/Config.hpp.in" 
 										"${PROJECT_SOURCE_DIR}/src/header/nostrautils/core/Config.hpp" @ONLY)
 
+set(CMAKE_DEBUG_POSTFIX "-dbg")
+
 add_library(NostraUtils SHARED ${NOU_SOURCE_FILES})
 add_library(Nostra::Utils ALIAS NostraUtils)
 
@@ -27,7 +36,7 @@ target_link_libraries(NostraUtils
 
 target_include_directories(NostraUtils
 	PUBLIC 
-		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/header/src>"
+		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/header>"
 		"$<INSTALL_INTERFACE:include>")
 
 target_compile_definitions(NostraUtils
@@ -76,36 +85,3 @@ install(DIRECTORY "src/header/"
 		"include" 
 	COMPONENT 
 		Develop)
-
-include(CMakePackageConfigHelpers)
-
-write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfigVersion.cmake"
-	VERSION "${PROJECT_VERSION}"
-	COMPATIBILITY AnyNewerVersion)
-
-export(EXPORT NostraUtilsTargets
-	FILE "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake"
-	NAMESPACE Nostra::)
-
-configure_file("cmake/NostraUtilsConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake" COPYONLY)
-
-set(ConfigPackageLocation "lib/cmake/ClimbingStats")
-
-install(EXPORT NostraUtilsTargets
-	FILE
-		NostraUtilsConfig.cmake
-	NAMESPACE
-		Nostra::
-	DESTINATION
-		${ConfigPackageLocation})
-
-install(
-  FILES
-    cmake/NostraUtilsConfig.cmake
-    "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake"
-  DESTINATION
-    ${ConfigPackageLocation}
-  COMPONENT
-    Develop
-)
-	
