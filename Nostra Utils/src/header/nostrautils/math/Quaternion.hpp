@@ -9,6 +9,8 @@
 
 /** \file math/Quaternion.hpp
 \author	 Gaetan Tayou
+/Quaternion 
+/ Represents a vector that is used to encode three-dimensional physical rotations. 
 \since   1.0.0
 \version 1.0.0
 
@@ -23,32 +25,43 @@ namespace NOU::NOU_MATH
 
 	template<typename T, sizeType N, sizeType R, sizeType C>
 	class Quaternion : public Vector<T, N> {
-	private:
-		T m_x;
-		T m_y;
-		T m_z;
-		T m_w;
-
 	public:
-		Quaternion(T &x, T &y, T &z, T &w);
-		Quaternion(Vector<T, N> &axis, T &angle);
+		//Constructs a quaternion from the specified components
+		Quaternion(T &x, T &y, T &z, T &w); 
+
+		// Creates a quaternion from the specified vector and rotation parts
+		//Quaternion(Vector<T, N> &axis, T &angle); 
+
 		Quaternion normalized();
+
+		//Returns the conjugate of a specified quaternion
 		Quaternion conjugate();
+
 		Quaternion mul(const T &r);
+
+		//Returns the quaternion that results from scaling all the components of a specified quaternion by a scalar factor. 
 		Quaternion mul(const Quaternion &r);
-		Quaternion mul(const Vector<T, N> &r);
+
+		Quaternion mul(const Vector<T, 4> &r);
+
 		Quaternion sub(const Quaternion &r);
-		Quaternion add(const Quaternion &r);
+
+		//Adds each element in one quaternion with its corresponding element in a second quaternion.
+		//Quaternion add(const Quaternion &r);
+
+		template<sizeType R, sizeType C>
 		Matrix<T, R, C> toRotationMatrix();
+
+		//Calculates the dot product of two quaternions
 		T dot(const Quaternion &r);
 		Quaternion nLerp(Quaternion dest, T lerpFactor, T shortest);
 		Quaternion(Matrix<T, R, C> rot);
-		Vector<T, N> getForward();
-		Vector<T, N> getUp();
-		Vector<T, N> getBack();
-		Vector<T, N> getDown();
-		Vector<T, N> getLeft();
-		Vector<T, N> getRight();
+		Vector<T, 4> getForward();
+		Vector<T, 4> getUp();
+		Vector<T, 4> getBack();
+		Vector<T, 4> getDown();
+		Vector<T, 4> getLeft();
+		Vector<T, 4> getRight();
 		T Length();
 		T getM_x();
 		T getM_y();
@@ -76,7 +89,7 @@ namespace NOU::NOU_MATH
 		m_y = axis.getY() * sinHalfAngle;
 		m_z = axis.getZ() * sinHalfAngle;
 		m_w = cosHalfAngle;
-	};
+	}
 
 	template<typename T>
 	T Quaternion::Length()
@@ -135,11 +148,11 @@ namespace NOU::NOU_MATH
 		return Quaternion(m_x - r.getM_x(), m_y - r.getM_y(), m_z - r.getM_z(), m_w - r.getM_w());
 	}
 
-
-	Quaternion Quaternion::add(const Quaternion &r)
-	{
-		return Quaternion(m_x + r.getM_x(), m_y + r.getM_y(), m_z + r.getM_z(), m_w + r.getM_w());
-	}
+	/*
+	/Adds each element in one quaternion with its corresponding element in a second quaternion.
+	\
+	*/
+	  
 
 	template<typename T, sizeType N>
 	Matrix4f Quaternion::toRotationMatrix()

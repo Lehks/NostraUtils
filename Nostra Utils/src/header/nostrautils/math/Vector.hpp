@@ -701,7 +701,6 @@ namespace NOU::NOU_MATH
 
         Vector scale(float64 scale) const;
         Vector& scaleAssign(float64 scale);
-
         T dotProduct(const Vector &other) const;
 
         float32 length() const;
@@ -820,6 +819,15 @@ namespace NOU::NOU_MATH
 
         Vector scale(float64 scale) const;
         Vector& scaleAssign(float64 scale);
+
+		Quaternion(Vector<T, 4> &axis, T &angle);
+		Vector<T, 4> add(const quaternion &r);
+		Vector<T, 4> sub(const quaternion &r);
+		//T Length();
+		T getM_x();
+		T getM_y();
+		T getM_z();
+		T getM_w();
 
         T dotProduct(const Vector &other) const;
 
@@ -2084,6 +2092,68 @@ namespace NOU::NOU_MATH
     {
         return unequal(other);
     }
+
+	template<typename T>
+	Vector<T, 4>::Quaternion(T &x, T &y, T &z, T &w) {
+		m_x = x; // Initialisierung der X Axe
+		m_y = y; // Initialisierung der Y Axe
+		m_z = z; // Initialisierung der Z Axe
+		m_w = w;  // Initialisierung der W Axe
+	}
+
+	template<typename T, sizeType N>
+	Vector<T, 4>::Quaternion(Vector<T, 4> &axis, T &angle)
+	{
+		T sinHalfAngle = sin(angle / 2);
+		T cosHalfAngle = cos(angle / 2);
+
+		m_x = axis.getX() * sinHalfAngle;
+		m_y = axis.getY() * sinHalfAngle;
+		m_z = axis.getZ() * sinHalfAngle;
+		m_w = cosHalfAngle;
+	}
+
+	template<typename T, sizeType 4>
+	Vector<T, 4> Vector<T, 4>::add(const quaternion &r)
+	{
+		return (m_x + r.getM_x(), m_y + r.getM_y(), m_z + r.getM_z(), m_w + r.getM_w());
+	}
+
+	template<typename T>
+	Vector<T, 4> Vector<T, 4>::mul(const T &r)
+	{
+		return Vector<T, 4>(m_x * r, m_y * r, m_z * r, m_w * r);
+	}
+
+	template<typename T>
+	Vector<T, 4> Vector<T, 4>::sub(const quaternion &r)
+	{
+		return Vector<T, 4>(m_x - r.getM_x(), m_y - r.getM_y(), m_z - r.getM_z(), m_w - r.getM_w());
+	}
+
+	template<typename T>
+	T Vector<T, 4>::getM_x()
+	{
+		return m_x;
+	}
+
+	template<typename T>
+	T Vector<T, 4>::getM_y()
+	{
+		return m_y;
+	}
+
+	template<typename T>
+	T Vector<T, 4>::getM_z()
+	{
+		return m_z;
+	}
+
+	template<typename T>
+	T Vector<T, 4>::getM_w()
+	{
+		return m_w;
+	}
 
 	///\endcond
 

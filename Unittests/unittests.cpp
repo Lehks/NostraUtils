@@ -3643,7 +3643,7 @@ TEST_METHOD(MathMat4)
 	IsTrue(mat10.value(1, 0) == 10.0f);
 	IsTrue(mat10.value(1, 1) == 12.0f);
 	IsTrue(mat10.value(1, 2) == 14.0f);
-	IsTrue(mat10.value(1, 3) == 16.0f);
+	IsTrue(mat10.value(1, 3) == 16.0f); 
 	IsTrue(mat10.value(2, 0) == 18.0f);
 	IsTrue(mat10.value(2, 1) == 20.0f);
 	IsTrue(mat10.value(2, 2) == 22.0f);
