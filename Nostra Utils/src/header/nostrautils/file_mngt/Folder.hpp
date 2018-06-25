@@ -77,7 +77,13 @@ namespace NOU::NOU_FILE_MNGT
 		
 		NOU_FUNC static boolean create(const Path &path);
 
+		/*
+		\brief A function that deletes a folder
+		\param path from type Path (const)
+		*/
+
 	
+		NOU_FUNC void remove(const NOU::NOU_DAT_ALG::String8 &path);
  
 		
 

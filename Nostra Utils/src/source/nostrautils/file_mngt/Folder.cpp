@@ -4,9 +4,11 @@
 
 
 
+
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 #include <Windows.h>
 #include <stdlib.h>
+#include <direct.h>
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 #include <unistd.h>
 #include <sys/stat.h>
@@ -158,6 +160,15 @@ namespace NOU::NOU_FILE_MNGT
 		closedir(dirp);
 	
        #endif
+	}
+
+
+	void Folder::remove(const NOU::NOU_DAT_ALG::String8 &path)
+	{
+		if (_rmdir(path.rawStr()) != 0)
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::UNKNOWN_ERROR, "The folder could not be deleted by this path");
+		}
 	}
 
 

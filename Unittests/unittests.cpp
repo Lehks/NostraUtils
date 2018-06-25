@@ -948,8 +948,20 @@ NOU_CHECK_ERROR_HANDLER;
 
 TEST_METHOD(Folder)
 {
-	NOU::file_mngt::Folder f("C:\\Users\\Mahan\\Desktop\\");
+	NOU::NOU_DAT_ALG::String8 str = "TestFolder";
+	NOU::NOU_DAT_ALG::String8 cwdParentPath = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory().getParentPath().rawStr();
 
+	NOU::file_mngt::Folder f(cwdParentPath + str);
+	f.create();
+
+	NOU::file_mngt::Folder a(cwdParentPath + str + "TestFolder");
+	a.create();
+	
+
+	a.remove(cwdParentPath + str + "TestFolder");
+	f.remove(cwdParentPath + str);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(ErrorHandler)
