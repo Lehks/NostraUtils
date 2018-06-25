@@ -32,14 +32,14 @@ namespace NOU::NOU_FILE_MNGT
 		\@param filenames
 		*/
 
-		Folder(Path m_path);
+		NOU_FUNC Folder(Path m_path);
 
 		/*
 		\brief Constructor of the class Folder with one parameter
 		\param m_path (location of you folder )
 		*/
 
-		Folder(NOU::NOU_DAT_ALG::String8 &path);
+		NOU_FUNC Folder(NOU::NOU_DAT_ALG::String8 &path);
 
 		/*
 		\brief A function that lists you all folders in a directory and safes the result in a vector { ls commando }  
@@ -53,7 +53,7 @@ namespace NOU::NOU_FILE_MNGT
 		\ return all files and safes in a vector
 		*/
 												
-		NOU::NOU_DAT_ALG::Vector<NOU::file_mngt::File> listFiles() const;
+		NOU_FUNC NOU::NOU_DAT_ALG::Vector<NOU::file_mngt::File> listFiles() const;
 		
 		/*
 		\brief  A function that returns you the current path 
@@ -75,7 +75,7 @@ namespace NOU::NOU_FILE_MNGT
 		\ return a folder in the path you give the constructor as parameter
 		*/
 		
-		static boolean create(const Path &path);
+		NOU_FUNC static boolean create(const Path &path);
 
 	
  

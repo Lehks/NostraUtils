@@ -17,20 +17,17 @@
 namespace NOU::NOU_FILE_MNGT
 {
 
+	Folder::Folder(Path m_path) :
+		m_path(m_path)
+	{
+
+	}
 	
 
-	Folder::Folder( NOU::NOU_DAT_ALG::String8 &path) :
-		m_path(path)
+	Folder::Folder(NOU::NOU_DAT_ALG::String8 &path)
 	{
-#if (NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H)
-		DWORD lastError = GetLastError();
-		if (lastError == ERROR_PATH_NOT_FOUND)
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::PATH_NOT_FOUND, "The path to the folder was not found.");
-
-#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-
-#endif
-		
+		Path tmpPath(path);
+		m_path = tmpPath;		
 	}
 
 	boolean Folder::create()

@@ -946,6 +946,12 @@ IsTrue(!(NOU::NOU_CORE::IsDefaultConstructible<NotDefaultConstructible>::value))
 NOU_CHECK_ERROR_HANDLER;
 }
 
+TEST_METHOD(Folder)
+{
+	NOU::file_mngt::Folder f("C:\\Users\\Mahan\\Desktop\\");
+
+}
+
 TEST_METHOD(ErrorHandler)
 {
 NOU::NOU_CORE::ErrorHandler handler;
@@ -1069,16 +1075,6 @@ TEST_METHOD(Quicksort)
 	
 	NoCopyClass arrTest[5] = { NoCopyClass(2), NoCopyClass(1), NoCopyClass(3), NoCopyClass(5), NoCopyClass(4) };
 	NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, noCopyClassComparator);
-	public:
-		Test(NOU::uint32 i) :
-			i(i)
-		{}
-
-		NOU::uint32 get()
-		{
-			return i;
-		}
-	};
 
 
 	/*Test arrTest[5] = { Test(2),Test(1),Test(3),Test(5),Test(4) };
