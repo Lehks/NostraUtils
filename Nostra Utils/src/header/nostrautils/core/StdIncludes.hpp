@@ -47,6 +47,13 @@
 #endif
 
 /**
+\brief The name of the namespace that contains all components that are related to language management.
+*/
+#ifndef NOU_LANG
+#define NOU_LANG lang
+#endif
+
+/**
 \brief The name of the namespace that contains all components that are related to math.
 */
 #ifndef NOU_MATH
