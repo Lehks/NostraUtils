@@ -7,10 +7,9 @@ namespace NOU::NOU_DAT_ALG
 	{
 		NOU_COND_PUSH_ERROR((max < 1), NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "Value max cannot be below 1");
 
-		const NOU::int16 PRIME = 421;
 		NOU::sizeType r;
 
-		r = static_cast<NOU::sizeType>((value % PRIME) % max);
+		r = static_cast<NOU::sizeType>(value% max);
 
 		return r;
 	}
@@ -170,7 +169,7 @@ namespace NOU::NOU_DAT_ALG
 
 		rotations = rotations % 8;
 		byte c;
-		for (sizeType i = 0; i < rotations; i++)
+		for (int32 i = 0; i < rotations; i++)
 		{
 			c = b & r;
 			if (c != 0)

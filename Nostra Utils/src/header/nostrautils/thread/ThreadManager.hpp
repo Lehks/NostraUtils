@@ -16,7 +16,7 @@
 \file thread/ThreadManager.hpp
 
 \author  Lukas Reichmann
-\version 1.0.0
+\version 1.0.1
 \since   1.0.0
 
 \brief A file that contains the thread management system of NOU.
@@ -28,7 +28,7 @@ namespace NOU::NOU_DAT_ALG
 	namespace internal
 	{
 		template<typename T>
-		class ObjectPoolChunk;
+		struct ObjectPoolChunk;
 	}
 
 	template<typename T>
@@ -70,7 +70,7 @@ namespace NOU::NOU_THREAD
 	\see AsyncTaskResult
 	\see TaskQueue
 	*/
-	class NOU_CLASS ThreadManager
+	class ThreadManager
 	{
 	//Parts responsible for creating the singleton
 	private:
@@ -82,7 +82,7 @@ namespace NOU::NOU_THREAD
 		\warning
 		This constructor must always be called from the main thread.
 		*/
-		ThreadManager();
+		NOU_FUNC ThreadManager();
 
 		/**
 		\brief Not copy-able.
@@ -107,7 +107,7 @@ namespace NOU::NOU_THREAD
 		\warning
 		The first time that this method is called must be done from the main thread.
 		*/
-		static ThreadManager& getInstance();
+		NOU_FUNC static ThreadManager& get();
 	//End of singleton parts
 
 		/**
@@ -154,13 +154,13 @@ namespace NOU::NOU_THREAD
 			 * should only be constructed by ThreadManager (which is possible b/c ThreadManager is a friend of 
 			 * TaskInformation).
 			 */
-			explicit TaskInformation(Priority id);
+			NOU_FUNC explicit TaskInformation(Priority id);
 
 		public:
 			/**
 			\brief Constructs a new instance with an invalid ID.
 			*/
-			TaskInformation();
+			NOU_FUNC TaskInformation();
 		};
 
 		//TaskInformation needs access to m_tasks to check whether a task is in it or not
@@ -274,7 +274,7 @@ namespace NOU::NOU_THREAD
 			</li>
 		</ul> 
 		*/
-		static void threadLoop(ThreadManager *threadManager, ThreadDataBundle **threadData, 
+		NOU_FUNC static void threadLoop(ThreadManager *threadManager, ThreadDataBundle **threadData,
 			Mutex *startupMutex, ConditionVariable *startupVariable, boolean *startupDone);
 
 		/**
@@ -347,7 +347,7 @@ namespace NOU::NOU_THREAD
 
 		\pre pushTask() or locking m_taskHeapAccessMutex
 		*/
-		TaskInformation enqueueTask(internal::AbstractTask *task, int32 priority, 
+		NOU_FUNC TaskInformation enqueueTask(internal::AbstractTask *task, int32 priority,
 			NOU_CORE::ErrorHandler *handler);
 
 		/**
@@ -358,7 +358,7 @@ namespace NOU::NOU_THREAD
 
 		\pre pushTask() or locking m_threadPoolAccessMutex
 		*/
-		boolean addThread();
+		NOU_FUNC boolean addThread();
 
 		/**
 		\param task       The task to execute.
@@ -370,7 +370,7 @@ namespace NOU::NOU_THREAD
 		The passed thread must not be in the thread pool and it must not already execute another task when
 		this method is called.
 		*/
-		void executeTaskWithThread(TaskErrorHandlerPair task, ThreadDataBundle &threadData);
+		NOU_FUNC void executeTaskWithThread(TaskErrorHandlerPair task, ThreadDataBundle &threadData);
 
 		/**
 		\param thread The thread to give back.
@@ -381,17 +381,17 @@ namespace NOU::NOU_THREAD
 		Returns a thread to the thread or executes the next task. If there is currently a task in the task 
 		heap, instead of actually giving back the thread, it will simply tell the thread to execute that task.
 		*/
-		void giveBackThread(ThreadDataBundle &thread);
+		NOU_FUNC void giveBackThread(ThreadDataBundle &thread);
 
 		/**
 		\brief Returns the passed handler to the handler pool.
 		*/
-		void giveBackHandler(NOU_CORE::ErrorHandler &handler);
+		NOU_FUNC void giveBackHandler(NOU_CORE::ErrorHandler &handler);
 	public:
 		/**
 		\brief Destructs the thread manager and shuts down all the threads that are currently running.
 		*/
-		~ThreadManager();
+		NOU_FUNC ~ThreadManager();
 
 		/**
 		\param task     The task to push.
@@ -412,7 +412,7 @@ namespace NOU::NOU_THREAD
 		time critical context. To manually create more threads than the thread manager would on its own, 
 		prepareThread() can be used.
 		*/	
-		TaskInformation pushTask(internal::AbstractTask *task, Priority priority, 
+		NOU_FUNC TaskInformation pushTask(internal::AbstractTask *task, Priority priority,
 			NOU_CORE::ErrorHandler *handler = nullptr); 
 
 		/**
@@ -423,14 +423,14 @@ namespace NOU::NOU_THREAD
 		\warning 
 		As pushTask(), this method is supposed to be used a sort of a "back end" for functionality.
 		*/
-		boolean removeTask(const TaskInformation &taskInfo);
+		NOU_FUNC boolean removeTask(const TaskInformation &taskInfo);
 
 		/**
 		\return The maximum amount of threads that is available if no threads are idling.
 
 		\brief Returns the maximum amount of threads that is available if no threads are idling.
 		*/
-		sizeType maximumAvailableThreads() const;
+		NOU_FUNC sizeType maximumAvailableThreads() const;
 
 		/**
 		\return The amount of threads that are currently idling (this includes threads that were not created 
@@ -444,7 +444,7 @@ namespace NOU::NOU_THREAD
 		thread might e.g. finish execution and change the value that is returned by the method.
 		*/
 		//no need to be const, thread manger is always obtainable as non-const reference
-		sizeType currentlyAvailableThreads(); 
+		NOU_FUNC sizeType currentlyAvailableThreads();
 
 		/**
 		\return The amount of threads that are prepared and idling.
@@ -455,7 +455,7 @@ namespace NOU::NOU_THREAD
 		The returned value can be viewed as more of a hint, since after the method has returned, another 
 		thread might prepare an additional thread.
 		*/
-		sizeType currentlyPreparedThreads();
+		NOU_FUNC sizeType currentlyPreparedThreads();
 
 		/**
 		\param id The id of the thread to get the handler of.
@@ -463,7 +463,7 @@ namespace NOU::NOU_THREAD
 
 		\brief Returns the error handler of the thread with the passed ID.
 		*/
-		NOU_CORE::ErrorHandler& getErrorHandlerByThreadId(ThreadWrapper::ID id);
+		NOU_FUNC NOU_CORE::ErrorHandler& getErrorHandlerByThreadId(ThreadWrapper::ID id);
 
 		/**
 		\param count The amount of threads to prepare.
@@ -477,7 +477,7 @@ namespace NOU::NOU_THREAD
 		useful if, e.g. multiple tasks should be executed as fast as possible. In that case, it would be 
 		possible to prepare the required threads before the time critical execution starts.
 		*/
-		sizeType prepareThread(sizeType count = 1);
+		NOU_FUNC sizeType prepareThread(sizeType count = 1);
 	};
 }
 

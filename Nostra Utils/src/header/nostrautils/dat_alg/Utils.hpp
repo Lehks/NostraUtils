@@ -14,10 +14,6 @@
 \brief   This file provides useful utility functions for dat_alg.
 */
 
-#ifndef NOU_XOR
-#define NOU_XOR(a,b) ((!a & b) | (a & !b))
-#endif
-
 namespace NOU::NOU_DAT_ALG
 {
 	/**
@@ -67,7 +63,7 @@ namespace NOU::NOU_DAT_ALG
 	\brief Determines the length of a string.
 	*/
 	template<typename CHAR_TYPE>
-	constexpr sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str);
+	constexpr sizeType stringlen(const NOU_CORE::RemoveConst_t<CHAR_TYPE> *str);
 
 	/**
 	\tparam The type of the parameters.
@@ -78,9 +74,14 @@ namespace NOU::NOU_DAT_ALG
 
 	\param epsilon A const reference to the passed epsilon.
 
-	\return True if the difference between the two parameters is smaller than the epsilon.
+	\return True if the difference between the two parameters is smaller or equal to the epsilon.
 
-	\brief Compares two parameters to a passed epsilon. 
+	\brief Compares two parameters using a passed epsilon. 
+
+	\details 
+	Compares two parameters using a passed epsilon. This can be used to properly compare floating point 
+	numbers and also works fine with integers if the epsilon is 0 (however, the latter one is usually not
+	useful).
 	*/
 	template<typename T>
 	constexpr T epsilonCompare(const T &t0, const T &t1, const T &epsilon);
@@ -106,7 +107,7 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 	template<typename CHAR_TYPE>
-	constexpr sizeType stringlen(const NOU_CORE::removeConst_t<CHAR_TYPE> *str)
+	constexpr sizeType stringlen(const NOU_CORE::RemoveConst_t<CHAR_TYPE> *str)
 	{
 		return *str != 0 ? stringlen<CHAR_TYPE>(str + 1) + 1 : 0;
 	}
@@ -115,8 +116,8 @@ namespace NOU::NOU_DAT_ALG
 	constexpr T epsilonCompare(const T &t0, const T &t1, const T &epsilon)
 	{
 		T diff = t0 - t1;
-		T abs = (diff < 0 ? -diff : diff);
-		return !(abs < epsilon) * (diff < 0 ? -1 : 1);
+		T abs = (diff < static_cast<T>(0) ? -diff : diff);
+		return !(abs <= epsilon) * (diff < T(0) ? T(-1): T(1));
 	}
 
 

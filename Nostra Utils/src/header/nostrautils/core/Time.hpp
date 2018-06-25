@@ -2,9 +2,11 @@
 #define NOU_CORE_TIME_HPP
 #include "nostrautils/core/StdIncludes.hpp"
 
-/** \file Vector.hpp
+/** \file Time.hpp
 \author  Leslie Marxen
-\brief   This file provides some functionallity to work with time values and constants.
+\version 1.0.1
+\since   1.0.0
+\brief   This file provides some functionality to work with time values and constants.
 */
 
 

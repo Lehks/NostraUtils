@@ -118,18 +118,18 @@ namespace NOU::NOU_CORE
 	second one.
 	*/
 	template<boolean B, typename T1, typename T2>
-	struct typeIf : IdentityType<T1>{};
+	struct TypeIf : IdentityType<T1>{};
 
 	///\cond
 	template<typename T1, typename T2>
-	struct typeIf<false, T1, T2> : IdentityType<T2> {};
+	struct TypeIf<false, T1, T2> : IdentityType<T2> {};
 	///\endcond
 
 	/**
-	\brief The result of a call to typeIf.
+	\brief The result of a call to TypeIf.
 	*/
 	template<boolean B, typename T1, typename T2>
-	using typeIf_t = typename typeIf<B, T1, T2>::type;
+	using TypeIf_t = typename TypeIf<B, T1, T2>::type;
 
 	/**
 	\tparam T The type to remove const from.
@@ -147,18 +147,18 @@ namespace NOU::NOU_CORE
 	const int | int
 	*/
 	template<typename T>
-	struct removeConst : IdentityType<T>{};
+	struct RemoveConst : IdentityType<T>{};
 
 	///\cond
 	template<typename T>
-	struct removeConst<const T> : IdentityType<T> {};
+	struct RemoveConst<const T> : IdentityType<T> {};
 	///\endcond
 
 	/**
-	\brief The result of a call to removeConst.
+	\brief The result of a call to RemoveConst.
 	*/
 	template<typename T>
-	using removeConst_t = typename removeConst<T>::type;
+	using RemoveConst_t = typename RemoveConst<T>::type;
 
 	/**
 	\tparam The enum the underlying type should be determined for.
@@ -220,7 +220,8 @@ namespace NOU::NOU_CORE
 		struct InvokeResultImpl : IdentityType<std::result_of_t<T(ARGS...)>> {};
 
 		template<typename T, typename...ARGS>
-		struct InvokeResultImpl<false, T, ARGS...> : IdentityType<std::result_of_t<std::add_pointer_t<T>(ARGS...)>> {};
+		struct InvokeResultImpl<false, T, ARGS...> : IdentityType<
+			std::result_of_t<std::add_pointer_t<T>(ARGS...)>> {};
 	}
 
 	template<typename T, typename...ARGS>
@@ -251,7 +252,7 @@ namespace NOU::NOU_CORE
 	*/
 #ifndef NOU_CPP14_COMPATIBILITY
 	template<typename T, typename... ARGS>
-	struct IsInvocable : typeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
+	struct IsInvocable : TypeIf_t<std::is_invocable<T, ARGS...>::value, TrueType, FalseType> {};
 	#define NOU_EXISTS_FEATURE_IS_INVOCABLE
 #endif
 	/**
@@ -271,7 +272,7 @@ namespace NOU::NOU_CORE
 	*/
 #ifndef NOU_CPP14_COMPATIBILITY
 	template<typename R, typename T, typename... ARGS>
-	struct IsInvocableR : typeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
+	struct IsInvocableR : TypeIf_t<std::is_invocable_r<R, T, ARGS...>::value, TrueType, FalseType> {};
 	#define NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 #endif
 
@@ -283,7 +284,7 @@ namespace NOU::NOU_CORE
 	\brief Checks whether a type is default constructible or not.
 	*/
 	template<typename T>
-	struct IsDefaultConstructible : typeIf_t<std::is_default_constructible<T>::value, 
+	struct IsDefaultConstructible : TypeIf_t<std::is_default_constructible<T>::value, 
 		TrueType, FalseType> {};
 
 	/**

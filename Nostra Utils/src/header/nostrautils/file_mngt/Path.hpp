@@ -6,10 +6,10 @@
 #include "nostrautils/dat_alg/String.hpp"
 #include "nostrautils/dat_alg/LazyEvaluationProperty.hpp"
 
-/** \file Vector.hpp
+/** \file file_mngt/Path.hpp
 \author  Dennis Franz
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides a Path implementation.
 */
 

@@ -38,9 +38,11 @@
 #include "nostrautils/dat_alg/Vector.hpp"
 
 #include "nostrautils/file_mngt/File.hpp"
+#include "nostrautils/file_mngt/INIFile.hpp"
 #include "nostrautils/file_mngt/Path.hpp"
 #include "nostrautils/file_mngt/Folder.hpp"
 
+#include "nostrautils/math/Color.hpp"
 #include "nostrautils/math/Vector.hpp"
 #include "nostrautils/math/Matrix.hpp"
 #include "nostrautils/math/Utils.hpp"
