@@ -165,10 +165,17 @@ namespace NOU::NOU_FILE_MNGT
 
 	void Folder::remove(const NOU::NOU_DAT_ALG::String8 &path)
 	{
+      #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 		if (_rmdir(path.rawStr()) != 0)
 		{
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::UNKNOWN_ERROR, "The folder could not be deleted by this path");
 		}
+
+        #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+
+		rmdir(path.rawStr())
+
+        #endif
 	}
 
 
