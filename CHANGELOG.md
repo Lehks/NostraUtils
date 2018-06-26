@@ -6,6 +6,7 @@
 
 - **Additions**
     - Added NOU_EXPORT_FUNC and NOU_IMPORT_FUNC.
+    - Added a remove function for the folder class .
 
 - **Deletions**
     - Removed NOU_CLASS.
@@ -23,6 +24,7 @@
 - Added an empty static const string member variable to the string.
 - Changed the return type of NOU\::NOU_FILE_MGNT\::Folder\::listFiles(). The function now returns a vector of
   files instead of folders.
+-
 
 ### Fixes
 - Fixed a wrong attribute type that resulted in an incorrect display of logging messages.
