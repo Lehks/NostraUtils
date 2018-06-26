@@ -125,4 +125,6 @@ install(DIRECTORY "src/header/"
 	DESTINATION 
 		"include" 
 	COMPONENT 
-		Develop)
+		Develop
+	FILES_MATCHING 
+		PATTERN "*.hpp")
