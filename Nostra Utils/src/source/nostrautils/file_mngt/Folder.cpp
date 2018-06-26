@@ -179,7 +179,7 @@ namespace NOU::NOU_FILE_MNGT
 
         #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 
-		rmdir(path.rawStr())
+		rmdir(path.rawStr());
 
         #endif
 	}
