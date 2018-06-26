@@ -205,7 +205,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as float.
 			*/
-			NOU_FUNC float32 getFloat(const NouString &, const NouString & = INI_DEFAULT_SECTION);
+			NOU_FUNC float32 getFloat(const NouString & key, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
 			\param key     The key to search

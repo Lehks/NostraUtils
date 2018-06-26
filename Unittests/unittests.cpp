@@ -1117,9 +1117,9 @@ NOU::NOU_DAT_ALG::Random random;
 
 for (NOU::uint32 i = 0; i < 100; i++)
 {
-typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(0, 10);
+typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(3, 10);
 
-bool condition = rand >= 0 && rand <= 10;
+bool condition = rand >= 3 && rand <= 10;
 IsTrue(condition);
 }
 }
@@ -1193,11 +1193,18 @@ IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 dbgVec.push(gpa.allocateObjects<NOU::DebugClass>(1, testValue));
 gpa.deallocateObjects(dbgVec.at(0));
 dbgVec.pop();
+
+#ifdef NOU_DEBUG 
+
 gpa.deallocateObjects(dbgVec.at(0));
 
 IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 2);
 NOU::NOU_CORE::getErrorHandler().popError();
 NOU::NOU_CORE::getErrorHandler().popError();
+
+#else
+IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+#endif
 
 for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
 {
@@ -1853,9 +1860,12 @@ auto task2 = NOU::NOU_THREAD::makeTask(&taskTestFunction2, i2);
 
 task2.getResult();
 
+//error is only pushed in Debug
+#ifdef NOU_DEBUG
 IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
 IsTrue(NOU::NOU_CORE::getErrorHandler().popError().getID() ==
        NOU::NOU_CORE::ErrorCodes::INVALID_OBJECT);
+#endif
 
 task2.execute();
 

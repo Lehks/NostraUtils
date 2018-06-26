@@ -64,6 +64,7 @@ namespace NOU::NOU_FILE_MNGT
 		
 #endif
 
+       return true;
 	}
 
 	const Path & Folder::getPath() const
@@ -115,6 +116,8 @@ namespace NOU::NOU_FILE_MNGT
 		}
 		closedir(dirp);
 #endif
+
+		return v;
 		}
 
 	NOU_DAT_ALG::Vector<NOU::file_mngt::File> Folder::listFiles() const
@@ -158,8 +161,11 @@ namespace NOU::NOU_FILE_MNGT
 			}
 		}
 		closedir(dirp);
-	
+
+
        #endif
+
+		return v;
 	}
 
 

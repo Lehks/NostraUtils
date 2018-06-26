@@ -791,7 +791,8 @@ WARN_LOGFILE           = "@CMAKE_CURRENT_BINARY_DIR@/Warnings.txt"
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = "@PROJECT_SOURCE_DIR@/src/header" \
-                         ./ \
+                         "@PROJECT_SOURCE_DIR@/doc" \
+						 "./" \
                          "@CMAKE_SOURCE_DIR@/README.md"
 
 # This tag can be used to specify the character encoding of the source files
