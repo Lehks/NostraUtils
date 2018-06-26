@@ -948,17 +948,45 @@ NOU_CHECK_ERROR_HANDLER;
 
 TEST_METHOD(Folder)
 {
+
 	NOU::NOU_DAT_ALG::String8 str = "TestFolder";
 	NOU::NOU_DAT_ALG::String8 cwdParentPath = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory().getParentPath().rawStr();
+	NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::Folder> vFolder;
+	NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::File> vFile;
+
 
 	NOU::file_mngt::Folder f(cwdParentPath + str);
 	f.create();
+#if NOU_OS == NOU_OS_WINDOWS
+	NOU::NOU_FILE_MNGT::File file(cwdParentPath + str + "\\TestFile.txt");
 
-	NOU::file_mngt::Folder a(cwdParentPath + str + "TestFolder");
+	NOU::file_mngt::Folder a(cwdParentPath + str + "\\TestFolder");
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+	NOU::NOU_FILE_MNGT::File file(cwdParentPath + str + "/TestFile.txt");
+
+	NOU::file_mngt::Folder a(cwdParentPath + str + "/TestFolder");
+#endif
 	a.create();
-	
+
+	file.createFile();
+	vFile = f.listFiles();
+	vFolder = f.listFolders();
+
+	NOU::NOU_DAT_ALG::String8 tmpfile = vFile[0].getPath().getAbsolutePath().rawStr();
+	NOU::NOU_DAT_ALG::String8 tmpstr = vFolder[2].getPath().getAbsolutePath().rawStr();
+
+#if NOU_OS == NOU_OS_WINDOWS
+    IsTrue(tmpstr == cwdParentPath + str + "\\TestFolder");
+	IsTrue(tmpfile == cwdParentPath + str + "\\TestFile.txt");
+
+	a.remove(cwdParentPath + str + "\\TestFolder");
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+	IsTrue(tmpstr == cwdParentPath + str + "/TestFolder");
+	IsTrue(tmpfile == cwdParentPath + str + "/TestFile.txt");
 
 	a.remove(cwdParentPath + str + "TestFolder");
+#endif
+	file.deleteFile();
 	f.remove(cwdParentPath + str);
 
 	NOU_CHECK_ERROR_HANDLER;

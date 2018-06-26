@@ -111,7 +111,8 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			while (readdir(dirp) != NULL)
 			{
-				v.emplaceBack(dstruct->d_name);
+				Folder f1(m_path + dstruct->d_name);
+				v.emplaceBack(f1);
 			}
 		}
 		closedir(dirp);
@@ -157,7 +158,8 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			while (readdir(dirp) != NULL)
 			{
-				v.emplaceBack(dstruct->d_name);
+				File f1(m_path + dstruct->d_name);
+				v.emplaceBack(f1);
 			}
 		}
 		closedir(dirp);
