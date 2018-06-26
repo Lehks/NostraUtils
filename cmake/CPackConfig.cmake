@@ -1,4 +1,4 @@
-include("${CMAKE_BINARY_DIR}/CPackConfig.cmake")
+#include("${CMAKE_BINARY_DIR}/CPackConfig.cmake")
 
 #configure_file("cmake/welcome.txt" "cmake/welcome.txt" COPYONLY)
 #configure_file("LICENSE.md" "LICENSE.md" COPYONLY)
