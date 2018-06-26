@@ -68,10 +68,6 @@ if(${NOU_CPP14_COMPATIBILITY})
 			NOU_CPP14_COMPATIBILITY)
 endif()
 
-include(GenerateExportHeader)
-
-generate_export_header(NostraUtilsDgb)
-
 install(TARGETS NostraUtilsDgb EXPORT NostraUtilsTargets
 	RUNTIME  DESTINATION "bin"
 	LIBRARY  DESTINATION "lib"
@@ -117,8 +113,6 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "R
 				NOU_CPP14_COMPATIBILITY)
 	endif()
 	
-	generate_export_header(NostraUtils)
-
 	install(TARGETS NostraUtils EXPORT NostraUtilsTargets
 		RUNTIME  DESTINATION "bin"
 		LIBRARY  DESTINATION "lib"
