@@ -24,7 +24,9 @@ if(${NOU_GENERATE_DOC})
 
 		install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html/"
 			DESTINATION 
-				"doc/NostraUtils")
+				"doc/NostraUtils"
+			COMPONENT
+				"Doc")
 
 	else()
 	
