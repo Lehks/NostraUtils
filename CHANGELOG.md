@@ -6,6 +6,7 @@
 
 - **Additions**
     - Added NOU_EXPORT_FUNC and NOU_IMPORT_FUNC.
+    - Added a functionality to remove folders to the folder class.
 
 - **Deletions**
     - Removed NOU_CLASS.

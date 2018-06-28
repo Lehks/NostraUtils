@@ -103,19 +103,20 @@ namespace NOU::NOU_FILE_MNGT
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 		NOU_DAT_ALG::Vector<Folder> v;
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
-		pattern.append("\\*");
+
 		DIR* dirp = opendir(pattern.rawStr());
 		struct dirent *dstruct;
 		NOU::uint8 dir = dstruct->d_type;
 
-		if(dir != DT_DIR)
+		while ((dstruct = readdir(dirp)) != NULL)
 		{
-			while (readdir(dirp) != NULL)
+			if(dstruct->d_type == DT_DIR)
 			{
 				Folder f1(m_path + dstruct->d_name);
 				v.emplaceBack(f1);
 			}
 		}
+
 		closedir(dirp);
 #endif
 
@@ -156,14 +157,16 @@ namespace NOU::NOU_FILE_MNGT
 		struct dirent *dstruct;
 		NOU::uint8 dir = dstruct->d_type;
 
-		if(dir != DT_DIR)
+
+		while ((dstruct = readdir(dirp)) != NULL)
 		{
-			while (readdir(dirp) != NULL)
+			if(dstruct->d_type != DT_DIR)
 			{
 				File f1(m_path + dstruct->d_name);
-				v.emplaceBack(f1);
+				v.emplaceBack(NOU::core::move(f1));
 			}
 		}
+
 		closedir(dirp);
 
 
@@ -183,7 +186,10 @@ namespace NOU::NOU_FILE_MNGT
 
         #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 
-		rmdir(path.rawStr());
+		 if(rmdir(path.rawStr()) != 0 )
+		 {
+		 	std::cout << strerror(errno) << std::endl;
+		 }
 
         #endif
 	}
