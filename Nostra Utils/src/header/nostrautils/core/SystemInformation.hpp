@@ -7,7 +7,7 @@
 \file core/SystemInformation.hpp
 
 \author  Lukas Reichmann
-\version 1.0.0
+\version 1.0.1
 \since   1.0.0
 
 \brief A file that provides functionality to query information about the system that the current executable 

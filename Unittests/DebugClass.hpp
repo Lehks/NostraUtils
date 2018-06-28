@@ -20,7 +20,7 @@ namespace NOU
 	check weather an instance that, e.g. was popped from a container is the correct one by 
 	checking the value.
 	*/
-	class NOU_CLASS DebugClass
+	class DebugClass
 	{
 	private:
 		/**

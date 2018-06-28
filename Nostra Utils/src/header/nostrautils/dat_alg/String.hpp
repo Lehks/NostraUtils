@@ -15,7 +15,7 @@
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides a String implementation.
 */
 
@@ -79,6 +79,11 @@ namespace NOU::NOU_DAT_ALG
 		void setSize(sizeType size);
 
 	public:
+	    /**
+        \brief An empty static const String member variable.
+        */
+        static const String<CHAR_TYPE> EMPTY_STRING;
+
 		/**
 		\param b The boolean to convert.
 		\return  Either \"true\" or \"false\".
@@ -154,11 +159,12 @@ namespace NOU::NOU_DAT_ALG
 		String(CharType c);
 		/**
 		\param buffersize	the size of the buffer.
+		\param b            a temporary char to different the constructor from the other's. (will maybe removed in the future)
 
 		\brief Special constructor for initialise a String with a certain amount of buffer space.
 		 the CharType is necessary because of the other int, float ... constructors.
 		*/
-		String(sizeType buffersize, CharType b);
+		String(sizeType buffersize, CharType b = 't');
 		/**
 		\param other Another String.
 
@@ -987,6 +993,9 @@ namespace NOU::NOU_DAT_ALG
 	using String32 = String<char32>;
 
 	template<typename CHAR_TYPE>
+	const String<CHAR_TYPE> String<CHAR_TYPE>::EMPTY_STRING = "";
+
+    template<typename CHAR_TYPE>
 	template<typename IT>
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)
 	{
@@ -1314,13 +1323,33 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, const StringView<CHAR_TYPE>& str)
 	{
 
-		for (sizeType i = 0; i < str.size(); i++)
-		{
-			insert(index + i, str[i]);
+		NOU_COND_PUSH_ERROR((index > StringView<CHAR_TYPE>::m_size),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
+		sizeType counter = 0;
+
+		String8 tmpstr = StringView<CHAR_TYPE>::logicalSubstring(index);
+
+		for (sizeType i = index; i < str.size() + index; i++)
+		{
+			if (i < m_data.size() - 1)
+			{
+				m_data[i] = str[counter];
+				counter++;
+			}
+			else {
+				m_data.insert(i,str[counter]);
+				counter++;
+			}
 		}
-		append(StringView<CHAR_TYPE>::NULL_TERMINATOR);
-		setSize(StringView<CHAR_TYPE>::m_size - 1);
+
+		for (sizeType j = 0; j < tmpstr.size(); j++)
+		{
+			m_data.insert(str.size() + index + j, tmpstr[j]);
+		}
+
+		setSize(StringView<CHAR_TYPE>::m_size + str.size() - 1);
+		insert(StringView<CHAR_TYPE>::size() + 1, StringView<CHAR_TYPE>::NULL_TERMINATOR);
 		return *this;
 	}
 
@@ -1556,7 +1585,7 @@ namespace NOU::NOU_DAT_ALG
 					counter2++;
 			}
 
-			insert(end, StringView<CHAR_TYPE>::NULL_TERMINATOR);
+			insert(StringView<CHAR_TYPE>::size() - 1, StringView<CHAR_TYPE>::NULL_TERMINATOR);
             setSize((oldsize - (end - start)) + replacement.size());
 		}
 

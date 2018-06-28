@@ -13,7 +13,7 @@
 /** \file Hashing.hpp
 \author  Leslie Marxen
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides some Hashing implementations.
 */
 
@@ -34,7 +34,7 @@ namespace NOU::NOU_DAT_ALG
 	/**
 	\param inputObject the input that will be hashed.
 	\param max the maximum value the out hashvalue wii have (0 <= output < max)
-	\param inputObjectSize The amount of objects that \p inputObject points to. Unless \p inputObject is an 
+	\param inputObjectCount The amount of objects that \p inputObject points to. Unless \p inputObject is an 
 	                       array, this is always 1.
 
 	\brief A Function that hashes an Object for a HashTable.
@@ -60,7 +60,8 @@ namespace NOU::NOU_DAT_ALG
 	/**
 	\param str A given stringview that is going to be hashed
 	\param max the maximum value the out hashvalue wii have (0 <= output < max)
-	\param strCount the count of Strings
+	\param inputObjectCount The amount of objects that \p str points to. Unless \p str is an 
+	                       array, this is always 1.
 
 	\brief A Function that hashes a stringview for a HashTable
 	*/
@@ -69,7 +70,7 @@ namespace NOU::NOU_DAT_ALG
 	constexpr sizeType hashObj(const NOU_DAT_ALG::StringView<T> *str, sizeType inputObjectCount = 1, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
 	{
 		NOU::NOU_DAT_ALG::Vector<T> b;
-		NOU::sizeType s;
+		NOU::sizeType s = 0;
 		T tmp;
 		NOU_DAT_ALG::String<T> tmpStr;
 		for(sizeType i = 0; i < inputObjectCount; i++)
@@ -88,7 +89,8 @@ namespace NOU::NOU_DAT_ALG
 	/**
 	\param str A given String that is going to be hashed
 	\param max the maximum value the out hashvalue wii have (0 <= output < max)
-	\param strCount the count of Strings to be hashed
+	\param inputObjectCount The amount of objects that \p str points to. Unless \p str is an 
+	                       array, this is always 1.
 
 	\brief A Function that hashes a string for a HashTable
 	*/
@@ -97,7 +99,7 @@ namespace NOU::NOU_DAT_ALG
 	constexpr sizeType hashObj(const NOU_DAT_ALG::String<T> *str, sizeType inputObjectCount = 1, sizeType max = static_cast<sizeType>(std::numeric_limits<sizeType>::max()))
 	{
 		NOU::NOU_DAT_ALG::Vector<T> b;
-		NOU::sizeType s;
+		NOU::sizeType s = 0;
 		T tmp;
 		NOU_DAT_ALG::String<T> tmpStr;
 		for(sizeType i = 0; i < inputObjectCount; i++)
@@ -114,7 +116,12 @@ namespace NOU::NOU_DAT_ALG
 	}
 
 
-	
+	/**
+	\brief a function that rotates the \p input byte by \p rotations rotations
+	\param input the byte where the rotations will be performed on
+	\param rotations the count of rotations that will be performed on \p input
+	\return returns a rotated byte
+	*/
 	NOU_FUNC byte leftRotation(const byte input, int32 rotations);
 }
 #endif

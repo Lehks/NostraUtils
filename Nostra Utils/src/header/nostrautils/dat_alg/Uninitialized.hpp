@@ -30,6 +30,10 @@ namespace NOU::NOU_DAT_ALG
 
 	An instance of this class that has a primitive type is pointless, since primitive types provide such an 
 	uninitialized behavior by default.
+
+	\note
+	Instances of this class will check whether the object that it stores is already initialized - but only if
+	NOU_DEBUG is defined.
 	*/
 	template<typename T>
 	class Uninitialized final

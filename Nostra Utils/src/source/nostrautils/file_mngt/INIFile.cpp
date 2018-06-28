@@ -8,13 +8,6 @@
 
 namespace NOU::NOU_FILE_MNGT
 {
-	constexpr const NOU::char8 *INIFile::INI_DEFAULT_SECTION;
-	const int32 INIFile::INI_QUOTE_NONE = 0;
-	const int32 INIFile::INI_QUOTE_DOUBLE = 1;
-	const int32 INIFile::INI_QUOTE_SINGLE = 2;
-	const int32 INIFile::INI_TYPE_NouString = 1;
-	const int32 INIFile::INI_TYPE_INT = 2;
-	const int32 INIFile::INI_TYPE_FLOAT = 3;
 
 	INIFile::INIFile(const NouString & filename)
 	{
@@ -244,7 +237,7 @@ namespace NOU::NOU_FILE_MNGT
 		for (int32 isec = (sectionKeys.size() - 1); isec >= 0; isec--)
 		{
 			// Write section
-			if (sectionValues.at(isec) > 0) {
+			if (*sectionValues.at(isec) > 0) {
 				if (sectionKeys.at(isec)->rawStr() != INI_DEFAULT_SECTION) {
 					inifile << "[" << sectionKeys.at(isec)->rawStr() << "]" << std::endl;
 				}
@@ -254,7 +247,7 @@ namespace NOU::NOU_FILE_MNGT
 			pos_sec = sectionKeys.at(isec)->size();
 
 			// Write string data
-			for (auto istr = 0; istr < stringKeys.size(); istr++)
+			for (sizeType istr = 0; istr < stringKeys.size(); istr++)
 			{
 				pos_dot = stringKeys.at(istr)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
@@ -267,7 +260,7 @@ namespace NOU::NOU_FILE_MNGT
 			}
 
 			// Write int data
-			for (auto iint = 0; iint < integerKeys.size(); iint++)
+			for (sizeType iint = 0; iint < integerKeys.size(); iint++)
 			{
 				pos_dot = integerKeys.at(iint)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
@@ -280,7 +273,7 @@ namespace NOU::NOU_FILE_MNGT
 			}
 
 			// Write float data
-			for (auto ifloat = 0; ifloat < floatKeys.size(); ifloat++)
+			for (sizeType ifloat = 0; ifloat < floatKeys.size(); ifloat++)
 			{
 				pos_dot = floatKeys.at(ifloat)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
@@ -442,7 +435,7 @@ namespace NOU::NOU_FILE_MNGT
 			pos_sec = sectionKeys.at(isec)->size();
 
 			// Get keys from string map
-			for (auto istr = 0; istr < stringKeys.size(); istr++)
+			for (sizeType istr = 0; istr < stringKeys.size(); istr++)
 			{
 				pos_dot = stringKeys.at(istr)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
@@ -454,7 +447,7 @@ namespace NOU::NOU_FILE_MNGT
 			}
 
 			// Get keys from int map
-			for (auto iint = 0; iint < integerKeys.size(); iint++)
+			for (sizeType iint = 0; iint < integerKeys.size(); iint++)
 			{
 				pos_dot = integerKeys.at(iint)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
@@ -466,7 +459,7 @@ namespace NOU::NOU_FILE_MNGT
 			}
 
 			// Get keys from float data
-			for (auto ifloat = 0; ifloat < floatKeys.size(); ifloat++)
+			for (sizeType ifloat = 0; ifloat < floatKeys.size(); ifloat++)
 			{
 				pos_dot = floatKeys.at(ifloat)->firstIndexOf('.');
 				if (pos_dot == NouString::NULL_INDEX) continue;
