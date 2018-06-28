@@ -103,6 +103,7 @@ namespace NOU::NOU_FILE_MNGT
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 		NOU_DAT_ALG::Vector<Folder> v;
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
+		pattern.append("\\*");
 		DIR* dirp = opendir(pattern.rawStr());
 		struct dirent *dstruct;
 		NOU::uint8 dir = dstruct->d_type;
@@ -150,6 +151,7 @@ namespace NOU::NOU_FILE_MNGT
        #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 		NOU_DAT_ALG::Vector<NOU::file_mngt::File> v;
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
+		pattern.append("\\*");
 		DIR* dirp = opendir(pattern.rawStr());
 		struct dirent *dstruct;
 		NOU::uint8 dir = dstruct->d_type;
