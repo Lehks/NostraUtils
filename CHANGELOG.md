@@ -29,6 +29,7 @@
 - Fixed an issue where the fast queue would crash when memory allocation failed.
 - Fixed an issue where the replace function didn't do what it supposed to do.
 - Fixed an issue where the trim method in the string didn't recognized some spaces.
+- Fixed several issues in the String.
 
 ## Version 1.0.0
 
