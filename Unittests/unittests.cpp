@@ -984,10 +984,11 @@ TEST_METHOD(Folder)
 	IsTrue(tmpstr == cwdParentPath + str + "/TestFolder");
 	IsTrue(tmpfile == cwdParentPath + str + "/TestFile.txt");
 
-	a.remove(cwdParentPath + str + "TestFolder");
+	a.remove(a.getPath().getAbsolutePath().rawStr());
 #endif
 	file.deleteFile();
-	f.remove(cwdParentPath + str);
+	f.remove(f.getPath().getAbsolutePath().rawStr()
+	);
 
 	NOU_CHECK_ERROR_HANDLER;
 }
