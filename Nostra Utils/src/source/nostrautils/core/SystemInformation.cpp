@@ -15,13 +15,13 @@ namespace NOU::NOU_CORE
 	{
 		uint64 NOU_FUNC totalPhysicalMemory()
 		{
-#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+#if NOU_OS == NOU_OS_WINDOWS
 			MEMORYSTATUSEX memStatus;
 			memStatus.dwLength = sizeof(MEMORYSTATUSEX);
 			GlobalMemoryStatusEx(&memStatus);
 
 			return memStatus.ullTotalPhys;
-#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+#elif NOU_OS == NOU_OS_MAC
 			int mib [] = { CTL_HW, HW_MEMSIZE };
 			int64_t value = 0;
 			size_t length = sizeof(value);
@@ -29,7 +29,6 @@ namespace NOU::NOU_CORE
 			sysctl(mib, 2, &value, &length, NULL, 0);
 
 			return value;
-
 #else
 			return 0; ///\todo Support other systems.
 #endif
@@ -37,12 +36,12 @@ namespace NOU::NOU_CORE
 
 		uint64 NOU_FUNC currentlyUsedMemory()
 		{
-#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+#if NOU_OS == NOU_OS_WINDOWS
 			PROCESS_MEMORY_COUNTERS pmc;
 			GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(PROCESS_MEMORY_COUNTERS));
 
 			return pmc.WorkingSetSize;
-#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+#elif NOU_OS == NOU_OS_MAC
 			struct rusage usage;
 			if(0 == getrusage(RUSAGE_SELF, &usage))
 				return usage.ru_maxrss; // bytes

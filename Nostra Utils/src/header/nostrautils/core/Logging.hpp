@@ -707,8 +707,6 @@ namespace NOU::NOU_CORE
 		NOU::NOU_DAT_ALG::FastQueue<Event> m_events;
 
 		/**
-		\param events	An event object.
-
 		\brief			Calls the write function for every objects in m_logger.
 		*/
 		NOU_FUNC void logAll();

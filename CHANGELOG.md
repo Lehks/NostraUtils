@@ -6,6 +6,7 @@
 
 - **Additions**
     - Added NOU_EXPORT_FUNC and NOU_IMPORT_FUNC.
+    - Added a functionality to remove folders to the folder class.
 
 - **Deletions**
     - Removed NOU_CLASS.
@@ -21,6 +22,8 @@
   project.
 - Improved String Replace and Insert method's.
 - Added an empty static const string member variable to the string.
+- Changed the return type of NOU\::NOU_FILE_MGNT\::Folder\::listFiles(). The function now returns a vector of
+  files instead of folders.
 
 ### Fixes
 - Fixed a wrong attribute type that resulted in an incorrect display of logging messages.
@@ -29,7 +32,12 @@
 - Fixed an issue where the fast queue would crash when memory allocation failed.
 - Fixed an issue where the replace function didn't do what it supposed to do.
 - Fixed an issue where the trim method in the string didn't recognized some spaces.
-- Fixed several issues in the String.
+- Fixed an issue where the path in the Folder wasn't correct 
+- Fixed an issue where the quicksort wouldn't work with comparators.
+- Fixed an issue, where the returned values of NOU\::NOU_FILE_MGNT\::Folder\::listFiles() and ::listFolders() 
+  would have the wrong path.
+  
+
 
 ## Version 1.0.0
 

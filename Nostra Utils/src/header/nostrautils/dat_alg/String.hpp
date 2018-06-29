@@ -159,11 +159,12 @@ namespace NOU::NOU_DAT_ALG
 		String(CharType c);
 		/**
 		\param buffersize	the size of the buffer.
+		\param b            a temporary char to different the constructor from the other's. (will maybe removed in the future)
 
 		\brief Special constructor for initialise a String with a certain amount of buffer space.
 		 the CharType is necessary because of the other int, float ... constructors.
 		*/
-		String(sizeType buffersize, CharType b);
+		String(sizeType buffersize, CharType b = 't');
 		/**
 		\param other Another String.
 

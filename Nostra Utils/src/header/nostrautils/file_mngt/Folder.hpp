@@ -21,17 +21,25 @@ namespace NOU::NOU_FILE_MNGT
 	{
 	private :
 
-		Path m_path;
+		NOU::NOU_FILE_MNGT::Path m_path;
 
 		NOU::NOU_DAT_ALG::String8 m_name = "."; 
 
 	public :
 		/*
-		\brief Constructor of the class 
+		\ brief Constructor of the class Folder with two parameters
+		\@param m_path (location of you folder )
+		\@param filenames
+		*/
+
+		NOU_FUNC Folder(Path m_path);
+
+		/*
+		\brief Constructor of the class Folder with one parameter
 		\param m_path (location of you folder )
 		*/
 
-		NOU_FUNC Folder(const Path &path);
+		NOU_FUNC Folder(NOU::NOU_DAT_ALG::String8 &path);
 
 		/*
 		\brief A function that lists you all folders in a directory and safes the result in a vector { ls commando }  
@@ -45,7 +53,7 @@ namespace NOU::NOU_FILE_MNGT
 		\ return all files and safes in a vector
 		*/
 												
-		NOU_FUNC NOU::NOU_DAT_ALG::Vector<Folder> listFiles() const;
+		NOU_FUNC NOU::NOU_DAT_ALG::Vector<NOU::file_mngt::File> listFiles() const;
 		
 		/*
 		\brief  A function that returns you the current path 
@@ -69,6 +77,13 @@ namespace NOU::NOU_FILE_MNGT
 		
 		NOU_FUNC static boolean create(const Path &path);
 
+		/*
+		\brief A function that deletes a folder
+		\param path from type Path (const)
+		*/
+
+	
+		NOU_FUNC void remove(const NOU::NOU_DAT_ALG::String8 &path);
  
 		
 

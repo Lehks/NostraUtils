@@ -946,6 +946,53 @@ IsTrue(!(NOU::NOU_CORE::IsDefaultConstructible<NotDefaultConstructible>::value))
 NOU_CHECK_ERROR_HANDLER;
 }
 
+TEST_METHOD(Folder)
+{
+
+	NOU::NOU_DAT_ALG::String8 str = "TestFolder";
+	NOU::NOU_DAT_ALG::String8 cwdParentPath = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory().getParentPath().rawStr();
+	NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::Folder> vFolder;
+	NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::File> vFile;
+
+
+	NOU::file_mngt::Folder f(cwdParentPath + str);
+	f.create();
+#if NOU_OS == NOU_OS_WINDOWS
+	NOU::NOU_FILE_MNGT::File file(cwdParentPath + str + "\\TestFile.txt");
+
+	NOU::file_mngt::Folder a(cwdParentPath + str + "\\TestFolder");
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+	NOU::NOU_FILE_MNGT::File file(cwdParentPath + str + "/TestFile.txt");
+
+	NOU::file_mngt::Folder a(cwdParentPath + str + "/TestFolder");
+#endif
+	a.create();
+
+	file.createFile();
+	vFile = f.listFiles();
+	vFolder = f.listFolders();
+
+	NOU::NOU_DAT_ALG::String8 tmpfile = vFile[0].getPath().getAbsolutePath().rawStr();
+	NOU::NOU_DAT_ALG::String8 tmpstr = vFolder[2].getPath().getAbsolutePath().rawStr();
+
+#if NOU_OS == NOU_OS_WINDOWS
+    IsTrue(tmpstr == cwdParentPath + str + "\\TestFolder");
+	IsTrue(tmpfile == cwdParentPath + str + "\\TestFile.txt");
+
+	a.remove(cwdParentPath + str + "\\TestFolder");
+#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
+	IsTrue(tmpstr == cwdParentPath + str + "/TestFolder");
+	IsTrue(tmpfile == cwdParentPath + str + "/TestFile.txt");
+
+	a.remove(a.getPath().getAbsolutePath().rawStr());
+#endif
+	file.deleteFile();
+	f.remove(f.getPath().getAbsolutePath().rawStr()
+	);
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
 TEST_METHOD(ErrorHandler)
 {
 NOU::NOU_CORE::ErrorHandler handler;
@@ -1069,11 +1116,28 @@ TEST_METHOD(Quicksort)
 	
 	NoCopyClass arrTest[5] = { NoCopyClass(2), NoCopyClass(1), NoCopyClass(3), NoCopyClass(5), NoCopyClass(4) };
 	NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, noCopyClassComparator);
+
+
+	/*Test arrTest[5] = { Test(2),Test(1),Test(3),Test(5),Test(4) };
+	NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, NOU::NOU_DAT_ALG::genericComparator<NOU::uint32>);
 	IsTrue(arrTest[0].get() == 1);
 	IsTrue(arrTest[1].get() == 2);
 	IsTrue(arrTest[2].get() == 3);
 	IsTrue(arrTest[3].get() == 4);
 	IsTrue(arrTest[4].get() == 5);
+
+
+int arr[5] = {2,1,3,5,4};
+NOU::NOU_DAT_ALG::qsort(arr, 0, 4, NOU::NOU_DAT_ALG::genericComparator<NOU::uint32>);
+IsTrue(arr[0] == 1);
+IsTrue(arr[1] == 2);
+IsTrue(arr[2] == 3);
+IsTrue(arr[3] == 4);
+IsTrue(arr[4] == 5);*/
+
+
+
+
 }
 
 TEST_METHOD(Random)
@@ -1082,9 +1146,9 @@ NOU::NOU_DAT_ALG::Random random;
 
 for (NOU::uint32 i = 0; i < 100; i++)
 {
-typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(0, 10);
+typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(3, 10);
 
-bool condition = rand >= 0 && rand <= 10;
+bool condition = rand >= 3 && rand <= 10;
 IsTrue(condition);
 }
 }
@@ -1158,10 +1222,18 @@ IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 dbgVec.push(gpa.allocateObjects<NOU::DebugClass>(1, testValue));
 gpa.deallocateObjects(dbgVec.at(0));
 dbgVec.pop();
+
+#ifdef NOU_DEBUG 
+
 gpa.deallocateObjects(dbgVec.at(0));
 
-IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 2);
 NOU::NOU_CORE::getErrorHandler().popError();
+NOU::NOU_CORE::getErrorHandler().popError();
+
+#else
+IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+#endif
 
 for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
 {
@@ -1552,7 +1624,7 @@ TEST_METHOD(HashMap)
 
 TEST_METHOD(BinarySearch)
 {
-NOU::NOU_DAT_ALG::Vector<NOU::sizeType> vec;
+NOU::NOU_DAT_ALG::Vector<NOU::int64> vec;
 vec.pushBack(1);
 vec.pushBack(5);
 vec.pushBack(13);
@@ -1561,7 +1633,7 @@ vec.pushBack(21);
 vec.pushBack(43);
 vec.pushBack(92);
 
-NOU::sizeType search_vals[] = { 1, 5, 19, 21, 92, 43, 103, 0};
+NOU::int64 search_vals[] = { 1, 5, 19, 21, 92, 43, 103, 0};
 
 
 IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[0], 0, vec.size() - 1) == 0);
@@ -1580,7 +1652,7 @@ IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[4], 0, -1) == 6);
 IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[5], 0, -1) == 5);
 IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[6], 0, -1) == -1);
 
-NOU::sizeType insertionIndex;
+NOU::int64 insertionIndex;
 
 NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1, &insertionIndex);
 IsTrue(insertionIndex == 4);
@@ -1817,9 +1889,12 @@ auto task2 = NOU::NOU_THREAD::makeTask(&taskTestFunction2, i2);
 
 task2.getResult();
 
+//error is only pushed in Debug
+#ifdef NOU_DEBUG
 IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
 IsTrue(NOU::NOU_CORE::getErrorHandler().popError().getID() ==
        NOU::NOU_CORE::ErrorCodes::INVALID_OBJECT);
+#endif
 
 task2.execute();
 
@@ -2244,9 +2319,9 @@ TEST_METHOD(INIFile)
 	parser.setInt("TEST_INT", 42);
 	IsTrue(parser.getInt("TEST_INT") == 42);
 
-	parser.setFloat("TEST_FLOAT", 13.37);
-	IsTrue(parser.getFloat("TEST_FLOAT") > 13.369);
-	IsTrue(parser.getFloat("TEST_FLOAT") < 13.381);
+	parser.setFloat("TEST_FLOAT", 13.37f);
+	IsTrue(parser.getFloat("TEST_FLOAT") > 13.369f);
+	IsTrue(parser.getFloat("TEST_FLOAT") < 13.381f);
 
 	parser.remove("TEST_STR");
 	IsTrue(parser.getString("TEST_STR").size() == 0);
@@ -2258,7 +2333,7 @@ TEST_METHOD(INIFile)
 
 	parser.remove("TEST_FLOAT");
 	IsTrue(parser.getFloat("TEST_FLOAT") < 0.1);
-	parser.setFloat("DEFAULT_TEST_FLOAT", 13.37);
+	parser.setFloat("DEFAULT_TEST_FLOAT", 13.37f);
 
 	parser.setString("TEST_STR", "Testing", "section");
 	IsTrue(parser.getString("TEST_STR", "section") == "Testing");
@@ -2266,9 +2341,9 @@ TEST_METHOD(INIFile)
 	parser.setInt("TEST_INT", 42, "section");
 	IsTrue(parser.getInt("TEST_INT", "section") == 42);
 
-	parser.setFloat("TEST_FLOAT", 13.37, "section");
-	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369);
-	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381);
+	parser.setFloat("TEST_FLOAT", 13.37f, "section");
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369f);
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381f);
 
 	IsTrue(parser.write("unittest.ini"));
 	IsTrue(parser.read());
@@ -2278,7 +2353,7 @@ TEST_METHOD(INIFile)
 
 	parser2.setString("TEST_STR2", "Testing");
 	parser2.setInt("TEST_INT2", 42);
-	parser2.setFloat("TEST_FLOAT2", 13.37);
+	parser2.setFloat("TEST_FLOAT2", 13.37f);
 
 	IsTrue(parser2.getDataType("TEST_STR2") == parser2.INI_TYPE_NouString);
 	IsTrue(parser2.getDataType("TEST_INT2") == parser2.INI_TYPE_INT);
