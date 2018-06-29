@@ -1552,11 +1552,11 @@ namespace NOU::NOU_DAT_ALG
                 counter++;
             }
 
-            for(sizeType i = end ; i < replacement.size(); i++)
-            {
-                insert(i,replacement[counter]);
-                counter++;
-            };
+           for(sizeType i = end ; i < replacement.size(); i++)
+           {
+               insert(i,replacement[counter]);
+               counter++;
+           };
 
         } else if(end - start == replacement.size())
         {
@@ -1584,8 +1584,9 @@ namespace NOU::NOU_DAT_ALG
 					counter2++;
 			}
 
-			insert(StringView<CHAR_TYPE>::size() - 1, StringView<CHAR_TYPE>::NULL_TERMINATOR);
             setSize((oldsize - (end - start)) + replacement.size());
+            insert(StringView<CHAR_TYPE>::size(), StringView<CHAR_TYPE>::NULL_TERMINATOR);
+            setSize(StringView<CHAR_TYPE>::size() - 1);
 		}
 
 		return *this;
