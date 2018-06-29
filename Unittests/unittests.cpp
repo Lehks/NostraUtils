@@ -1257,143 +1257,151 @@ NOU_CHECK_ERROR_HANDLER;
 
 TEST_METHOD(String)
 {
-NOU::NOU_DAT_ALG::String<NOU::char8> str;
+	NOU::NOU_DAT_ALG::String8 str1;
+	NOU::NOU_DAT_ALG::String8 str2 ("Hello");
+	NOU::NOU_DAT_ALG::String8 str3 ('H');
+	NOU::NOU_DAT_ALG::String8 str4 = "Hello";
+	NOU::NOU_DAT_ALG::String8 str5 = 4;
+	NOU::NOU_DAT_ALG::String8 str6 = 5.5;
+	NOU::NOU_DAT_ALG::String8 str7 (5);
+	NOU::NOU_DAT_ALG::String8 str8 (5.5);
+	NOU::NOU_DAT_ALG::String8 str9 = "HelloHello";
 
-str.append('a');
-IsTrue(str[0] == 'a');
+	//str2 used
+	//AT
+	IsTrue(str2.at(0) == 'H');
+	IsTrue(str2.at(1) == 'e');
+	IsTrue(str2.at(2) == 'l');
+	IsTrue(str2.at(3) == 'l');
+	IsTrue(str2.at(4) == 'o');
+	
+	IsTrue(str2.size() == 5);
 
-str.append("Hallo");
-IsTrue(str[1] == 'H');
+	//str1 used
+	//INSERT
+	str1.insert(0,'c');
+	str1.insert(1, "Name");
+	IsTrue(str1 == "cName");
+	IsTrue(str1.size() == 5);
+	str1.insert(0, 3);
+	str1.insert(0, 5.0);
+	IsTrue(str1 == "5.03cName");
+	IsTrue(str1.size() == 9);
 
-str.insert(0, 'A');
-IsTrue(str[0] == 'A');
+	//str3 used
+	//APPEND
+	str3.append('e');
+	IsTrue(str3 == "He");
+	IsTrue(str3.size() == 2);
+	str3.append("llo");
+	IsTrue(str3 == "Hello");
+	IsTrue(str3.size() == 5);
+	str3.append(20);
+	IsTrue(str3 == "Hello20");
+	IsTrue(str3.size() == 7);
+	str3.append(5.5);
+	IsTrue(str3 == "Hello205.5");
+	IsTrue(str3.size() == 10);
 
-str.appendIf(1, 'T');
-IsTrue(str[str.size() - 1] == 'T');
+	//str4 and str9 used
+	//REPLACE
+	NOU::sizeType index = 0;
+	str4.replace(index, 'h');							//index , char
+	IsTrue(str4 == "hello");
+	IsTrue(str4.size() == 5);
+	str4.replace('l', 'L');							//char, char
+	IsTrue(str4 == "heLLo");
+	IsTrue(str4.size() == 5);
+	
+	str9.replace("ll", "aa");						//str == str
+	IsTrue(str9 == "HeaaoHeaao");
+	IsTrue(str9.size() == 10);
+	str9.replace("aa", "lll");						//str < str 
+	IsTrue(str9 == "HellloHelllo");
+	IsTrue(str9.size() == 12);
+	str9.replace("lll", "a");						//str > str
+	IsTrue(str9 == "HeaoHeao");
+	IsTrue(str9.size() == 8);
+	//
+	//str9.replace(0, 4,"Hell");						// ==
+	//IsTrue(str9 == "HellHeao");
+	//IsTrue(str9.size() == 8);
+	//str9.replace(0, 4, "H");						// >
+	//IsTrue(str9 == "HHeao");
+	//IsTrue(str9.size() == 5);
+	//str9.replace(0, 4, "Hello");					// <
+	//IsTrue(str9 == "Helloo");
+	//IsTrue(str9.size() == 6);
+	//str9.replace(0, str9.size(), "Hello");
+	//IsTrue(str9 == "Hello");
+	//IsTrue(str9.size() == 5);
+	//
+	////str1 used
+	////CLEAR
+	//str1.clear();
+	//IsTrue(str1.size() == 0);
+	//
+	////str1 and str9 used
+	////COPYSUBSTRING -TO and -HERE
+	//str1.copySubstringHere(str9, 0, str9.size(), 0);
+	//IsTrue(str1 == "Hello");
+	//IsTrue(str1.size() == 5);
+	//
+	//str1.copySubstringTo(str9, 0, str1.size(), 0);
+	//IsTrue(str9 == "HelloHello");
+	//IsTrue(str9.size() == 10);
+	//
+	////str1 used
+	////FILL RANGE
+	//str1.fillRange('a', 0, str1.size());
+	//IsTrue(str1 == "aaaaa");
+	//IsTrue(str1.size() == 5);
+	//
+	////str1 used
+	////REMOVE
+	//str1.remove(0, str1.size());
+	//IsTrue(str1.size() == 0);
+	//
+	////str9 used
+	////PRESERVER
+	//str9.preserve(1,6);
+	//IsTrue(str9 == "elloH");
+	//IsTrue(str9.size() == 5);
+	//
+	////str9 used
+	////SUBSTRING
+	//NOU::NOU_DAT_ALG::String8 strTMP;
+	//strTMP = str9.substring(0, str9.size());
+	//IsTrue(strTMP == "elloH");
+	//IsTrue(strTMP.size() == 5);
+	//
+	////str9 used
+	////TO -LOWER and -UPPERCASE
+	//str9.toLowerCase();
+	//IsTrue(str9 == "elloh");
+	//IsTrue(str9.size() == 5);
+	//
+	//str9.toUpperCase();
+	//IsTrue(str9 == "ELLOH");
+	//IsTrue(str9.size() == 5);
+	//
+	////str9 used
+	////TRIM
+	//str9.clear();
+	//str9 = "   Hello       ";
+	//str9.trim();
+	//IsTrue(str9 == "Hello");
+	//IsTrue(str9.size() == 5);
+	//
+	////new str used
+	////BUFFER
+	//NOU::NOU_DAT_ALG::String8 strNEW(50,'a');
+	//strNEW.append('a');
+	//IsTrue(strNEW.getCapacity() == 50);
+	//strNEW.removeRemainingBufferFromString();
+	//IsTrue(strNEW.getCapacity() == 2);
 
-str.append(2);
-IsTrue(str[str.size() - 1] == '2');
-
-str.append(-1);
-IsTrue(str[str.size() - 2] == '-');
-IsTrue(str[str.size() - 1] == '1');
-
-NOU::sizeType i = 0; // becasue of NULLTERMINATOR
-str.clear();
-IsTrue(str.size() == i);
-
-str.append("Hallo Welt");
-str.replace('l', 'V', 0, str.size() - 1);
-IsTrue(str[2] == 'V');
-IsTrue(str[3] == 'V');
-IsTrue(str[8] == 'V');
-
-str.clear();
-str.append(17.025);
-IsTrue(str[0] == '1');
-IsTrue(str[1] == '7');
-IsTrue(str[2] == '.');
-IsTrue(str[3] == '0');
-IsTrue(str[4] == '2');
-IsTrue(str[5] == '5');
-
-str.remove(2, str.size());
-IsTrue(str[0] == '1');
-IsTrue(str[1] == '7');
-
-NOU::NOU_DAT_ALG::String<NOU::char8> substr;
-
-substr.append(str.substring(0, 1));
-IsTrue(str[0] == '1');
-
-substr.clear();
-substr.append(str.copy());
-IsTrue(str[0] == '1');
-IsTrue(str[1] == '7');
-substr.clear();
-str.clear();
-substr.append("AAAAA");
-str.append("Hallo");
-
-NOU::NOU_DAT_ALG::String<NOU::char8> str1;
-NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "Hallo";
-
-str1 = str2;
-IsTrue(str1 == "Hallo");
-
-str1 = "User";
-IsTrue(str1 == "User");
-
-NOU::NOU_DAT_ALG::String<NOU::char8> str3 = str1.substring(0, 2);
-IsTrue(str3 == "Us");
-
-str1 = str3.fillRange('a', 0, 2);
-IsTrue(str1 == "aa");
-
-str1 = "NostraUtils";
-
-str3 = str1.preserve(6, 11);
-IsTrue(str3 == "Utils");
-
-str1 = "";
-
-str2 = str1.concat("Hallo");
-IsTrue(str2 == "Hallo");
-str1 = str2.concat(1);
-IsTrue(str1 == "Hallo1");
-str2 = str1.concat('a');
-IsTrue(str2 == "Hallo1a");
-str1 = str2.concat(1.3);
-IsTrue(str1 == "Hallo1a1.3");
-
-str1 = "User";
-str2 = "Hallo";
-
-str1.copySubstringTo(str2, 0,4,5);
-IsTrue(str2 == "HalloUser");
-
-str1 = "User";
-str1.copySubstringHere("Hallo",0,5,0);
-IsTrue(str1 == "HalloUser");
-
-str1.replace(0, 9, "wasgeht");
-IsTrue(str1 == "wasgeht");
-
-str1 = "ThisIsAString";
-str1.replace("String", "Integer");
-IsTrue(str1 == "ThisIsAInteger");
-
-str1 = "ThisIsAString";
-str1.replace("String", "Intege");
-IsTrue(str1 == "ThisIsAIntege");
-
-str1 = "ThisIsAString";
-str1.replace("AString", "Intege");
-IsTrue(str1 == "ThisIsIntege");
-
-
-str1 = "ThisIsAString";
-str1.replace(0, 7, "Integer");
-IsTrue(str1 == "IntegerString");
-
-str1 = "ThisIsAString";
-str1.replace(0,13, "Integer");
-IsTrue(str1 == "Integer");
-
-str1 = "ThisIsAString";
-str1.replace(0, 5, "Integer");
-IsTrue(str1 == "IntegersAString");
-
-NOU::NOU_DAT_ALG::String8 newstr(50, 'b');
-IsTrue(newstr.getCapacity() == 50);
-
-newstr.appendBuffer(10);
-IsTrue(newstr.getCapacity() == 60);
-
-newstr.removeRemainingBufferFromString();
-IsTrue(newstr.getCapacity() == 1);
-
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(BinaryHeap)
