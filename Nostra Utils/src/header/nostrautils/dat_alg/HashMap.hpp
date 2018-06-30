@@ -15,7 +15,7 @@
 \author  Dennis Franz
 \author  Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides a HashMap implementation.
 */
 
@@ -156,6 +156,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param key   The key to map the value to.
 		\param value The value that will be mapped to the key.
+		\param comp The comparator that will used to compare keys.
 
 		\return True, if the key-value-pair could be put into the map, false if not. As of now, the method
 		will always return true.
@@ -294,7 +295,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\return The value that is mapped to \p key.
 
-		\brief Returns the value that is mapped to \p key, or an invalid value if no value is mapped to the
+		\brief Returns the value that is mapped to \p key, or an invalid value if no value is mapped to the	
 		key (see detailed section).
 
 		\details

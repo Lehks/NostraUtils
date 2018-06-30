@@ -13,7 +13,7 @@
 \author  Leslie Marxen
 \author	 Lukas Gross
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides very basic file i/o implementations
 */
 namespace NOU::NOU_FILE_MNGT
@@ -40,19 +40,17 @@ namespace NOU::NOU_FILE_MNGT
 	/**
 	\brief Class that handles very basic i/o on a single file.
 	*/
-	class NOU_CLASS File
+	class File
 	{
 	private:
 		const static sizeType INVALID_SIZE;
 
 		/**
-		 \param file     The file handle of the opened file. This is an output parameter.
-		 \param filename The name of the file to open.
 		 \param mode     The mode to open the file with.
 
 		 \brief Wraps around either fopen() on POSIX systems or fopen_s() on a Windows system.
 		*/
-		void openStream(const char8 *mode);
+		NOU_FUNC void openStream(const char8 *mode);
 
 		/**
 		\brief File stream of the opened File.
@@ -83,7 +81,7 @@ namespace NOU::NOU_FILE_MNGT
 		
 		\brief Constructor of the File class.
 		*/
-		File(const Path &path);
+		NOU_FUNC File(const Path &path);
 		
 		/**
 		\param other The object to copy.
@@ -97,19 +95,19 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief Move-constructor of the File class.
 		*/
-		File(File &&other);
+		NOU_FUNC File(File &&other);
 
 		/**
 		\brief Destructor of the File Class.
 		*/
-		~File();
+		NOU_FUNC ~File();
 
 		/**
 		\return The read byte.
 
 		\brief Reads a single byte from the file.
 		*/
-		byte read();
+		NOU_FUNC byte read();
 
 		/**
 		\param size   The size of the buffer.
@@ -117,7 +115,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief reads a string of given size
 		*/
-		sizeType read(sizeType size, char8 *buffer);
+		NOU_FUNC sizeType read(sizeType size, char8 *buffer);
 
 		/**
 		\param buffer A reference to a string where the read data will be written to.
@@ -125,7 +123,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief reads the whole file into a string.
 		*/
-		void read(NOU::NOU_DAT_ALG::String8 &buffer, sizeType size = 0);
+		NOU_FUNC void read(NOU::NOU_DAT_ALG::String8 &buffer, sizeType size = 0);
 
 		/**
 		\param b The byte to write.
@@ -134,7 +132,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief Writes a single byte into a file according to the i/o mode that is set.
 		*/
-		boolean write(byte b);
+		NOU_FUNC boolean write(byte b);
 
 
 		/**
@@ -144,26 +142,26 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief Writes a string into a file.
 		*/
-		boolean write(const NOU::NOU_DAT_ALG::StringView8 &s);
+		NOU_FUNC boolean write(const NOU::NOU_DAT_ALG::StringView8 &s);
 
 		/**
 		\return True if successfully opened, false if otherwise.
 
 		\brief Opens the internal file stream.
 		*/
-		boolean open(AccessMode mode = AccessMode::READ_WRITE);
+		NOU_FUNC boolean open(AccessMode mode = AccessMode::READ_WRITE);
 
 		/**
 		\return True if successfully closed, false if otherwise.
 
 		\brief Closes the internal file stream.
 		*/
-		boolean close();
+		NOU_FUNC boolean close();
 
 		/**
 		\brief Creates the file if not already existing.
 		*/
-		void createFile();
+		NOU_FUNC void createFile();
 
 		/** 
 		\return True if currently opened, false if not.
@@ -171,49 +169,49 @@ namespace NOU::NOU_FILE_MNGT
 		\brief Checks if the file stream is opened.
 		*/
 
-		boolean isCurrentlyOpen();
+		NOU_FUNC boolean isCurrentlyOpen();
 
 		/**
 		\return Returns the current access mode of the file.
 
 		\brief Getter for the access mode that was used the last time.
 		*/
-		const AccessMode& getMode();
+		NOU_FUNC const AccessMode& getMode();
 
 		/**
 		\return Returns the path of the object.
 
 		\brief Getter for the object path.
 		*/
-		const Path& getPath();
+		NOU_FUNC const Path& getPath();
 
 		/**
 		\return The data stream.
 
 		\brief Getter for data stream.
 		*/
-		FILE* getData(); 
+		NOU_FUNC FILE* getData();
 
 		/**
 		\return True if file exists, false otherwise.
 
 		\brief Checks if a file is already existing according to the set path.
 		*/
-		boolean exists();
+		NOU_FUNC boolean exists();
 
 		/**
 		\return The size of the file in bytes.
 		
 		\brief Returns the file size in bytes, pushes an error if the file is not existent.
 		*/
-		sizeType size();
+		NOU_FUNC sizeType size();
 
 		/**
 		\return True if successfully deleted, false if otherwise.
 		
 		\brief Deletes the corresponding file.
 		*/
-		boolean deleteFile();
+		NOU_FUNC boolean deleteFile();
 
 	private:
 
@@ -224,7 +222,7 @@ namespace NOU::NOU_FILE_MNGT
 		
 		\brief Setter for AccessMode
 		*/
-		boolean setMode(AccessMode mode);
+		NOU_FUNC boolean setMode(AccessMode mode);
 	};
 }
 

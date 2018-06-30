@@ -3,13 +3,41 @@
 ## Version 1.0.1
 
 ### Features
-- None
+
+- **Additions**
+    - Added NOU_EXPORT_FUNC and NOU_IMPORT_FUNC.
+    - Added a functionality to remove folders to the folder class.
+
+- **Deletions**
+    - Removed NOU_CLASS.
+
+- **Deprecations**
+    - None
 
 ### Improvements
 - Improved logging queue process.
+- Improved Hash function support for arrays.
+- Improved HashMap support for only movable/copyable classes.
+- Improved CMake build process. The library should now work better when build as a sub-project of another 
+  project.
+- Improved String Replace and Insert method's.
+- Added an empty static const string member variable to the string.
+- Changed the return type of NOU\::NOU_FILE_MGNT\::Folder\::listFiles(). The function now returns a vector of
+  files instead of folders.
 
 ### Fixes
 - Fixed a wrong attribute type that resulted in an incorrect display of logging messages.
+- Fixed pure virtual method call when terminating all applications using the logging system.
+- Fixed a bug where the HashMap seemed to return random values.
+- Fixed an issue where the fast queue would crash when memory allocation failed.
+- Fixed an issue where the replace function didn't do what it supposed to do.
+- Fixed an issue where the trim method in the string didn't recognized some spaces.
+- Fixed an issue where the path in the Folder wasn't correct 
+- Fixed an issue where the quicksort wouldn't work with comparators.
+- Fixed an issue, where the returned values of NOU\::NOU_FILE_MGNT\::Folder\::listFiles() and ::listFolders() 
+  would have the wrong path.
+  
+
 
 ## Version 1.0.0
 

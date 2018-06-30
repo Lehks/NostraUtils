@@ -1,14 +1,21 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
-project("NostraUtilsTests" CXX)
+project(NostraUtilsTests CXX)
 
-include_directories("${PROJECT_SOURCE_DIR}/../Nostra Utils/src/header")
+option(NOU_GENERATE_TESTS "Enables or disables generation of the Unit-Tests." OFF)
+option(NOU_UNITTEST_COLOR "Enables or disables color in the Unit-Test output. \
+										This variable has only an effect, if NOU_GENERATE_TESTS is ON." ON)
 
 # Build Test-Executable
-add_executable("${NOU_UNIT_TEST_NAME}" "unittests.cpp" "DebugClass.cpp")
+add_executable(NostraUtilsUnitTests unittests.cpp DebugClass.cpp)
 
 # Link against NOU 
-target_link_libraries("${NOU_UNIT_TEST_NAME}" "${NOU_LIB_NAME}")
-add_dependencies("${NOU_UNIT_TEST_NAME}" "${NOU_LIB_NAME}")
+target_link_libraries(NostraUtilsUnitTests Nostra::Utils)
 
-install(TARGETS "${NOU_UNIT_TEST_NAME}" DESTINATION "bin")
+if(NOT NOU_UNITTEST_COLOR)
+	target_compile_definitions(NostraUtilsUnitTests 
+		PRIVATE	
+			CATCH_CONFIG_COLOUR_NONE)
+endif()
+
+install(TARGETS NostraUtilsUnitTests DESTINATION "bin")

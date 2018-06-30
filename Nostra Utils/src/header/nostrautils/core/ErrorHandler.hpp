@@ -9,7 +9,7 @@
 \file core/ErrorHandler.hpp
 
 \author	 Lukas Gross
-\version 1.0.0
+\version 1.0.1
 \since	 1.0.0
 
 \brief A file that contains the nostra::utils::core::ErrorHandler class.
@@ -26,7 +26,7 @@ namespace NOU::NOU_CORE
 	/**
 	\brief Defines an error location object with its attributes and functions.
 	*/
-	class NOU_CLASS ErrorLocation
+	class ErrorLocation
 	{
 	public:
 
@@ -76,7 +76,7 @@ namespace NOU::NOU_CORE
 
 		\brief			Constructs a new ErrorLocation 
 		*/
-		ErrorLocation(const StringType &fnName, sizeType line, const StringType &file,
+		NOU_FUNC ErrorLocation(const StringType &fnName, sizeType line, const StringType &file,
 			ErrorType id, const StringType &msg);
 
 		/**
@@ -84,55 +84,55 @@ namespace NOU::NOU_CORE
 
 		\brief	Returns the name of the function in which the error occurred.
 		*/
-		const StringType& getFnName() const;
+		NOU_FUNC const StringType& getFnName() const;
 
 		/**
 		\return Returns the line.
 		
 		\brief	Returns the line in which the error occurred.
 		*/
-		sizeType getLine() const;
+		NOU_FUNC sizeType getLine() const;
 
 		/**
 		\return Returns the file.
 		
 		\brief	Returns the file in which the error occurred.
 		*/
-		const StringType& getFile() const;
+		NOU_FUNC const StringType& getFile() const;
 
 		/**
 		\return Returns the id code.
 		
 		\brief	Returns the id of the error, or ErrorCodes::UNKNOWN_ERROR if the error is not known.
 		*/
-		ErrorType getID() const;
+		NOU_FUNC ErrorType getID() const;
 
 		/**
 		\brief Returns the error code that was actually set. If the set error code is a valid one, this will
 		       be the same as getId(), but if the code is invalid (not part of any error pool) the returned 
 			   code will be the error that was set, not ErrorCodes::UNKNOWN_ERROR.
 		*/
-		ErrorType getActualID() const;
+		NOU_FUNC ErrorType getActualID() const;
 
 		/**
 		\return Returns the error message.
 		
 		\brief	Returns the error message of the error.
 		*/
-		const StringType& getMsg() const;
+		NOU_FUNC const StringType& getMsg() const;
 
 		/**
 		\return The name of the error as a string.
 
 		\brief	Returns the name of the error as provided by ErrorHandler::getError().getName().
 		*/
-		const StringType& getName() const;
+		NOU_FUNC const StringType& getName() const;
 	};
 
 	/**
 	\brief Defines an error object with its attributes and functions.
 	*/
-	class NOU_CLASS Error
+	class Error
 	{
 	public:
 
@@ -166,28 +166,28 @@ namespace NOU::NOU_CORE
 
 		\brief		Constructs a new error.
 		*/
-		Error(const StringType &name, ErrorType id);
+		NOU_FUNC Error(const StringType &name, ErrorType id);
 
 		/**
 		\return Returns the name.
 
 		\brief	Returns the name of the error object.
 		*/
-		const StringType& getName() const;
+		NOU_FUNC const StringType& getName() const;
 
 		/**
 		\return Returns the id.
 
 		\brief Returns the id of the error object.
 		*/
-		ErrorType getID() const;
+		NOU_FUNC ErrorType getID() const;
 	};
 
 	/**
 	\brief Defines the ErrorPool interface. This interface is used to provide new errors for the 
 	       ErrorHandler.
 	*/
-	class NOU_CLASS ErrorPool
+	class ErrorPool
 	{
 	public:
 
