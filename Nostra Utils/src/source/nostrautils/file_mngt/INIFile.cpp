@@ -340,7 +340,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	INIFile::NouString INIFile::getString(const NouString & key, const NouString & section)
+	const INIFile::NouString& INIFile::getString(const NouString & key, const NouString & section) const
 	{
 		const NouString search = section + "." + key;
 
@@ -358,11 +358,11 @@ namespace NOU::NOU_FILE_MNGT
 			return NouString(this->getFloat(key, section));
 		}
 
-		return NouString();
+		return NOU_DAT_ALG::String8::EMPTY_STRING;
 	}
 
 
-	int32 INIFile::getInt(const NouString & key, const NouString & section)
+	int32 INIFile::getInt(const NouString & key, const NouString & section) const
 	{
 		const NouString search = section + "." + key;
 
@@ -384,7 +384,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	float32 INIFile::getFloat(const NouString & key, const NouString & section)
+	float32 INIFile::getFloat(const NouString & key, const NouString & section) const
 	{
 		const NouString search = section + "." + key;
 
@@ -406,7 +406,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean INIFile::keyExists(const NouString & key, const NouString & section)
+	boolean INIFile::keyExists(const NouString & key, const NouString & section) const
 	{
 		NouString search = NouString(section + "." + key);
 
@@ -414,7 +414,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	NOU::NOU_DAT_ALG::HashMap<INIFile::NouString, INIFile::NouString> INIFile::getKeys()
+	NOU::NOU_DAT_ALG::HashMap<INIFile::NouString, INIFile::NouString> INIFile::getKeys() const
 	{
 		NOU::NOU_DAT_ALG::HashMap<NouString, NouString> keys = NOU::NOU_DAT_ALG::HashMap<NouString, NouString>();
 
@@ -475,7 +475,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	int32 INIFile::getDataType(const NouString &key, const NouString & section)
+	int32 INIFile::getDataType(const NouString &key, const NouString & section) const
 	{
 		NouString search = section + "." + key;
 
