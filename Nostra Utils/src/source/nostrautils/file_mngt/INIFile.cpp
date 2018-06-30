@@ -340,7 +340,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	const INIFile::NouString& INIFile::getString(const NouString & key, const NouString & section) const
+	INIFile::NouString INIFile::getString(const NouString & key, const NouString & section) const
 	{
 		const NouString search = section + "." + key;
 

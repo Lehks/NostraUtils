@@ -187,7 +187,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as NouString.
 			*/
-			NOU_FUNC const NouString& getString(const NouString & key, const NouString & section = INI_DEFAULT_SECTION) const;
+			NOU_FUNC NouString getString(const NouString & key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param  key     The key to search
