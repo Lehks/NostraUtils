@@ -1465,7 +1465,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = StringView<CHAR_TYPE>::m_size;
 
-		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() + 1|| end > StringView<CHAR_TYPE>::size() + 1),
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() || end > StringView<CHAR_TYPE>::size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
@@ -1485,7 +1485,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = StringView<CHAR_TYPE>::size();
 
-		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() + 1|| end > StringView<CHAR_TYPE>::size() + 1),
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() || end > StringView<CHAR_TYPE>::size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 
@@ -1518,7 +1518,8 @@ namespace NOU::NOU_DAT_ALG
                     sizeType counter = 0;
                     sizeType counter2 = 0;
 
-                    for (sizeType j = i; j < oldsize; j++) {
+
+                    for (sizeType j = i; j < oldsize - (target.size() - replacement.size()); j++) {
                         if (counter < replacement.size()) {
                             replace(j, replacement[counter]);
                             counter++;
@@ -1544,7 +1545,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = StringView<CHAR_TYPE>::size();
 
-		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() + 1 || end > StringView<CHAR_TYPE>::size() + 1),
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() || end > StringView<CHAR_TYPE>::size()),
 							NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		if(end - start < replacement.size())
@@ -1729,7 +1730,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX || end > StringView<CHAR_TYPE>::size())
 			end = StringView<CHAR_TYPE>::size();
 
-		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() + 1|| end > StringView<CHAR_TYPE>::size() + 1),
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() || end > StringView<CHAR_TYPE>::size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = 0; i < StringView<CHAR_TYPE>::size(); i++)

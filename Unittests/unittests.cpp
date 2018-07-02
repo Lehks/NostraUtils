@@ -976,7 +976,7 @@ TEST_METHOD(Folder)
 	NOU::NOU_DAT_ALG::String8 tmpstr = vFolder[2].getPath().getAbsolutePath().rawStr();
 
 #if NOU_OS == NOU_OS_WINDOWS
-    IsTrue(tmpstr == cwdParentPath + str + "\\TestFolder");
+   IsTrue(tmpstr == cwdParentPath + str + "\\TestFolder");
 	IsTrue(tmpfile == cwdParentPath + str + "\\TestFile.txt");
 
 	a.remove(cwdParentPath + str + "\\TestFolder");
@@ -1322,84 +1322,84 @@ TEST_METHOD(String)
 	str9.replace("lll", "a");						//str > str
 	IsTrue(str9 == "HeaoHeao");
 	IsTrue(str9.size() == 8);
-	//
-	//str9.replace(0, 4,"Hell");						// ==
-	//IsTrue(str9 == "HellHeao");
-	//IsTrue(str9.size() == 8);
-	//str9.replace(0, 4, "H");						// >
-	//IsTrue(str9 == "HHeao");
-	//IsTrue(str9.size() == 5);
-	//str9.replace(0, 4, "Hello");					// <
-	//IsTrue(str9 == "Helloo");
-	//IsTrue(str9.size() == 6);
-	//str9.replace(0, str9.size(), "Hello");
-	//IsTrue(str9 == "Hello");
-	//IsTrue(str9.size() == 5);
-	//
-	////str1 used
-	////CLEAR
-	//str1.clear();
-	//IsTrue(str1.size() == 0);
-	//
-	////str1 and str9 used
-	////COPYSUBSTRING -TO and -HERE
-	//str1.copySubstringHere(str9, 0, str9.size(), 0);
-	//IsTrue(str1 == "Hello");
-	//IsTrue(str1.size() == 5);
-	//
-	//str1.copySubstringTo(str9, 0, str1.size(), 0);
-	//IsTrue(str9 == "HelloHello");
-	//IsTrue(str9.size() == 10);
-	//
-	////str1 used
-	////FILL RANGE
-	//str1.fillRange('a', 0, str1.size());
-	//IsTrue(str1 == "aaaaa");
-	//IsTrue(str1.size() == 5);
-	//
-	////str1 used
-	////REMOVE
-	//str1.remove(0, str1.size());
-	//IsTrue(str1.size() == 0);
-	//
-	////str9 used
-	////PRESERVER
-	//str9.preserve(1,6);
-	//IsTrue(str9 == "elloH");
-	//IsTrue(str9.size() == 5);
-	//
-	////str9 used
-	////SUBSTRING
-	//NOU::NOU_DAT_ALG::String8 strTMP;
-	//strTMP = str9.substring(0, str9.size());
-	//IsTrue(strTMP == "elloH");
-	//IsTrue(strTMP.size() == 5);
-	//
-	////str9 used
-	////TO -LOWER and -UPPERCASE
-	//str9.toLowerCase();
-	//IsTrue(str9 == "elloh");
-	//IsTrue(str9.size() == 5);
-	//
-	//str9.toUpperCase();
-	//IsTrue(str9 == "ELLOH");
-	//IsTrue(str9.size() == 5);
-	//
-	////str9 used
-	////TRIM
-	//str9.clear();
-	//str9 = "   Hello       ";
-	//str9.trim();
-	//IsTrue(str9 == "Hello");
-	//IsTrue(str9.size() == 5);
-	//
-	////new str used
-	////BUFFER
-	//NOU::NOU_DAT_ALG::String8 strNEW(50,'a');
-	//strNEW.append('a');
-	//IsTrue(strNEW.getCapacity() == 50);
-	//strNEW.removeRemainingBufferFromString();
-	//IsTrue(strNEW.getCapacity() == 2);
+
+	str9.replace(0, 4,"Hell");						// ==
+	IsTrue(str9 == "HellHeao");
+	IsTrue(str9.size() == 8);
+	str9.replace(0, 4, "H");						// >
+	IsTrue(str9 == "HHeao");
+	IsTrue(str9.size() == 5);
+	str9.replace(0, 4, "Hello");					// <
+	IsTrue(str9 == "Helloo");
+	IsTrue(str9.size() == 6);
+	str9.replace(0, str9.size(), "Hello");
+	IsTrue(str9 == "Hello");
+	IsTrue(str9.size() == 5);
+
+	//str1 used
+	//CLEAR
+	str1.clear();
+	IsTrue(str1.size() == 0);
+
+	//str1 and str9 used
+	//COPYSUBSTRING -TO and -HERE
+	str1.copySubstringHere(str9, 0, str9.size(), 0);
+	IsTrue(str1 == "Hello");
+	IsTrue(str1.size() == 5);
+
+	str1.copySubstringTo(str9, 0, str1.size(), 0);
+	IsTrue(str9 == "HelloHello");
+	IsTrue(str9.size() == 10);
+
+	//str1 used
+	//FILL RANGE
+	str1.fillRange('a', 0, str1.size());
+	IsTrue(str1 == "aaaaa");
+	IsTrue(str1.size() == 5);
+
+	//str1 used
+	//REMOVE
+	str1.remove(0, str1.size());
+	IsTrue(str1.size() == 0);
+
+	//str9 used
+	//PRESERVER
+	str9.preserve(1,6);
+	IsTrue(str9 == "elloH");
+	IsTrue(str9.size() == 5);
+
+	//str9 used
+	//SUBSTRING
+	NOU::NOU_DAT_ALG::String8 strTMP;
+	strTMP = str9.substring(0, str9.size());
+	IsTrue(strTMP == "elloH");
+	IsTrue(strTMP.size() == 5);
+
+	//str9 used
+	//TO -LOWER and -UPPERCASE
+	str9.toLowerCase();
+	IsTrue(str9 == "elloh");
+	IsTrue(str9.size() == 5);
+
+	str9.toUpperCase();
+	IsTrue(str9 == "ELLOH");
+	IsTrue(str9.size() == 5);
+
+	//str9 used
+	//TRIM
+	str9.clear();
+	str9 = "   Hello       ";
+	str9.trim();
+	IsTrue(str9 == "Hello");
+	IsTrue(str9.size() == 5);
+
+	//new str used
+	//BUFFER
+	NOU::NOU_DAT_ALG::String8 strNEW(50,'a');
+	strNEW.append('a');
+	IsTrue(strNEW.getCapacity() == 50);
+	strNEW.removeRemainingBufferFromString();
+	IsTrue(strNEW.getCapacity() == 2);
 
 	NOU_CHECK_ERROR_HANDLER;
 }
