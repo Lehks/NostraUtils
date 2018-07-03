@@ -27,48 +27,48 @@ configure_file("src/header/nostrautils/core/Config.hpp.in"
 
 set(CMAKE_DEBUG_POSTFIX "-dbg")
 
-add_library(NostraUtilsDgb SHARED ${NOU_SOURCE_FILES})
-add_library(Nostra::UtilsDbg ALIAS NostraUtilsDgb)
+add_library(UtilsDgb SHARED ${NOU_SOURCE_FILES})
+add_library(Nostra::UtilsDbg ALIAS UtilsDgb)
 
-target_link_libraries(NostraUtilsDgb
+target_link_libraries(UtilsDgb
 	PRIVATE 
 		Threads::Threads)
 
-target_include_directories(NostraUtilsDgb
+target_include_directories(UtilsDgb
 	PUBLIC 
 		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/header>"
 		"$<INSTALL_INTERFACE:include>")
 
-target_compile_definitions(NostraUtilsDgb
+target_compile_definitions(UtilsDgb
 	INTERFACE
 		"NOU_DLL")
 
-target_compile_definitions(NostraUtilsDgb
+target_compile_definitions(UtilsDgb
 	PUBLIC
 		"NOU_DEBUG")
 
-target_compile_features(NostraUtilsDgb
+target_compile_features(UtilsDgb
 	PUBLIC 
 		cxx_std_17)
 
 if(MSVC)
-	target_compile_options(NostraUtilsDgb
+	target_compile_options(UtilsDgb
 		PRIVATE
 			"/wd4251"
 			"/WX")
 else()
-	target_compile_options(NostraUtilsDgb
+	target_compile_options(UtilsDgb
 		PRIVATE
 			"-Werror")
 endif()
 
 if(${NOU_CPP14_COMPATIBILITY})
-	target_compile_definitions(NostraUtilsDgb
+	target_compile_definitions(UtilsDgb
 		PUBLIC
 			NOU_CPP14_COMPATIBILITY)
 endif()
 
-install(TARGETS NostraUtilsDgb EXPORT NostraUtilsTargets
+install(TARGETS UtilsDgb EXPORT UtilsTargets
 	RUNTIME  DESTINATION "bin"
 	LIBRARY  DESTINATION "lib"
 	ARCHIVE  DESTINATION "lib"
@@ -76,44 +76,44 @@ install(TARGETS NostraUtilsDgb EXPORT NostraUtilsTargets
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDbgInfo")
 
-	add_library(NostraUtils SHARED ${NOU_SOURCE_FILES})
-	add_library(Nostra::Utils ALIAS NostraUtils)
+	add_library(Utils SHARED ${NOU_SOURCE_FILES})
+	add_library(Nostra::Utils ALIAS Utils)
 	
-	target_link_libraries(NostraUtils
+	target_link_libraries(Utils
 		PRIVATE 
 			Threads::Threads)
 	
-	target_include_directories(NostraUtils
+	target_include_directories(Utils
 		PUBLIC 
 			"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/header>"
 			"$<INSTALL_INTERFACE:include>")
 	
-	target_compile_definitions(NostraUtils
+	target_compile_definitions(Utils
 		INTERFACE
 			"NOU_DLL")
 	
-	target_compile_features(NostraUtils
+	target_compile_features(Utils
 		PUBLIC 
 			cxx_std_17)
 	
 	if(MSVC)
-		target_compile_options(NostraUtils
+		target_compile_options(Utils
 			PRIVATE
 				"/wd4251"
 				"/WX")
 	else()
-		target_compile_options(NostraUtils
+		target_compile_options(Utils
 			PRIVATE
 				"-Werror")
 	endif()
 	
 	if(${NOU_CPP14_COMPATIBILITY})
-		target_compile_definitions(NostraUtils
+		target_compile_definitions(Utils
 			PUBLIC
 				NOU_CPP14_COMPATIBILITY)
 	endif()
 	
-	install(TARGETS NostraUtils EXPORT NostraUtilsTargets
+	install(TARGETS Utils EXPORT UtilsTargets
 		RUNTIME  DESTINATION "bin"
 		LIBRARY  DESTINATION "lib"
 		ARCHIVE  DESTINATION "lib"

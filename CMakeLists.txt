@@ -44,28 +44,28 @@ write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfigV
 	VERSION "${NostraUtils_VERSION}"
 	COMPATIBILITY AnyNewerVersion)
 
-export(EXPORT NostraUtilsTargets
+export(EXPORT UtilsTargets
 	FILE "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake"
 	NAMESPACE Nostra::)
 
 configure_file("cmake/NostraUtilsConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake" COPYONLY)
 
-set(ConfigPackageLocation "lib/cmake/NostraUtils")
+set(CONFIG_PACKAGE_LOCATION "lib/cmake/NostraUtils")
 
-install(EXPORT NostraUtilsTargets
+install(EXPORT UtilsTargets
 	FILE
 		NostraUtilsConfig.cmake
 	NAMESPACE
 		Nostra::
 	DESTINATION
-		${ConfigPackageLocation})
+		${CONFIG_PACKAGE_LOCATION})
 
 install(
   FILES
     cmake/NostraUtilsConfig.cmake
     "${CMAKE_CURRENT_BINARY_DIR}/NostraUtilsConfig.cmake"
   DESTINATION
-    ${ConfigPackageLocation}
+    ${CONFIG_PACKAGE_LOCATION}
   COMPONENT
     Develop
 )
