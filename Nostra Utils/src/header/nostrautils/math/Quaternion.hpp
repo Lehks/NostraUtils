@@ -70,7 +70,9 @@ namespace NOU::NOU_MATH
 	};
 
 
-
+	/*
+	\Initializes a new instance of the Quaternion class.
+	*/
 	template<typename T>
 	Quaternion::Quaternion(T &x, T &y, T &z, T &w) {
 		m_x = x; // Initialisierung der X Axe
@@ -91,19 +93,30 @@ namespace NOU::NOU_MATH
 		m_w = cosHalfAngle;
 	}
 
+	/*
+	\Returns the length of a quaternion;
+	*/
 	template<typename T>
 	T Quaternion::Length()
 	{
 		return sqrt(m_x * m_x + m_y * m_y + m_z * m_z + m_w * m_w);
 	}
 
+	/*
+	\Returns the normal of a quaternion.
+	*/
 	template<typename T>
 	Quaternion Quaternion::normalized()
 	{
 		T length = Length();
 		return  Quaternion(m_x / length, m_y / length, m_z / length, m_w / length);
 	}
-
+	/*
+	\Returns the conjugate of a quaternion.
+	/
+	\Given a quaternion (x, y, z, w),
+	/the Conjugate method returns the quaternion (-x, -y, -z, w).
+	*/
 	template<typename T>
 	Quaternion Quaternion::conjugate()
 	{
@@ -118,6 +131,10 @@ namespace NOU::NOU_MATH
 
 	/*
 	\Product of two quaternions
+	/
+	\The result represents the rotation m1 followed by the rotation m2 (return value = m1 * m2).
+	This is done so that Multiply maintains the same semantics as Matrix,
+	because unit quaternions can be considered as another way of representing rotation matrices.
 	*/
 
 	template<typename T>
@@ -142,7 +159,9 @@ namespace NOU::NOU_MATH
 		return  Quaternion(X, Y, Z, W);
 	}
 
-
+	/*
+	\Subtracts two quaternion instances.
+	*/
 	Quaternion Quaternion::sub(const Quaternion &r)
 	{
 		return Quaternion(m_x - r.getM_x(), m_y - r.getM_y(), m_z - r.getM_z(), m_w - r.getM_w());
@@ -164,12 +183,18 @@ namespace NOU::NOU_MATH
 		return  Matrix4f().InitRotation(forward, up, right);
 	}
 
+	/*
+	\Returns the dot product of two quaternions.
+	*/
 	template<typename T>
 	T Quaternion::dot(const Quaternion &r)
 	{
 		return m_x * r.getM_x() + m_y * r.getM_y() + m_z * r.getM_z() + m_w * r.getM_w();
 	}
+	/*
+	\Interpolates between two quaternions, using spherical linear interpolation.
 
+	*/
 	template<typename T>
 	Quaternion Quaternion::nLerp(Quaternion dest, T lerpFactor, T shortest)
 	{
@@ -181,7 +206,10 @@ namespace NOU::NOU_MATH
 		return correctedDest.sub().mul(lerpFactor).add().Normalized();
 	}
 
-
+	/*
+	\Builds a quaternion with the given yaw, pitch, and roll.
+	
+	*/
 	template<typename T, sizeType R, sizeType C>
 	Quaternion::Quaternion(Matrix<T, R, C> rot)
 	{
