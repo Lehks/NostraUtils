@@ -161,7 +161,7 @@ namespace NOU::NOU_FILE_MNGT
 			}
 		}
 
-		closedir(dirp);#
+		closedir(dirp);
 
 #endif
 		return v;
