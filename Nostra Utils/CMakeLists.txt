@@ -23,7 +23,7 @@ find_package(Threads REQUIRED)
 file(GLOB_RECURSE NOU_SOURCE_FILES "src/source/nostrautils/*.cpp")
 
 configure_file("src/header/nostrautils/core/Config.hpp.in" 
-										"${PROJECT_SOURCE_DIR}/src/header/nostrautils/core/Config.hpp" @ONLY)
+								"${PROJECT_BINARY_DIR}/src/header/nostrautils/core/Config.hpp" @ONLY)
 
 set(CMAKE_DEBUG_POSTFIX "-dbg")
 
@@ -37,7 +37,9 @@ target_link_libraries(UtilsDgb
 target_include_directories(UtilsDgb
 	PUBLIC 
 		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/header>"
-		"$<INSTALL_INTERFACE:include>")
+		"$<INSTALL_INTERFACE:include>"
+	PRIVATE
+		"$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/header>")
 
 target_compile_definitions(UtilsDgb
 	INTERFACE
@@ -128,3 +130,9 @@ install(DIRECTORY "src/header/"
 		Develop
 	FILES_MATCHING 
 		PATTERN "*.hpp")
+
+install(FILES "${PROJECT_BINARY_DIR}/src/header/nostrautils/core/Config.hpp" 
+	DESTINATION 
+		"include/nostrautils/core" 
+	COMPONENT 
+		Develop)

@@ -5,8 +5,8 @@
 #include <cstdint>
 #include <type_traits>
 
-#if __has_include("Config.hpp")
-#include "Config.hpp"
+#if __has_include("nostrautils/core/Config.hpp")
+#include "nostrautils/core/Config.hpp"
 #endif
 
 /**
