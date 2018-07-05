@@ -39,7 +39,7 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief		Constructs a new Folder object with a String as the location.
 		*/
-		NOU_FUNC Folder(const NOU::NOU_DAT_ALG::String8 &path);
+		NOU_FUNC Folder(const NOU::NOU_DAT_ALG::StringView8 &path);
 
 		/**
 		\return		A vector of folders.

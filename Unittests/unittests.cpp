@@ -954,17 +954,17 @@ TEST_METHOD(Folder)
 	NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::Folder> vFolder;
 	NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::File> vFile;
 
-
-	NOU::file_mngt::Folder f(cwdParentPath + str);
+	NOU::NOU_FILE_MNGT::Path path(cwdParentPath + str);
+	NOU::NOU_FILE_MNGT::Folder f(path);
 	f.create();
 #if NOU_OS == NOU_OS_WINDOWS
-	NOU::NOU_FILE_MNGT::File file(cwdParentPath + str + "\\TestFile.txt");
+	NOU::NOU_FILE_MNGT::File file(path + "\\TestFile.txt");
 
-	NOU::file_mngt::Folder a(cwdParentPath + str + "\\TestFolder");
+	NOU::NOU_FILE_MNGT::Folder a(path + "\\TestFolder");
 #elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
-	NOU::NOU_FILE_MNGT::File file(cwdParentPath + str + "/TestFile.txt");
+	NOU::NOU_FILE_MNGT::File file(path + "/TestFile.txt");
 
-	NOU::file_mngt::Folder a(cwdParentPath + str + "/TestFolder");
+	NOU::file_mngt::Folder a(path + "/TestFolder");
 #endif
 	a.create();
 
@@ -979,7 +979,7 @@ TEST_METHOD(Folder)
    IsTrue(tmpstr == cwdParentPath + str + "\\TestFolder");
 	IsTrue(tmpfile == cwdParentPath + str + "\\TestFile.txt");
 
-	a.remove(cwdParentPath + str + "\\TestFolder");
+	a.remove(path + "\\TestFolder");
 #elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
 	IsTrue(tmpstr == cwdParentPath + str + "/TestFolder");
 	IsTrue(tmpfile == cwdParentPath + str + "/TestFile.txt");

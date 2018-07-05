@@ -18,7 +18,7 @@ namespace NOU::NOU_FILE_MNGT
 		m_path(path)
 	{}
 
-	Folder::Folder(const NOU::NOU_DAT_ALG::String8 &path) :
+	Folder::Folder(const NOU::NOU_DAT_ALG::StringView8 &path) :
 		m_path(path)
 	{}
 
