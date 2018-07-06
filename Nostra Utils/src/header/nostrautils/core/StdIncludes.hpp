@@ -5,9 +5,9 @@
 #include <cstdint>
 #include <type_traits>
 
-#if __has_include("nostrautils/core/Config.hpp")
+//#if __has_include("nostrautils/core/Config.hpp")
 #include "nostrautils/core/Config.hpp"
-#endif
+//#endif
 
 /**
 \file core/StdIncludes.hpp

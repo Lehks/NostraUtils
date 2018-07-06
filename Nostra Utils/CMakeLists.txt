@@ -23,7 +23,7 @@ find_package(Threads REQUIRED)
 file(GLOB_RECURSE NOU_SOURCE_FILES "src/source/nostrautils/*.cpp")
 
 configure_file("src/header/nostrautils/core/Config.hpp.in" 
-								"${PROJECT_BINARY_DIR}/src/header/nostrautils/core/Config.hpp" @ONLY)
+								"${CMAKE_CURRENT_BINARY_DIR}/src/header/nostrautils/core/Config.hpp" @ONLY)
 
 set(CMAKE_DEBUG_POSTFIX "-dbg")
 
@@ -38,8 +38,7 @@ target_include_directories(UtilsDgb
 	PUBLIC 
 		"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/header>"
 		"$<INSTALL_INTERFACE:include>"
-	PRIVATE
-		"$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src/header>")
+		"$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src/header>")
 
 target_compile_definitions(UtilsDgb
 	INTERFACE
@@ -88,7 +87,8 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "R
 	target_include_directories(Utils
 		PUBLIC 
 			"$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/header>"
-			"$<INSTALL_INTERFACE:include>")
+			"$<INSTALL_INTERFACE:include>"
+			"$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/src/header>")
 	
 	target_compile_definitions(Utils
 		INTERFACE
