@@ -17,7 +17,7 @@
 
 namespace NOU::NOU_DAT_ALG
 {
-	template<typename T>
+	template<typename T, template<typename> class ALLOC = NOU_MEM_MNGT::GenericAllocationCallback>
 	class FastQueue;
 }
 

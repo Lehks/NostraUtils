@@ -5,6 +5,7 @@
 #include "nostrautils/dat_alg/Vector.hpp"
 #include "nostrautils/mem_mngt/AllocationCallback.hpp"
 #include "nostrautils/core/Assertions.hpp"
+#include  "nostrautils/dat_alg/FwdDcl.hpp"
 
 /** \file ObjectPool.hpp
 \author  Lukas Reichmann
@@ -69,30 +70,31 @@ namespace NOU::NOU_DAT_ALG
 	assumptions on which concrete object will be returned. It is a good practice to have the objects in the
 	container share the same state.
 	*/
-	template<typename T>
-	class ObjectPool
+	template<typename T, template<typename> class ALLOC> //!!Default parameter specified in ThreadManager.hpp
+	class ObjectPool final
 	{
-	private:
+	public:
 		/**
 		\brief The type of object that will be stored in the pool.
 		*/
 		using Type = T;
 
+		/**
+		\brief The type of the elements stored in an internal vector. This is the type that needs to be
+		allocated by an allocation callback.
+		*/
 		using Chunk = internal::ObjectPoolChunk<Type>;
 
-	public:
-
 		/**
-		\brief The type that needs to be used by an allocation callback in order for that callback to be 
-		       compatible with an object pool.
+		\brief The type of the allocator used by the object pool.
 		*/
-		using AllocType = Chunk;
+		using Allocator = typename Vector<Chunk, ALLOC>::Allocator;
 
 	private:
 		/**
 		\brief The vector in which the different chunks are being stored.
 		*/
-		Vector<Chunk> m_data;
+		Vector<Chunk, ALLOC> m_data;
 
 		/**
 		\brief The start of the linked list that links the single chunk to build the actual pool.
@@ -135,8 +137,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Constructs a new instance.
 		*/
-		explicit ObjectPool(sizeType capacity, NOU_MEM_MNGT::AllocationCallback<AllocType> &allocationCallback
-			= NOU_MEM_MNGT::GenericAllocationCallback<AllocType>::get());
+		explicit ObjectPool(sizeType capacity, Allocator &&allocationCallback = Allocator());
 
 		ObjectPool(const ObjectPool&) = delete;
 		ObjectPool(ObjectPool&&) = delete;
@@ -252,16 +253,16 @@ namespace NOU::NOU_DAT_ALG
 		m_data(NOU_CORE::forward<Type>(data))
 	{}
 
-	template<typename T>
-	typename ObjectPool<T>::Chunk* ObjectPool<T>::getChunkFromObject(const Type &object)
+	template<typename T, template<typename> class ALLOC>
+	typename ObjectPool<T, ALLOC>::Chunk* ObjectPool<T, ALLOC>::getChunkFromObject(const Type &object)
 	{
 		//calculate address of the chunk
 		return reinterpret_cast<Chunk*>(reinterpret_cast<byte*>(const_cast<Type*>(&object))
 			- NOU_OFFSET_OF(Chunk, m_data));
 	}
 
-	template<typename T>
-	void ObjectPool<T>::removeFromList(Chunk *chunk)
+	template<typename T, template<typename> class ALLOC>
+	void ObjectPool<T, ALLOC>::removeFromList(Chunk *chunk)
 	{
 		if (chunk->m_left != nullptr)
 			chunk->m_left->m_right = chunk->m_right;
@@ -270,8 +271,8 @@ namespace NOU::NOU_DAT_ALG
 			chunk->m_right->m_left = chunk->m_left;
 	}
 
-	template<typename T>
-	void ObjectPool<T>::setAsHead(Chunk *chunk)
+	template<typename T, template<typename> class ALLOC>
+	void ObjectPool<T, ALLOC>::setAsHead(Chunk *chunk)
 	{
 		chunk->m_left = nullptr;
 		chunk->m_right = m_head;
@@ -279,29 +280,28 @@ namespace NOU::NOU_DAT_ALG
 		m_head = chunk;
 	}
 
-	template<typename T>
-	ObjectPool<T>::ObjectPool(sizeType capacity,
-		NOU_MEM_MNGT::AllocationCallback<AllocType> &allocationCallback) :
-		m_data(capacity, allocationCallback),
+	template<typename T, template<typename> class ALLOC>
+	ObjectPool<T, ALLOC>::ObjectPool(sizeType capacity, Allocator &&allocationCallback) :
+		m_data(capacity, NOU_CORE::move(allocationCallback)),
 		m_remainingObjects(0),
 		m_head(nullptr)
 	{}
 
-	template<typename T>
-	T& ObjectPool<T>::pushObject(const Type &object)
+	template<typename T, template<typename> class ALLOC>
+	T& ObjectPool<T, ALLOC>::pushObject(const Type &object)
 	{
 		return emplaceObject(object);
 	}
 
-	template<typename T>
-	T& ObjectPool<T>::pushObject(Type &&object)
+	template<typename T, template<typename> class ALLOC>
+	T& ObjectPool<T, ALLOC>::pushObject(Type &&object)
 	{
 		return emplaceObject(NOU_CORE::move(object));
 	}
 
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	template<typename... ARGS>
-	T& ObjectPool<T>::emplaceObject(ARGS&&... args)
+	T& ObjectPool<T, ALLOC>::emplaceObject(ARGS&&... args)
 	{
 #ifdef NOU_DEBUG
 		sizeType oldCapacity = m_data.capacity();
@@ -329,8 +329,8 @@ namespace NOU::NOU_DAT_ALG
 		return m_data[m_data.size() - 1].m_data;
 	}
 
-	template<typename T>
-	typename ObjectPool<T>::Type& ObjectPool<T>::get()
+	template<typename T, template<typename> class ALLOC>
+	typename ObjectPool<T, ALLOC>::Type& ObjectPool<T, ALLOC>::get()
 	{
 		NOU_COND_PUSH_DBG_ERROR((m_head == nullptr), NOU_CORE::getErrorHandler(),
 			NOU_CORE::ErrorCodes::INVALID_STATE, "The pool is empty. Use pushObject() to push a new object.");
@@ -349,8 +349,8 @@ namespace NOU::NOU_DAT_ALG
 		return head->m_data;
 	}
 
-	template<typename T>
-	void ObjectPool<T>::giveBack(const Type& object)
+	template<typename T, template<typename> class ALLOC>
+	void ObjectPool<T, ALLOC>::giveBack(const Type& object)
 	{
 #ifdef NOU_DEBUG
 		if (!isPartOf(object))
@@ -370,40 +370,40 @@ namespace NOU::NOU_DAT_ALG
 		m_remainingObjects++;
 	}
 
-	template<typename T>
-	boolean ObjectPool<T>::isPartOf(const Type &object)
+	template<typename T, template<typename> class ALLOC>
+	boolean ObjectPool<T, ALLOC>::isPartOf(const Type &object)
 	{
 		return (reinterpret_cast<const Chunk*>(&object) >= m_data.data() &&
 			reinterpret_cast<const Chunk*>(&object) < m_data.data() + m_data.size());
 	}
 
-	template<typename T>
-	sizeType ObjectPool<T>::size() const
+	template<typename T, template<typename> class ALLOC>
+	sizeType ObjectPool<T, ALLOC>::size() const
 	{
 		return m_data.size();
 	}
 
-	template<typename T>
-	boolean ObjectPool<T>::empty() const
+	template<typename T, template<typename> class ALLOC>
+	boolean ObjectPool<T, ALLOC>::empty() const
 	{
 		return size() == 0;
 	}
 
-	template<typename T>
-	sizeType ObjectPool<T>::capacity() const
+	template<typename T, template<typename> class ALLOC>
+	sizeType ObjectPool<T, ALLOC>::capacity() const
 	{
 		return m_data.capacity();
 	}
 
-	template<typename T>
-	sizeType ObjectPool<T>::remainingObjects() const
+	template<typename T, template<typename> class ALLOC>
+	sizeType ObjectPool<T, ALLOC>::remainingObjects() const
 	{
 		return m_remainingObjects;
 	}
 
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	template<typename P>
-	void ObjectPool<T>::foreach(P predicate)
+	void ObjectPool<T, ALLOC>::foreach(P predicate)
 	{
 #ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<void, P, T&>::value);
@@ -415,9 +415,9 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	template<typename P>
-	void ObjectPool<T>::foreach(P predicate) const
+	void ObjectPool<T, ALLOC>::foreach(P predicate) const
 	{
 #ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
 		static_assert(NOU_CORE::IsInvocableR<void, P, const T&>::value);

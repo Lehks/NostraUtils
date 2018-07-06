@@ -6,6 +6,7 @@
 #include "nostrautils/core/ErrorHandler.hpp"
 #include "nostrautils/dat_alg/Hashing.hpp"
 #include "nostrautils/dat_alg/Vector.hpp"
+#include  "nostrautils/dat_alg/FwdDcl.hpp"
 
 #include <type_traits>
 
@@ -25,8 +26,9 @@ namespace NOU::NOU_DAT_ALG
 	/**
 	\brief   This class provides a HashMap implementation using the bucket method.
 	*/
-	template<typename K, typename V>
-	class HashMap 
+	//!!Default parameter specified in dat_alg/FwdDcl.hpp
+	template<typename K, typename V, template<typename> class ALLOC>
+	class HashMap final
 	{
 	public:
 		/**
@@ -34,6 +36,8 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		//can be changed to minimize collisions -> the bigger the more often O(1) occurs
 		constexpr static NOU::sizeType LOAD_SIZE = 20;
+
+		using Allocator = typename Vector<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>, ALLOC>::Allocator;
 
 	private:
 
@@ -115,12 +119,12 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The amount of objects that are currently stored in the map.
 		*/
-		sizeType											m_size;
+		sizeType											    m_size;
 
 		/**
 		\brief The buckets.
 		*/
-		Vector<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>>		m_data;
+		Vector<Vector<NOU::NOU_DAT_ALG::Pair<K, V>>, ALLOC> m_data;
 
 		/**
 		\param key The key to search.
@@ -176,9 +180,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Creates a new instance from the passes parameters.
 		*/
-		explicit HashMap(sizeType size = LOAD_SIZE, NOU::NOU_MEM_MNGT::AllocationCallback<Vector<
-			NOU::NOU_DAT_ALG::Pair<K, V>>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<Vector<
-			NOU::NOU_DAT_ALG::Pair<K, V>>>::get());
+		explicit HashMap(sizeType size = LOAD_SIZE, Allocator &&allocator = Allocator());
 
 		/**
 		\param key     The key that the passed value will be mapped to.
@@ -419,32 +421,32 @@ namespace NOU::NOU_DAT_ALG
 
 	///\cond
 
-	template <typename K, typename V>
+	template<typename K, typename V, template<typename> class ALLOC>
 	template<typename T>
 	template<typename... ARGS>
-	HashMap<K, V>::Wrapper<T>::Wrapper(ARGS&&... args) :
+	HashMap<K, V, ALLOC>::Wrapper<T>::Wrapper(ARGS&&... args) :
 		m_data(NOU_CORE::forward<ARGS>(args)...)
 	{}
 
-	template <typename K, typename V>
+	template<typename K, typename V, template<typename> class ALLOC>
 	template<typename T>
-	T& HashMap<K, V>::Wrapper<T>::lval()
+	T& HashMap<K, V, ALLOC>::Wrapper<T>::lval()
 	{
 		return m_data;
 	}
 
-	template <typename K, typename V>
+	template<typename K, typename V, template<typename> class ALLOC>
 	template<typename T>
-	T HashMap<K, V>::Wrapper<T>::rval()
+	T HashMap<K, V, ALLOC>::Wrapper<T>::rval()
 	{
 		return NOU_CORE::move(m_data);
 	}
 
-	template <typename K, typename V>
-	constexpr NOU::sizeType HashMap<K, V>::LOAD_SIZE;
+	template<typename K, typename V, template<typename> class ALLOC>
+	constexpr NOU::sizeType HashMap<K, V, ALLOC>::LOAD_SIZE;
 
-	template <typename K, typename V>
-	NOU::NOU_DAT_ALG::Pair<K, V>* HashMap<K, V>::getPair(const K &key)
+	template<typename K, typename V, template<typename> class ALLOC>
+	NOU::NOU_DAT_ALG::Pair<K, V>* HashMap<K, V, ALLOC>::getPair(const K &key)
 	{
 		NOU::sizeType hash = hashObj(&key, 1, m_data.size());
 
@@ -462,8 +464,8 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template <typename K, typename V>
-	NOU::NOU_DAT_ALG::Pair<K, V>* HashMap<K, V>::getPair(const K &key, Comparator<K> comp)
+	template<typename K, typename V, template<typename> class ALLOC>
+	NOU::NOU_DAT_ALG::Pair<K, V>* HashMap<K, V, ALLOC>::getPair(const K &key, Comparator<K> comp)
 	{
 		NOU::sizeType hash = hashObj(&key, 1, m_data.size());
 
@@ -481,8 +483,8 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::mapImp(Wrapper<K> &&key, Wrapper<V> &&value) 
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::mapImp(Wrapper<K> &&key, Wrapper<V> &&value) 
 	{
 		sizeType n;
 
@@ -523,8 +525,8 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::mapImp(Wrapper<K> &&key, Wrapper<V> &&value, Comparator<K> comp)
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::mapImp(Wrapper<K> &&key, Wrapper<V> &&value, Comparator<K> comp)
 	{
 		sizeType n;
 
@@ -565,9 +567,9 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template <typename K, typename V>
-	HashMap<K, V>::HashMap(sizeType size, NOU_MEM_MNGT::AllocationCallback<Vector<NOU_DAT_ALG::Pair<K, V>>> &allocator) :
-		m_data(size, allocator),
+	template<typename K, typename V, template<typename> class ALLOC>
+	HashMap<K, V, ALLOC>::HashMap(sizeType size, Allocator &&allocator) :
+		m_data(size, NOU_CORE::move(allocator)),
 		m_size(0)
 	{
 		for (sizeType i = 0; i < size; i++)
@@ -576,56 +578,56 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 	 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::map(const K &key, const V &value) 
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::map(const K &key, const V &value) 
 	{
 		return mapImp(Wrapper<K>(key), Wrapper<V>(value));
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::map(K &&key, V &&value)
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::map(K &&key, V &&value)
 	{
 		return mapImp(Wrapper<K>(NOU_CORE::move(key)), Wrapper<V>(NOU_CORE::move(value)));
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::map(const K &key, V &&value)
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::map(const K &key, V &&value)
 	{
 		return mapImp(Wrapper<K>(key), Wrapper<V>(NOU_CORE::move(value)));
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::map(K &&key, const V &value)
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::map(K &&key, const V &value)
 	{
 		return mapImp(Wrapper<K>(NOU_CORE::move(key)), Wrapper<V>(value));
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::map(const K &key, const V &value, Comparator<K> comp)
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::map(const K &key, const V &value, Comparator<K> comp)
 	{
 		return mapImp(Wrapper<K>(key), Wrapper<V>(value), comp);
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::map(K &&key, V &&value, Comparator<K> comp)
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::map(K &&key, V &&value, Comparator<K> comp)
 	{
 		return mapImp(Wrapper<K>(NOU_CORE::move(key)), Wrapper<V>(NOU_CORE::move(value)), comp);
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::map(const K &key, V &&value, Comparator<K> comp)
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::map(const K &key, V &&value, Comparator<K> comp)
 	{
 		return mapImp(Wrapper<K>(key), Wrapper<V>(NOU_CORE::move(value)), comp);
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::map(K &&key, const V &value, Comparator<K> comp)
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::map(K &&key, const V &value, Comparator<K> comp)
 	{
 		return mapImp(Wrapper<K>(NOU_CORE::move(key)), Wrapper<V>(value), comp);
 	}
 
-	template <typename K, typename V>
-	V& HashMap<K, V>::get(const K &key)
+	template<typename K, typename V, template<typename> class ALLOC>
+	V& HashMap<K, V, ALLOC>::get(const K &key)
 	{
 		sizeType n;
 		n = hashObj(&key, 1, m_data.size());
@@ -644,8 +646,8 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template <typename K, typename V>
-	const V& HashMap<K,V>::get(const K &key) const
+	template<typename K, typename V, template<typename> class ALLOC>
+	const V& HashMap<K, V, ALLOC>::get(const K &key) const
 	{
 		sizeType n;
 		n = hashObj(&key, 1, m_data.size());
@@ -664,8 +666,8 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template <typename K, typename V>
-	V& HashMap<K, V>::get(const K &key, Comparator<K> comp)
+	template<typename K, typename V, template<typename> class ALLOC>
+	V& HashMap<K, V, ALLOC>::get(const K &key, Comparator<K> comp)
 	{
 		NOU::NOU_DAT_ALG::Pair<K, V> *pair = getPair(key, comp);
 
@@ -682,8 +684,8 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template <typename K, typename V>
-	const V& HashMap<K, V>::get(const K &key, Comparator<K> comp) const
+	template<typename K, typename V, template<typename> class ALLOC>
+	const V& HashMap<K, V, ALLOC>::get(const K &key, Comparator<K> comp) const
 	{
 		NOU::NOU_DAT_ALG::Pair<K, V> *pair = getPair(key, comp);
 
@@ -700,20 +702,20 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template<typename K, typename V>
-	boolean HashMap<K, V>::isEmpty() const
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::isEmpty() const
 	{
 		return m_size == 0;
 	}
 
-	template<typename K, typename V>
-	sizeType HashMap<K, V>::size() const
+	template<typename K, typename V, template<typename> class ALLOC>
+	sizeType HashMap<K, V, ALLOC>::size() const
 	{
 		return m_size;
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::remove(const K &key, V *out)
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::remove(const K &key, V *out)
 	{
 		sizeType h;
 
@@ -734,8 +736,8 @@ namespace NOU::NOU_DAT_ALG
 		return false;
 	}
 
-	template<typename K, typename V>
-	Vector<const K*> HashMap<K, V>::keySet() const
+	template<typename K, typename V, template<typename> class ALLOC>
+	Vector<const K*> HashMap<K, V, ALLOC>::keySet() const
 	{
 		Vector<const K*> keySetVec(m_size);
 
@@ -749,8 +751,8 @@ namespace NOU::NOU_DAT_ALG
 		return keySetVec;
 	}
 
-	template<typename K, typename V>
-	Vector<const V*> HashMap<K, V>::entrySet() const
+	template<typename K, typename V, template<typename> class ALLOC>
+	Vector<const V*> HashMap<K, V, ALLOC>::entrySet() const
 	{
 		Vector<const V*> entrySetVec(m_size);
 
@@ -764,26 +766,26 @@ namespace NOU::NOU_DAT_ALG
 		return entrySetVec;
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::containsKey(const K &key) const 
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::containsKey(const K &key) const 
 	{
-		return const_cast<HashMap<K, V>*>(this)->getPair(key) != nullptr;
+		return const_cast<HashMap<K, V, ALLOC>*>(this)->getPair(key) != nullptr;
 	}
 
-	template <typename K, typename V>
-	boolean HashMap<K, V>::containsKey(const K &key, Comparator<K> comp) const 
+	template<typename K, typename V, template<typename> class ALLOC>
+	boolean HashMap<K, V, ALLOC>::containsKey(const K &key, Comparator<K> comp) const 
 	{
-		return const_cast<HashMap<K, V>*>(this)->getPair(key, comp) != nullptr;
+		return const_cast<HashMap<K, V, ALLOC>*>(this)->getPair(key, comp) != nullptr;
 	}
 
-	template<typename K, typename V>
-	V& HashMap<K, V>::operator [](const K &key) 
+	template<typename K, typename V, template<typename> class ALLOC>
+	V& HashMap<K, V, ALLOC>::operator [](const K &key) 
 	{
 		return get(key);
 	}
 
-	template<typename K, typename V>
-	NOU::sizeType HashMap<K, V>::bucketCount() const 
+	template<typename K, typename V, template<typename> class ALLOC>
+	NOU::sizeType HashMap<K, V, ALLOC>::bucketCount() const 
 	{
 		return m_data.size();
 	}

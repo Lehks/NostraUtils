@@ -7,6 +7,7 @@
 #include "nostrautils/core/ErrorHandler.hpp"
 #include "nostrautils/dat_alg/Utils.hpp"
 #include "nostrautils/dat_alg/Quicksort.hpp"
+#include  "nostrautils/dat_alg/FwdDcl.hpp"
 
 #include <type_traits>
 #include <new>
@@ -22,18 +23,18 @@
 namespace NOU::NOU_DAT_ALG
 {
 	///\cond
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	class VectorIterator;
 
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	class VectorReverseIterator;
 	///\endcond
 
-	template<typename T>
-	using VectorConstIterator = const VectorIterator<T>;
+	template<typename T, template<typename> class ALLOC>
+	using VectorConstIterator = const VectorIterator<T, ALLOC>;
 
-	template<typename T>
-	using VectorReverseConstIterator = const VectorReverseIterator<T>;
+	template<typename T, template<typename> class ALLOC>
+	using VectorReverseConstIterator = const VectorReverseIterator<T, ALLOC>;
 
 	/**
 	\tparam The type of the elements that will be stored in this Vector.
@@ -42,15 +43,20 @@ namespace NOU::NOU_DAT_ALG
 
 	\details The most basic of our containers. It can act like a dynamic array a FIFO-Queue, LIFO-Queue or a normal Queue.
 	*/
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	class Vector final
 	{
+	public:
+		/**
+		\brief The type of the allocator used by the vector.
+		*/
+		using Allocator = ALLOC<T>;
 
 	private:
 		/**
 		\brief The allocation callback that will allocate and deallocate the memory for the vector.
 		*/
-		NOU::NOU_MEM_MNGT::AllocationCallback<T>	&m_allocator;
+		Allocator	                                m_allocator;
 
 		/**
 		\brief A Constant for the minimal size of the Vector.
@@ -103,7 +109,7 @@ namespace NOU::NOU_DAT_ALG
 	public:
 		/**
 		\param size Initial size of the constructor.
-		\param allocator Allocator for the vector.
+		\param allocator The allocator used by this vector.
 
 		\brief Standard constructor with the size.
 		\details 
@@ -114,31 +120,44 @@ namespace NOU::NOU_DAT_ALG
 		\see   nostra::utils::mem_mngt::AllocationCallback
 		\see   nostra::utils::mem_mngt::GenericAllocationCallback
 		*/
-		Vector<T>(sizeType size = MIN_CAPACITY, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = 
-			NOU_MEM_MNGT::GenericAllocationCallback<T>::get());
+		Vector(sizeType size = MIN_CAPACITY, Allocator &&allocator = Allocator());
 
 		/**
 		\param other Takes an other vector for moving.
 
 		\brief For Moving the \p other Vector.
 		*/
-		Vector<T>(Vector<T> &&other);
+		Vector(Vector<T, ALLOC> &&other);
 
 		/**
 		\param other Takes an other vector for copying.
 
 		\brief For Copying the \p other Vector.
 		*/
-		Vector<T>(const Vector<T> &other);
+		Vector(const Vector<T, ALLOC> &other);
 
 		/**
 		\brief Standard destructor.
 
 		\details 
-		Note that the Vectors memory is not allocated with the new keyword therefore the memory gets not dealocated with the delete keyword. 
-		For more deatils look at the implication.
+		Note that the Vectors memory is not allocated with the new keyword therefore the memory gets not deallocated with the delete keyword. 
+		For more details look at the implication.
 		*/
-		~Vector<T>();
+		~Vector();
+
+		/**
+		\return The allocator used by this vector.
+
+		\brief Returns the allocator used by this vector.
+		*/
+		const Allocator& getAllocator() const;
+
+		/**
+		\return The allocator used by this vector.
+
+		\brief Returns the allocator used by this vector.
+		*/
+		Allocator& getAllocator();
 
 		/**
 		\tparam ARGS The types of the arguments that will be passed to the constructor of the type T.
@@ -403,7 +422,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the first element in the
 		vector.
 		*/
-		VectorIterator<T> begin();
+		VectorIterator<T, ALLOC> begin();
 
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the element after the last element
@@ -414,14 +433,14 @@ namespace NOU::NOU_DAT_ALG
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
 		*/
-		VectorIterator<T> end();
+		VectorIterator<T, ALLOC> end();
 
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
 
 		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
 		*/
-		VectorIterator<T> indexIterator(sizeType index);
+		VectorIterator<T, ALLOC> indexIterator(sizeType index);
 
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
@@ -429,7 +448,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the first element in the
 		vector.
 		*/
-		VectorConstIterator<T> begin() const;
+		VectorConstIterator<T, ALLOC> begin() const;
 
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the element after the last element
@@ -440,14 +459,14 @@ namespace NOU::NOU_DAT_ALG
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
 		*/
-		VectorConstIterator<T> end() const;
+		VectorConstIterator<T, ALLOC> end() const;
 
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
 
 		\brief Returns a nostra::utils::dat_alg::VectorIterator that points to the element at the specified index.
 		*/
-		VectorConstIterator<T> indexIterator(sizeType index) const;
+		VectorConstIterator<T, ALLOC> indexIterator(sizeType index) const;
 
 		/**
 		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the vector.
@@ -455,7 +474,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the
 		vector.
 		*/
-		VectorReverseIterator<T> rbegin();
+		VectorReverseIterator<T, ALLOC> rbegin();
 
 		/**
 		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
@@ -466,7 +485,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
 		*/
-		VectorReverseIterator<T> rend();
+		VectorReverseIterator<T, ALLOC> rend();
 
 		/**
 		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified index.
@@ -474,7 +493,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified
 		index.
 		*/
-		VectorReverseIterator<T> rindexIterator(sizeType index);
+		VectorReverseIterator<T, ALLOC> rindexIterator(sizeType index);
 
 		/**
 		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the vector.
@@ -482,7 +501,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the last element in the
 		vector.
 		*/
-		VectorReverseConstIterator<T> rbegin() const;
+		VectorReverseConstIterator<T, ALLOC> rbegin() const;
 
 		/**
 		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element before the first
@@ -493,7 +512,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\warning Using the operator * on this iterator is invalid and it will return an invalid element.
 		*/
-		VectorReverseConstIterator<T> rend() const;
+		VectorReverseConstIterator<T, ALLOC> rend() const;
 
 		/**
 		\return A nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified index.
@@ -501,7 +520,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns a nostra::utils::dat_alg::VectorReverseIterator that points to the element at the specified
 		index.
 		*/
-		VectorReverseConstIterator<T> rindexIterator(sizeType index) const;
+		VectorReverseConstIterator<T, ALLOC> rindexIterator(sizeType index) const;
 
 		/**
 		\param other The vector to copy the data from.
@@ -555,10 +574,10 @@ namespace NOU::NOU_DAT_ALG
 	\brief An iterator that is used to iterate over a nostra::utils::dat_alg::Vector (this iterator supports
 	both const and non-const iterating). This iterator is a forward iterator.
 	*/
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	class VectorIterator
 	{
-		friend class Vector<T>;
+		friend class Vector<T, ALLOC>;
 
 	private:
 		/*
@@ -690,10 +709,10 @@ namespace NOU::NOU_DAT_ALG
 	\brief An iterator that is used to iterate over a nostra::utils::dat_alg::Vector (this iterator supports
 	both const and non-const iterating). This iterator is a reverse iterator.
 	*/
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	class VectorReverseIterator
 	{
-		friend class Vector<T>;
+		friend class Vector<T, ALLOC>;
 
 	private:
 		/*
@@ -821,23 +840,23 @@ namespace NOU::NOU_DAT_ALG
 		constexpr VectorReverseIterator& operator -= (sizeType value);
 	};
 
-	template<typename T>
-	constexpr sizeType Vector<T>::MIN_CAPACITY;
+	template<typename T, template<typename> class ALLOC>
+	constexpr sizeType Vector<T, ALLOC>::MIN_CAPACITY;
 
-	template<typename T>
-	T* Vector<T>::alloc(sizeType amount)
+	template<typename T, template<typename> class ALLOC>
+	T* Vector<T, ALLOC>::alloc(sizeType amount)
 	{
 		return m_allocator.allocate(amount); 
 	}
 
-	template<typename T>
-	void Vector<T>::free(T *data)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::free(T *data)
 	{
 		return m_allocator.deallocate(data); 
 	}
 
-	template<typename T>
-	void Vector<T>::reallocateData(sizeType capacity)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::reallocateData(sizeType capacity)
 	{
 		T *newData = alloc(capacity);
 
@@ -854,23 +873,23 @@ namespace NOU::NOU_DAT_ALG
 		m_data = newData;
 	}
 
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	template<typename... ARGS>
-	void Vector<T>::construct(sizeType index, ARGS&&... args)
+	void Vector<T, ALLOC>::construct(sizeType index, ARGS&&... args)
 	{
 		new (m_data + index) T(NOU_CORE::forward<ARGS>(args)...);
 	}
 
-	template<typename T>
-	Vector<T>::Vector(sizeType size, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator) :
+	template<typename T, template<typename> class ALLOC>
+	Vector<T, ALLOC>::Vector(sizeType size, Allocator &&allocator) :
 		m_capacity(NOU::NOU_CORE::max(MIN_CAPACITY, size)),
 		m_data(alloc(m_capacity)),
 		m_size(0),
 		m_allocator(allocator)
 	{}
 
-	template<typename T>
-	Vector<T>::Vector(Vector<T>&& other) :
+	template<typename T, template<typename> class ALLOC>
+	Vector<T, ALLOC>::Vector(Vector<T, ALLOC>&& other) :
 		m_capacity(other.m_capacity),
 		m_data(other.m_data),
 		m_size(other.m_size),
@@ -881,8 +900,8 @@ namespace NOU::NOU_DAT_ALG
 		other.m_size = 0; //set size to 0, to avoid any destructor's for stored objects from being called.
 	}
 
-	template<typename T>
-	Vector<T>::Vector(const Vector<T> &other) :
+	template<typename T, template<typename> class ALLOC>
+	Vector<T, ALLOC>::Vector(const Vector<T, ALLOC> &other) :
 		m_capacity(other.m_capacity),
 		m_data(alloc(m_capacity)),
 		m_size(other.m_size),
@@ -892,8 +911,8 @@ namespace NOU::NOU_DAT_ALG
 			new (m_data + i) T(other.at(i));
 	}
 
-	template<typename T>
-	Vector<T>::~Vector() 
+	template<typename T, template<typename> class ALLOC>
+	Vector<T, ALLOC>::~Vector() 
 	{
 		for (sizeType i = 0; i < m_size; i++)
 		{
@@ -903,9 +922,21 @@ namespace NOU::NOU_DAT_ALG
 		m_allocator.deallocate(m_data);
 	}
 
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
+	const typename Vector<T, ALLOC>::Allocator& Vector<T, ALLOC>::getAllocator() const
+	{
+		return m_allocator;
+	}
+
+	template<typename T, template<typename> class ALLOC>
+	typename Vector<T, ALLOC>::Allocator& Vector<T, ALLOC>::getAllocator()
+	{
+		return m_allocator;
+	}
+
+	template<typename T, template<typename> class ALLOC>
 	template<typename ...ARGS>
-	void Vector<T>::emplaceBack(ARGS&& ...args)
+	void Vector<T, ALLOC>::emplaceBack(ARGS&& ...args)
 	{
 		expandIfNeeded(1);
 
@@ -914,26 +945,26 @@ namespace NOU::NOU_DAT_ALG
 		m_size++;
 	}
 
-	template<typename T>
-	boolean Vector<T>::empty() const
+	template<typename T, template<typename> class ALLOC>
+	boolean Vector<T, ALLOC>::empty() const
 	{
 		return m_size > 0 ? false : true;
 	}
 
-	template<typename T>
-	sizeType Vector<T>::size() const
+	template<typename T, template<typename> class ALLOC>
+	sizeType Vector<T, ALLOC>::size() const
 	{
 		return m_size;
 	}
 
-	template<typename T>
-	sizeType Vector<T>::capacity() const
+	template<typename T, template<typename> class ALLOC>
+	sizeType Vector<T, ALLOC>::capacity() const
 	{
 		return m_capacity;
 	}
 
-	template<typename T>
-	T& Vector<T>::at(sizeType index)
+	template<typename T, template<typename> class ALLOC>
+	T& Vector<T, ALLOC>::at(sizeType index)
 	{
 		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
@@ -941,8 +972,8 @@ namespace NOU::NOU_DAT_ALG
 		return m_data[index];
 	}
 
-	template<typename T>
-	const T& Vector<T>::at(sizeType index) const
+	template<typename T, template<typename> class ALLOC>
+	const T& Vector<T, ALLOC>::at(sizeType index) const
 	{
 		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
@@ -950,8 +981,8 @@ namespace NOU::NOU_DAT_ALG
 		return m_data[index];
 	}
 
-	template<typename T>
-	void Vector<T>::expandCapacity(sizeType additionalCapacity)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::expandCapacity(sizeType additionalCapacity)
 	{
 		//dividing by m_capacity is safe b/c m_capacity is always > 0
 		sizeType newCapacity = m_capacity + (((m_capacity + additionalCapacity) / m_capacity) * m_capacity); 
@@ -959,39 +990,39 @@ namespace NOU::NOU_DAT_ALG
 		reallocateData(newCapacity);
 	}
 
-	template<typename T>
-	void Vector<T>::expandIfNeeded(sizeType additionalCapactiy)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::expandIfNeeded(sizeType additionalCapactiy)
 	{
 		if ((m_size + additionalCapactiy) > m_capacity)
 			expandCapacity(additionalCapactiy);
 	}
 
-	template<typename T>
-	void Vector<T>::pushBack(const T &data)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::pushBack(const T &data)
 	{
 		emplaceBack(data);
 	}
 
-	template<typename T>
-	void Vector<T>::pushBack(T &&data)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::pushBack(T &&data)
 	{
 		emplaceBack(NOU_CORE::move(data));
 	}
 
-	template<typename T>
-	void Vector<T>::pushFront(T &&data)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::pushFront(T &&data)
 	{
 		insert(0, NOU_CORE::move(data));
 	}
 
-	template<typename T>
-	void Vector<T>::pushFront(const T &data)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::pushFront(const T &data)
 	{
 		insert(0, data);
 	}
 
-	template<typename T>
-	T Vector<T>::popFront()
+	template<typename T, template<typename> class ALLOC>
+	T Vector<T, ALLOC>::popFront()
 	{
 		NOU_COND_PUSH_ERROR((m_size == 0),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found.");
@@ -1001,50 +1032,50 @@ namespace NOU::NOU_DAT_ALG
 		return element;
 	}
 
-	template<typename T>
-	void Vector<T>::push(T &&data)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::push(T &&data)
 	{
 		pushBack(NOU_CORE::move(data));
 	}
 	
-	template<typename T>
-	void Vector<T>::push(const T &data)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::push(const T &data)
 	{
 		pushBack(data);
 	}
 
-	template<typename T>
-	T Vector<T>::pop()
+	template<typename T, template<typename> class ALLOC>
+	T Vector<T, ALLOC>::pop()
 	{
 		return popFront();
 	}
 
-	template<typename T>
-	T& Vector<T>::peekFront()
+	template<typename T, template<typename> class ALLOC>
+	T& Vector<T, ALLOC>::peekFront()
 	{
 		return m_data[0];
 	}
 
-	template<typename T>
-	const T& Vector<T>::peekFront() const
+	template<typename T, template<typename> class ALLOC>
+	const T& Vector<T, ALLOC>::peekFront() const
 	{
 		return m_data[0];
 	}
 
-	template<typename T>
-	T& Vector<T>::peek()
+	template<typename T, template<typename> class ALLOC>
+	T& Vector<T, ALLOC>::peek()
 	{
 		return peekFront();
 	}
 
-	template<typename T>
-	const T& Vector<T>::peek() const
+	template<typename T, template<typename> class ALLOC>
+	const T& Vector<T, ALLOC>::peek() const
 	{
 		return peekFront();
 	}
 
-	template<typename T>
-	void Vector<T>::swap(sizeType index0, sizeType index1)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::swap(sizeType index0, sizeType index1)
 	{
 		NOU_COND_PUSH_ERROR((index0 >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
@@ -1055,8 +1086,8 @@ namespace NOU::NOU_DAT_ALG
 		NOU::NOU_DAT_ALG::swap(m_data + index0, m_data + index1);
 	}
 
-	template<typename T>
-	void Vector<T>::remove(sizeType index)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::remove(sizeType index)
 	{
 		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at this index.");
@@ -1073,9 +1104,9 @@ namespace NOU::NOU_DAT_ALG
 		m_size--;
 	}
 	
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	template<typename... ARGS>
-	void Vector<T>::emplace(sizeType index, ARGS&&... args)
+	void Vector<T, ALLOC>::emplace(sizeType index, ARGS&&... args)
 	{
 		expandIfNeeded(1);
 		for (sizeType i = m_size; i > index; i--)
@@ -1093,44 +1124,44 @@ namespace NOU::NOU_DAT_ALG
 		m_size++;
 	}
 
-	template<typename T>
-	void Vector<T>::insert(sizeType index, T &&data)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::insert(sizeType index, T &&data)
 	{
 		emplace(index, NOU_CORE::move(data));
 	}
 
-	template<typename T>
-	void Vector<T>::insert(sizeType index, const T &data)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::insert(sizeType index, const T &data)
 	{
 		emplace(index, data);
 	}
 
-	template<typename T>
-	void Vector<T>::sort()
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::sort()
 	{
 		qsort(m_data, 0, size() - 1);
 	}
 
-	template<typename T>
-	void Vector<T>::sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::sortComp(NOU::NOU_DAT_ALG::Comparator<T> comp)
 	{
 		qsort(m_data, 0, size() - 1, comp);
 	}
 
-	template<typename T>
-	T* const & Vector<T>::data()
+	template<typename T, template<typename> class ALLOC>
+	T* const & Vector<T, ALLOC>::data()
 	{
 		return m_data;
 	}
 
-	template<typename T>
-	const T* Vector<T>::data() const
+	template<typename T, template<typename> class ALLOC>
+	const T* Vector<T, ALLOC>::data() const
 	{
 		return m_data;
 	}
 
-	template<typename T>
-	void Vector<T>::clear()
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::clear()
 	{
 		for (sizeType i = 0; i < m_size; i++)
 		{
@@ -1140,21 +1171,21 @@ namespace NOU::NOU_DAT_ALG
 		reallocateData(1);
 	}
 
-	template<typename T>
-	void Vector<T>::setSize(sizeType size)
+	template<typename T, template<typename> class ALLOC>
+	void Vector<T, ALLOC>::setSize(sizeType size)
 	{
 		m_size = size;
 	}
 
-	template<typename T>
-	Vector<T>& Vector<T>::replace(sizeType index, T&& replacement)
+	template<typename T, template<typename> class ALLOC>
+	Vector<T, ALLOC>& Vector<T, ALLOC>::replace(sizeType index, T&& replacement)
 	{
 		at(index) = NOU_CORE::move(replacement);
 		return *this;
 	}
 
-	template<typename T>
-	Vector<T>& Vector<T>::replace(sizeType index, const T& replacement)
+	template<typename T, template<typename> class ALLOC>
+	Vector<T, ALLOC>& Vector<T, ALLOC>::replace(sizeType index, const T& replacement)
 	{
 		NOU_COND_PUSH_ERROR((index >= m_size),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "No object was found at this index.");
@@ -1163,8 +1194,8 @@ namespace NOU::NOU_DAT_ALG
 		return *this;
 	}
 
-	template<typename T>
-	Vector<T>& Vector<T>::operator = (const Vector<T> &other)
+	template<typename T, template<typename> class ALLOC>
+	Vector<T, ALLOC>& Vector<T, ALLOC>::operator = (const Vector<T, ALLOC> &other)
 	{
 		//Delete all objects that are in the current vector, but will not overridden by elements in the other
 		//one
@@ -1208,8 +1239,8 @@ namespace NOU::NOU_DAT_ALG
 		return *this;
 	}
 
-	template<typename T>
-	Vector<T>& Vector<T>::operator = (Vector<T> &&other)
+	template<typename T, template<typename> class ALLOC>
+	Vector<T, ALLOC>& Vector<T, ALLOC>::operator = (Vector<T, ALLOC> &&other)
 	{
 		this->~Vector(); //destruct elements in this vector + frees buffer
 
@@ -1224,180 +1255,180 @@ namespace NOU::NOU_DAT_ALG
 		return *this;
 	}
 
-	template<typename T>
-	T& Vector<T>::operator [] (sizeType index)
+	template<typename T, template<typename> class ALLOC>
+	T& Vector<T, ALLOC>::operator [] (sizeType index)
 	{
 		return at(index);
 	}
 
-	template<typename T>
-	const T& Vector<T>::operator [] (sizeType index) const
+	template<typename T, template<typename> class ALLOC>
+	const T& Vector<T, ALLOC>::operator [] (sizeType index) const
 	{
 		return at(index);
 	}
 
-	template<typename T>
-	VectorIterator<T> Vector<T>::begin()
+	template<typename T, template<typename> class ALLOC>
+	VectorIterator<T, ALLOC> Vector<T, ALLOC>::begin()
 	{
 		return indexIterator(0);
 	}
 
-	template<typename T>
-	VectorIterator<T> Vector<T>::end()
+	template<typename T, template<typename> class ALLOC>
+	VectorIterator<T, ALLOC> Vector<T, ALLOC>::end()
 	{
 		return indexIterator(m_size);
 	}
 
-	template<typename T>
-	VectorIterator<T> Vector<T>::indexIterator(sizeType index)
+	template<typename T, template<typename> class ALLOC>
+	VectorIterator<T, ALLOC> Vector<T, ALLOC>::indexIterator(sizeType index)
 	{
-		return VectorIterator<T>(index, const_cast<const T**>(&m_data));
+		return VectorIterator<T, ALLOC>(index, const_cast<const T**>(&m_data));
 	}
 
-	template<typename T>
-	VectorConstIterator<T> Vector<T>::begin()const
+	template<typename T, template<typename> class ALLOC>
+	VectorConstIterator<T, ALLOC> Vector<T, ALLOC>::begin()const
 	{
 		return indexIterator(0);
 	}
 
-	template<typename T>
-	VectorConstIterator<T> Vector<T>::end()const
+	template<typename T, template<typename> class ALLOC>
+	VectorConstIterator<T, ALLOC> Vector<T, ALLOC>::end()const
 	{
 		return indexIterator(m_size);
 	}
 
-	template<typename T>
-	VectorConstIterator<T> Vector<T>::indexIterator(sizeType index)const
+	template<typename T, template<typename> class ALLOC>
+	VectorConstIterator<T, ALLOC> Vector<T, ALLOC>::indexIterator(sizeType index)const
 	{
-		return VectorConstIterator<T>(index, const_cast<const T**>(&m_data));
+		return VectorConstIterator<T, ALLOC>(index, const_cast<const T**>(&m_data));
 	}
 
-	template<typename T>
-	VectorReverseIterator<T> Vector<T>::rbegin()
-	{
-		return rindexIterator(m_size - 1);
-	}
-
-	template<typename T>
-	VectorReverseIterator<T> Vector<T>::rend()
-	{
-		return rindexIterator(-1);
-	}
-
-	template<typename T>
-	VectorReverseIterator<T> Vector<T>::rindexIterator(sizeType index)
-	{
-		return VectorReverseIterator<T>(index, const_cast<const T**>(&m_data));
-	}
-
-	template<typename T>
-	VectorReverseConstIterator<T> Vector<T>::rbegin() const
+	template<typename T, template<typename> class ALLOC>
+	VectorReverseIterator<T, ALLOC> Vector<T, ALLOC>::rbegin()
 	{
 		return rindexIterator(m_size - 1);
 	}
 
-	template<typename T>
-	VectorReverseConstIterator<T> Vector<T>::rend() const
+	template<typename T, template<typename> class ALLOC>
+	VectorReverseIterator<T, ALLOC> Vector<T, ALLOC>::rend()
 	{
 		return rindexIterator(-1);
 	}
 
-	template<typename T>
-	VectorReverseConstIterator<T> Vector<T>::rindexIterator(sizeType index) const
+	template<typename T, template<typename> class ALLOC>
+	VectorReverseIterator<T, ALLOC> Vector<T, ALLOC>::rindexIterator(sizeType index)
 	{
-		return VectorReverseConstIterator<T>(index, const_cast<const T**>(&m_data));
+		return VectorReverseIterator<T, ALLOC>(index, const_cast<const T**>(&m_data));
 	}
 
-	template<typename T>
-	constexpr VectorIterator<T>::VectorIterator(sizeType index, const T **dataPtr) :
+	template<typename T, template<typename> class ALLOC>
+	VectorReverseConstIterator<T, ALLOC> Vector<T, ALLOC>::rbegin() const
+	{
+		return rindexIterator(m_size - 1);
+	}
+
+	template<typename T, template<typename> class ALLOC>
+	VectorReverseConstIterator<T, ALLOC> Vector<T, ALLOC>::rend() const
+	{
+		return rindexIterator(-1);
+	}
+
+	template<typename T, template<typename> class ALLOC>
+	VectorReverseConstIterator<T, ALLOC> Vector<T, ALLOC>::rindexIterator(sizeType index) const
+	{
+		return VectorReverseConstIterator<T, ALLOC>(index, const_cast<const T**>(&m_data));
+	}
+
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorIterator<T, ALLOC>::VectorIterator(sizeType index, const T **dataPtr) :
 		m_dataPtr(const_cast<T**>(dataPtr)), //const cast is safe at this point
 		m_index(index)
 	{}
 
-	template<typename T>
-	constexpr T& VectorIterator<T>::operator * ()
+	template<typename T, template<typename> class ALLOC>
+	constexpr T& VectorIterator<T, ALLOC>::operator * ()
 	{
 		return *((*m_dataPtr) + m_index);
 	}
 
-	template<typename T>
-	constexpr const T& VectorIterator<T>::operator * () const
+	template<typename T, template<typename> class ALLOC>
+	constexpr const T& VectorIterator<T, ALLOC>::operator * () const
 	{
 		return *((*m_dataPtr) + m_index);
 	}
 
-	template<typename T>
-	constexpr T* VectorIterator<T>::operator -> ()
+	template<typename T, template<typename> class ALLOC>
+	constexpr T* VectorIterator<T, ALLOC>::operator -> ()
 	{
 		return ((*m_dataPtr) + m_index);
 	}
 
-	template<typename T>
-	constexpr const T* VectorIterator<T>::operator -> () const
+	template<typename T, template<typename> class ALLOC>
+	constexpr const T* VectorIterator<T, ALLOC>::operator -> () const
 	{
 		return ((*m_dataPtr) + m_index);
 	}
 
-	template<typename T>
-	constexpr VectorIterator<T>& VectorIterator<T>::operator ++ ()
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorIterator<T, ALLOC>& VectorIterator<T, ALLOC>::operator ++ ()
 	{
 		m_index++;
 
 		return *this;
 	}
 
-	template<typename T>
-	constexpr const VectorIterator<T>& VectorIterator<T>::operator ++ () const
+	template<typename T, template<typename> class ALLOC>
+	constexpr const VectorIterator<T, ALLOC>& VectorIterator<T, ALLOC>::operator ++ () const
 	{
 		m_index++;
 
 		return *this;
 	}
 
-	template<typename T>
-	constexpr VectorIterator<T> VectorIterator<T>::operator ++ (int) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorIterator<T, ALLOC> VectorIterator<T, ALLOC>::operator ++ (int) const
 	{
-		VectorIterator<T> ret = *this;
+		VectorIterator<T, ALLOC> ret = *this;
 
 		m_index++;
 
 		return ret;
 	}
 
-	template<typename T>
-	constexpr boolean VectorIterator<T>::operator == (const VectorIterator<T> &other) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr boolean VectorIterator<T, ALLOC>::operator == (const VectorIterator<T, ALLOC> &other) const
 	{
 		return m_dataPtr == other.m_dataPtr && m_index == other.m_index;
 	}
 
-	template<typename T>
-	constexpr boolean VectorIterator<T>::operator != (const VectorIterator<T> &other) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr boolean VectorIterator<T, ALLOC>::operator != (const VectorIterator<T, ALLOC> &other) const
 	{
 		return !(*this == other);
 	}
 
-	template<typename T>
-	constexpr VectorIterator<T> VectorIterator<T>::operator + (sizeType value) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorIterator<T, ALLOC> VectorIterator<T, ALLOC>::operator + (sizeType value) const
 	{
-		return VectorIterator<T>(m_index + value, const_cast<const T**>(m_dataPtr));
+		return VectorIterator<T, ALLOC>(m_index + value, const_cast<const T**>(m_dataPtr));
 	}
 
-	template<typename T>
-	constexpr VectorIterator<T> VectorIterator<T>::operator - (sizeType value) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorIterator<T, ALLOC> VectorIterator<T, ALLOC>::operator - (sizeType value) const
 	{
-		return VectorIterator<T>(m_index - value, const_cast<const T**>(m_dataPtr));
+		return VectorIterator<T, ALLOC>(m_index - value, const_cast<const T**>(m_dataPtr));
 	}
 
-	template<typename T>
-	constexpr VectorIterator<T>& VectorIterator<T>::operator += (sizeType value)
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorIterator<T, ALLOC>& VectorIterator<T, ALLOC>::operator += (sizeType value)
 	{
 		m_index += value;
 
 		return *this;
 	}
 
-	template<typename T>
-	constexpr VectorIterator<T>& VectorIterator<T>::operator -= (sizeType value)
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorIterator<T, ALLOC>& VectorIterator<T, ALLOC>::operator -= (sizeType value)
 	{
 		m_index -= value;
 
@@ -1406,96 +1437,96 @@ namespace NOU::NOU_DAT_ALG
 
 
 
-	template<typename T>
-	constexpr VectorReverseIterator<T>::VectorReverseIterator(sizeType index, const T **dataPtr) :
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorReverseIterator<T, ALLOC>::VectorReverseIterator(sizeType index, const T **dataPtr) :
 		m_dataPtr(const_cast<T**>(dataPtr)), //const cast is safe at this point
 		m_index(index)
 	{}
 
-	template<typename T>
-	constexpr T& VectorReverseIterator<T>::operator * ()
+	template<typename T, template<typename> class ALLOC>
+	constexpr T& VectorReverseIterator<T, ALLOC>::operator * ()
 	{
 		return *((*m_dataPtr) + m_index);
 	}
 
-	template<typename T>
-	constexpr const T& VectorReverseIterator<T>::operator * () const
+	template<typename T, template<typename> class ALLOC>
+	constexpr const T& VectorReverseIterator<T, ALLOC>::operator * () const
 	{
 		return *((*m_dataPtr) + m_index);
 	}
 
-	template<typename T>
-	constexpr T* VectorReverseIterator<T>::operator -> ()
+	template<typename T, template<typename> class ALLOC>
+	constexpr T* VectorReverseIterator<T, ALLOC>::operator -> ()
 	{
 		return ((*m_dataPtr) + m_index);
 	}
 
-	template<typename T>
-	constexpr const T* VectorReverseIterator<T>::operator -> () const
+	template<typename T, template<typename> class ALLOC>
+	constexpr const T* VectorReverseIterator<T, ALLOC>::operator -> () const
 	{
 		return ((*m_dataPtr) + m_index);
 	}
 
-	template<typename T>
-	constexpr VectorReverseIterator<T>& VectorReverseIterator<T>::operator ++ ()
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorReverseIterator<T, ALLOC>& VectorReverseIterator<T, ALLOC>::operator ++ ()
 	{
 		m_index--;
 
 		return *this;
 	}
 
-	template<typename T>
-	constexpr const VectorReverseIterator<T>& VectorReverseIterator<T>::operator ++ () const
+	template<typename T, template<typename> class ALLOC>
+	constexpr const VectorReverseIterator<T, ALLOC>& VectorReverseIterator<T, ALLOC>::operator ++ () const
 	{
 		m_index--;
 
 		return *this;
 	}
 
-	template<typename T>
-	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator ++ (int) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorReverseIterator<T, ALLOC> VectorReverseIterator<T, ALLOC>::operator ++ (int) const
 	{
-		VectorReverseIterator<T> ret = *this;
+		VectorReverseIterator<T, ALLOC> ret = *this;
 
 		m_index--;
 
 		return ret;
 	}
 
-	template<typename T>
-	constexpr boolean VectorReverseIterator<T>::operator == (const VectorReverseIterator<T> &other) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr boolean VectorReverseIterator<T, ALLOC>::operator == (const VectorReverseIterator<T, ALLOC> &other) const
 	{
 		return m_dataPtr == other.m_dataPtr && m_index == other.m_index;
 	}
 
-	template<typename T>
-	constexpr boolean VectorReverseIterator<T>::operator != (const VectorReverseIterator<T> &other) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr boolean VectorReverseIterator<T, ALLOC>::operator != (const VectorReverseIterator<T, ALLOC> &other) const
 	{
 		return !(*this == other);
 	}
 
-	template<typename T>
-	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator + (sizeType value) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorReverseIterator<T, ALLOC> VectorReverseIterator<T, ALLOC>::operator + (sizeType value) const
 	{
-		return VectorReverseIterator<T>(m_index - value, const_cast<const T**>(m_dataPtr));
+		return VectorReverseIterator<T, ALLOC>(m_index - value, const_cast<const T**>(m_dataPtr));
 	}
 
-	template<typename T>
-	constexpr VectorReverseIterator<T> VectorReverseIterator<T>::operator - (sizeType value) const
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorReverseIterator<T, ALLOC> VectorReverseIterator<T, ALLOC>::operator - (sizeType value) const
 	{
-		return VectorReverseIterator<T>(m_index + value, const_cast<const T**>(m_dataPtr));
+		return VectorReverseIterator<T, ALLOC>(m_index + value, const_cast<const T**>(m_dataPtr));
 	}
 
-	template<typename T>
-	constexpr VectorReverseIterator<T>& VectorReverseIterator<T>::operator += (sizeType value)
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorReverseIterator<T, ALLOC>& VectorReverseIterator<T, ALLOC>::operator += (sizeType value)
 	{
 		m_index -= value;
 
 		return *this;
 	}
 
-	template<typename T>
-	constexpr VectorReverseIterator<T>& VectorReverseIterator<T>::operator -= (sizeType value)
+	template<typename T, template<typename> class ALLOC>
+	constexpr VectorReverseIterator<T, ALLOC>& VectorReverseIterator<T, ALLOC>::operator -= (sizeType value)
 	{
 		m_index += value;
 

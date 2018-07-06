@@ -30,8 +30,9 @@ namespace NOU::NOU_DAT_ALG
 		using CharType = typename StringView<CHAR_TYPE>::CharType;
 		using ConstCharType = typename StringView<CHAR_TYPE>::ConstCharType;
 
-		using StringIterator = VectorIterator<CharType>;
-		using StringReverseIterator = VectorReverseIterator<CharType>;
+		using StringIterator = VectorIterator<CharType, NOU_MEM_MNGT::GenericAllocationCallback>;
+		using StringReverseIterator = VectorReverseIterator<CharType, 
+			NOU_MEM_MNGT::GenericAllocationCallback>;
 
 	private:
 

@@ -72,8 +72,11 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		using ConstCharType = const CharType;
 
-		using StringConstIterator = VectorConstIterator<ConstCharType>;
-		using StringReverseConstIterator = VectorReverseConstIterator<ConstCharType>;
+		using StringConstIterator = VectorConstIterator<ConstCharType, 
+			NOU_MEM_MNGT::GenericAllocationCallback>;
+
+		using StringReverseConstIterator = VectorReverseConstIterator<ConstCharType,
+			NOU_MEM_MNGT::GenericAllocationCallback>;
 
 		/**
 		\brief The character that is used to separate the decimal places from the remaining digits by stringToFloat32()

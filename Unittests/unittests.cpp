@@ -325,7 +325,7 @@ IsTrue(0 == vec2[0]);
 
 NOU::sizeType i = 0;
 
-for (NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> it = vec2.begin(); it != vec2.end(); it++)
+for (auto it = vec2.begin(); it != vec2.end(); it++)
 {
 IsTrue(*it == vec2[i]);
 i++;
@@ -333,7 +333,7 @@ i++;
 
 i = vec2.size() - 1;
 
-for (NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> it = vec2.rbegin(); it != vec2.rend(); it++)
+for (auto it = vec2.rbegin(); it != vec2.rend(); it++)
 {
 IsTrue(*it == vec2[i]);
 i--;
@@ -343,7 +343,7 @@ NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::int32> dbgAlloc;
 
 {
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> vec4(1, dbgAlloc);
+NOU::NOU_DAT_ALG::Vector<NOU::int32, NOU::NOU_MEM_MNGT::DebugAllocationCallback> vec4(1);
 
 vec4.pushBack(5);
 vec4.pushBack(2);
@@ -578,10 +578,9 @@ NOU::NOU_CORE::getErrorHandler().popError();
 NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
 
 {
-NOU::NOU_DAT_ALG::FastQueue<NOU::DebugClass> fq(5, allocator);
+NOU::NOU_DAT_ALG::FastQueue<NOU::DebugClass, NOU::NOU_MEM_MNGT::DebugAllocationCallback> fq(5);
 
 IsTrue(fq.capacity() == 5);
-IsTrue(&fq.getAllocationCallback() == &allocator);
 
 IsTrue(fq.size() == 0);
 IsTrue(fq.empty());
@@ -689,17 +688,14 @@ NOU_CHECK_ERROR_HANDLER;
 TEST_METHOD(AllocationCallbackDeleter)
 {
 NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> dbgAlloc;
-NOU::NOU_MEM_MNGT::AllocationCallbackRefDeleter<int> deleter0(dbgAlloc);
-
-int *iPtr0 = dbgAlloc.allocate();
-
-deleter0(iPtr0); //delete using deleter
 
 IsTrue(dbgAlloc.getCounter() == 0);
 
 auto callback = NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>();
+
+
 NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int,
-        NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>> deleter1(callback);
+        NOU::NOU_MEM_MNGT::DebugAllocationCallback> deleter1(NOU::NOU_CORE::move(callback));
 
 int *iPtr1 = deleter1.getAllocator().allocate();
 

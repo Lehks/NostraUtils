@@ -26,47 +26,47 @@ namespace NOU::NOU_MEM_MNGT
 	\brief A class that defines a unified interface that is used to allocate and deallocate uninitialized
 	       memory.
 	*/
-	template<typename T>
-	class AllocationCallback
-	{
-	public:
+	//template<typename T>
+	//class AllocationCallback
+	//{
+	//public:
 
-		virtual ~AllocationCallback() = default;
+	//	virtual ~AllocationCallback() = default;
 
-		/**
-		\param amount The amount of objects to allocate.
+	//	/**
+	//	\param amount The amount of objects to allocate.
 
-		\return A pointer to the allocated memory, or \p nullptr (see details section).
+	//	\return A pointer to the allocated memory, or \p nullptr (see details section).
 
-		\brief Allocates enough memory to hold \p amount instances of the type \p T.
+	//	\brief Allocates enough memory to hold \p amount instances of the type \p T.
 
-		\details
-		Allocates enough memory to hold \p amount instances of the type \p T. This function may or may not 
-		call constructors. All tough the behavior of calling constructors may change from allocation callback 
-		to allocation callback, it must be consistent along the usage of the same allocator class.
-		The memory allocated with this function must be deallocatable using the deallocate() function of the 
-		same allocation callback.
-		*/
-		virtual T* allocate(sizeType amount = 1) = 0;
+	//	\details
+	//	Allocates enough memory to hold \p amount instances of the type \p T. This function may or may not 
+	//	call constructors. All tough the behavior of calling constructors may change from allocation callback 
+	//	to allocation callback, it must be consistent along the usage of the same allocator class.
+	//	The memory allocated with this function must be deallocatable using the deallocate() function of the 
+	//	same allocation callback.
+	//	*/
+	//	virtual T* allocate(sizeType amount = 1) = 0;
 
-		/**
-		\param data The block of memory to deallocate.
+	//	/**
+	//	\param data The block of memory to deallocate.
 
-		\brief Deallocates memory that was previously allocated by the same allocation callback. 
+	//	\brief Deallocates memory that was previously allocated by the same allocation callback. 
 
-		\details
-		Deallocates memory that was previously allocated by the same allocation callback. This function
-		may or may not call destructors. All tough the behavior of calling destructors may change from 
-		allocation callback to allocation callback, it must be consistent along the usage of the same 
-		allocator class.
+	//	\details
+	//	Deallocates memory that was previously allocated by the same allocation callback. This function
+	//	may or may not call destructors. All tough the behavior of calling destructors may change from 
+	//	allocation callback to allocation callback, it must be consistent along the usage of the same 
+	//	allocator class.
 
-		\note 
-		It is only required that the same allocation callback that allocated memory can also deallocate the
-		same memory, however it is allowed for an allocation callback to also deallocate the memory of another
-		callback. This behavior is never defined and may or may not result in a proper deallocation.
-		*/
-		virtual void deallocate(T *data) = 0;
-	};
+	//	\note 
+	//	It is only required that the same allocation callback that allocated memory can also deallocate the
+	//	same memory, however it is allowed for an allocation callback to also deallocate the memory of another
+	//	callback. This behavior is never defined and may or may not result in a proper deallocation.
+	//	*/
+	//	virtual void deallocate(T *data) = 0;
+	//};
 
 	/**
 	\tparam T The type of objects to allocate.
@@ -84,7 +84,7 @@ namespace NOU::NOU_MEM_MNGT
 	any memory that was allocated by deallocateUninitialized().
 	*/
 	template<typename T>
-	class GenericAllocationCallback final : public AllocationCallback<T>
+	class GenericAllocationCallback final //: public AllocationCallback<T>
 	{
 	public:
 		/**
@@ -106,7 +106,7 @@ namespace NOU::NOU_MEM_MNGT
 		\brief An implementation of AllocationCallback::allocate() that uses the function 
 		       allocateUninitialized().
 		*/
-		virtual T* allocate(sizeType amount = 1) override;
+		T* allocate(sizeType amount = 1);
 
 		/**
 		\param data The memory to deallocate.
@@ -114,7 +114,7 @@ namespace NOU::NOU_MEM_MNGT
 		\brief An implementation of AllocationCallback::deallocate() that uses the function 
 		       deallocateUninitialized().
 		*/
-		virtual void deallocate(T *data) override;
+		void deallocate(T *data);
 	};
 
 	/**
@@ -124,7 +124,7 @@ namespace NOU::NOU_MEM_MNGT
 	       tracks the amount of allocations and deallocations.
 	*/
 	template<typename T>
-	class DebugAllocationCallback final : public AllocationCallback<T>
+	class DebugAllocationCallback final //: public AllocationCallback<T>
 	{
 	private:
 		/**
@@ -147,7 +147,7 @@ namespace NOU::NOU_MEM_MNGT
 		\brief An implementation of AllocationCallback::allocate() that uses 
 		       DebugAllocationCallback<T>::allocate().
 		*/
-		virtual T* allocate(sizeType amount = 1) override;
+		T* allocate(sizeType amount = 1);
 
 		/**
 		\param data The memory to deallocate.
@@ -155,7 +155,7 @@ namespace NOU::NOU_MEM_MNGT
 		\brief An implementation of AllocationCallback::deallocate() that uses 
 		       DebugAllocationCallback<T>::deallocate().
 		*/
-		virtual void deallocate(T *data) override;
+		void deallocate(T *data);
 
 		/**
 		\return m_counter
