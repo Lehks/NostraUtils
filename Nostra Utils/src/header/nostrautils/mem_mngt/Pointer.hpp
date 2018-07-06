@@ -79,7 +79,7 @@ namespace NOU::NOU_MEM_MNGT
 
 		\brief Constructs a new AllocationCallbackDeleter.
 		*/
-		AllocationCallbackDeleter(Allocator &&allocator);
+		AllocationCallbackDeleter(Allocator &&allocator = Allocator());
 
 		virtual ~AllocationCallbackDeleter() = default;
 

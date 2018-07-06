@@ -687,15 +687,7 @@ TEST_METHOD(DebugAllocationCallback)
 
 TEST_METHOD(AllocationCallbackDeleter)
 {
-	NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> dbgAlloc;
-
-	IsTrue(dbgAlloc.getCounter() == 0);
-
-	auto callback = NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>();
-
-
-	NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int,
-		NOU::NOU_MEM_MNGT::DebugAllocationCallback> deleter1(NOU::NOU_CORE::move(callback));
+	NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int, NOU::NOU_MEM_MNGT::DebugAllocationCallback> deleter1;
 
 	int *iPtr1 = deleter1.getAllocator().allocate();
 
