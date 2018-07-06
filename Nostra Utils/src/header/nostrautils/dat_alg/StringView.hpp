@@ -12,7 +12,7 @@
 /** \file StringView.hpp
 \author	 Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides the StringView which is an interface between \link nostra::utils::dat_alg::String 
          String\endlink and C-Strings.
 

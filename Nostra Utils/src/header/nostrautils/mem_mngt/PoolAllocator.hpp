@@ -11,7 +11,8 @@
 \file mem_mngt/PoolAllocator.hpp
 
 \author	 Lukas Gross
-\version 1.0.0
+\author	 Lukas Reichmann
+\version 1.0.1
 \since	 1.0.0
 
 \brief A file that contains the nostra::utils::mem_mngt::PoolAllocator class.
@@ -46,11 +47,11 @@ namespace NOU::NOU_MEM_MNGT
 
 	\brief		A class that defines the PoolAllocator.
 	*/
-	template <typename T, typename ALLOC = GenericAllocationCallback<PoolBlock<T>*>>
+	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
 	class PoolAllocator
 	{
 	public:
-		using Allocator = ALLOC;
+		using Allocator = typename NOU_DAT_ALG::Vector<PoolBlock<T>*, ALLOC>::Allocator;
 
 	private:
 		/**
@@ -71,7 +72,7 @@ namespace NOU::NOU_MEM_MNGT
 		/**
 		\brief A vector that stores the PoolAllocators.
 		*/
-		NOU_DAT_ALG::Vector<PoolBlock<T>*> m_blocks;
+		NOU_DAT_ALG::Vector<PoolBlock<T>*, ALLOC> m_blocks;
 
 		/**
 		\brief The size of the PoolAllocator. 
@@ -149,13 +150,13 @@ namespace NOU::NOU_MEM_MNGT
 		void deallocate(T* data);
 	};
 
-	template<typename T, typename ALLOC>
+	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
 	constexpr sizeType PoolAllocator<T, ALLOC>::POOL_ALLOCATOR_DEFAULT_SIZE;
 
-	template<typename T, typename ALLOC>
+	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
 	constexpr sizeType PoolAllocator<T, ALLOC>::BLOCK_BUFFER_DEFAULT_SIZE;
 
-	template<typename T, typename ALLOC>
+	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
 	PoolAllocator<T, ALLOC>::PoolAllocator(sizeType size, Allocator &&allocator) :
 		m_size(size),
 		m_blocks(BLOCK_BUFFER_DEFAULT_SIZE, NOU_CORE::move(allocator))
@@ -163,7 +164,7 @@ namespace NOU::NOU_MEM_MNGT
 		newPool(size);
 	}
 
-	template<typename T, typename ALLOC>
+	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
 	PoolAllocator<T, ALLOC>::~PoolAllocator()
 	{
 		for (PoolBlock<T>* block : m_blocks)
@@ -174,7 +175,7 @@ namespace NOU::NOU_MEM_MNGT
 		m_head = nullptr;
 	}
 
-	template<typename T, typename ALLOC>
+	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
 	void PoolAllocator<T, ALLOC>::newPool(sizeType size)
 	{
 		PoolBlock<T>* m_data = new PoolBlock<T>[size];
@@ -189,7 +190,7 @@ namespace NOU::NOU_MEM_MNGT
 		m_blocks.pushBack(m_data);
 	}
 
-	template<typename T, typename ALLOC>
+	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
 	template <typename... arguments>
 	T* PoolAllocator<T, ALLOC>::allocate(arguments&&... args)
 	{	
@@ -213,7 +214,7 @@ namespace NOU::NOU_MEM_MNGT
 		return retVal;
 	}
 
-	template<typename T, typename ALLOC>
+	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
 	void PoolAllocator<T, ALLOC>::deallocate(T* data)
 	{
 		if (data == nullptr)

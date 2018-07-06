@@ -9,7 +9,7 @@
 /** \file Pointer.hpp
 \author	 Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides smart pointer classes (which is currently only \link 
          nostra::utils::mem_mngt::UniquePtr UniquePtr \endlink).
 
