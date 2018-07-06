@@ -4,6 +4,7 @@
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/mem_mngt/Pointer.hpp"
 #include "nostrautils/core/Meta.hpp"
+#include "nostrautils/dat_alg/FwdDcl.hpp"
 
 /**
 \file core/ErrorHandler.hpp
@@ -14,12 +15,6 @@
 
 \brief A file that contains the nostra::utils::core::ErrorHandler class.
 */
-
-namespace NOU::NOU_DAT_ALG
-{
-	template<typename T, template<typename> class ALLOC = NOU_MEM_MNGT::GenericAllocationCallback>
-	class FastQueue;
-}
 
 namespace NOU::NOU_CORE
 {

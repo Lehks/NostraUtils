@@ -26,6 +26,9 @@ namespace NOU::NOU_DAT_ALG
 	class HashMap;
 
 	template<typename T, template<typename> class ALLOC = NOU_MEM_MNGT::GenericAllocationCallback>
+	class FastQueue;
+
+	template<typename T, template<typename> class ALLOC = NOU_MEM_MNGT::GenericAllocationCallback>
 	class Vector;
 }
 ///\endcond
