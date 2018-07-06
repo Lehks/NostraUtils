@@ -651,7 +651,7 @@ namespace NOU::NOU_DAT_ALG
 	{
 		sizeType n;
 		n = hashObj(&key, 1, m_data.size());
-		NOU::NOU_DAT_ALG::Pair<K, V> *pair = getPair(key);
+		NOU::NOU_DAT_ALG::Pair<K, V> *pair = const_cast<HashMap<K, V>*>(this)->getPair(key);
 
 		if(pair == nullptr) 
 		{
@@ -687,7 +687,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename K, typename V, template<typename> class ALLOC>
 	const V& HashMap<K, V, ALLOC>::get(const K &key, Comparator<K> comp) const
 	{
-		NOU::NOU_DAT_ALG::Pair<K, V> *pair = getPair(key, comp);
+		NOU::NOU_DAT_ALG::Pair<K, V> *pair = const_cast<HashMap<K, V>*>(this)->getPair(key, comp);
 
 		if (pair == nullptr)
 		{

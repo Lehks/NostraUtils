@@ -1,94 +1,100 @@
-
 #ifndef NOU_FILE_MNGT_FOLDER_HPP
 #define NOU_FILE_MNGT_FOLDER_HPP
 
 #include "nostrautils/file_mngt/File.hpp"
 #include "nostrautils/file_mngt/Path.hpp"
 #include "nostrautils/dat_alg/StringView.hpp"
+
 /** \file Folder.hpp
 \author  Mahan Karimi
 \since   1.0.0
 \version 1.0.1
 \brief    This class provides an implementation for a simple folder system.
 */
-
-
-
-
 namespace NOU::NOU_FILE_MNGT
 {
+	/**
+	\brief			A class that provides the functionality to create, remove and operate folders.
+	*/
 	class Folder 
 	{
 	private :
 
+		/**
+		\brief		The path of the folder.
+		*/
 		NOU::NOU_FILE_MNGT::Path m_path;
 
-		NOU::NOU_DAT_ALG::String8 m_name = "."; 
-
 	public :
-		/*
-		\ brief Constructor of the class Folder with two parameters
-		\@param m_path (location of you folder )
-		\@param filenames
+
+		/**
+		\param path	The folder location.
+
+		\brief		Constructs a new Folder object with a Path object as the location.
 		*/
+		NOU_FUNC Folder(const Path& path);
 
-		NOU_FUNC Folder(Path m_path);
+		/**
+		\param path	The folder location.
 
-		/*
-		\brief Constructor of the class Folder with one parameter
-		\param m_path (location of you folder )
+		\brief		Constructs a new Folder object with a String as the location.
 		*/
+		NOU_FUNC Folder(const NOU::NOU_DAT_ALG::String8 &path);
 
-		NOU_FUNC Folder(NOU::NOU_DAT_ALG::String8 &path);
+		/**
+		\return		A vector of folders.
+		
+		\brief		A function that lists all folders.
 
-		/*
-		\brief A function that lists you all folders in a directory and safes the result in a vector { ls commando }  
-		\return all folders and safes in a vector  
+		\details	This function is similar to the ls-command (UNIX/LINUX/MAC) and dir-command (Windows).
 		*/
-
 		NOU_FUNC NOU::NOU_DAT_ALG::Vector<Folder> listFolders() const;
 
-		/*
-		\ brief A function that lists you all files in a directory and safes the result in a vector 
-		\ return all files and safes in a vector
-		*/
-												
+		/**
+		\return		A vector of files.
+		
+		\brief		A function that lists all files.
+
+		\details	This function is similar to the ls-command (UNIX/LINUX/MAC) and dir-command (Windows).
+		*/		
 		NOU_FUNC NOU::NOU_DAT_ALG::Vector<NOU::file_mngt::File> listFiles() const;
 		
-		/*
-		\brief  A function that returns you the current path 
-		\return the path which you give you constructor as parameter
+		/**
+		\return		The path of the folder.
+		
+		\brief		This function returns the path of the folder.
 		*/
-
 		NOU_FUNC const Path & getPath() const;
 
-		/*
-		\ brief A function that creates you a folder with an object
-		\ return a folder in the path you give the constructor as parameter 
-		*/
+		/**
+		\return		True when a new folder is created and false if not.
+		
+		\brief		This function creates a new folder.
 
+		\details	Calls the create(const Path &path) with the m_path attribute as default value.
+		*/
 		NOU_FUNC boolean create();
 
-		/*
-		\ brief A function that creates you a folder without an object
-		\ param a path where you folder will be create
-		\ return a folder in the path you give the constructor as parameter
+		/**
+		\param path	The path of the folder that will be created.
+
+		\return		True when a new folder is created and false if not.
+
+		\brief		Creates a new folder on the passed path.
 		*/
-		
 		NOU_FUNC static boolean create(const Path &path);
 
-		/*
-		\brief A function that deletes a folder
-		\param path from type Path (const)
+		/**
+		\brief		Removes the folder.
 		*/
+		NOU_FUNC void remove();
 
-	
-		NOU_FUNC void remove(const NOU::NOU_DAT_ALG::String8 &path);
- 
-		
+		/**
+		\param path	The path of the folder.
 
-		
+		\brief		Removes the folder on the passed path.
+		*/
+		NOU_FUNC void remove(const Path &path);
 	};
 }
-
 #endif

@@ -1,40 +1,29 @@
-
 #include "nostrautils/file_mngt/Folder.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
 
-
-
-
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
-#include <Windows.h>
-#include <stdlib.h>
-#include <direct.h>
+	#include <Windows.h>
+	#include <stdlib.h>
+	#include <direct.h>
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <dirent.h>
+	#include <unistd.h>
+	#include <sys/stat.h>
+	#include <sys/types.h>
+	#include <dirent.h>
 #endif
 
 namespace NOU::NOU_FILE_MNGT
 {
+	Folder::Folder(const Path& path) :
+		m_path(path)
+	{}
 
-	Folder::Folder(Path m_path) :
-		m_path(m_path)
-	{
-
-	}
-	
-
-	Folder::Folder(NOU::NOU_DAT_ALG::String8 &path)
-	{
-		Path tmpPath(path);
-		m_path = tmpPath;		
-	}
+	Folder::Folder(const NOU::NOU_DAT_ALG::String8 &path) :
+		m_path(path)
+	{}
 
 	boolean Folder::create()
 	{
-
 		return Folder::create(m_path);
 	}
 
@@ -55,15 +44,12 @@ namespace NOU::NOU_FILE_MNGT
 
 			return false;
 		}
-		return true;
-
 
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 		
        mkdir(path.getAbsolutePath().rawStr(), 0777);
 		
 #endif
-
        return true;
 	}
 
@@ -75,11 +61,15 @@ namespace NOU::NOU_FILE_MNGT
 	NOU_DAT_ALG::Vector<Folder> Folder::listFolders() const
 	{
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+
 		NOU_DAT_ALG::Vector<Folder> v;
+
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
 		pattern.append("\\*");
+
 		WIN32_FIND_DATA data;
 		HANDLE hFind;
+
 		NOU::boolean firstFolder = true;
 
 		hFind = FindFirstFile(pattern.rawStr(), &data);
@@ -97,14 +87,15 @@ namespace NOU::NOU_FILE_MNGT
 
 			FindClose(hFind);
 		}
-		return v;
-
 
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+
 		NOU_DAT_ALG::Vector<Folder> v;
+
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
 
 		DIR* dirp = opendir(pattern.rawStr());
+
 		struct dirent *dstruct;
 		NOU::uint8 dir = dstruct->d_type;
 
@@ -116,23 +107,24 @@ namespace NOU::NOU_FILE_MNGT
 				v.emplaceBack(f1);
 			}
 		}
-
 		closedir(dirp);
 #endif
-
 		return v;
-		}
+	}
 
 	NOU_DAT_ALG::Vector<NOU::file_mngt::File> Folder::listFiles() const
 	{
-      #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+
 		NOU_DAT_ALG::Vector<NOU::file_mngt::File> v;
+
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
 		pattern.append("\\*");
+
 		WIN32_FIND_DATA data;
 		HANDLE hFind;
+
 		NOU::boolean firstFolder = true;
-		
 		
 		if ((hFind = FindFirstFile(pattern.rawStr(), &data)) != INVALID_HANDLE_VALUE)
 		{
@@ -147,16 +139,18 @@ namespace NOU::NOU_FILE_MNGT
 			} while (FindNextFile(hFind, &data) != 0);
 			FindClose(hFind);
 		}
-		return v;
 
-       #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+
 		NOU_DAT_ALG::Vector<NOU::file_mngt::File> v;
+
 		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
 		pattern.append("\\*");
+
 		DIR* dirp = opendir(pattern.rawStr());
+
 		struct dirent *dstruct;
 		NOU::uint8 dir = dstruct->d_type;
-
 
 		while ((dstruct = readdir(dirp)) != NULL)
 		{
@@ -169,33 +163,32 @@ namespace NOU::NOU_FILE_MNGT
 
 		closedir(dirp);
 
-
-       #endif
-
+#endif
 		return v;
 	}
 
-
-	void Folder::remove(const NOU::NOU_DAT_ALG::String8 &path)
+	void Folder::remove()
 	{
-      #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
-		if (_rmdir(path.rawStr()) != 0)
-		{
-			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::UNKNOWN_ERROR, "The folder could not be deleted by this path");
-		}
-
-        #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
-
-		 if(rmdir(path.rawStr()) != 0 )
-		 {
-		 	std::cout << strerror(errno) << std::endl;
-		 }
-
-        #endif
+		remove(m_path);
 	}
 
+	void Folder::remove(const Path &path)
+	{
+#if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
+		if (_rmdir(path.getAbsolutePath().rawStr()) != 0)
+		{
+			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::UNKNOWN_ERROR, "The folder at the passed path could not be deleted!");
+		}
 
-	
+#elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
+
+		 if(rmdir(path.getAbsolutePath().rawStr()) != 0 )
+		 {
+			 NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::UNKNOWN_ERROR, "The folder at the passed path could not be deleted!");
+		 }
+
+#endif
+	}
 }
 
 

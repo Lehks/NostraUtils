@@ -238,7 +238,7 @@ namespace NOU::NOU_FILE_MNGT
 		{
 			// Write section
 			if (*sectionValues.at(isec) > 0) {
-				if (sectionKeys.at(isec)->rawStr() != INI_DEFAULT_SECTION) {
+				if (*sectionKeys.at(isec) != INI_DEFAULT_SECTION) {
 					inifile << "[" << sectionKeys.at(isec)->rawStr() << "]" << std::endl;
 				}
 			}
@@ -253,7 +253,7 @@ namespace NOU::NOU_FILE_MNGT
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
 				key_section = stringKeys.at(istr)->substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)->rawStr()) continue;
+				if (key_section != *sectionKeys.at(isec)) continue;
 
 				inifile << stringKeys.at(istr)->substring(pos_sec + 1).rawStr() << " = ";
 				inifile << "\"" << stringValues.at(istr)->rawStr() << "\"" << std::endl;
@@ -266,7 +266,7 @@ namespace NOU::NOU_FILE_MNGT
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
 				key_section = integerKeys.at(iint)->substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)->rawStr()) continue;
+				if (key_section != *sectionKeys.at(isec)) continue;
 
 				inifile << integerKeys.at(iint)->substring(pos_sec + 1).rawStr() << " = ";
 				inifile << integerValues.at(iint) << std::endl;
@@ -279,7 +279,7 @@ namespace NOU::NOU_FILE_MNGT
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
 				key_section = floatKeys.at(ifloat)->substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)->rawStr()) continue;
+				if (key_section != *sectionKeys.at(isec)) continue;
 
 				inifile << floatKeys.at(ifloat)->substring(pos_sec + 1).rawStr() << " = ";
 				inifile << floatValues.at(ifloat) << std::endl;
@@ -340,7 +340,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	INIFile::NouString INIFile::getString(const NouString & key, const NouString & section)
+	INIFile::NouString INIFile::getString(const NouString & key, const NouString & section) const
 	{
 		const NouString search = section + "." + key;
 
@@ -358,11 +358,11 @@ namespace NOU::NOU_FILE_MNGT
 			return NouString(this->getFloat(key, section));
 		}
 
-		return NouString();
+		return NOU_DAT_ALG::String8::EMPTY_STRING;
 	}
 
 
-	int32 INIFile::getInt(const NouString & key, const NouString & section)
+	int32 INIFile::getInt(const NouString & key, const NouString & section) const
 	{
 		const NouString search = section + "." + key;
 
@@ -384,7 +384,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	float32 INIFile::getFloat(const NouString & key, const NouString & section)
+	float32 INIFile::getFloat(const NouString & key, const NouString & section) const
 	{
 		const NouString search = section + "." + key;
 
@@ -406,7 +406,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	boolean INIFile::keyExists(const NouString & key, const NouString & section)
+	boolean INIFile::keyExists(const NouString & key, const NouString & section) const
 	{
 		NouString search = NouString(section + "." + key);
 
@@ -414,7 +414,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	NOU::NOU_DAT_ALG::HashMap<INIFile::NouString, INIFile::NouString> INIFile::getKeys()
+	NOU::NOU_DAT_ALG::HashMap<INIFile::NouString, INIFile::NouString> INIFile::getKeys() const
 	{
 		NOU::NOU_DAT_ALG::HashMap<NouString, NouString> keys = NOU::NOU_DAT_ALG::HashMap<NouString, NouString>();
 
@@ -441,7 +441,7 @@ namespace NOU::NOU_FILE_MNGT
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
 				key_section = stringKeys.at(istr)->substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)->rawStr()) continue;
+				if (key_section != *sectionKeys.at(isec)) continue;
 
 				keys.map(stringKeys.at(istr)->substring(pos_sec + 1).rawStr(), key_section);
 			}
@@ -453,7 +453,7 @@ namespace NOU::NOU_FILE_MNGT
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
 				key_section = integerKeys.at(iint)->substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)->rawStr()) continue;
+				if (key_section != *sectionKeys.at(isec)) continue;
 
 				keys.map(integerKeys.at(iint)->substring(pos_sec + 1).rawStr(), key_section);
 			}
@@ -465,7 +465,7 @@ namespace NOU::NOU_FILE_MNGT
 				if (pos_dot == NouString::NULL_INDEX) continue;
 
 				key_section = floatKeys.at(ifloat)->substring(0, pos_dot);
-				if (key_section != sectionKeys.at(isec)->rawStr()) continue;
+				if (key_section != *sectionKeys.at(isec)) continue;
 
 				keys.map(floatKeys.at(ifloat)->substring(pos_sec + 1).rawStr(), key_section);
 			}
@@ -475,7 +475,7 @@ namespace NOU::NOU_FILE_MNGT
 	}
 
 
-	int32 INIFile::getDataType(const NouString &key, const NouString & section)
+	int32 INIFile::getDataType(const NouString &key, const NouString & section) const
 	{
 		NouString search = section + "." + key;
 

@@ -143,7 +143,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Writes the INI file
 			*/
-			NOU_FUNC boolean write(const NouString & = NouString(""));
+			NOU_FUNC boolean write(const NouString & = NouString::EMPTY_STRING);
 
 			/**
 			\param key     The key to remove
@@ -187,7 +187,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as NouString.
 			*/
-			NOU_FUNC NouString getString(const NouString & key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC NouString getString(const NouString & key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param  key     The key to search
@@ -196,7 +196,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as integer.
 			*/
-			NOU_FUNC int32 getInt(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC int32 getInt(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param key     The key to search
@@ -205,7 +205,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as float.
 			*/
-			NOU_FUNC float32 getFloat(const NouString & key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC float32 getFloat(const NouString & key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param key     The key to search
@@ -214,7 +214,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Checks if a given key exists in the given section.
 			*/
-			NOU_FUNC boolean keyExists(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC boolean keyExists(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param key     The key to search for
@@ -223,14 +223,14 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Returns the data type for the value of a given key.
 			*/
-			NOU_FUNC int32 getDataType(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC int32 getDataType(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\return A hashmap with the key - section pairs.
 
 			\brief Returns a list of all keys in the ini file, including their corresponding section.
 			*/
-			NOU_FUNC NOU::NOU_DAT_ALG::HashMap<NouString, NouString> getKeys();
+			NOU_FUNC NOU::NOU_DAT_ALG::HashMap<NouString, NouString> getKeys() const;
 
 			/**
 			\param other The inifile that should be merged into this one.
