@@ -143,7 +143,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Writes the INI file
 			*/
-			NOU_FUNC boolean write(const NouString & = NouString::EMPTY_STRING);
+			NOU_FUNC boolean write(const NouString & = NouString::getEmptyString());
 
 			/**
 			\param key     The key to remove

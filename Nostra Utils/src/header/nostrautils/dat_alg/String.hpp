@@ -83,7 +83,7 @@ namespace NOU::NOU_DAT_ALG
 	    /**
         \brief An empty static const String member variable.
         */
-        static const String<CHAR_TYPE> EMPTY_STRING;
+        static const String<CHAR_TYPE>& getEmptyString();
 
 		/**
 		\param b The boolean to convert.
@@ -994,7 +994,11 @@ namespace NOU::NOU_DAT_ALG
 	using String32 = String<char32>;
 
 	template<typename CHAR_TYPE>
-	const String<CHAR_TYPE> String<CHAR_TYPE>::EMPTY_STRING = "";
+	const String<CHAR_TYPE>& String<CHAR_TYPE>::getEmptyString()
+	{
+		static String<CHAR_TYPE> str = "";
+		return str;
+	}
 
     template<typename CHAR_TYPE>
 	template<typename IT>

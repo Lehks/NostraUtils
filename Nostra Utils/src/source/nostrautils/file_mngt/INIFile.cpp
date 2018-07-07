@@ -358,7 +358,7 @@ namespace NOU::NOU_FILE_MNGT
 			return NouString(this->getFloat(key, section));
 		}
 
-		return NOU_DAT_ALG::String8::EMPTY_STRING;
+		return NOU_DAT_ALG::String8::getEmptyString();
 	}
 
 
