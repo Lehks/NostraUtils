@@ -15,6 +15,10 @@
 				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
 				while(NOU::NOU_CORE::getErrorHandler().getErrorCount() > 0)								 \
 				{																						 \
+					std::cout << NOU::NOU_CORE::getErrorHandler().peekError().getName() << std::endl;    \
+					std::cout << NOU::NOU_CORE::getErrorHandler().peekError().getFile() << std::endl;    \
+					std::cout << NOU::NOU_CORE::getErrorHandler().peekError().getLine() << std::endl;    \
+					std::cout << std::endl;                                                              \
 					NOU::NOU_CORE::getErrorHandler().popError();										 \
 				}																						 \
 				IsTrue(errorCount == 0);
@@ -936,47 +940,90 @@ TEST_METHOD(IsDefaultConstructible)
 
 TEST_METHOD(Folder)
 {
+	using namespace NOU::NOU_FILE_MNGT;
 
-	NOU::NOU_DAT_ALG::String8 str = "TestFolder";
-	NOU::NOU_DAT_ALG::String8 cwdParentPath = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory().getParentPath().rawStr();
-	NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::Folder> vFolder;
-	NOU::NOU_DAT_ALG::Vector<NOU::NOU_FILE_MNGT::File> vFile;
+	//Check exists()
+	IsTrue(Folder::exists("."));
+	IsTrue(Folder::exists(".."));
+	IsTrue(!Folder::exists("..."));
 
-	NOU::NOU_FILE_MNGT::Path path(cwdParentPath + str);
-	NOU::NOU_FILE_MNGT::Folder f(path);
-	f.create();
-#if NOU_OS == NOU_OS_WINDOWS
-	NOU::NOU_FILE_MNGT::File file(path + "\\TestFile.txt");
+	//Check constructor
+	Folder f1("TestFolder");
+	IsTrue(f1.getPath() == "TestFolder");
 
-	NOU::NOU_FILE_MNGT::Folder a(path + "\\TestFolder");
-#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
-	NOU::NOU_FILE_MNGT::File file(path + "/TestFile.txt");
+	//Check create()
+	f1.create();
+	IsTrue(f1.exists());
 
-	NOU::file_mngt::Folder a(path + "/TestFolder");
-#endif
-	a.create();
+	//Check remove()
+	f1.remove();
+	IsTrue(!f1.exists());
 
-	file.createFile();
-	vFile = f.listFiles();
-	vFolder = f.listFolders();
+	//More checks, w/ different paths
+	IsTrue(!Folder::exists("TestFolder"));
+	Folder::create("TestFolder");
+	IsTrue(Folder::exists("TestFolder"));
 
-	NOU::NOU_DAT_ALG::String8 tmpfile = vFile[0].getPath().getAbsolutePath().rawStr();
-	NOU::NOU_DAT_ALG::String8 tmpstr = vFolder[2].getPath().getAbsolutePath().rawStr();
+	IsTrue(!Folder::exists("TestFolder/TestFolder2"));
+	Folder::create("TestFolder/TestFolder2");
+	IsTrue(Folder::exists("TestFolder/TestFolder2"));
 
-#if NOU_OS == NOU_OS_WINDOWS
-	IsTrue(tmpstr == cwdParentPath + str + "\\TestFolder");
-	IsTrue(tmpfile == cwdParentPath + str + "\\TestFile.txt");
+	
+	IsTrue(!Folder::exists("TestFolder/TestFolder2/TestFolder3"));
+	Folder::create("TestFolder/TestFolder2/TestFolder3");
+	IsTrue(Folder::exists("TestFolder/TestFolder2/TestFolder3"));
 
-	a.remove(path + "\\TestFolder");
-#elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
-	IsTrue(tmpstr == cwdParentPath + str + "/TestFolder");
-	IsTrue(tmpfile == cwdParentPath + str + "/TestFile.txt");
+	Folder::remove("TestFolder/TestFolder2/TestFolder3");
+	IsTrue(!Folder::exists("TestFolder/TestFolder2/TestFolder3"));
 
-	a.remove(a.getPath().getAbsolutePath().rawStr());
-#endif
-	file.deleteFile();
-	f.remove(f.getPath().getAbsolutePath().rawStr()
-	);
+
+	Folder::remove("TestFolder/TestFolder2");
+	IsTrue(!Folder::exists("TestFolder/TestFolder2"));
+
+	Folder::remove("TestFolder");
+	IsTrue(!Folder::exists("TestFolder"));
+
+	//Check listFiles() & listFolders()
+	Folder::create("TestFolder");
+
+	Folder folder("TestFolder");
+
+	//Check empty dir
+	auto folders1 = folder.listFolders();
+	IsTrue(folders1.size() == 2);
+
+	auto files1 = folder.listFiles();
+	IsTrue(files1.size() == 0);
+
+
+	Folder::create("TestFolder/Folder1");
+	Folder::create("TestFolder/Folder2");
+	Folder::create("TestFolder/Folder3");
+	File file1("TestFolder/file1");
+	file1.createFile();
+	File file2("TestFolder/file2");
+	file2.createFile();
+	File file3("TestFolder/file3");
+	file3.createFile();
+
+	auto folders = folder.listFolders();
+
+	IsTrue(folders.size() == 5);
+	//TODO Check if the folders are the correct ones, Vector::contains() is missing for that
+
+	auto files = folder.listFiles();
+
+	IsTrue(files.size() == 3);	
+	//TODO Check if the files are the correct ones, Vector::contains() is missing for that
+
+	file3.deleteFile();
+	file2.deleteFile();
+	file1.deleteFile();
+
+	Folder::remove("TestFolder/Folder3");
+	Folder::remove("TestFolder/Folder2");
+	Folder::remove("TestFolder/Folder1");
+	Folder::remove("TestFolder");
 
 	NOU_CHECK_ERROR_HANDLER;
 }

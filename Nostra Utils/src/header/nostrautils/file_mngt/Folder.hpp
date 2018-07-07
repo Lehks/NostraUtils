@@ -35,13 +35,6 @@ namespace NOU::NOU_FILE_MNGT
 		NOU_FUNC Folder(const Path& path);
 
 		/**
-		\param path	The folder location.
-
-		\brief		Constructs a new Folder object with a String as the location.
-		*/
-		NOU_FUNC Folder(const NOU::NOU_DAT_ALG::StringView8 &path);
-
-		/**
 		\return		A vector of folders.
 		
 		\brief		A function that lists all folders.
@@ -94,7 +87,23 @@ namespace NOU::NOU_FILE_MNGT
 
 		\brief		Removes the folder on the passed path.
 		*/
-		NOU_FUNC void remove(const Path &path);
+		NOU_FUNC static void remove(const Path &path);
+
+		/**
+		\return True, if the folder exists, false if not.
+
+		\brief Returns whether the folder exists or not. 
+		*/
+		NOU_FUNC boolean exists() const;
+
+		/**
+		\param path The path to the folder to check. 
+		
+		\return True, if the folder exists, false if not.
+
+		\brief Returns whether the folder exists or not. 
+		*/
+		NOU_FUNC static boolean exists(const Path &path);
 	};
 }
 #endif
