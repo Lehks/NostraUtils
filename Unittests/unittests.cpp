@@ -945,7 +945,7 @@ TEST_METHOD(Folder)
 	//Check exists()
 	IsTrue(Folder::exists("."));
 	IsTrue(Folder::exists(".."));
-	IsTrue(!Folder::exists("..."));
+	IsTrue(!Folder::exists("DoesNotExist"));
 
 	//Check constructor
 	Folder f1("TestFolder");

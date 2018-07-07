@@ -217,11 +217,11 @@ namespace NOU::NOU_FILE_MNGT
 		
 		DWORD fileAttributes = GetFileAttributesA(path.getAbsolutePath().rawStr());
 
-		if(fileAttributes == INVALID_FILE_ATTRIBUTES)
+		if (fileAttributes == INVALID_FILE_ATTRIBUTES)
 			return false;
-		else if(ftyp & FILE_ATTRIBUTE_DIRECTORY)
+		else if (fileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 			return true;
-		else 
+		else
 			return false;
 
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
