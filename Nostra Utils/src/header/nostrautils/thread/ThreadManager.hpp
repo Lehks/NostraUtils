@@ -9,6 +9,7 @@
 #include "nostrautils/thread/Task.hpp"
 #include "nostrautils/thread/Mutex.hpp"
 #include "nostrautils/thread/ConditionVariable.hpp"
+#include  "nostrautils/dat_alg/FwdDcl.hpp"
 
 #include <iostream>
 
@@ -22,25 +23,7 @@
 \brief A file that contains the thread management system of NOU.
 */
 
-///\cond
-namespace NOU::NOU_DAT_ALG
-{
-	namespace internal
-	{
-		template<typename T>
-		struct ObjectPoolChunk;
-	}
 
-	template<typename T>
-	class ObjectPool;
-
-	template<typename T>
-	class BinaryHeap;
-
-	template<typename K, typename V>
-	class HashMap;
-}
-///\endcond
 
 namespace NOU::NOU_THREAD
 {
@@ -183,7 +166,8 @@ namespace NOU::NOU_THREAD
 		\brief An abbreviation for a unique pointer to an object pool.
 		*/
 		template<typename T>
-		using ObjectPoolPtr = NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::ObjectPool<T>>;
+		using ObjectPoolPtr = NOU_MEM_MNGT::UniquePtr<NOU_DAT_ALG::ObjectPool<T, 
+			NOU_MEM_MNGT::GenericAllocationCallback>>;
 
 		NOU_DEFINE_PAIR(TaskErrorHandlerPairTempl, task, handler)
 

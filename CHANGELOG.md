@@ -10,6 +10,7 @@
 
 - **Deletions**
     - Removed NOU_CLASS.
+    - Removed NOU\::NOU_DAT_ALG::AllocationCallback.
 
 - **Deprecations**
     - None
@@ -24,6 +25,8 @@
 - Added an empty static const string member variable to the string.
 - Changed the return type of NOU\::NOU_FILE_MGNT\::Folder\::listFiles(). The function now returns a vector of
   files instead of folders.
+- Improved the allocation callback system. The page "Allocation Callback system" provides more information
+  on that new system.
 
 ### Fixes
 - Fixed a wrong attribute type that resulted in an incorrect display of logging messages.
