@@ -76,7 +76,7 @@ namespace NOU::NOU_FILE_MNGT
 		posQuoteFirst = line.firstIndexOf(quote) + 1;
 		posQuoteLast = line.lastIndexOf(quote);
 
-		value = line.substring(posQuoteFirst, posQuoteLast - (posQuoteFirst - 1));
+		value = line.substring(posQuoteFirst, posQuoteLast);
 
 		return value;
 	}
