@@ -6,7 +6,8 @@
 
 - **Additions**
     - Added NOU_EXPORT_FUNC and NOU_IMPORT_FUNC.
-    - Added a functionality to remove folders to the folder class.
+    - Added functionality to remove a folder.
+    - Added functionality to check if a folder exists.
 
 - **Deletions**
     - Removed NOU_CLASS.
@@ -39,6 +40,7 @@
 - Fixed an issue where the quicksort wouldn't work with comparators.
 - Fixed an issue, where the returned values of NOU\::NOU_FILE_MGNT\::Folder\::listFiles() and ::listFolders() 
   would have the wrong path.
+- Fixed an issue where Folder::listFiles() would not work on POSIX systems.
   
 
 
