@@ -21,7 +21,8 @@ namespace NOU::NOU_DAT_ALG
 {
 
 	/**
-	\tparam The type of the elements that will be stored in this BinaryHeap.
+	\tparam T     The type of the elements that will be stored in this BinaryHeap.
+	\tparam ALLOC The type of the allocation callback.
 
 	\brief A Min or Max Heap that works with priority.
 

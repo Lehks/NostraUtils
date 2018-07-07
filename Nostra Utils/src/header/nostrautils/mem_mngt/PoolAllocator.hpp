@@ -21,7 +21,7 @@ namespace NOU::NOU_MEM_MNGT
 {
 
 	/**
-	\tparam T	The type of the elements that are stored in the PoolBlock.
+	\tparam T	  The type of the elements that are stored in the PoolBlock.
 
 	\brief		An union that defines the PoolBlock.
 	*/
@@ -43,7 +43,8 @@ namespace NOU::NOU_MEM_MNGT
 	};
 
 	/**
-	\tparam T	The type of the stored elements.
+	\tparam T	  The type of the stored elements.
+	\tparam ALLOC The type of the allocation callback.
 
 	\brief		A class that defines the PoolAllocator.
 	*/

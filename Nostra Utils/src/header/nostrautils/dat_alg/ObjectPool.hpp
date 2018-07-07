@@ -21,6 +21,8 @@ namespace NOU::NOU_DAT_ALG
 	namespace internal
 	{
 		/**
+		\tparam T The type of objects to store.
+
 		\brief A struct that will be used to store the data and pointer to build a double linked list. This is
 		only public to allow a custom nostra::utils::mem_mngt::AllocationCallback.
 		*/
@@ -55,6 +57,7 @@ namespace NOU::NOU_DAT_ALG
 
 	/**
 	\tparam T The type of objects to store.
+	\tparam ALLOC The type of the allocation callback.
 
 	\brief A container that stores a pool of pre-allocated objects. The container has a maximum size and can
 	not grow larger that size.

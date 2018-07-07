@@ -24,6 +24,10 @@ namespace NOU::NOU_DAT_ALG
 {
 
 	/**
+	\tparam K     The type of the keys.
+	\tparam V     The type of the values.
+	\tparam ALLOC The type of the allocation callback.
+
 	\brief   This class provides a HashMap implementation using the bucket method.
 	*/
 	//!!Default parameter specified in dat_alg/FwdDcl.hpp

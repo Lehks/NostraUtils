@@ -37,7 +37,8 @@ namespace NOU::NOU_DAT_ALG
 	using VectorReverseConstIterator = const VectorReverseIterator<T, ALLOC>;
 
 	/**
-	\tparam The type of the elements that will be stored in this Vector.
+	\tparam T     The type of the elements that will be stored in this Vector.
+	\tparam ALLOC The type of the allocation callback.
 
 	\brief A dynamically growing container that can store multiple elements of a single type.
 

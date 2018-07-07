@@ -24,6 +24,8 @@ namespace NOU::NOU_DAT_ALG
 {
 	/**
 	\tparam T The type of the stored elements.
+	\tparam ALLOC The type of the allocation callback.
+
 	\brief A FIFO-Queue that, under certain circumstances, can operate in O(1).
 
 	\details
