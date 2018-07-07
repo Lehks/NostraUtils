@@ -211,12 +211,17 @@ namespace NOU::NOU_FILE_MNGT
 #if NOU_COMPILER == NOU_COMPILER_CLANG
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused" 
+#elif NOU_COMPILER == NOU_COMPILER_GCC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result" 
 #endif
 
 		*getcwd(cwd, sizeof(cwd));
 
 #if NOU_COMPILER == NOU_COMPILER_CLANG
 #pragma clang diagnostic pop
+#elif NOU_COMPILER == NOU_COMPILER_GCC
+#pragma GCC diagnostic pop
 #endif
 
 		return Path(cwd);
