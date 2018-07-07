@@ -32,17 +32,17 @@ namespace NOU::NOU_DAT_ALG
 	This queue is a good choice if the push / pop ratio is about 1:1 and the queue is frequently empty. In
 	that case, both the push and pop operations can be done in O(1).
 	*/
-	template<typename T>
+	template<typename T, template<typename> class ALLOC> //!!Default parameter specified in dat_alg/FwdDcl.hpp
 	class FastQueue final
 	{
-
-
 	public:
 		/**
 		\brief Local class alias.
 		*/
 		using Type = T;
 
+		using Allocator = typename NOU_MEM_MNGT::AllocationCallbackDeleter<Type>::Allocator;
+		
 		/**
 		\brief The minimum capacity of a FastQueue.
 		*/
@@ -52,7 +52,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The allocator that will be used to allocate and deallocate data.
 		*/
-		NOU_MEM_MNGT::AllocationCallback<Type> &m_allocator;
+		Allocator m_allocator;
 
 		/** 
 		\brief The max size of the queue.
@@ -72,7 +72,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief A pointer to the queue.
 		*/
-		NOU_MEM_MNGT::UniquePtr<Type, NOU_MEM_MNGT::AllocationCallbackRefDeleter<Type>> m_queue;
+		NOU_MEM_MNGT::UniquePtr<Type, NOU_MEM_MNGT::AllocationCallbackDeleter<Type>> m_queue;
 		
 		/**
 		\param src		The source array.
@@ -90,8 +90,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief					Constructs a new FastQueue.
 		*/
-		FastQueue(sizeType initialCapacity = MIN_CAPACITY, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
-			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::get());
+		FastQueue(sizeType initialCapacity = MIN_CAPACITY, Allocator &&allocator = Allocator());
 		
 		/**
 		\brief Destructs an instance of FastQueue.
@@ -227,7 +226,14 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief	Returns m_allocator.
 		*/
-		const NOU_MEM_MNGT::AllocationCallback<Type>& getAllocationCallback() const;
+		const Allocator& getAllocator() const;
+
+		/**
+		\return	m_allocator.
+
+		\brief	Returns m_allocator.
+		*/
+		Allocator& getAllocator();
 
 		/**
 		\param index	The index of the element that will be returned.
@@ -250,11 +256,11 @@ namespace NOU::NOU_DAT_ALG
 
 	};
 
-	template<typename T>
-	constexpr sizeType FastQueue<T>::MIN_CAPACITY;
+	template<typename T, template<typename> class ALLOC>
+	constexpr sizeType FastQueue<T, ALLOC>::MIN_CAPACITY;
 
-	template<typename T>
-	void FastQueue<T>::copyFromTo(Type *src, Type *dst, sizeType amount)
+	template<typename T, template<typename> class ALLOC>
+	void FastQueue<T, ALLOC>::copyFromTo(Type *src, Type *dst, sizeType amount)
 	{
 		for (sizeType i = 0; i < amount; i++)
 		{
@@ -263,21 +269,21 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template<typename T>
-	FastQueue<T>::FastQueue(sizeType initialCapacity, NOU_MEM_MNGT::AllocationCallback<Type> &allocator) :
-		m_allocator(allocator),
+	template<typename T, template<typename> class ALLOC>
+	FastQueue<T, ALLOC>::FastQueue(sizeType initialCapacity, Allocator &&allocator) :
+		m_allocator(NOU_CORE::move(allocator)),
 		m_capacity(initialCapacity < MIN_CAPACITY ? MIN_CAPACITY : initialCapacity),///\todo replace w/ max()
 		m_startIndex(0),
 		m_endIndex(0),
-		m_queue(m_allocator.allocate(m_capacity), m_allocator)
+		m_queue(m_allocator.allocate(m_capacity), NOU_CORE::move(m_allocator))
 	{
 		if(m_queue == nullptr)
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::BAD_ALLOCATION,
 				"The allocation failed.");
 	}
 
-	template<typename T>
-	FastQueue<T>::~FastQueue()
+	template<typename T, template<typename> class ALLOC>
+	FastQueue<T, ALLOC>::~FastQueue()
 	{
 		for (Type* i = m_queue.rawPtr() + m_startIndex; i != m_queue.rawPtr() + m_endIndex; i++)
 		{
@@ -285,48 +291,48 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template<typename T>
-	boolean FastQueue<T>::empty() const
+	template<typename T, template<typename> class ALLOC>
+	boolean FastQueue<T, ALLOC>::empty() const
 	{
 		return m_startIndex == m_endIndex;
 	}
 
-	template<typename T>
-	sizeType FastQueue<T>::size() const
+	template<typename T, template<typename> class ALLOC>
+	sizeType FastQueue<T, ALLOC>::size() const
 	{
 		return m_endIndex - m_startIndex;
 	}
 
-	template<typename T>
-	void FastQueue<T>::pushBack(const Type &data)
+	template<typename T, template<typename> class ALLOC>
+	void FastQueue<T, ALLOC>::pushBack(const Type &data)
 	{
 		resize(1);
 		new (m_queue.rawPtr() + m_endIndex) Type(data);
 		m_endIndex++;
 	}
 
-	template<typename T>
-	void FastQueue<T>::pushBack(Type &&data)
+	template<typename T, template<typename> class ALLOC>
+	void FastQueue<T, ALLOC>::pushBack(Type &&data)
 	{
 		resize(1);
 		new (m_queue.rawPtr() + m_endIndex) Type(NOU_CORE::forward<Type>(data));
 		m_endIndex++;
 	}
 
-	template<typename T>
-	void FastQueue<T>::push(const Type &data)
+	template<typename T, template<typename> class ALLOC>
+	void FastQueue<T, ALLOC>::push(const Type &data)
 	{
 		pushBack(data);
 	}
 
-	template<typename T>
-	void FastQueue<T>::push(Type &&data)
+	template<typename T, template<typename> class ALLOC>
+	void FastQueue<T, ALLOC>::push(Type &&data)
 	{
 		pushBack(NOU_CORE::forward<Type>(data));
 	}
 
-	template<typename T>
-	typename FastQueue<T>::Type FastQueue<T>::popFront()
+	template<typename T, template<typename> class ALLOC>
+	typename FastQueue<T, ALLOC>::Type FastQueue<T, ALLOC>::popFront()
 	{
 		if (size() == 0)
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, 
@@ -347,14 +353,14 @@ namespace NOU::NOU_DAT_ALG
 		return ret;
 	}
 
-	template<typename T>
-	typename FastQueue<T>::Type FastQueue<T>::pop() //trailing? 
+	template<typename T, template<typename> class ALLOC>
+	typename FastQueue<T, ALLOC>::Type FastQueue<T, ALLOC>::pop() //trailing? 
 	{
 		return popFront();
 	}
 
-	template<typename T>
-	const typename FastQueue<T>::Type& FastQueue<T>::peekFront() const
+	template<typename T, template<typename> class ALLOC>
+	const typename FastQueue<T, ALLOC>::Type& FastQueue<T, ALLOC>::peekFront() const
 	{
 		if (size() == 0)
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
@@ -363,8 +369,8 @@ namespace NOU::NOU_DAT_ALG
 		return m_queue[m_startIndex];
 	}
 
-	template<typename T>
-	typename FastQueue<T>::Type& FastQueue<T>::peekFront()
+	template<typename T, template<typename> class ALLOC>
+	typename FastQueue<T, ALLOC>::Type& FastQueue<T, ALLOC>::peekFront()
 	{
 		if (size() == 0)
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
@@ -373,20 +379,20 @@ namespace NOU::NOU_DAT_ALG
 		return m_queue[m_startIndex];
 	}
 
-	template<typename T>
-	const typename FastQueue<T>::Type& FastQueue<T>::peek() const
+	template<typename T, template<typename> class ALLOC>
+	const typename FastQueue<T, ALLOC>::Type& FastQueue<T, ALLOC>::peek() const
 	{
 		return peekFront();
 	}
 
-	template<typename T>
-	typename FastQueue<T>::Type& FastQueue<T>::peek()
+	template<typename T, template<typename> class ALLOC>
+	typename FastQueue<T, ALLOC>::Type& FastQueue<T, ALLOC>::peek()
 	{
 		return peekFront();
 	}
 
-	template<typename T>
-	void FastQueue<T>::swap(sizeType index0, sizeType index1)
+	template<typename T, template<typename> class ALLOC>
+	void FastQueue<T, ALLOC>::swap(sizeType index0, sizeType index1)
 	{
 		if (index0 >= size())
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
@@ -400,8 +406,8 @@ namespace NOU::NOU_DAT_ALG
 		NOU_DAT_ALG::swap<Type>(queueStart + index0, queueStart + index1);
 	}
 
-	template<typename T>
-	typename FastQueue<T>::Type& FastQueue<T>::at(sizeType index)
+	template<typename T, template<typename> class ALLOC>
+	typename FastQueue<T, ALLOC>::Type& FastQueue<T, ALLOC>::at(sizeType index)
 	{
 		if (index >= size())
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
@@ -410,8 +416,8 @@ namespace NOU::NOU_DAT_ALG
 		return *(m_queue.rawPtr() + m_startIndex + index);
 	}
 
-	template<typename T>
-	const typename FastQueue<T>::Type& FastQueue<T>::at(sizeType index) const
+	template<typename T, template<typename> class ALLOC>
+	const typename FastQueue<T, ALLOC>::Type& FastQueue<T, ALLOC>::at(sizeType index) const
 	{
 		if (index >= size())
 			NOU_PUSH_ERROR(NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS,
@@ -420,8 +426,8 @@ namespace NOU::NOU_DAT_ALG
 		return *(m_queue.rawPtr() + m_startIndex + index);
 	}
 
-	template<typename T>
-	void FastQueue<T>::clear()
+	template<typename T, template<typename> class ALLOC>
+	void FastQueue<T, ALLOC>::clear()
 	{
 		for (Type* i = m_queue.rawPtr() + m_startIndex; i != m_queue.rawPtr() + m_endIndex; i++)
 		{
@@ -432,14 +438,14 @@ namespace NOU::NOU_DAT_ALG
 		m_endIndex = 0;
 	}
 
-	template<typename T>
-	sizeType FastQueue<T>::capacity()
+	template<typename T, template<typename> class ALLOC>
+	sizeType FastQueue<T, ALLOC>::capacity()
 	{
 		return m_capacity;
 	}
 
-	template<typename T>
-	void FastQueue<T>::resize(sizeType additionalCapacity)
+	template<typename T, template<typename> class ALLOC>
+	void FastQueue<T, ALLOC>::resize(sizeType additionalCapacity)
 	{
 		//The remaining size that is available after the end index, aka w/o moving or reallocation
 		sizeType remainingSize = m_capacity - m_endIndex;
@@ -478,21 +484,26 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template<typename T>
-	const NOU_MEM_MNGT::AllocationCallback<typename FastQueue<T>::Type>& 
-		FastQueue<T>::getAllocationCallback() const
+	template<typename T, template<typename> class ALLOC>
+	const typename FastQueue<T, ALLOC>::Allocator& FastQueue<T, ALLOC>::getAllocator() const
 	{
 		return m_allocator;
 	}
 
-	template<typename T>
-	const typename FastQueue<T>::Type& FastQueue<T>::operator [] (sizeType index) const
+	template<typename T, template<typename> class ALLOC>
+	typename FastQueue<T, ALLOC>::Allocator& FastQueue<T, ALLOC>::getAllocator()
+	{
+		return m_allocator;
+	}
+
+	template<typename T, template<typename> class ALLOC>
+	const typename FastQueue<T, ALLOC>::Type& FastQueue<T, ALLOC>::operator [] (sizeType index) const
 	{
 		return at(index);
 	}
 
-	template<typename T>
-	typename FastQueue<T>::Type& FastQueue<T>::operator [] (sizeType index)
+	template<typename T, template<typename> class ALLOC>
+	typename FastQueue<T, ALLOC>::Type& FastQueue<T, ALLOC>::operator [] (sizeType index)
 	{
 		return at(index);
 	}

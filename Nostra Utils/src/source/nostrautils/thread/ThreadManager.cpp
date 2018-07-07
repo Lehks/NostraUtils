@@ -98,7 +98,7 @@ namespace NOU::NOU_THREAD
 
 		return ObjectPoolPtr<ThreadDataBundle>(new NOU_DAT_ALG::ObjectPool<ThreadDataBundle>
 			(threadPoolCapacity, NOU_MEM_MNGT::GenericAllocationCallback<
-				NOU_DAT_ALG::ObjectPool<ThreadDataBundle>::AllocType>::get()),
+				NOU_DAT_ALG::ObjectPool<ThreadDataBundle>::Chunk>()),
 			NOU_MEM_MNGT::defaultDeleter);
 	}
 
