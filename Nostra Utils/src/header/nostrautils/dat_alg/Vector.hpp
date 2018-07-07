@@ -886,7 +886,7 @@ namespace NOU::NOU_DAT_ALG
 		m_capacity(NOU::NOU_CORE::max(MIN_CAPACITY, size)),
 		m_data(alloc(m_capacity)),
 		m_size(0),
-		m_allocator(allocator)
+		m_allocator(NOU_CORE::move(allocator))
 	{}
 
 	template<typename T, template<typename> class ALLOC>
