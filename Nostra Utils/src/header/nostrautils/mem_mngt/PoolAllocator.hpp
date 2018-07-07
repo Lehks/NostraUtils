@@ -151,13 +151,13 @@ namespace NOU::NOU_MEM_MNGT
 		void deallocate(T* data);
 	};
 
-	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
+	template <typename T, template<typename> class ALLOC>
 	constexpr sizeType PoolAllocator<T, ALLOC>::POOL_ALLOCATOR_DEFAULT_SIZE;
 
-	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
+	template <typename T, template<typename> class ALLOC>
 	constexpr sizeType PoolAllocator<T, ALLOC>::BLOCK_BUFFER_DEFAULT_SIZE;
 
-	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
+	template <typename T, template<typename> class ALLOC>
 	PoolAllocator<T, ALLOC>::PoolAllocator(sizeType size, Allocator &&allocator) :
 		m_size(size),
 		m_blocks(BLOCK_BUFFER_DEFAULT_SIZE, NOU_CORE::move(allocator))
@@ -165,7 +165,7 @@ namespace NOU::NOU_MEM_MNGT
 		newPool(size);
 	}
 
-	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
+	template <typename T, template<typename> class ALLOC>
 	PoolAllocator<T, ALLOC>::~PoolAllocator()
 	{
 		for (PoolBlock<T>* block : m_blocks)
@@ -176,7 +176,7 @@ namespace NOU::NOU_MEM_MNGT
 		m_head = nullptr;
 	}
 
-	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
+	template <typename T, template<typename> class ALLOC>
 	void PoolAllocator<T, ALLOC>::newPool(sizeType size)
 	{
 		PoolBlock<T>* m_data = new PoolBlock<T>[size];
@@ -191,7 +191,7 @@ namespace NOU::NOU_MEM_MNGT
 		m_blocks.pushBack(m_data);
 	}
 
-	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
+	template <typename T, template<typename> class ALLOC>
 	template <typename... arguments>
 	T* PoolAllocator<T, ALLOC>::allocate(arguments&&... args)
 	{	
@@ -215,7 +215,7 @@ namespace NOU::NOU_MEM_MNGT
 		return retVal;
 	}
 
-	template <typename T, template<typename> class ALLOC = GenericAllocationCallback>
+	template <typename T, template<typename> class ALLOC>
 	void PoolAllocator<T, ALLOC>::deallocate(T* data)
 	{
 		if (data == nullptr)
