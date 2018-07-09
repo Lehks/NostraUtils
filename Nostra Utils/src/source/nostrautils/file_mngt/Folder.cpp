@@ -1,6 +1,8 @@
 #include "nostrautils/file_mngt/Folder.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
 
+#include <thread>
+
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_WIN_H
 	#include <Windows.h>
 	#include <stdlib.h>
@@ -108,13 +110,13 @@ namespace NOU::NOU_FILE_MNGT
 #elif NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 
 		NOU_DAT_ALG::Vector<Folder> v;
+		
+		DIR* dirp = opendir(m_path.getAbsolutePath().rawStr());
 
-		NOU::NOU_DAT_ALG::String8 pattern(m_path.getAbsolutePath().rawStr());
-
-		DIR* dirp = opendir(pattern.rawStr());
+		if(dirp == nullptr) //abort, if opendir() failed
+			return v;
 
 		struct dirent *dstruct;
-		NOU::uint8 dir = dstruct->d_type;
 
 		while ((dstruct = readdir(dirp)) != NULL)
 		{

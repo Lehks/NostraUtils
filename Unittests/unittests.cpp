@@ -995,7 +995,6 @@ TEST_METHOD(Folder)
 	auto files1 = folder.listFiles();
 	IsTrue(files1.size() == 0);
 
-
 	Folder::create("TestFolder/Folder1");
 	Folder::create("TestFolder/Folder2");
 	Folder::create("TestFolder/Folder3");
