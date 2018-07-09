@@ -88,14 +88,6 @@ namespace NOU::NOU_DAT_ALG
 		void free(T *data);
 
 		/**
-		\brief Reallocate memory for the vector.
-
-		\details 
-		If a new element gets inserted to the vector it has to reallocate the memory for it.
-		*/
-		void reallocateData(sizeType capacity);
-
-		/**
 		\tparam ARGS The types of the arguments that will be passed to the constructor of T.
 
 		\param index The index at which the instance will be inserted at.
@@ -121,7 +113,7 @@ namespace NOU::NOU_DAT_ALG
 		\see   nostra::utils::mem_mngt::GenericAllocationCallback
 		*/
 		Vector<T>(sizeType size = MIN_CAPACITY, NOU::NOU_MEM_MNGT::AllocationCallback<T> &allocator = 
-			NOU_MEM_MNGT::GenericAllocationCallback<T>::getInstance());
+			NOU_MEM_MNGT::GenericAllocationCallback<T>::get());
 
 		/**
 		\param other Takes an other vector for moving.
@@ -394,6 +386,14 @@ namespace NOU::NOU_DAT_ALG
 		\brief replaces the data at the index with the passed data.
 		*/
 		Vector& replace(sizeType index, const T &replacement);
+
+        /**
+        \brief Reallocate memory for the vector.
+
+        \details
+        If a new element gets inserted to the vector it has to reallocate the memory for it.
+        */
+        void reallocateData(sizeType capacity);
 
 		/**
 		\return A nostra::utils::dat_alg::VectorIterator that points to the first element in the vector.
@@ -1189,7 +1189,15 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		//####
 		for (i = 0; i < NOU::NOU_CORE::min(m_size, other.m_size); i++) //copy-assign part
-			at(i) = other.at(i);
+		{
+			if constexpr (std::is_copy_assignable_v<T>)
+				at(i) = other.at(i);
+			else
+			{
+				at(i).~T();
+				new (m_data + i) T(at(i));
+			}
+		}
 
 		for (; i < other.m_size; i++) //copy-constr part
 			new (m_data + i) T(other.at(i));

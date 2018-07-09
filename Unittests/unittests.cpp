@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_RUNNER
-#include "Catch/catch.hpp"
 
 #define NOU_DEBUG
 #define NOU_DLL
@@ -12,6 +10,10 @@
 #include <string>
 #include <iostream>
 
+#define CATCH_CONFIG_RUNNER
+#include "Catch/catch.hpp"
+
+
 #define NOU_CHECK_ERROR_HANDLER 																		 \
 				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
 				while(NOU::NOU_CORE::getErrorHandler().getErrorCount() > 0)								 \
@@ -19,6 +21,27 @@
 					NOU::NOU_CORE::getErrorHandler().popError();										 \
 				}																						 \
 				IsTrue(errorCount == 0);
+
+namespace Catch
+{
+	template<>
+	struct StringMaker<NOU::NOU_DAT_ALG::StringView8>
+	{
+		static std::string convert(const NOU::NOU_DAT_ALG::StringView8 &value)
+		{
+			return std::string("\"") + value.rawStr() + std::string("\"");
+		}
+	};
+
+	template<>
+	struct StringMaker<NOU::NOU_DAT_ALG::String8>
+	{
+		static std::string convert(const NOU::NOU_DAT_ALG::String8 &value)
+		{
+			return StringMaker<NOU::NOU_DAT_ALG::StringView8>::convert(value);
+		}
+	};
+}
 
 void printErrors()
 {
@@ -53,6 +76,35 @@ int dummyFunc1(int)
 
 //used in test UniquePtr
 NOU::boolean testVar = false;
+
+
+class NoCopyClass
+{
+private:
+	NOU::uint32 m_id;
+
+public:
+	explicit NoCopyClass(NOU::uint32 id) :
+		m_id(id)
+	{}
+
+	NoCopyClass(const NoCopyClass &) = delete;
+
+	NoCopyClass(NoCopyClass && other) :
+		m_id(other.m_id)
+	{}
+
+	NOU::uint32 get() const
+	{
+		return m_id;
+	}
+};
+
+NOU::NOU_DAT_ALG::CompareResult noCopyClassComparator(const NoCopyClass &a, const NoCopyClass &b)
+{
+	return NOU::NOU_DAT_ALG::genericComparator(a.get(), b.get());
+}
+
 
 TEST_METHOD(TypeSizes)
 {
@@ -1196,8 +1248,37 @@ IsTrue(str1 == "wasgeht");
 
 str1 = "ThisIsAString";
 str1.replace("String", "Integer");
+IsTrue(str1 == "ThisIsAInteger");
 
-//IsTrue(str1 == "ThisIsAInteger");
+str1 = "ThisIsAString";
+str1.replace("String", "Intege");
+IsTrue(str1 == "ThisIsAIntege");
+
+str1 = "ThisIsAString";
+str1.replace("AString", "Intege");
+IsTrue(str1 == "ThisIsIntege");
+
+
+str1 = "ThisIsAString";
+str1.replace(0, 7, "Integer");
+IsTrue(str1 == "IntegerString");
+
+str1 = "ThisIsAString";
+str1.replace(0,13, "Integer");
+IsTrue(str1 == "Integer");
+
+str1 = "ThisIsAString";
+str1.replace(0, 5, "Integer");
+IsTrue(str1 == "IntegersAString");
+
+NOU::NOU_DAT_ALG::String8 newstr(50, 'b');
+IsTrue(newstr.getCapacity() == 50);
+
+newstr.appendBuffer(10);
+IsTrue(newstr.getCapacity() == 60);
+
+newstr.removeRemainingBufferFromString();
+IsTrue(newstr.getCapacity() == 1);
 
 NOU_CHECK_ERROR_HANDLER;
 }
@@ -1262,106 +1343,171 @@ TEST_METHOD(Hashfunction)
 NOU::int64 i1 = 243536768574;
 NOU::int64 i2 = 243536768574;
 
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
+//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, sizeof(NOU::int64), 20));
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
 
 NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
 NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
+//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
 
 }
 
 TEST_METHOD(HashMap)
 {
-NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm(100);
-NOU::NOU_DAT_ALG::HashMap<NOU::char8, NOU::int32> hm1(100);
-NOU::NOU_DAT_ALG::String<NOU::char8> str = "The quick onyx goblin jumps over the lazy dwarf";
-NOU::boolean b;
+	
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> map;
 
-//AreEqual(hm.isEmpty(), true);
-IsTrue(hm.isEmpty() == true);
+		IsTrue(map.bucketCount() == NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32>::LOAD_SIZE);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey(0));
 
-for (NOU::sizeType i = 0; i < str.size(); i++) {
-b = hm.map(str.at(i), 1);
-}
+		//push values
+		map.map(0, 5);
+		map.map(1, 900);
+		map.map(2, 1337);
 
-//AreEqual(hm.isEmpty(), false);
+		IsTrue(map.containsKey(0));
+		IsTrue(map.containsKey(1));
+		IsTrue(map.containsKey(2));
 
-IsTrue(hm.isEmpty() == false);
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
 
-for (NOU::sizeType i = 0; i < str.size(); i++) {
-//AreEqual(hm.get(str.at(i)), 1);
-IsTrue(hm.get(str.at(i)) == 1);
-}
-NOU::char8 k = 'h';
+		IsTrue(map.get(0) == 5);
+		IsTrue(map.get(1) == 900);
+		IsTrue(map.get(2) == 1337);
 
-//NOU::int32 count = hm.remove(k, &out);
+		//assign new value to key
+		map.map(2, 42);
 
-NOU::boolean r = hm.remove(k);
-IsTrue(r);
+		IsTrue(map.containsKey(2));
+		IsTrue(map.get(2) == 42);
 
-//AreEqual(1, count);
+		IsTrue(map.size() == 3);
 
+		//array subscript
+		IsTrue(map.get(0) == map[0]);
+		IsTrue(map.get(1) == map[1]);
+		IsTrue(map.get(2) == map[2]);
 
-for (NOU::sizeType i = 0; i < str.size(); i++)
-{
-k = str.at(i);
-if (!hm1.containsKey(str.at(i)))
-{
-hm1.map(k, 1);
-}
-else
-{
-hm1.map(k, hm1.get(k) + 1);
-}
-}
+		//key set
+		auto keySet = map.keySet();
 
-//AreEqual(hm1.get('h'), 2);
-//AreEqual(hm1.get(' '), 8);
+		IsTrue(keySet.size() == 3);
 
-IsTrue(hm1.get('h') == 2);
-IsTrue(hm1.get(' ') == 8);
+		//entry set
+		auto entrySet = map.entrySet();
 
-NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> cm(100);
+		IsTrue(entrySet.size() == 3);
 
-cm.map(5, 1);
-cm.map(41, 2);
-cm.map(10, 3);
-cm.map(49875, 4);
+		//check if compiles
+		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> mapMove = NOU::NOU_CORE::move(map);
+	}
+	
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NoCopyClass, NoCopyClass> map(50);
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> c;
+		IsTrue(map.bucketCount() == 50);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey(NoCopyClass(0), noCopyClassComparator));
 
-c = cm.entrySet();
+		//push values
+		map.map(NoCopyClass(0), NoCopyClass(5), noCopyClassComparator);
+		map.map(NoCopyClass(1), NoCopyClass(900), noCopyClassComparator);
+		map.map(NoCopyClass(2), NoCopyClass(1337), noCopyClassComparator);
 
-//AreEqual(c[0], 1);
-//AreEqual(c[1], 4);
-//AreEqual(c[2], 3);
-//AreEqual(c[3], 2);
+		IsTrue(map.containsKey(NoCopyClass(0), noCopyClassComparator));
+		IsTrue(map.containsKey(NoCopyClass(1), noCopyClassComparator));
+		IsTrue(map.containsKey(NoCopyClass(2), noCopyClassComparator));
 
-IsTrue(c[0] == 1);
-IsTrue(c[1] == 4);
-IsTrue(c[2] == 3);
-IsTrue(c[3] == 2);
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> a;
+		IsTrue(map.get(NoCopyClass(0), noCopyClassComparator).get() == NoCopyClass(5).get());
+		IsTrue(map.get(NoCopyClass(1), noCopyClassComparator).get() == NoCopyClass(900).get());
+		IsTrue(map.get(NoCopyClass(2), noCopyClassComparator).get() == NoCopyClass(1337).get());
 
-a = cm.keySet();
+		//assign new value to key
+		map.map(NoCopyClass(2), NoCopyClass(42), noCopyClassComparator);
 
-//AreEqual(a[0], 5);
-//AreEqual(a[1], 49875);
-//AreEqual(a[2], 10);
-//AreEqual(a[3], 41);
+		IsTrue(map.containsKey(NoCopyClass(2), noCopyClassComparator));
+		IsTrue(map.get(NoCopyClass(2), noCopyClassComparator).get() == NoCopyClass(42).get());
 
-IsTrue(a[0] == 5);
-IsTrue(a[1] == 49875);
-IsTrue(a[2] == 10);
-IsTrue(a[3] == 41);
+		IsTrue(map.size() == 3);
 
+		//array subscript not possible, array subscript can not take 2 parameters 
+		//(which is required for the comparator)
+
+		//key set
+		auto keySet = map.keySet();
+
+		IsTrue(keySet.size() == 3);
+
+		//entry set
+		auto entrySet = map.entrySet();
+
+		IsTrue(entrySet.size() == 3);
+	}
+	
+
+	{
+		//construction
+		NOU::NOU_DAT_ALG::HashMap<NOU::NOU_DAT_ALG::String8, NOU::NOU_DAT_ALG::String8> map(50);
+
+		IsTrue(map.bucketCount() == 50);
+		IsTrue(map.size() == 0);
+		IsTrue(map.isEmpty());
+		IsTrue(!map.containsKey("test"));
+
+		//push values
+		map.map("test", "map to test");
+		map.map("another test", "map to another test");
+		map.map("yet another test", "map to yet another test");
+
+		IsTrue(map.containsKey("test"));
+		IsTrue(map.containsKey("another test"));
+		IsTrue(map.containsKey("yet another test"));
+
+		IsTrue(map.size() == 3);
+		IsTrue(!map.isEmpty());
+
+		IsTrue(map.get("test") == "map to test");
+		IsTrue(map.get("another test") == "map to another test");
+		IsTrue(map.get("yet another test") == "map to yet another test");
+
+		//assign new value to key
+		map.map("yet another test", "over write");
+
+		IsTrue(map.containsKey("yet another test"));
+		IsTrue(map.get("yet another test") == "over write");
+
+		IsTrue(map.size() == 3);
+
+		//array subscript not possible, array subscript can not take 2 parameters 
+		//(which is required for the comparator)
+
+		//key set
+		auto keySet = map.keySet();
+
+		IsTrue(keySet.size() == 3);
+
+		//entry set
+		auto entrySet = map.entrySet();
+
+		IsTrue(entrySet.size() == 3);
+	}
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(BinarySearch)
@@ -1583,14 +1729,14 @@ IsTrue(objPool.remainingObjects() == 2);
 NOU::int64 i1 = 243536768574;
 NOU::int64 i2 = 243536768574;
 
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 20));
+NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
 
 NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
 NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-h = NOU::NOU_DAT_ALG::hashObj(&str1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 20));
+h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
+IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
 
 
 }
@@ -1843,87 +1989,194 @@ TEST_METHOD(IsBaseOf)
 
 TEST_METHOD(Logging)
 {
-	static NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
-
-	static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
 	static NOU::NOU_DAT_ALG::String8 writeOutput;
 
-	NOU::NOU_CORE::Logger* log = NOU::NOU_CORE::Logger::instance();
-
-	static NOU::NOU_THREAD::Mutex mutex;
-	static NOU::NOU_THREAD::ConditionVariable variable;
+	NOU::NOU_CORE::Logger& log = NOU::NOU_CORE::Logger::get();
 
 	class TestLogger : public NOU::NOU_CORE::ILogger
 	{
-		void write(const NOU::NOU_CORE::Event& event, StringType filename)
+		void write(const NOU::NOU_CORE::Event& event) override
 		{
 			writeOutput = NOU::NOU_CORE::Logger::print(event);
-			variable.notifyAll();
 		}
 	};
 
-	log->pushLogger<TestLogger>();
-	log->write(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+	log.pushLogger<TestLogger>();
 
-	//Wait until the logger has actually printed the message
-	NOU::NOU_THREAD::UniqueLock lock(mutex);
-	variable.wait(lock);
-
-	if (testOutput.size() == writeOutput.size()) //For better error message
 	{
-		for (int i = 0; i < testOutput.size(); i++)
+		NOU_LOG_FATAL("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::FATAL, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
 		{
-			IsTrue(testOutput.at(i) == writeOutput.at(i));
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
 		}
 	}
-	else
+
 	{
-		IsTrue(false);
+#define ERROR_RENAME ERROR
+#undef ERROR
+
+		NOU_LOG_ERROR("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::ERROR, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+
+#define ERROR ERROR_RENAME
+#undef ERROR_RENAME
+	}
+
+	{
+		NOU_LOG_WARNING("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::WARNING, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+	}
+
+	{
+#define INFO_RENAME INFO
+#undef INFO
+
+		NOU_LOG_INFO("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::INFO, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+
+#define INFO INFO_RENAME
+#undef INFO_RENAME
+	}
+
+	{
+		NOU_LOG_DEBUG("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::DEBUG, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+	}
+
+	{
+		NOU_LOG_TRACE("Unittest error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::TRACE, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
 	}
 
 	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(File)
-{
-	NOU::NOU_FILE_MNGT::File f("UnitTestFile");
-	NOU::NOU_DAT_ALG::StringView8 testString = "Nostra";
-	NOU::char8 *buff;
-	NOU::char8 firstIn[6];
-	NOU::boolean errBit;
-
-
-
-	// Creating file and testing if it exists
-	IsTrue(!f.exists());
-	f.createFile();
-	IsTrue(f.exists());
-	NOU::sizeType s;
-
-	// Read/Write
-	f.open();
-	buff = firstIn;
-	errBit = f.write(testString);
-	IsTrue(errBit);
-	f.close();
-	s = f.size();
-	f.open(NOU::NOU_FILE_MNGT::AccessMode::READ);
-	f.read(s, buff);
-
-	for(NOU::sizeType i = 0; i < s; i++)
+{	
 	{
-		IsTrue(buff[i] == testString[i]);
+		NOU::NOU_DAT_ALG::String8 filename = "unittest_testfile.txt";
+		NOU::NOU_DAT_ALG::String8 output = "1. 2. 3. This is a string for testing the unittests.";
+		NOU::NOU_DAT_ALG::String8 buffer;
+
+		NOU::NOU_FILE_MNGT::Path path = NOU::NOU_FILE_MNGT::Path::currentWorkingDirectory();
+
+		path += filename;
+
+		NOU::NOU_FILE_MNGT::File file(path);
+
+		file.createFile();
+		IsTrue(file.exists() == true);
+
+		file.open(NOU::NOU_FILE_MNGT::AccessMode::WRITE);
+		IsTrue(file.isCurrentlyOpen() == true);
+
+		file.write(output);
+
+		IsTrue(file.size() == output.size());
+
+		file.close();
+		IsTrue(file.isCurrentlyOpen() == false);
+
+		file.open(NOU::NOU_FILE_MNGT::AccessMode::READ);
+		file.read(buffer); //Reads the hole file into the buffer.
+
+		file.close();
+		IsTrue(file.isCurrentlyOpen() == false);
+
+		file.deleteFile();
+		IsTrue(file.exists() == false);
+
+		for (NOU::sizeType i = 0; i < buffer.size() - 1; i++)
+		{
+			IsTrue(output[i] == buffer[i]);
+		}
 	}
 
-
-
-	// Deleting File
-	f.close();
-	IsTrue(f.deleteFile());
-	IsTrue(!f.exists());
+	NOU_CHECK_ERROR_HANDLER;
 }
 
-/*
+
 TEST_METHOD(INIFile)
 {
 	NOU::NOU_FILE_MNGT::INIFile parser = NOU::NOU_FILE_MNGT::INIFile("unittest.ini");
@@ -1940,12 +2193,15 @@ TEST_METHOD(INIFile)
 
 	parser.remove("TEST_STR");
 	IsTrue(parser.getString("TEST_STR").size() == 0);
+	parser.setString("DEFAULT_TEST_STR", "Testing");
 
 	parser.remove("TEST_INT");
 	IsTrue(parser.getInt("TEST_INT") == 0);
+	parser.setInt("DEFAULT_TEST_INT", 42);
 
 	parser.remove("TEST_FLOAT");
 	IsTrue(parser.getFloat("TEST_FLOAT") < 0.1);
+	parser.setFloat("DEFAULT_TEST_FLOAT", 13.37);
 
 	parser.setString("TEST_STR", "Testing", "section");
 	IsTrue(parser.getString("TEST_STR", "section") == "Testing");
@@ -1957,9 +2213,35 @@ TEST_METHOD(INIFile)
 	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369);
 	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381);
 
+	IsTrue(parser.write("unittest.ini"));
+	IsTrue(parser.read());
+
+
+	NOU::NOU_FILE_MNGT::INIFile parser2 = NOU::NOU_FILE_MNGT::INIFile("unittest2.ini");
+
+	parser2.setString("TEST_STR2", "Testing");
+	parser2.setInt("TEST_INT2", 42);
+	parser2.setFloat("TEST_FLOAT2", 13.37);
+
+	IsTrue(parser2.getDataType("TEST_STR2") == parser2.INI_TYPE_NouString);
+	IsTrue(parser2.getDataType("TEST_INT2") == parser2.INI_TYPE_INT);
+	IsTrue(parser2.getDataType("TEST_FLOAT2") == parser2.INI_TYPE_FLOAT);
+
+	NOU::NOU_DAT_ALG::HashMap<NOU::NOU_FILE_MNGT::INIFile::NouString, NOU::NOU_FILE_MNGT::INIFile::NouString> inikeys = parser2.getKeys();
+
+	IsTrue(inikeys.containsKey("TEST_STR2"));
+	IsTrue(inikeys.containsKey("TEST_INT2"));
+	IsTrue(inikeys.containsKey("TEST_INT2"));
+
+	parser.merge(parser2);
+
+	IsTrue(parser.keyExists("TEST_STR2"));
+	IsTrue(parser.keyExists("TEST_INT2"));
+	IsTrue(parser.keyExists("TEST_INT2"));
+
 	NOU_CHECK_ERROR_HANDLER;
 }
-*/
+
 TEST_METHOD(MathVec2)
 {
 	using namespace NOU::NOU_MATH;

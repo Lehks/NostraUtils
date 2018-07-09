@@ -77,10 +77,10 @@ namespace NOU::NOU_THREAD
 
 	NOU_FUNC ThreadManager& getThreadManager()
 	{
-		return ThreadManager::getInstance();
+		return ThreadManager::get();
 	}
 
-	ThreadManager& ThreadManager::getInstance()
+	ThreadManager& ThreadManager::get()
 	{
 		static ThreadManager instance;
 		return instance;
@@ -98,7 +98,7 @@ namespace NOU::NOU_THREAD
 
 		return ObjectPoolPtr<ThreadDataBundle>(new NOU_DAT_ALG::ObjectPool<ThreadDataBundle>
 			(threadPoolCapacity, NOU_MEM_MNGT::GenericAllocationCallback<
-				NOU_DAT_ALG::ObjectPool<ThreadDataBundle>::AllocType>::getInstance()),
+				NOU_DAT_ALG::ObjectPool<ThreadDataBundle>::AllocType>::get()),
 			NOU_MEM_MNGT::defaultDeleter);
 	}
 

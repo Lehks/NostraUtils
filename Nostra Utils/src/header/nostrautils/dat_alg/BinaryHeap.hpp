@@ -93,7 +93,9 @@ namespace NOU::NOU_DAT_ALG
 		Default = true (min heap),
 		false = max heap.
 		*/
-		BinaryHeap(boolean isMinHeap = true, sizeType size = 0, NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator = NOU_MEM_MNGT::GenericAllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>::getInstance());
+		BinaryHeap(boolean isMinHeap = true, sizeType size = 0, 
+			NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator = 
+			NOU_MEM_MNGT::GenericAllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>::get());
 		/**
 		\param other			An other BinaryHeap.
 

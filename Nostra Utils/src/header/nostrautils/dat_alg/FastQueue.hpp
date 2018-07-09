@@ -91,7 +91,7 @@ namespace NOU::NOU_DAT_ALG
 		\brief					Constructs a new FastQueue.
 		*/
 		FastQueue(sizeType initialCapacity = MIN_CAPACITY, NOU_MEM_MNGT::AllocationCallback<Type> &allocator 
-			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::getInstance());
+			= NOU_MEM_MNGT::GenericAllocationCallback<Type>::get());
 		
 		/**
 		\brief Destructs an instance of FastQueue.
