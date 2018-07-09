@@ -4,6 +4,7 @@
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/Assertions.hpp"
 #include "nostrautils/math/Utils.hpp"
+#include "Matrix.hpp"
 
 #include <initializer_list>
 
@@ -30,6 +31,17 @@ namespace NOU::NOU_MATH
 	class VectorBase
 	{
 		static_assert(N > 1, "A vector can not have 0 or 1 rows.");
+
+	private:
+		/*
+		/Vector Quaternion components.
+		\x, y, w, z
+		*/
+		T x;
+		T y;
+		T z;
+		T w;
+
 
     public:
         using InitializerList = std::initializer_list<T>;
@@ -794,11 +806,22 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	class Vector<T, 4> : public VectorBase<T, 4>
 	{
+	private:
+		/*
+		/Vector Quaternion components.
+		\x, y, w, z
+		*/
+		T x;
+		T y;
+		T z;
+		T w;
 	public:
 		static Vector nullVector();
 
         Vector() = default;
+
         Vector(const T &x, const T &y, const T &z, const T &w);
+
         Vector(const Vector<T, 2> &vec, const T &z, const T &w);
         Vector(const Vector<T, 3> &vec, const T &w);
         Vector(const typename VectorBase<T, 4>::InitializerList &values);
@@ -819,15 +842,6 @@ namespace NOU::NOU_MATH
 
         Vector scale(float64 scale) const;
         Vector& scaleAssign(float64 scale);
-
-		Quaternion(Vector<T, 4> &axis, T &angle);
-		Vector<T, 4> add(const quaternion &r);
-		Vector<T, 4> sub(const quaternion &r);
-		//T Length();
-		T getM_x();
-		T getM_y();
-		T getM_z();
-		T getM_w();
 
         T dotProduct(const Vector &other) const;
 
@@ -858,9 +872,133 @@ namespace NOU::NOU_MATH
 
         boolean operator == (const Vector &other) const;
         boolean operator != (const Vector &other) const;
+/*
+		T getX();
+		T getY();
+		T getZ();
+		T getW();
+		Vector(Vector axis, T angle);
+
+		Vector<T, 4> nLerp(Vector<T, 4> dest, T lerpFactor, bool shortest);
+
+		Matrix<T, 4, 4> toRotationMatrix();
+
+		Vector getForward();
+		Vector getUp();
+		Vector getBack();
+		Vector getDown();
+		Vector getLeft();
+		Vector getRight();
+*/
     };
 
 	///endcond
+
+/*
+	template<typename T>
+	Vector<T, 4>::Vector<T, 4> (T x, T y, T z, T w)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+		this->w = w;
+	}
+
+	template<typename T>
+	Vector<T, 4> Vector<T, 4>::nLerp(Vector<T, 4> dest, T lerpFactor, bool shortest)
+	{
+		Vector<T, 4> correctedDest = dest;
+
+		if (shortest && dot(dest) < 0)
+			correctedDest = Vector<T, 4>(-dest.getX(), -det.getY(), -det.getZ(); -det.getW());
+
+		return correctedDest.sub().multiplyElements(lerpFactor).add().normalize();
+	}
+
+	template<typename T>
+	Matrix<T, 4, 4> Vector<T, 4>::toRotationMatrix()
+	{
+		Vector<T, 4> forward = Vector<T, 4>(2.0f *((x * z) - (w * y)), 2.0f * ((y * z) + (w * x)), 1.0f - 2.0f *((x * x) + (y * y));
+		Vector<T, 4> up = Vector<T, 4>(2.0f *((x * y) + (w * z)), 1.0f -2.0f * ((x * x) + (z * z)), 2.0f *((y * z) - (w * x));
+		Vector<T, 4> right = Vector<T, 4>(1.0f - 2.0f *((y * y) + (z * z)), 2.0f * ((x * y) - (w * z)), 2.0f *((x * z) + (w * y));
+
+		//return Matrix<T, 4, 4>.u
+	}
+
+	template<typename T>
+	Vector<T, 4>::Vector(Vector<T, 4> axis, T angle)
+	{
+		T sinHalfAngle = sin(angle / 2);
+		T cosHalfAngle = cos(angle / 2);
+
+		x = axis.getX() * sinHalfAngle;
+		y = axis.getY() * sinHalfAngle;
+		z = axis.getZ() * sinHalfAngle;
+		w = cosHalfAngle;
+	}
+
+	template<typename T>
+	Vector<T, 3> Vector<T, 3>::getForward()
+	{
+		return Vector<T, 3>(0, 0, 1).rotate(this);
+	}
+
+	template<typename T>
+	Vector<T, 3> Vector<T, 3>::getBack()
+	{
+		return Vector<T, 3>(0, 0, -1).rotate(this);
+	}
+
+	template<typename T>
+	Vector<T, 3> Vector<T, 3>::getUp()
+	{
+		return Vector<T, 3>(0, 1, 0).rotate(this);
+	}
+
+	template<typename T>
+	Vector<T, 3> Vector<T, 3>::getDown()
+	{
+		return Vector<T, 3>(0, -1, 0).rotate(this);
+	}
+
+	template<typename T>
+	Vector<T, 3> Vector<T, 3>::getRight()
+	{
+		return Vector<T, 3>(1, 0, 0).rotate(this);
+	}
+
+	template<typename T>
+	Vector<T, 3> Vector<T, 3>::getLeft()
+	{
+		return Vector<T, 3>(-1, 0, 0).rotate(this);
+	}
+
+	template<typename T>
+	Vector<T, 4>::getX()
+	{
+		return x;
+	}
+
+	template<typename T>
+	Vector<T, 4>::getY()
+	{
+		return y;
+	}
+
+	template<typename T>
+	Vector<T, 4>::getZ()
+	{
+		return z;
+	}
+
+	template<typename T>
+	Vector<T, 4>::getW()
+	{
+		return w;
+	}
+	*/
+	
+	
 
 	/**
 	\tparam N The amount of components in the vector.
@@ -1999,7 +2137,7 @@ namespace NOU::NOU_MATH
     boolean Vector<T, 4>::unequal(const Vector<T, 4> &other) const
     {
         return !equal(other);
-    }
+    } 
 
     template<typename T>
     Vector<T, 4>& Vector<T, 4>::normalize()
@@ -2093,67 +2231,7 @@ namespace NOU::NOU_MATH
         return unequal(other);
     }
 
-	template<typename T>
-	Vector<T, 4>::Quaternion(T &x, T &y, T &z, T &w) {
-		m_x = x; // Initialisierung der X Axe
-		m_y = y; // Initialisierung der Y Axe
-		m_z = z; // Initialisierung der Z Axe
-		m_w = w;  // Initialisierung der W Axe
-	}
-
-	template<typename T, sizeType N>
-	Vector<T, 4>::Quaternion(Vector<T, 4> &axis, T &angle)
-	{
-		T sinHalfAngle = sin(angle / 2);
-		T cosHalfAngle = cos(angle / 2);
-
-		m_x = axis.getX() * sinHalfAngle;
-		m_y = axis.getY() * sinHalfAngle;
-		m_z = axis.getZ() * sinHalfAngle;
-		m_w = cosHalfAngle;
-	}
-
-	template<typename T, sizeType 4>
-	Vector<T, 4> Vector<T, 4>::add(const quaternion &r)
-	{
-		return (m_x + r.getM_x(), m_y + r.getM_y(), m_z + r.getM_z(), m_w + r.getM_w());
-	}
-
-	template<typename T>
-	Vector<T, 4> Vector<T, 4>::mul(const T &r)
-	{
-		return Vector<T, 4>(m_x * r, m_y * r, m_z * r, m_w * r);
-	}
-
-	template<typename T>
-	Vector<T, 4> Vector<T, 4>::sub(const quaternion &r)
-	{
-		return Vector<T, 4>(m_x - r.getM_x(), m_y - r.getM_y(), m_z - r.getM_z(), m_w - r.getM_w());
-	}
-
-	template<typename T>
-	T Vector<T, 4>::getM_x()
-	{
-		return m_x;
-	}
-
-	template<typename T>
-	T Vector<T, 4>::getM_y()
-	{
-		return m_y;
-	}
-
-	template<typename T>
-	T Vector<T, 4>::getM_z()
-	{
-		return m_z;
-	}
-
-	template<typename T>
-	T Vector<T, 4>::getM_w()
-	{
-		return m_w;
-	}
+	
 
 	///\endcond
 

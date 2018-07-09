@@ -450,7 +450,8 @@ namespace NOU::NOU_MATH
 		\end{bmatrix}
 		\f$
 		*/
-		Vector<T, R> mult(const Vector<T, C> &other) const;
+	
+		//Vector<T, R> mult(const Vector<T, C> &other) const;
 
 		/**
 		\param other The scalar to multiply with.
@@ -744,7 +745,7 @@ namespace NOU::NOU_MATH
 		Matrix<T, 4, 4> mult(const Matrix<T, 4, 4> &other) const;
 
 		Vector<T, 4> mult(const Vector<T, 4> &other) const;
-
+		 
 		Matrix mult(const T &other) const;
 		Matrix& multAssign(const T &other);
 
