@@ -4,7 +4,6 @@
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/Assertions.hpp"
 #include "nostrautils/math/Utils.hpp"
-#include "Matrix.hpp"
 
 #include <initializer_list>
 

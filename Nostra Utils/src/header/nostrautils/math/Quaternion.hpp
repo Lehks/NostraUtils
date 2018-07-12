@@ -4,8 +4,8 @@
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/Assertions.hpp"
 #include "nostrautils/math/Utils.hpp"
-#include "nostrautils/math/Vector.hpp"
-#include "nostrautils/math/Matrix.hpp"
+//#include "nostrautils/math/Vector.hpp"
+//#include "nostrautils/math/Matrix.hpp"
 
 /** \file math/Quaternion.hpp
 \author	 Gaetan Tayou

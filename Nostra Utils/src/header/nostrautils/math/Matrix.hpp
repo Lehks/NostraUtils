@@ -450,8 +450,7 @@ namespace NOU::NOU_MATH
 		\end{bmatrix}
 		\f$
 		*/
-	
-		//Vector<T, R> mult(const Vector<T, C> &other) const;
+		Vector<T, R> mult(const Vector<T, C> &other) const;
 
 		/**
 		\param other The scalar to multiply with.
