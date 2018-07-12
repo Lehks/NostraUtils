@@ -1,0 +1,29 @@
+#ifndef NOU_CORE_CONFIG_HPP
+#define NOU_CORE_CONFIG_HPP
+
+/** 
+\file Config.hpp
+\author	 Lukas Reichmann
+\since   1.0.1
+\version @PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@
+\brief   This file will be configured by CMake and provides macros that put CMake defined variables into the
+         source code of NOU.
+*/
+
+#ifndef NOU_IS_CONFIG_FILE_PRESENT
+#define NOU_IS_CONFIG_FILE_PRESENT
+#endif
+
+#ifndef NOU_VERSION_MAJOR
+#define NOU_INTERNAL_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#endif
+
+#ifndef NOU_VERSION_MINOR
+#define NOU_INTERNAL_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#endif
+
+#ifndef NOU_VERSION_PATCH
+#define NOU_INTERNAL_VERSION_PATCH @PROJECT_VERSION_PATCH@
+#endif
+
+#endif

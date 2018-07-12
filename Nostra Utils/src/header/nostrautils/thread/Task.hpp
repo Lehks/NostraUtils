@@ -13,7 +13,7 @@
 \file thread/Task.hpp
 
 \author  Lukas Reichmann
-\version 1.0.0
+\version 1.0.1
 \since   1.0.0
 
 \brief This file contains the task class(es).
@@ -35,7 +35,7 @@ namespace NOU::NOU_THREAD
 		A parent class of the Task class that does not take or need any template types. This abstract task
 		however, can only execute the stored functionality and not access the results.
 		*/
-		class NOU_CLASS AbstractTask
+		class AbstractTask
 		{
 		public:
 			virtual ~AbstractTask() = default;
@@ -93,8 +93,8 @@ namespace NOU::NOU_THREAD
 		/**
 		\brief The arguments that will be passed to the invocable.
 		*/
-		//removeConst b/c otherwise it is not possible to pass const objects to the constructor
-		std::tuple<NOU_CORE::removeConst_t<ARGS>...> m_args;
+		//RemoveConst b/c otherwise it is not possible to pass const objects to the constructor
+		std::tuple<NOU_CORE::RemoveConst_t<ARGS>...> m_args;
 
 		/**
 		\brief The invocable.
@@ -178,7 +178,7 @@ namespace NOU::NOU_THREAD
 		using InvocableType = I;
 
 	private:
-		std::tuple<NOU_CORE::removeConst_t<ARGS>...> m_args;
+		std::tuple<NOU_CORE::RemoveConst_t<ARGS>...> m_args;
 		InvocableType m_invocable;
 
 	public:

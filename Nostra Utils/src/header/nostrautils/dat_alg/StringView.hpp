@@ -12,7 +12,7 @@
 /** \file StringView.hpp
 \author	 Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides the StringView which is an interface between \link nostra::utils::dat_alg::String 
          String\endlink and C-Strings.
 
@@ -64,7 +64,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The same as ConstCharType, but without the const. This type is used by nostra::utils::data_alg::String.
 		*/
-		using CharType = NOU_CORE::removeConst_t<CHAR_TYPE>;
+		using CharType = NOU_CORE::RemoveConst_t<CHAR_TYPE>;
 
 		/**
 		\brief The type that is used to store the single characters. Since a string view is read only, this type is
@@ -72,8 +72,11 @@ namespace NOU::NOU_DAT_ALG
 		*/
 		using ConstCharType = const CharType;
 
-		using StringConstIterator = VectorConstIterator<ConstCharType>;
-		using StringReverseConstIterator = VectorReverseConstIterator<ConstCharType>;
+		using StringConstIterator = VectorConstIterator<ConstCharType, 
+			NOU_MEM_MNGT::GenericAllocationCallback>;
+
+		using StringReverseConstIterator = VectorReverseConstIterator<ConstCharType,
+			NOU_MEM_MNGT::GenericAllocationCallback>;
 
 		/**
 		\brief The character that is used to separate the decimal places from the remaining digits by stringToFloat32()
@@ -158,7 +161,7 @@ namespace NOU::NOU_DAT_ALG
 		getMultiplierForDecPlaces() because 2.123 has 3 decimal places.
 		*/
 		static float64 getMultiplierForDecPlaces(int32 place);
-
+		
 		/**
 		\brief A pointer to the string that is represented by this string view.
 		\note
@@ -632,8 +635,12 @@ namespace NOU::NOU_DAT_ALG
 			}
 		}
 
-		if (isNegative)
-			ret = -ret;
+		//to avoid compile warning
+		if constexpr(!std::is_unsigned_v<OT>)
+		{
+			if (isNegative)
+				ret = -ret;
+		}
 
 		return ret;
 	}

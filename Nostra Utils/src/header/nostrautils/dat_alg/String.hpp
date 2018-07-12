@@ -15,7 +15,7 @@
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides a String implementation.
 */
 
@@ -30,8 +30,9 @@ namespace NOU::NOU_DAT_ALG
 		using CharType = typename StringView<CHAR_TYPE>::CharType;
 		using ConstCharType = typename StringView<CHAR_TYPE>::ConstCharType;
 
-		using StringIterator = VectorIterator<CharType>;
-		using StringReverseIterator = VectorReverseIterator<CharType>;
+		using StringIterator = VectorIterator<CharType, NOU_MEM_MNGT::GenericAllocationCallback>;
+		using StringReverseIterator = VectorReverseIterator<CharType, 
+			NOU_MEM_MNGT::GenericAllocationCallback>;
 
 	private:
 
@@ -79,6 +80,11 @@ namespace NOU::NOU_DAT_ALG
 		void setSize(sizeType size);
 
 	public:
+	    /**
+        \brief An empty static const String member variable.
+        */
+        static const String<CHAR_TYPE>& getEmptyString();
+
 		/**
 		\param b The boolean to convert.
 		\return  Either \"true\" or \"false\".
@@ -154,11 +160,12 @@ namespace NOU::NOU_DAT_ALG
 		String(CharType c);
 		/**
 		\param buffersize	the size of the buffer.
+		\param b            a temporary char to different the constructor from the other's. (will maybe removed in the future)
 
 		\brief Special constructor for initialise a String with a certain amount of buffer space.
 		 the CharType is necessary because of the other int, float ... constructors.
 		*/
-		String(sizeType buffersize, CharType b);
+		String(sizeType buffersize, CharType b = 't');
 		/**
 		\param other Another String.
 
@@ -222,8 +229,15 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the character at the passed index.
 		*/
-		CharType& at(sizeType index);
+		CharType at(sizeType index);
 
+		/**
+		\param index The index of the character that will be returned.
+		\return      The character at the provided index.
+
+		\brief Returns the character at the passed index.
+		*/
+		CharType at(sizeType index) const;
 		/**
 		\param index The index at which the character will be inserted.
 		\param c     The character to insert.
@@ -957,6 +971,14 @@ namespace NOU::NOU_DAT_ALG
 		\brief Returns the character at the passed index. This is equal to at().
 		*/
 		CharType& operator [] (sizeType index);
+
+		/**
+		\param index The index of the character that will be returned.
+		\return      The character at the provided index
+
+		\brief Returns the character at the passed index. This is equal to at().
+		*/
+		CharType operator [] (sizeType index) const;
 	};
 	/**
 	\brief An alias name for a String that uses a nostra::utils::char8;
@@ -972,6 +994,13 @@ namespace NOU::NOU_DAT_ALG
 	using String32 = String<char32>;
 
 	template<typename CHAR_TYPE>
+	const String<CHAR_TYPE>& String<CHAR_TYPE>::getEmptyString()
+	{
+		static String<CHAR_TYPE> str = "";
+		return str;
+	}
+
+    template<typename CHAR_TYPE>
 	template<typename IT>
 	String<CHAR_TYPE> String<CHAR_TYPE>::genericIntToString(IT i)
 	{
@@ -1056,7 +1085,7 @@ namespace NOU::NOU_DAT_ALG
 
 		if (tempFloat == 0)
 		{
-			str.insert(0, '0');
+			str.insert(str.size(), '0');
 			return str;
 		}
 
@@ -1272,9 +1301,14 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>::String(float64 f) :
 		String(NOU_CORE::move(floatToString(f)))
 	{}
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::CharType String<CHAR_TYPE>::at(sizeType index)
+	{
+		return m_data.at(index);
+	}
 
 	template<typename CHAR_TYPE>
-	typename String<CHAR_TYPE>::CharType& String<CHAR_TYPE>::at(sizeType index)
+	typename String<CHAR_TYPE>::CharType String<CHAR_TYPE>::at(sizeType index) const
 	{
 		return m_data.at(index);
 	}
@@ -1282,7 +1316,7 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, CharType c)
 	{
-		NOU_COND_PUSH_ERROR((index > StringView<CHAR_TYPE>::m_size),
+		NOU_COND_PUSH_ERROR((index > StringView<CHAR_TYPE>::size() + 1),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		m_data.insert(index, c);
@@ -1294,13 +1328,33 @@ namespace NOU::NOU_DAT_ALG
 	String<CHAR_TYPE>& String<CHAR_TYPE>::insert(sizeType index, const StringView<CHAR_TYPE>& str)
 	{
 
-		for (sizeType i = 0; i < str.size(); i++)
-		{
-			insert(index + i, str[i]);
+		NOU_COND_PUSH_ERROR((index > StringView<CHAR_TYPE>::size() + 1),
+			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
+		sizeType counter = 0;
+
+		String8 tmpstr = StringView<CHAR_TYPE>::logicalSubstring(index);
+
+		for (sizeType i = index; i < str.size() + index; i++)
+		{
+			if (i < m_data.size() - 1)
+			{
+				m_data[i] = str[counter];
+				counter++;
+			}
+			else {
+				m_data.insert(i,str[counter]);
+				counter++;
+			}
 		}
-		append(StringView<CHAR_TYPE>::NULL_TERMINATOR);
-		setSize(StringView<CHAR_TYPE>::m_size - 1);
+
+		for (sizeType j = 0; j < tmpstr.size(); j++)
+		{
+			m_data.insert(str.size() + index + j, tmpstr[j]);
+		}
+
+		setSize(StringView<CHAR_TYPE>::m_size + str.size() - 1);
+		insert(StringView<CHAR_TYPE>::size() + 1, StringView<CHAR_TYPE>::NULL_TERMINATOR);
 		return *this;
 	}
 
@@ -1416,7 +1470,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = StringView<CHAR_TYPE>::m_size;
 
-		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::m_size || end > StringView<CHAR_TYPE>::m_size),
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() || end > StringView<CHAR_TYPE>::size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		for (sizeType i = start; i < end; i++)
@@ -1439,15 +1493,15 @@ namespace NOU::NOU_DAT_ALG
 		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() || end > StringView<CHAR_TYPE>::size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
+
 		for(sizeType i = start; i < end; i++)
 		{
-			if(target == substring(i, target.size() + i) ) {
+			if(target == this->logicalSubstring(i, target.size() + i) ) {
                 if (target.size() == replacement.size()) {
                     for (sizeType j = 0; j < target.size(); j++) {
                         replace(i + j, replacement[j]);
                     }
-
-                    break;
+                    i = i + replacement.size();
                 } else if (target.size() < replacement.size())
                 {
                     sizeType counter = 0;
@@ -1461,25 +1515,28 @@ namespace NOU::NOU_DAT_ALG
                         counter++;
                     }
 
-                    break;
+                    i = i + replacement.size() - 1;
+					end = end + replacement.size();
                 } else
                 {
                     sizeType oldsize = StringView<CHAR_TYPE>::size();
                     sizeType counter = 0;
                     sizeType counter2 = 0;
 
-                    for (sizeType j = i; j < oldsize; j++) {
+
+                    for (sizeType j = i; j < oldsize - (target.size() - replacement.size()); j++) {
                         if (counter < replacement.size()) {
                             replace(j, replacement[counter]);
                             counter++;
                         } else {
-                            m_data[j] = m_data[(target.size() - counter) + j];
+                            m_data.replace(j , m_data[(target.size() - counter) + j]);
                             counter2++;
                         };
                     }
                     setSize((oldsize - target.size()) + replacement.size());
 
-                    break;
+                    i = i + replacement.size();
+					end = (end - target.size()) + replacement.size();
                 }
 			}
 		}
@@ -1493,7 +1550,7 @@ namespace NOU::NOU_DAT_ALG
 		if (end == StringView<CHAR_TYPE>::NULL_INDEX)
 			end = StringView<CHAR_TYPE>::size();
 
-		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() + 1 || end > StringView<CHAR_TYPE>::size() + 1),
+		NOU_COND_PUSH_ERROR((start > StringView<CHAR_TYPE>::size() || end > StringView<CHAR_TYPE>::size()),
 							NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "An index was out of bounds.");
 
 		if(end - start < replacement.size())
@@ -1505,11 +1562,11 @@ namespace NOU::NOU_DAT_ALG
                 counter++;
             }
 
-            for(sizeType i = end ; i < replacement.size(); i++)
-            {
-                insert(i,replacement[counter]);
-                counter++;
-            };
+           for(sizeType i = end ; i < replacement.size(); i++)
+           {
+               insert(i,replacement[counter]);
+               counter++;
+           };
 
         } else if(end - start == replacement.size())
         {
@@ -1537,8 +1594,9 @@ namespace NOU::NOU_DAT_ALG
 					counter2++;
 			}
 
-			insert(end, StringView<CHAR_TYPE>::NULL_TERMINATOR);
             setSize((oldsize - (end - start)) + replacement.size());
+            insert(StringView<CHAR_TYPE>::size(), StringView<CHAR_TYPE>::NULL_TERMINATOR);
+            setSize(StringView<CHAR_TYPE>::size() - 1);
 		}
 
 		return *this;
@@ -1858,7 +1916,7 @@ namespace NOU::NOU_DAT_ALG
 			if (m_data.at(i) >= '\u0040' && m_data.at(i) <= '\u005A') // \u0040 (A) upper letter unicode, \u005A upper letter unicode (Z) 
 			{
 				String<CHAR_TYPE>::CharType c = m_data.at(i) + 32;  // adds +32 to convert the upper case letter \u0040 - \u005A to lower case letter \u0060 - \u007A
-				m_data.replace(c, i);								// example: A (\u0040) toLowerCase = a (\u0060)
+				m_data.replace(i, c);								// example: A (\u0040) toLowerCase = a (\u0060)
 			}
 		}
 
@@ -1873,7 +1931,7 @@ namespace NOU::NOU_DAT_ALG
 			if (m_data.at(i) >= '\u0060' && m_data.at(i) <= '\u007A') //same just vice versa toLowerCase.
 			{
 				String<CHAR_TYPE>::CharType c = m_data.at(i) - 32;
-				m_data.replace(c, i);
+				m_data.replace(i, c);
 			}
 		}
 
@@ -1883,25 +1941,20 @@ namespace NOU::NOU_DAT_ALG
 	template<typename CHAR_TYPE>
 	String<CHAR_TYPE>& String<CHAR_TYPE>::trim()
 	{
-		sizeType endofstring = StringView<CHAR_TYPE>::size() - 1;
-		sizeType minusSize = 0;
-
-		while (m_data.at(endofstring) == '\u0020' || m_data.at(endofstring) == '\u000A')
+		if (StringView<CHAR_TYPE>::size() == 0)
 		{
-			m_data.remove(endofstring);
-			endofstring--;
-			minusSize++;
+			return *this;
 		}
 
-		sizeType startofstring = 0;
+		sizeType first = this->firstIndexOfNot(' ');
+		sizeType last = this->lastIndexOfNot(' ');
 
-		while (m_data.at(startofstring) == '\u0020' || m_data.at(startofstring) == '\u000A')
-		{
-			m_data.remove(startofstring);
-			startofstring++;
-			minusSize++;
-		}
-		setSize(StringView<CHAR_TYPE>::size() - minusSize);
+		String8 str = substring(first, last + 1);
+
+		m_data = str.m_data;
+        StringView<CHAR_TYPE>::m_dataPtr = const_cast<ConstCharType**>(&m_data.data());
+        setSize(str.size());
+
 		return *this;
 	}
 
@@ -2079,8 +2132,15 @@ namespace NOU::NOU_DAT_ALG
 		append(f);
 		return *this;
 	}
+
 	template<typename CHAR_TYPE>
 	typename String<CHAR_TYPE>::CharType& String<CHAR_TYPE>::operator [] (sizeType index)
+	{
+		return m_data.at(index);
+	}
+
+	template<typename CHAR_TYPE>
+	typename String<CHAR_TYPE>::CharType String<CHAR_TYPE>::operator [] (sizeType index) const
 	{
 		return m_data.at(index);
 	}

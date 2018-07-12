@@ -6,11 +6,13 @@
 #include "nostrautils/dat_alg/Vector.hpp"
 #include "nostrautils/mem_mngt/AllocationCallback.hpp"
 #include "nostrautils/core/ErrorHandler.hpp"
+#include  "nostrautils/dat_alg/FwdDcl.hpp"
 
 /** \file BinaryHeap.hpp
 \author  Dennis Franz
+\author  Lukas Reichmann
 \since   1.0.0
-\version 1.0.0
+\version 1.0.1
 \brief   This file provides a BinaryHeap (Min / Max) implementation.
 */
 
@@ -19,7 +21,8 @@ namespace NOU::NOU_DAT_ALG
 {
 
 	/**
-	\tparam The type of the elements that will be stored in this BinaryHeap.
+	\tparam T     The type of the elements that will be stored in this BinaryHeap.
+	\tparam ALLOC The type of the allocation callback.
 
 	\brief A Min or Max Heap that works with priority.
 
@@ -27,13 +30,15 @@ namespace NOU::NOU_DAT_ALG
 	the priority is split in 2 parts ( PriorityTypePart(s) ). the first part (right to left) is the unique identifier of the priority,
 	we need that because of our search function. The second part is the "standard" id which will be used for sorting / maintaining the heap law.
 	*/
-	template<typename T>
-	class BinaryHeap
+	template<typename T, template<typename> class ALLOC> //!!Default parameter specified in dat_alg/FwdDcl.hpp
+	class BinaryHeap final
 	{
 	public:
 		using PriorityTypePart = NOU::uint32;
 
 		using PriorityType = NOU::uint64;
+
+		using Allocator = typename Vector<NOU::NOU_DAT_ALG::Pair<PriorityType, T>, ALLOC>::Allocator;
 
 		static_assert(sizeof(PriorityType) == sizeof(PriorityTypePart) * 2);
 
@@ -45,7 +50,7 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\brief The Vector that stores the Pairs(the data and the priority).
 		*/
-		Vector<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>			m_data;
+		Vector<NOU::NOU_DAT_ALG::Pair<PriorityType, T>, ALLOC>	m_data;
 		/**
 		\brief A counter that provides a unique identifier for every priority.
 		*/
@@ -61,7 +66,7 @@ namespace NOU::NOU_DAT_ALG
 		\param counter			The counter (default 0: means that the normal count will be increased).
 		\return					A full 64bit priority.
 
-		\brief Takes the raw priority and (just in case of BinaryHeap<T>::decreaseKey a counter).
+		\brief Takes the raw priority and (just in case of BinaryHeap<T, ALLOC>::decreaseKey a counter).
 		*/
 		PriorityType makePriority(PriorityTypePart rawPriority, PriorityTypePart counter = 0);
 		/**
@@ -93,21 +98,19 @@ namespace NOU::NOU_DAT_ALG
 		Default = true (min heap),
 		false = max heap.
 		*/
-		BinaryHeap(boolean isMinHeap = true, sizeType size = 0, 
-			NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator = 
-			NOU_MEM_MNGT::GenericAllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>>::get());
+		BinaryHeap(boolean isMinHeap = true, sizeType size = 0, Allocator &&allocator = Allocator());
 		/**
 		\param other			An other BinaryHeap.
 
 		\brief "Standard" copy constructor.
 		*/
-		BinaryHeap(const BinaryHeap<T> &other);
+		BinaryHeap(const BinaryHeap<T, ALLOC> &other);
 		/**
 		\param other			An other BinaryHeap.
 
 		\brief "Standard" move constructor.
 		*/
-		BinaryHeap(BinaryHeap<T> && other);
+		BinaryHeap(BinaryHeap<T, ALLOC> && other);
 		/**
 		\param data				The data that will be one part of the Pair which gets inserted in the vector.
 		\param priority			Which is the other part of the Pair thats get inserted in the vector.
@@ -180,7 +183,7 @@ namespace NOU::NOU_DAT_ALG
 
 		\brief Returns the FULL priority at the given index (Counter and ID).
 		*/
-		typename BinaryHeap<T>::PriorityType priorityAt(sizeType index);
+		typename BinaryHeap<T, ALLOC>::PriorityType priorityAt(sizeType index);
 		/**
 		\param id			An id.
 
@@ -197,27 +200,27 @@ namespace NOU::NOU_DAT_ALG
 		/**
 		\param index			An index.
 
-		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T>::at)
-		\see	 BinaryHeap<T>::at()
+		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T, ALLOC>::at)
+		\see	 BinaryHeap<T, ALLOC>::at()
 		*/
 		T& operator [] (sizeType index);
 		/**
 		\param index			An index.
 
-		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T>::at)
-		\see	 BinaryHeap<T>::at()
+		\brief Returns the data part of the object at the given index. (calls BinaryHeap<T, ALLOC>::at)
+		\see	 BinaryHeap<T, ALLOC>::at()
 		*/
 		const T& operator [] (sizeType index) const;
 	};
 
-	template<typename T>
-	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::nextPriorityIdCounter()
+	template<typename T, template<typename> class ALLOC>
+	typename BinaryHeap<T, ALLOC>::PriorityTypePart BinaryHeap<T, ALLOC>::nextPriorityIdCounter()
 	{
 		return ++m_nextPriorityIdCounter;
 	}
 
-	template<typename T>
-	typename BinaryHeap<T>::PriorityType BinaryHeap<T>::makePriority(PriorityTypePart rawPriority, PriorityTypePart counter)
+	template<typename T, template<typename> class ALLOC>
+	typename BinaryHeap<T, ALLOC>::PriorityType BinaryHeap<T, ALLOC>::makePriority(PriorityTypePart rawPriority, PriorityTypePart counter)
 	{
 		PriorityType ret = (rawPriority * 100000000);
 
@@ -236,20 +239,20 @@ namespace NOU::NOU_DAT_ALG
 		return ret;
 	}
 
-	template<typename T>
-	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::getPriority(PriorityType priority) const
+	template<typename T, template<typename> class ALLOC>
+	typename BinaryHeap<T, ALLOC>::PriorityTypePart BinaryHeap<T, ALLOC>::getPriority(PriorityType priority) const
 	{
-		return (priority / 100000000);
+		return static_cast<PriorityTypePart>(priority / 100000000);
 	}
 
-	template<typename T>
-	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::getPriorityId(PriorityType priority) const
+	template<typename T, template<typename> class ALLOC>
+	typename BinaryHeap<T, ALLOC>::PriorityTypePart BinaryHeap<T, ALLOC>::getPriorityId(PriorityType priority) const
 	{
-		return (priority % 10000);
+		return static_cast<PriorityTypePart>(priority % 10000);
 	}
 
-	template<typename T>
-	void BinaryHeap<T>::checkForLaw()
+	template<typename T, template<typename> class ALLOC>
+	void BinaryHeap<T, ALLOC>::checkForLaw()
 	{
 		sizeType i = m_data.size() - 1;
 
@@ -289,42 +292,42 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template<typename T>
-	BinaryHeap<T>::BinaryHeap(boolean isMinHeap, sizeType size,NOU::NOU_MEM_MNGT::AllocationCallback<NOU::NOU_DAT_ALG::Pair<PriorityType, T>> &allocator) :
+	template<typename T, template<typename> class ALLOC>
+	BinaryHeap<T, ALLOC>::BinaryHeap(boolean isMinHeap, sizeType size, Allocator &&allocator) :
 		m_isMinHeap(isMinHeap),
-		m_data(size, allocator),
+		m_data(size, NOU_CORE::move(allocator)),
 		m_nextPriorityIdCounter(0) //counter still starts at 0
 	{}
 
-	template<typename T>
-	BinaryHeap<T>::BinaryHeap(const BinaryHeap<T> &other) :
+	template<typename T, template<typename> class ALLOC>
+	BinaryHeap<T, ALLOC>::BinaryHeap(const BinaryHeap<T, ALLOC> &other) :
 		m_isMinHeap(other.m_isMinHeap),
 		m_data(other.m_data),
 		m_nextPriorityIdCounter(other.m_nextPriorityIdCounter)
 	{}
 
-	template<typename T>
-	BinaryHeap<T>::BinaryHeap(BinaryHeap &&other) :
+	template<typename T, template<typename> class ALLOC>
+	BinaryHeap<T, ALLOC>::BinaryHeap(BinaryHeap &&other) :
 		m_isMinHeap(other.m_isMinHeap),
 		m_data(other.m_data),
 		m_nextPriorityIdCounter(other.m_nextPriorityIdCounter)
 	{}
 
-	template<typename T>
-	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::enqueue(PriorityTypePart priority, const T& data)
+	template<typename T, template<typename> class ALLOC>
+	typename BinaryHeap<T, ALLOC>::PriorityTypePart BinaryHeap<T, ALLOC>::enqueue(PriorityTypePart priority, const T& data)
 	{
 		return emplace(priority, data);
 	}
 
-	template<typename T>
-	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::enqueue(PriorityTypePart priority, T&& data)
+	template<typename T, template<typename> class ALLOC>
+	typename BinaryHeap<T, ALLOC>::PriorityTypePart BinaryHeap<T, ALLOC>::enqueue(PriorityTypePart priority, T&& data)
 	{
 		return emplace(priority, NOU_CORE::move(data));
 	}
 
-	template<typename T>
+	template<typename T, template<typename> class ALLOC>
 	template<typename... ARGS>
-	typename BinaryHeap<T>::PriorityTypePart BinaryHeap<T>::emplace(PriorityTypePart priority, ARGS&&... args)
+	typename BinaryHeap<T, ALLOC>::PriorityTypePart BinaryHeap<T, ALLOC>::emplace(PriorityTypePart priority, ARGS&&... args)
 	{
 		PriorityType pt = makePriority(priority);
 
@@ -337,8 +340,8 @@ namespace NOU::NOU_DAT_ALG
 		return getPriorityId(pt);
 	}
 
-	template<typename T>
-	void BinaryHeap<T>::dequeue()
+	template<typename T, template<typename> class ALLOC>
+	void BinaryHeap<T, ALLOC>::dequeue()
 	{
 		m_data.remove(0);
 
@@ -398,20 +401,20 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template<typename T>
-	const T& BinaryHeap<T>::get() const
+	template<typename T, template<typename> class ALLOC>
+	const T& BinaryHeap<T, ALLOC>::get() const
 	{
 		return at(0);
 	}
 
-	template<typename T>
-	T& BinaryHeap<T>::get()
+	template<typename T, template<typename> class ALLOC>
+	T& BinaryHeap<T, ALLOC>::get()
 	{
 		return at(0);
 	}
 
-	template<typename T>
-	void BinaryHeap<T>::decreaseKey(PriorityTypePart id , PriorityTypePart newpriority)
+	template<typename T, template<typename> class ALLOC>
+	void BinaryHeap<T, ALLOC>::decreaseKey(PriorityTypePart id , PriorityTypePart newpriority)
 	{
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
@@ -439,14 +442,14 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template<typename T>
-	sizeType BinaryHeap<T>::size() const
+	template<typename T, template<typename> class ALLOC>
+	sizeType BinaryHeap<T, ALLOC>::size() const
 	{
 		return m_data.size();
 	}
 
-	template<typename T>
-	T& BinaryHeap<T>::at(sizeType index)
+	template<typename T, template<typename> class ALLOC>
+	T& BinaryHeap<T, ALLOC>::at(sizeType index)
 	{
 		NOU_COND_PUSH_ERROR((index > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at the given Index.");
@@ -454,8 +457,8 @@ namespace NOU::NOU_DAT_ALG
 		return m_data.at(index).dataTwo;
 	}
 
-	template<typename T>
-	const T& BinaryHeap<T>::at(sizeType index) const
+	template<typename T, template<typename> class ALLOC>
+	const T& BinaryHeap<T, ALLOC>::at(sizeType index) const
 	{
 		NOU_COND_PUSH_ERROR((index > m_data.size()),
 			NOU_CORE::getErrorHandler(), NOU_CORE::ErrorCodes::INVALID_OBJECT, "No object was found at the given Index.");
@@ -463,14 +466,14 @@ namespace NOU::NOU_DAT_ALG
 		return m_data.at(index).dataTwo;
 	}
 
-	template<typename T>
-	typename BinaryHeap<T>::PriorityType BinaryHeap<T>::priorityAt(sizeType index)
+	template<typename T, template<typename> class ALLOC>
+	typename BinaryHeap<T, ALLOC>::PriorityType BinaryHeap<T, ALLOC>::priorityAt(sizeType index)
 	{
 		return m_data.at(index).dataOne;
 	}
 
-	template<typename T>
-	boolean BinaryHeap<T>::checkIfPresent(PriorityTypePart id)
+	template<typename T, template<typename> class ALLOC>
+	boolean BinaryHeap<T, ALLOC>::checkIfPresent(PriorityTypePart id)
 	{
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
@@ -483,8 +486,8 @@ namespace NOU::NOU_DAT_ALG
 		return false;
 	}
 
-	template<typename T>
-	void BinaryHeap<T>::deleteById(PriorityTypePart id)
+	template<typename T, template<typename> class ALLOC>
+	void BinaryHeap<T, ALLOC>::deleteById(PriorityTypePart id)
 	{
 		for (sizeType i = 0; i < m_data.size(); i++)
 		{
@@ -496,14 +499,14 @@ namespace NOU::NOU_DAT_ALG
 		}
 	}
 
-	template<typename T>
-	T& BinaryHeap<T>::operator[](sizeType index)
+	template<typename T, template<typename> class ALLOC>
+	T& BinaryHeap<T, ALLOC>::operator[](sizeType index)
 	{
 		return at(index);
 	}
 	
-	template<typename T>
-	const T& BinaryHeap<T>::operator[](sizeType index) const
+	template<typename T, template<typename> class ALLOC>
+	const T& BinaryHeap<T, ALLOC>::operator[](sizeType index) const
 	{
 		return at(index);
 	}
