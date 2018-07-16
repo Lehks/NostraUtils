@@ -4,7 +4,6 @@
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/core/Assertions.hpp"
 #include "nostrautils/math/Utils.hpp"
-#include "Matrix.hpp"
 
 #include <initializer_list>
 
@@ -31,17 +30,6 @@ namespace NOU::NOU_MATH
 	class VectorBase
 	{
 		static_assert(N > 1, "A vector can not have 0 or 1 rows.");
-
-	private:
-		/*
-		/Vector Quaternion components.
-		\x, y, w, z
-		*/
-		T x;
-		T y;
-		T z;
-		T w;
-
 
     public:
         using InitializerList = std::initializer_list<T>;
@@ -806,15 +794,7 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	class Vector<T, 4> : public VectorBase<T, 4>
 	{
-	private:
-		/*
-		/Vector Quaternion components.
-		\x, y, w, z
-		*/
-		T x;
-		T y;
-		T z;
-		T w;
+	
 	public:
 		static Vector nullVector();
 
