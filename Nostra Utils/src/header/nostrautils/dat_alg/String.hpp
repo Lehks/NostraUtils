@@ -15,7 +15,7 @@
 \author  Dennis Franz
 \author	 Lukas Reichmann
 \since   1.0.0
-\version 1.0.1
+\version 1.0.2
 \brief   This file provides a String implementation.
 */
 
@@ -1743,8 +1743,8 @@ namespace NOU::NOU_DAT_ALG
 		{
 			if (i < start)
 				m_data.remove(0);
-			else if (i > start && i > end)
-				m_data.remove(end);
+			else if (i >= end)
+				m_data.remove(end - start);
 		}
 
 		setSize(end - start);

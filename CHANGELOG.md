@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 1.0.2
+
+### Features
+
+- **Additions**
+
+- **Deletions**
+
+- **Deprecations**
+
+### Improvements
+
+### Fixes
+- Fixed a bug in the String replace method where a null terminator was
+  not set correct.
+- Fixed a bug in the String preserver method where the end of the
+  interval was not excluded.
+
+
 ## Version 1.0.1
 
 ### Features
