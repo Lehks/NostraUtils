@@ -1738,8 +1738,8 @@ namespace NOU::NOU_DAT_ALG
 		{
 			if (i < start)
 				m_data.remove(0);
-			else if (i > start && i > end)
-				m_data.remove(end);
+			else if (i >= end)
+				m_data.remove(end - start);
 		}
 
 		setSize(end - start);
