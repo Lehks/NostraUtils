@@ -1530,12 +1530,13 @@ namespace NOU::NOU_DAT_ALG
                     }
                     setSize((oldsize - target.size()) + replacement.size());
 
-                    i = i + replacement.size();
+					i = i + replacement.size() - 1;
 					end = (end - target.size()) + replacement.size();
-                }
+				}
 			}
 		}
-
+		append(StringView<CHAR_TYPE>::NULL_TERMINATOR);
+		setSize(StringView<CHAR_TYPE>::size() - 1);
 		return *this;
 	}
 
