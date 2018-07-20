@@ -127,7 +127,7 @@ namespace NOU::NOU_CORE
 	void ConsoleLogger::write(const Event& event)
 	{
 		NOU::NOU_DAT_ALG::String8 error = Logger::print(event);
-		std::cout << error.rawStr() << std::endl;
+		std::cout << error.rawStr() << std::flush;
 	}
 
 	void FileLogger::write(const Event& event)
@@ -379,6 +379,7 @@ namespace NOU::NOU_CORE
 		{
 			delete element;
 		}
+		m_logger.clear();
 	}
 
 	NOU::NOU_DAT_ALG::String8 Logger::print(const Event& event)
@@ -419,23 +420,41 @@ namespace NOU::NOU_CORE
 		return error;
 	}
 
-	void Logger::logAll(Event&& events)
+	void Logger::logAll()
 	{
 		for (sizeType i = 0; i < m_logger.size(); i++)
 		{
-			m_taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i], 
-				NOU_CORE::move(events)));
+			//m_taskQueue.pushTask(NOU_THREAD::makeTask(&callLoggingTarget, m_logger[i]));
+			callLoggingTarget(m_logger[i]);
 		}
+
+		//m_taskQueue.pushTask(NOU_THREAD::makeTask(&callSpecialEvent, static_cast<ILogger*>(nullptr)));
+		callSpecialEvent(static_cast<ILogger*>(nullptr));
 	}
 
-	void Logger::callLoggingTarget(ILogger *logger, Event event)
+	void Logger::callLoggingTarget(ILogger *logger)
 	{
-		logger->write(event);
+		NOU::NOU_THREAD::Lock lock(Logger::get().m_mutexEventQueue);
+
+		logger->write(Logger::get().m_events.peekFront());
+	}
+
+	void Logger::callSpecialEvent(ILogger *logger)
+	{
+		NOU::NOU_THREAD::Lock lock(Logger::get().m_mutexEventQueue);
+
+		Logger::get().m_events.popFront();
 	}
 
 	void Logger::write(EventLevelCodes level, const StringType &msg)
 	{
-		logAll(Event(level, msg));
+		{
+			NOU::NOU_THREAD::Lock lock(Logger::get().m_mutexEventQueue);
+
+			m_events.pushBack(Event(level, msg));
+		}
+
+		logAll();
 	}
 
 	void Logger::wait()

@@ -4,6 +4,7 @@
 
 #if NOU_OS_LIBRARY == NOU_OS_LIBRARY_POSIX
 #	include <sys/stat.h>
+#	include <string.h>
 #endif
 
 namespace NOU::NOU_FILE_MNGT

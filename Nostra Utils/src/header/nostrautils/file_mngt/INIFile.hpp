@@ -6,21 +6,27 @@
 #include "nostrautils/dat_alg/Hashing.hpp"
 #include "nostrautils/dat_alg/HashMap.hpp"
 
+/** \file INIFile.hpp
+\author	 Tobias Kuhn
+\since   1.0.0
+\version 1.0.1
+\brief   This file provides a class to parse .ini files.
+*/
 
 namespace NOU::NOU_FILE_MNGT
 {
-	class NOU_CLASS INIFile
+	class INIFile
 	{
 		public:
 			using NouString = NOU::NOU_DAT_ALG::String<char8>;
 
 			static constexpr const NOU::char8 *INI_DEFAULT_SECTION = "undefined";
-			static const int32 INI_QUOTE_NONE;
-			static const int32 INI_QUOTE_DOUBLE;
-			static const int32 INI_QUOTE_SINGLE;
-			static const int32 INI_TYPE_NouString;
-			static const int32 INI_TYPE_INT;
-			static const int32 INI_TYPE_FLOAT;
+			static constexpr int32 INI_QUOTE_NONE = 0;
+			static constexpr int32 INI_QUOTE_DOUBLE = 1;
+			static constexpr int32 INI_QUOTE_SINGLE = 2;
+			static constexpr int32 INI_TYPE_NouString = 1;
+			static constexpr int32 INI_TYPE_INT = 2;
+			static constexpr int32 INI_TYPE_FLOAT = 3;
 
 		private:
 			/**
@@ -59,7 +65,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Parses a single line from the file.
 			*/
-			void parseLine(const NouString & line, const NouString & section);
+			NOU_FUNC void parseLine(const NouString & line, const NouString & section);
 
 			/**
 			\param line A single line of text.
@@ -67,7 +73,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Parses the key from a given line.
 			*/
-			NouString parseKey(const NouString & line) const;
+			NOU_FUNC NouString parseKey(const NouString & line) const;
 
 			/**
 			\param line      A single line of text to parse.
@@ -76,7 +82,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Parses the value from a given line as a NouString.
 			*/
-			NouString parseStringValue(const NouString & line, const int32 quoteType) const;
+			NOU_FUNC NouString parseStringValue(const NouString & line, const int32 quoteType) const;
 
 			/**
 			\param line A single line of text.
@@ -84,7 +90,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Parses the value from a given line as an integer.
 			*/
-			int32 parseIntValue(const NouString & line) const;
+			NOU_FUNC int32 parseIntValue(const NouString & line) const;
 
 			/**
 			\param line A single line of text.
@@ -92,7 +98,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Parses the value from a given line as a float.
 			*/
-			float32 parseFloatValue(const NouString &line) const;
+			NOU_FUNC float32 parseFloatValue(const NouString &line) const;
 
 			/**
 			\param line A single line of text
@@ -103,41 +109,41 @@ namespace NOU::NOU_FILE_MNGT
 				   Returns 1 if double quotes were detected.
 				   Returns 2 if single quotes were detected.
 			*/
-			int32 parseValueQuote(const NouString &line) const;
+			NOU_FUNC int32 parseValueQuote(const NouString &line) const;
 
 			/**
 			\param section The section name.
 			
 			\brief Registers a section in m_data_sections, and increases the counter by 1.
 			*/
-			void incSection(const NouString & section);
+			NOU_FUNC void incSection(const NouString & section);
 
 			/**
 			\param section The section name.
 
 			\brief Decreases the value counter of a section by 1.
 			*/
-			void decSection(const NouString & section);
+			NOU_FUNC void decSection(const NouString & section);
 
 		public:
 			/**
 			\param filename The full to the ini file that should be loaded.
 			*/
-			INIFile(const NouString & filename);
+			NOU_FUNC INIFile(const NouString & filename);
 
 			/**
 			\return True on success, False on error.
 
 			\brief Parses the INI file
 			*/
-			boolean read();
+			NOU_FUNC boolean read();
 
 			/**
 			\return True on success, False on error.
 
 			\brief Writes the INI file
 			*/
-			boolean write(const NouString & = NouString(""));
+			NOU_FUNC boolean write(const NouString & = NouString::getEmptyString());
 
 			/**
 			\param key     The key to remove
@@ -145,7 +151,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Removes a key-value pair from the ini
 			*/
-			void remove(const NouString & key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC void remove(const NouString & key, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
 			\param key     The key to set
@@ -154,7 +160,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Sets a key-value NouString pair, overriding any existing key.
 			*/
-			void setString(const NouString & key, const NouString & value, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC void setString(const NouString & key, const NouString & value, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
 			\param key     The key to set
@@ -163,7 +169,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Sets a key-value integer pair, overriding any existing key.
 			*/
-			void setInt(const NouString & key, int32 value, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC void setInt(const NouString & key, int32 value, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
 			\param key     The key to set
@@ -172,7 +178,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Sets a key-value float pair, overriding any existing key.
 			*/
-			void setFloat(const NouString & key, float32 value, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC void setFloat(const NouString & key, float32 value, const NouString & section = INI_DEFAULT_SECTION);
 
 			/**
 			\param key     The key to search
@@ -181,7 +187,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as NouString.
 			*/
-			NouString getString(const NouString & key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC NouString getString(const NouString & key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param  key     The key to search
@@ -190,7 +196,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as integer.
 			*/
-			int32 getInt(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC int32 getInt(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param key     The key to search
@@ -199,7 +205,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Retrieves a value of a given key as float.
 			*/
-			float32 getFloat(const NouString &, const NouString & = INI_DEFAULT_SECTION);
+			NOU_FUNC float32 getFloat(const NouString & key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param key     The key to search
@@ -208,7 +214,7 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Checks if a given key exists in the given section.
 			*/
-			boolean keyExists(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC boolean keyExists(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\param key     The key to search for
@@ -217,21 +223,30 @@ namespace NOU::NOU_FILE_MNGT
 
 			\brief Returns the data type for the value of a given key.
 			*/
-			int32 getDataType(const NouString &key, const NouString & section = INI_DEFAULT_SECTION);
+			NOU_FUNC int32 getDataType(const NouString &key, const NouString & section = INI_DEFAULT_SECTION) const;
 
 			/**
 			\return A hashmap with the key - section pairs.
 
 			\brief Returns a list of all keys in the ini file, including their corresponding section.
 			*/
-			NOU::NOU_DAT_ALG::HashMap<NouString, NouString> getKeys();
+			NOU_FUNC NOU::NOU_DAT_ALG::HashMap<NouString, NouString> getKeys() const;
 
 			/**
 			\param other The inifile that should be merged into this one.
 
 			\brief Merges the given ini file data into the current file. Existing keys will be replaced.
 			*/
-			void merge(INIFile &other);
+			NOU_FUNC void merge(INIFile &other);
 	};
+
+	constexpr const NOU::char8 *INIFile::INI_DEFAULT_SECTION;
+	constexpr int32 INIFile::INI_QUOTE_NONE;
+	constexpr int32 INIFile::INI_QUOTE_DOUBLE;
+	constexpr int32 INIFile::INI_QUOTE_SINGLE;
+	constexpr int32 INIFile::INI_TYPE_NouString;
+	constexpr int32 INIFile::INI_TYPE_INT;
+	constexpr int32 INIFile::INI_TYPE_FLOAT;
+
 }
 #endif

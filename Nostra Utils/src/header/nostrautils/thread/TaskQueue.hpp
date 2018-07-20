@@ -262,7 +262,7 @@ namespace NOU::NOU_THREAD
 	*/
 	template<typename R, typename I, typename ACCUM = 
 		TaskQueueAccumulators::FunctionPtr<
-			NOU_CORE::typeIf_t<
+			NOU_CORE::TypeIf_t<
 				NOU_CORE::AreSame<R, void>::value, 
 					TaskQueueAccumulators::Void, R>>,
 		typename... ARGS>

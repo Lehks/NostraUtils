@@ -1,0 +1,109 @@
+/**
+\page AllocationCallback_explanation Allocation Callbacks
+
+\brief On this page, the use and reason for the existence of allocation callbacks are explained.
+
+\tableofcontents
+
+\section sec_basic_explanation Basic explanation
+
+Basically, an allocation callback is a combination of two functions: an allocation function and a
+deallocation function.
+
+Allocation callbacks are used by containers (e.g. nostra::utils::dat_alg::Vector) to abstract the way that
+they allocate memory. This enables a user to pass a custom allocator that uses a custom allocation logic to
+a container that is then used by that container to allocate memory.
+
+\section sec_usage Usage
+
+The type of an allocation callback is always passed as template parameter to a class that should use it. The
+container will then construct an instance of that allocation callback type, or, alternatively, an instance of
+the allocation callback type can be passed to the constructor 
+
+For the following example, it is assumed, that an allocation callback, called `MyAllocCallback` already
+exists.
+
+\code{.cpp}
+/*
+ * Construct a new vector that uses the allocator MyAllocCallback.
+ * 
+ * The vector will use the default constructor of the callback class to construct the instance.
+ */
+NOU::NOU_DAT_ALG::Vector<NOU::uint32, MyAllocCallback> vec0;
+
+/*
+ * Construct a new vector that uses the allocator MyAllocCallback.
+ * 
+ * The vector will use the instance of the allocation callback that was passed (which in this case is also
+ * constructed using the default constructor).
+ * Note that the first parameter is the initial capacity of the vector. This has nothing to do with the 
+ * callback, it is simply the way that the vector constructor works.
+ */
+NOU::NOU_DAT_ALG::Vector<NOU::uint32, MyAllocCallback> vec1(5, MyAllocationCallback());
+\endcode
+
+\section sec_formal_requirements Formal requirements
+
+This section will explain the requirements that an allocation callback must fulfill to properly work.
+
+An allocation callback must at least have:
+- a single template parameter (this parameter is called `T` in the following items)
+- a default constructor
+- a move constructor
+- a member function called `allocate` with the signature `T* allocate(sizeType)`
+- a member function called `deallocate` with the signature `void deallocate(T*)`
+
+An allocation callback should have:
+- a copy constructor (otherwise, the entire container my not be copy-able)
+
+Also the behavior must be as defined in the following:
+
+The template parameter `T` is the type of objects that can be allocated by the callback. Each callback can 
+only allocate instances of a single type.
+
+The member function `allocate(sizeType)` shall return a pointer to a chunk of memory that is large enough to 
+hold as may objects as the value of the `sizeType` that was passed to it. The function must NOT initialize
+that memory - allocation callbacks only return uninitialized memory.    
+On failure, the function shall return `nullptr`.
+
+The member function `deallocate(T*)` shall at least be able to deallocate any memory that was allocated by 
+the same instance (not type) of the allocation callback. The function must NOT call any destructors, it can 
+always be assumed that only uninitialized memory is passed to it. Also, it shall be able to deallocate 
+`nullptr` without raising any errors.
+
+\subsection subsec_example Example
+
+An exemplary class for an allocation callback looks like this:
+
+\code{.cpp}
+template<typename T>
+/*
+ * An allocation callback that simply wraps around a nostra::utils::mem_mngt::GenericAllocationCallback.
+ */
+class MyAllocCallback
+{
+private:
+	NOU::NOU_MEM_MNGT::GenericAllocationCallback<T> m_callback;
+
+public:
+	T* allocate(NOU::sizeType amount)
+	{
+		return m_callback.allocate(amount);
+	}
+
+	void deallocate(T *ptr)
+	{
+		m_callback.deallocate(ptr);
+	}
+};
+\endcode
+
+\section sec_predef Predefined allocation callbacks
+
+There are currently two predefined allocation callbacks:
+- nostra::utils::mem_mngt::GenericAllocationCallback: A callback that internally uses 
+  nostra::utils::mem_mngt::allocateUninitialized() and nostra::utils::mem_mngt::deallocateUninitialized().
+- nostra::utils::mem_mngt::DebugAllocationCallback: A callback that internally uses the generic allocation
+  callback, but also counts the ratio of allocations and deallocations (an a per-instance basis).
+
+*/

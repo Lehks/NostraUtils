@@ -1,7 +1,4 @@
 
-#define NOU_DEBUG
-#define NOU_DLL
-
 #include "nostrautils/NostraUtils.hpp"
 
 #include "DebugClass.hpp"
@@ -18,6 +15,10 @@
 				auto errorCount = NOU::NOU_CORE::getErrorHandler().getErrorCount();						 \
 				while(NOU::NOU_CORE::getErrorHandler().getErrorCount() > 0)								 \
 				{																						 \
+					std::cout << NOU::NOU_CORE::getErrorHandler().peekError().getName() << std::endl;    \
+					std::cout << NOU::NOU_CORE::getErrorHandler().peekError().getFile() << std::endl;    \
+					std::cout << NOU::NOU_CORE::getErrorHandler().peekError().getLine() << std::endl;    \
+					std::cout << std::endl;                                                              \
 					NOU::NOU_CORE::getErrorHandler().popError();										 \
 				}																						 \
 				IsTrue(errorCount == 0);
@@ -108,520 +109,552 @@ NOU::NOU_DAT_ALG::CompareResult noCopyClassComparator(const NoCopyClass &a, cons
 
 TEST_METHOD(TypeSizes)
 {
-IsTrue(sizeof(NOU::int8) >= 1);
-IsTrue(sizeof(NOU::uint8) >= 1);
-IsTrue(sizeof(NOU::int16) >= 2);
-IsTrue(sizeof(NOU::uint16) >= 2);
-IsTrue(sizeof(NOU::int32) >= 4);
-IsTrue(sizeof(NOU::uint32) >= 4);
-IsTrue(sizeof(NOU::int64) >= 8);
-IsTrue(sizeof(NOU::uint64) >= 8);
+	IsTrue(sizeof(NOU::int8) >= 1);
+	IsTrue(sizeof(NOU::uint8) >= 1);
+	IsTrue(sizeof(NOU::int16) >= 2);
+	IsTrue(sizeof(NOU::uint16) >= 2);
+	IsTrue(sizeof(NOU::int32) >= 4);
+	IsTrue(sizeof(NOU::uint32) >= 4);
+	IsTrue(sizeof(NOU::int64) >= 8);
+	IsTrue(sizeof(NOU::uint64) >= 8);
 
-IsTrue(sizeof(NOU::char8) >= 1);
-IsTrue(sizeof(NOU::char16) >= 2);
-IsTrue(sizeof(NOU::char32) >= 4);
+	IsTrue(sizeof(NOU::char8) >= 1);
+	IsTrue(sizeof(NOU::char16) >= 2);
+	IsTrue(sizeof(NOU::char32) >= 4);
 
-/*
-  sizeof(long double) >= 4 / 8 to sort out those compilers that do not have a float that is
-  32 / 64 bit wide
-*/
-bool conditionFloat32 = (sizeof(NOU::float32) == 4 && sizeof(long double) >= 4);
-bool conditionFloat64 = (sizeof(NOU::float64) == 8 && sizeof(long double) >= 8);
+	/*
+	  sizeof(long double) >= 4 / 8 to sort out those compilers that do not have a float that is
+	  32 / 64 bit wide
+	*/
+	bool conditionFloat32 = (sizeof(NOU::float32) == 4 && sizeof(long double) >= 4);
+	bool conditionFloat64 = (sizeof(NOU::float64) == 8 && sizeof(long double) >= 8);
 
-IsTrue(conditionFloat32);
-IsTrue(conditionFloat64);
+	IsTrue(conditionFloat32);
+	IsTrue(conditionFloat64);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(Versions)
 {
-NOU::uint32 major0 = 0;
-NOU::uint32 minor0 = 0;
-NOU::uint32 patch0 = 0;
-NOU::uint32 version0 = NOU_MAKE_VERSION(major0, minor0, patch0);
+	NOU::uint32 major0 = 0;
+	NOU::uint32 minor0 = 0;
+	NOU::uint32 patch0 = 0;
+	NOU::uint32 version0 = NOU_MAKE_VERSION(major0, minor0, patch0);
 
-IsTrue(NOU_VERSION_MAJOR(version0) == major0);
-IsTrue(NOU_VERSION_MINOR(version0) == minor0);
-IsTrue(NOU_VERSION_PATCH(version0) == patch0);
+	IsTrue(NOU_VERSION_MAJOR(version0) == major0);
+	IsTrue(NOU_VERSION_MINOR(version0) == minor0);
+	IsTrue(NOU_VERSION_PATCH(version0) == patch0);
 
-NOU::uint32 major1 = 5;
-NOU::uint32 minor1 = 23;
-NOU::uint32 patch1 = 9187;
-NOU::uint32 version1 = NOU_MAKE_VERSION(major1, minor1, patch1);
+	NOU::uint32 major1 = 5;
+	NOU::uint32 minor1 = 23;
+	NOU::uint32 patch1 = 9187;
+	NOU::uint32 version1 = NOU_MAKE_VERSION(major1, minor1, patch1);
 
-IsTrue(NOU_VERSION_MAJOR(version1) == major1);
-IsTrue(NOU_VERSION_MINOR(version1) == minor1);
-IsTrue(NOU_VERSION_PATCH(version1) == patch1);
+	IsTrue(NOU_VERSION_MAJOR(version1) == major1);
+	IsTrue(NOU_VERSION_MINOR(version1) == minor1);
+	IsTrue(NOU_VERSION_PATCH(version1) == patch1);
 
-NOU::uint32 major2 = NOU_VERSION_MAJOR_MAX;
-NOU::uint32 minor2 = NOU_VERSION_MINOR_MAX;
-NOU::uint32 patch2 = NOU_VERSION_PATCH_MAX;
-NOU::uint32 version2 = NOU_MAKE_VERSION(major2, minor2, patch2);
+	NOU::uint32 major2 = NOU_VERSION_MAJOR_MAX;
+	NOU::uint32 minor2 = NOU_VERSION_MINOR_MAX;
+	NOU::uint32 patch2 = NOU_VERSION_PATCH_MAX;
+	NOU::uint32 version2 = NOU_MAKE_VERSION(major2, minor2, patch2);
 
-IsTrue(NOU_VERSION_MAJOR(version2) == major2);
-IsTrue(NOU_VERSION_MINOR(version2) == minor2);
-IsTrue(NOU_VERSION_PATCH(version2) == patch2);
+	IsTrue(NOU_VERSION_MAJOR(version2) == major2);
+	IsTrue(NOU_VERSION_MINOR(version2) == minor2);
+	IsTrue(NOU_VERSION_PATCH(version2) == patch2);
 
-NOU::uint32 major3 = NOU_VERSION_MAJOR_MAX + 5; //overflow on purpose
-NOU::uint32 minor3 = NOU_VERSION_MINOR_MAX + 5;
-NOU::uint32 patch3 = NOU_VERSION_PATCH_MAX + 5;
-NOU::NOU_CORE::Version version3(major2, minor2, patch2);
+	NOU::uint32 major3 = NOU_VERSION_MAJOR_MAX + 5; //overflow on purpose
+	NOU::uint32 minor3 = NOU_VERSION_MINOR_MAX + 5;
+	NOU::uint32 patch3 = NOU_VERSION_PATCH_MAX + 5;
+	NOU::NOU_CORE::Version version3(major2, minor2, patch2);
 
-//compare with normal, not overflown values
-IsTrue(version3.getMajor() == NOU_VERSION_MAJOR_MAX);
-IsTrue(version3.getMinor() == NOU_VERSION_MINOR_MAX);
-IsTrue(version3.getPatch() == NOU_VERSION_PATCH_MAX);
+	//compare with normal, not overflown values
+	IsTrue(version3.getMajor() == NOU_VERSION_MAJOR_MAX);
+	IsTrue(version3.getMinor() == NOU_VERSION_MINOR_MAX);
+	IsTrue(version3.getPatch() == NOU_VERSION_PATCH_MAX);
 
-NOU::NOU_CORE::Version version4 = version3;
+	NOU::NOU_CORE::Version version4 = version3;
 
-IsTrue(version3 == version4);
-IsTrue(!(version3 != version4));
-IsTrue(!(version3 > version4));
-IsTrue(!(version3 < version4));
-IsTrue(version3 >= version4);
-IsTrue(version3 <= version4);
+	IsTrue(version3 == version4);
+	IsTrue(!(version3 != version4));
+	IsTrue(!(version3 > version4));
+	IsTrue(!(version3 < version4));
+	IsTrue(version3 >= version4);
+	IsTrue(version3 <= version4);
 
-NOU::NOU_CORE::Version version5(1, 2, 3);
-NOU::NOU_CORE::Version version6(1, 2, 4);
+	NOU::NOU_CORE::Version version5(1, 2, 3);
+	NOU::NOU_CORE::Version version6(1, 2, 4);
 
-IsTrue(!(version5 == version6));
-IsTrue(version5 != version6);
-IsTrue(!(version5 > version6));
-IsTrue(version5 < version6);
-IsTrue(!(version5 >= version6));
-IsTrue(version5 <= version6);
+	IsTrue(!(version5 == version6));
+	IsTrue(version5 != version6);
+	IsTrue(!(version5 > version6));
+	IsTrue(version5 < version6);
+	IsTrue(!(version5 >= version6));
+	IsTrue(version5 <= version6);
 
-NOU::NOU_CORE::Version version7(1, 2, 3);
-NOU::NOU_CORE::Version version8(1, 3, 3);
+	NOU::NOU_CORE::Version version7(1, 2, 3);
+	NOU::NOU_CORE::Version version8(1, 3, 3);
 
-IsTrue(!(version7 == version8));
-IsTrue(version7 != version8);
-IsTrue(!(version7 > version8));
-IsTrue(version7 < version8);
-IsTrue(!(version7 >= version8));
-IsTrue(version7 <= version8);
+	IsTrue(!(version7 == version8));
+	IsTrue(version7 != version8);
+	IsTrue(!(version7 > version8));
+	IsTrue(version7 < version8);
+	IsTrue(!(version7 >= version8));
+	IsTrue(version7 <= version8);
 
-NOU::NOU_CORE::Version version9(1, 2, 3);
-NOU::NOU_CORE::Version version10(2, 2, 4);
+	NOU::NOU_CORE::Version version9(1, 2, 3);
+	NOU::NOU_CORE::Version version10(2, 2, 4);
 
-IsTrue(!(version9 == version10));
-IsTrue(version9 != version10);
-IsTrue(!(version9 > version10));
-IsTrue(version9 < version10);
-IsTrue(!(version9 >= version10));
-IsTrue(version9 <= version10);
+	IsTrue(!(version9 == version10));
+	IsTrue(version9 != version10);
+	IsTrue(!(version9 > version10));
+	IsTrue(version9 < version10);
+	IsTrue(!(version9 >= version10));
+	IsTrue(version9 <= version10);
 
-NOU::NOU_CORE::Version version11(5, 9, 4);
-NOU::NOU_CORE::Version version12(1, 10, 4);
+	NOU::NOU_CORE::Version version11(5, 9, 4);
+	NOU::NOU_CORE::Version version12(1, 10, 4);
 
-IsTrue(!(version11 == version12));
-IsTrue(version11 != version12);
-IsTrue(version11 > version12);
-IsTrue(!(version11 < version12));
-IsTrue(version11 >= version12);
-IsTrue(!(version11 <= version12));
+	IsTrue(!(version11 == version12));
+	IsTrue(version11 != version12);
+	IsTrue(version11 > version12);
+	IsTrue(!(version11 < version12));
+	IsTrue(version11 >= version12);
+	IsTrue(!(version11 <= version12));
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(Clamp)
 {
-IsTrue(NOU::NOU_CORE::clamp(2, 1, 3) == 2); //in interval
-IsTrue(NOU::NOU_CORE::clamp(2, 2, 3) == 2); //on min border
-IsTrue(NOU::NOU_CORE::clamp(2, 3, 3) == 3); //on max border
-IsTrue(NOU::NOU_CORE::clamp(1, 2, 3) == 2); //smaller than min
-IsTrue(NOU::NOU_CORE::clamp(4, 3, 3) == 3); //greater than max
+	IsTrue(NOU::NOU_CORE::clamp(2, 1, 3) == 2); //in interval
+	IsTrue(NOU::NOU_CORE::clamp(2, 2, 3) == 2); //on min border
+	IsTrue(NOU::NOU_CORE::clamp(2, 3, 3) == 3); //on max border
+	IsTrue(NOU::NOU_CORE::clamp(1, 2, 3) == 2); //smaller than min
+	IsTrue(NOU::NOU_CORE::clamp(4, 3, 3) == 3); //greater than max
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(Swap)
 {
-NOU::int32 a = 1;
-NOU::int32 b = 2;
+	NOU::int32 a = 1;
+	NOU::int32 b = 2;
 
-NOU::NOU_DAT_ALG::swap(&a, &b);
+	NOU::NOU_DAT_ALG::swap(&a, &b);
 
-IsTrue(2 == a);
-IsTrue(1 == b);
+	IsTrue(2 == a);
+	IsTrue(1 == b);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 
-struct NOU_CLASS Foo
+struct Foo
 {
 public:
-    int m_i;
-    bool m_b;
-    float m_f;
+	int m_i;
+	bool m_b;
+	float m_f;
 
-    Foo() = default;
-    Foo(Foo &&other)
-    {
-        m_i = other.m_i;
-        m_b = other.m_b;
-        m_f = other.m_f;
-    }
-    Foo(int i, bool b, float f) :
-            m_i(i),
-            m_b(b),
-            m_f(f)
-    {}
+	Foo() = default;
+	Foo(Foo &&other)
+	{
+		m_i = other.m_i;
+		m_b = other.m_b;
+		m_f = other.m_f;
+	}
+	Foo(int i, bool b, float f) :
+		m_i(i),
+		m_b(b),
+		m_f(f)
+	{}
 };
 
 struct NotCopiable
 {
-    NotCopiable() = default;
-    NotCopiable(const NotCopiable&) = delete;
-    NotCopiable(NotCopiable&&) = default;
+	NotCopiable() = default;
+	NotCopiable(const NotCopiable&) = delete;
+	NotCopiable(NotCopiable&&) = default;
 };
 
 TEST_METHOD(Vector)
 {
-NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
+	NOU::NOU_DAT_ALG::Vector<NOU::int32> vec1(10);
 
-IsTrue(static_cast<NOU::sizeType>(0) == vec1.size());
+	IsTrue(static_cast<NOU::sizeType>(0) == vec1.size());
 
-for (NOU::int32 i = 0; i < 10; i++)
-{
-vec1.pushBack(i);
-}
+	for (NOU::int32 i = 0; i < 10; i++)
+	{
+		vec1.pushBack(i);
+	}
 
-IsTrue(0 == vec1[0]);
-IsTrue(1 == vec1[1]);
-IsTrue(2 == vec1[2]);
-IsTrue(3 == vec1[3]);
-IsTrue(4 == vec1[4]);
-IsTrue(5 == vec1[5]);
-IsTrue(6 == vec1[6]);
-IsTrue(7 == vec1[7]);
-IsTrue(8 == vec1[8]);
-IsTrue(9 == vec1[9]);
+	IsTrue(0 == vec1[0]);
+	IsTrue(1 == vec1[1]);
+	IsTrue(2 == vec1[2]);
+	IsTrue(3 == vec1[3]);
+	IsTrue(4 == vec1[4]);
+	IsTrue(5 == vec1[5]);
+	IsTrue(6 == vec1[6]);
+	IsTrue(7 == vec1[7]);
+	IsTrue(8 == vec1[8]);
+	IsTrue(9 == vec1[9]);
 
-IsTrue(!vec1.empty());
+	IsTrue(!vec1.empty());
 
-vec1.pushBack(10);
-IsTrue(10 == vec1[10]);
+	vec1.pushBack(10);
+	IsTrue(10 == vec1[10]);
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> vec2(11);
-vec2 = vec1;
-IsTrue(vec2[9] == vec1[9]);
+	NOU::NOU_DAT_ALG::Vector<NOU::int32> vec2(11);
+	vec2 = vec1;
+	IsTrue(vec2[9] == vec1[9]);
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> vec3(10);
-vec3 = vec1;
-IsTrue(vec3[9] == vec1[9]);
+	NOU::NOU_DAT_ALG::Vector<NOU::int32> vec3(10);
+	vec3 = vec1;
+	IsTrue(vec3[9] == vec1[9]);
 
-vec1.pushFront(15);
-IsTrue(15 == vec1[0]);
+	vec1.pushFront(15);
+	IsTrue(15 == vec1[0]);
 
-NOU::int32 testinteger = 0;
-testinteger = vec1.popFront();
-IsTrue(15 == testinteger);
+	NOU::int32 testinteger = 0;
+	testinteger = vec1.popFront();
+	IsTrue(15 == testinteger);
 
-vec2.swap(0, 1);
-IsTrue(0 == vec2[1]);
+	vec2.swap(0, 1);
+	IsTrue(0 == vec2[1]);
 
-vec2.remove(0);
-IsTrue(0 == vec2[0]);
+	vec2.remove(0);
+	IsTrue(0 == vec2[0]);
 
-NOU::sizeType i = 0;
+	NOU::sizeType i = 0;
 
-for (NOU::NOU_DAT_ALG::VectorIterator<NOU::int32> it = vec2.begin(); it != vec2.end(); it++)
-{
-IsTrue(*it == vec2[i]);
-i++;
-}
+	for (auto it = vec2.begin(); it != vec2.end(); it++)
+	{
+		IsTrue(*it == vec2[i]);
+		i++;
+	}
 
-i = vec2.size() - 1;
+	i = vec2.size() - 1;
 
-for (NOU::NOU_DAT_ALG::VectorReverseIterator<NOU::int32> it = vec2.rbegin(); it != vec2.rend(); it++)
-{
-IsTrue(*it == vec2[i]);
-i--;
-}
+	for (auto it = vec2.rbegin(); it != vec2.rend(); it++)
+	{
+		IsTrue(*it == vec2[i]);
+		i--;
+	}
 
-NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::int32> dbgAlloc;
+	NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::int32> dbgAlloc;
 
-{
+	{
 
-NOU::NOU_DAT_ALG::Vector<NOU::int32> vec4(1, dbgAlloc);
+		NOU::NOU_DAT_ALG::Vector<NOU::int32, NOU::NOU_MEM_MNGT::DebugAllocationCallback> vec4(1);
 
-vec4.pushBack(5);
-vec4.pushBack(2);
-vec4.remove(1);
-vec4.pushBack(1);
-vec4.pushBack(1);
-vec4.pushBack(1);
-vec4.pushBack(546045);
-vec4.pushBack(909789);
-vec4.pushBack(213301);
-vec4.pushBack(898049);
-vec4.pushBack(132034);
-vec4.pushBack(1);
-vec4.pushBack(1);
-vec4.pushBack(1);
-vec4.remove(0);
-vec4.remove(0);
-vec4.remove(0);
-vec4.remove(0);
-vec4.remove(0);
-vec4.remove(0);
-vec4.remove(0);
-vec4.remove(0);
-vec4.remove(0);
-vec4.remove(0);
-vec4.remove(0);
-
-
-vec4.pushBack(4);
-}
+		vec4.pushBack(5);
+		vec4.pushBack(2);
+		vec4.remove(1);
+		vec4.pushBack(1);
+		vec4.pushBack(1);
+		vec4.pushBack(1);
+		vec4.pushBack(546045);
+		vec4.pushBack(909789);
+		vec4.pushBack(213301);
+		vec4.pushBack(898049);
+		vec4.pushBack(132034);
+		vec4.pushBack(1);
+		vec4.pushBack(1);
+		vec4.pushBack(1);
+		vec4.remove(0);
+		vec4.remove(0);
+		vec4.remove(0);
+		vec4.remove(0);
+		vec4.remove(0);
+		vec4.remove(0);
+		vec4.remove(0);
+		vec4.remove(0);
+		vec4.remove(0);
+		vec4.remove(0);
+		vec4.remove(0);
 
 
-IsTrue(dbgAlloc.getCounter() == 0);
-
-IsTrue(0 == vec2.peek());
-IsTrue(0 == vec2.peekFront());
+		vec4.pushBack(4);
+	}
 
 
-{
-NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec5(1);
+	IsTrue(dbgAlloc.getCounter() == 0);
 
-vec5.pushBack(NOU::DebugClass());
-vec5.pushBack(NOU::DebugClass());
-vec5.remove(0);
-vec5.pushBack(NOU::DebugClass());
-vec5.remove(1);
-vec5.remove(0);
+	IsTrue(0 == vec2.peek());
+	IsTrue(0 == vec2.peekFront());
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
 
-vec5.push(NOU::DebugClass());
-vec5.push(NOU::DebugClass());
-vec5.push(NOU::DebugClass());
-}
+	{
+		NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec5(1);
 
-IsTrue(0 == vec1.peek());
-IsTrue(0 == vec1.peekFront());
+		vec5.pushBack(NOU::DebugClass());
+		vec5.pushBack(NOU::DebugClass());
+		vec5.remove(0);
+		vec5.pushBack(NOU::DebugClass());
+		vec5.remove(1);
+		vec5.remove(0);
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
+		IsTrue(NOU::DebugClass::getCounter() == 0);
 
-//Check if this compiles
-NOU::NOU_DAT_ALG::Vector<NotCopiable> vec;
+		vec5.push(NOU::DebugClass());
+		vec5.push(NOU::DebugClass());
+		vec5.push(NOU::DebugClass());
+	}
 
-NOU_CHECK_ERROR_HANDLER;
+	IsTrue(0 == vec1.peek());
+	IsTrue(0 == vec1.peekFront());
+
+	IsTrue(NOU::DebugClass::getCounter() == 0);
+
+	//Check if this compiles
+	NOU::NOU_DAT_ALG::Vector<NotCopiable> vec;
+
+	NOU::NOU_DAT_ALG::Vector<NOU::int32> vecSortTest;
+	NOU::NOU_DAT_ALG::Vector<NOU::int32> vecSortTest2;
+
+	vecSortTest.pushBack(5);
+	vecSortTest.pushBack(8);
+	vecSortTest.pushBack(2);
+	vecSortTest.pushBack(4);
+	vecSortTest.pushBack(9);
+
+	vecSortTest.sort();
+
+	IsTrue(vecSortTest[0] == 2);
+	IsTrue(vecSortTest[1] == 4);
+	IsTrue(vecSortTest[2] == 5);
+	IsTrue(vecSortTest[3] == 8);
+	IsTrue(vecSortTest[4] == 9);
+
+	vecSortTest2.pushBack(5);
+	vecSortTest2.pushBack(8);
+	vecSortTest2.pushBack(2);
+	vecSortTest2.pushBack(4);
+	vecSortTest2.pushBack(9);
+
+
+
+	vecSortTest2.sortComp(NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
+
+	IsTrue(vecSortTest2[0] == 2);
+	IsTrue(vecSortTest2[1] == 4);
+	IsTrue(vecSortTest2[2] == 5);
+	IsTrue(vecSortTest2[3] == 8);
+	IsTrue(vecSortTest2[4] == 9);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(Comparator)
 {
-//int as dummy type
-IsTrue(std::is_same<NOU::NOU_DAT_ALG::Comparator<int>,
-       decltype(&NOU::NOU_DAT_ALG::genericComparator<int>)>::value);
+	//int as dummy type
+	IsTrue(std::is_same<NOU::NOU_DAT_ALG::Comparator<int>,
+		decltype(&NOU::NOU_DAT_ALG::genericComparator<int>)>::value);
 
-IsTrue(std::is_same<NOU::NOU_DAT_ALG::Comparator<int>,
-       decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>::value);
+	IsTrue(std::is_same<NOU::NOU_DAT_ALG::Comparator<int>,
+		decltype(&NOU::NOU_DAT_ALG::genericInvertedComparator<int>)>::value);
 
-IsTrue(NOU::NOU_DAT_ALG::invert(-1) == 1);
-IsTrue(NOU::NOU_DAT_ALG::invert(0) == 0);
-IsTrue(NOU::NOU_DAT_ALG::invert(1) == -1);
+	IsTrue(NOU::NOU_DAT_ALG::invert(-1) == 1);
+	IsTrue(NOU::NOU_DAT_ALG::invert(0) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::invert(1) == -1);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(1, 5) < 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(1, 5) < 0);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 5) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 5) == 0);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 1) > 0);
-
-
-IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(1, 5) < 0);
-
-IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(5, 5) == 0);
-
-IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(5, 1) > 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(5, 1) > 0);
 
 
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(1, 5) < 0);
 
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(5, 5) == 0);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'a') == 0);
-
-IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'A') == 0);
-
-IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'b') < 0);
-
-IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') < 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator<NOU::uint64>(5, 1) > 0);
 
 
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
-                                           static_cast<NOU::char16>('a')) == 0);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
-                                           static_cast<NOU::char16>('A')) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'a') == 0);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
-                                           static_cast<NOU::char16>('b')) < 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'A') == 0);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
-                                           static_cast<NOU::char16>('b')) < 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator('a', 'b') < 0);
+
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator('A', 'b') < 0);
 
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
-                                           static_cast<NOU::char32>('a')) == 0);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
-                                           static_cast<NOU::char32>('A')) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
+		static_cast<NOU::char16>('a')) == 0);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
-                                           static_cast<NOU::char32>('b')) < 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
+		static_cast<NOU::char16>('A')) == 0);
 
-IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
-                                           static_cast<NOU::char32>('b')) < 0);
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('a'),
+		static_cast<NOU::char16>('b')) < 0);
 
-NOU_CHECK_ERROR_HANDLER;
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char16>('A'),
+		static_cast<NOU::char16>('b')) < 0);
+
+
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
+		static_cast<NOU::char32>('a')) == 0);
+
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
+		static_cast<NOU::char32>('A')) == 0);
+
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('a'),
+		static_cast<NOU::char32>('b')) < 0);
+
+	IsTrue(NOU::NOU_DAT_ALG::genericComparator(static_cast<NOU::char32>('A'),
+		static_cast<NOU::char32>('b')) < 0);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 
 struct TestDeleter
 {
-    void operator () (int* i)
-    {
-        testVar = true;
-        delete i;
-    }
+	void operator () (int* i)
+	{
+		testVar = true;
+		delete i;
+	}
 };
 
 TEST_METHOD(UniquePtr)
 {
-//use string for testing.
-std::string *rawPtr = new std::string("Hello World!");
-std::string *rawPtr1 = new std::string("Hello World! 1");
+	//use string for testing.
+	std::string *rawPtr = new std::string("Hello World!");
+	std::string *rawPtr1 = new std::string("Hello World! 1");
 
-NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr(rawPtr, NOU::NOU_MEM_MNGT::defaultDeleter);
-NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr1(rawPtr1, NOU::NOU_MEM_MNGT::defaultDeleter);
+	NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr(rawPtr, NOU::NOU_MEM_MNGT::defaultDeleter);
+	NOU::NOU_MEM_MNGT::UniquePtr<std::string> uPtr1(rawPtr1, NOU::NOU_MEM_MNGT::defaultDeleter);
 
-IsTrue(uPtr.rawPtr() == rawPtr);
-IsTrue(uPtr[0] == rawPtr[0]);
-IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
-IsTrue(*uPtr == *rawPtr);
-IsTrue(uPtr);
-IsTrue(!NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr,
-                                                  NOU::NOU_MEM_MNGT::defaultDeleter));
-IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
-IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
-IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
-IsTrue((uPtr > uPtr1) == (rawPtr > rawPtr1));
-IsTrue((uPtr == uPtr1) == (rawPtr == rawPtr1));
-IsTrue((uPtr != uPtr1) == (rawPtr != rawPtr1));
+	IsTrue(uPtr.rawPtr() == rawPtr);
+	IsTrue(uPtr[0] == rawPtr[0]);
+	IsTrue(uPtr->size() == rawPtr->size()); //check -> operator
+	IsTrue(*uPtr == *rawPtr);
+	IsTrue(uPtr);
+	IsTrue(!NOU::NOU_MEM_MNGT::UniquePtr<std::string>(nullptr,
+		NOU::NOU_MEM_MNGT::defaultDeleter));
+	IsTrue((uPtr <= uPtr1) == (rawPtr <= rawPtr1));
+	IsTrue((uPtr >= uPtr1) == (rawPtr >= rawPtr1));
+	IsTrue((uPtr < uPtr1) == (rawPtr < rawPtr1));
+	IsTrue((uPtr > uPtr1) == (rawPtr > rawPtr1));
+	IsTrue((uPtr == uPtr1) == (rawPtr == rawPtr1));
+	IsTrue((uPtr != uPtr1) == (rawPtr != rawPtr1));
 
-IsTrue(uPtr.deleter() == &NOU::NOU_MEM_MNGT::defaultDeleter<std::string>);
+	IsTrue(uPtr.deleter() == &NOU::NOU_MEM_MNGT::defaultDeleter<std::string>);
 
-uPtr = std::move(uPtr1);
+	uPtr = std::move(uPtr1);
 
-IsTrue(uPtr1.rawPtr() == nullptr);
+	IsTrue(uPtr1.rawPtr() == nullptr);
 
-IsTrue(uPtr.rawPtr() == rawPtr1);
+	IsTrue(uPtr.rawPtr() == rawPtr1);
 
-{
-//check if this compiles
-NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
+	{
+		//check if this compiles
+		NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr2(new int, TestDeleter());
 
-//destructor is called here
-}
+		//destructor is called here
+	}
 
-IsTrue(testVar); //if testVar is true, the destructor has been called.
+	IsTrue(testVar); //if testVar is true, the destructor has been called.
 
-testVar = false;
+	testVar = false;
 
-NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr3(new int, TestDeleter());
-uPtr3 = new int;
+	NOU::NOU_MEM_MNGT::UniquePtr<int, TestDeleter> uPtr3(new int, TestDeleter());
+	uPtr3 = new int;
 
-IsTrue(testVar); //if testVar is true, the destructor has been called.
+	IsTrue(testVar); //if testVar is true, the destructor has been called.
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(FastQueue)
 {
-while (NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
-NOU::NOU_CORE::getErrorHandler().popError();
+	while (NOU::NOU_CORE::getErrorHandler().getErrorCount() != 0)
+		NOU::NOU_CORE::getErrorHandler().popError();
 
-NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
+	NOU::NOU_MEM_MNGT::DebugAllocationCallback<NOU::DebugClass> allocator;
 
-{
-NOU::NOU_DAT_ALG::FastQueue<NOU::DebugClass> fq(5, allocator);
+	{
+		NOU::NOU_DAT_ALG::FastQueue<NOU::DebugClass, NOU::NOU_MEM_MNGT::DebugAllocationCallback> fq(5);
 
-IsTrue(fq.capacity() == 5);
-IsTrue(&fq.getAllocationCallback() == &allocator);
+		IsTrue(fq.capacity() == 5);
 
-IsTrue(fq.size() == 0);
-IsTrue(fq.empty());
+		IsTrue(fq.size() == 0);
+		IsTrue(fq.empty());
 
-fq.push(NOU::DebugClass());
-fq.push(NOU::DebugClass());
-fq.push(NOU::DebugClass());
-fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
 
-fq.pop();
-fq.pop();
-fq.pop();
-fq.pop();
+		fq.pop();
+		fq.pop();
+		fq.pop();
+		fq.pop();
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
+		IsTrue(NOU::DebugClass::getCounter() == 0);
 
-fq.push(NOU::DebugClass());
-fq.push(NOU::DebugClass());
-fq.push(NOU::DebugClass());
-fq.push(NOU::DebugClass());
-fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
 
-fq.clear();
+		fq.clear();
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
+		IsTrue(NOU::DebugClass::getCounter() == 0);
 
-fq.push(NOU::DebugClass());
-fq.push(NOU::DebugClass());
-fq.push(NOU::DebugClass());
-}
+		fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
+		fq.push(NOU::DebugClass());
+	}
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
-IsTrue(allocator.getCounter() == 0);
+	IsTrue(NOU::DebugClass::getCounter() == 0);
+	IsTrue(allocator.getCounter() == 0);
 
-NOU::NOU_DAT_ALG::FastQueue<int> fq;
+	NOU::NOU_DAT_ALG::FastQueue<int> fq;
 
-fq.push(1);
-fq.push(2);
-fq.push(3);
-fq.push(4);
+	fq.push(1);
+	fq.push(2);
+	fq.push(3);
+	fq.push(4);
 
-IsTrue(fq.peek() == 1);
+	IsTrue(fq.peek() == 1);
 
-IsTrue(fq.pop() == 1);
-IsTrue(fq.pop() == 2);
-IsTrue(fq.pop() == 3);
-IsTrue(fq.pop() == 4);
+	IsTrue(fq.pop() == 1);
+	IsTrue(fq.pop() == 2);
+	IsTrue(fq.pop() == 3);
+	IsTrue(fq.pop() == 4);
 
-IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+	IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 
-//Check if this compiles
-NOU::NOU_DAT_ALG::FastQueue<NotCopiable>();
+	//Check if this compiles
+	NOU::NOU_DAT_ALG::FastQueue<NotCopiable>();
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(AreSame)
 {
-IsTrue(NOU::NOU_CORE::AreSame<int, int>::value);
-IsTrue(!NOU::NOU_CORE::AreSame<double, int>::value);
-IsTrue(!NOU::NOU_CORE::AreSame<int, double>::value);
-IsTrue(NOU::NOU_CORE::AreSame<int, int, int>::value);
-IsTrue(!NOU::NOU_CORE::AreSame<int, int, double>::value);
-IsTrue(!NOU::NOU_CORE::AreSame<int, double, double>::value);
-IsTrue(!NOU::NOU_CORE::AreSame<int, double, double, int>::value);
-IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
-IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
-IsTrue(!NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
+	IsTrue(NOU::NOU_CORE::AreSame<int, int>::value);
+	IsTrue(!NOU::NOU_CORE::AreSame<double, int>::value);
+	IsTrue(!NOU::NOU_CORE::AreSame<int, double>::value);
+	IsTrue(NOU::NOU_CORE::AreSame<int, int, int>::value);
+	IsTrue(!NOU::NOU_CORE::AreSame<int, int, double>::value);
+	IsTrue(!NOU::NOU_CORE::AreSame<int, double, double>::value);
+	IsTrue(!NOU::NOU_CORE::AreSame<int, double, double, int>::value);
+	IsTrue(NOU::NOU_CORE::AreSame<int, int, int, int>::value);
+	IsTrue(NOU::NOU_CORE::AreSame<double, double, double, double, double>::value);
+	IsTrue(!NOU::NOU_CORE::AreSame<int, int, int, int, int, int, double>::value);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 #ifdef NOU_EXISTS_FEATURE_IS_INVOCABLE_R
@@ -643,392 +676,498 @@ TEST_METHOD(IsInvocable)
 
 TEST_METHOD(DebugAllocationCallback)
 {
-NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> alloc;
+	NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> alloc;
 
-int *iPtr = alloc.allocate(5);
+	int *iPtr = alloc.allocate(5);
 
-IsTrue(alloc.getCounter() == 1);
+	IsTrue(alloc.getCounter() == 1);
 
-alloc.deallocate(iPtr);
+	alloc.deallocate(iPtr);
 
-IsTrue(alloc.getCounter() == 0);
+	IsTrue(alloc.getCounter() == 0);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(AllocationCallbackDeleter)
 {
-NOU::NOU_MEM_MNGT::DebugAllocationCallback<int> dbgAlloc;
-NOU::NOU_MEM_MNGT::AllocationCallbackRefDeleter<int> deleter0(dbgAlloc);
+	NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int, NOU::NOU_MEM_MNGT::DebugAllocationCallback> deleter1;
 
-int *iPtr0 = dbgAlloc.allocate();
+	int *iPtr1 = deleter1.getAllocator().allocate();
 
-deleter0(iPtr0); //delete using deleter
+	deleter1(iPtr1); //delete using deleter
 
-IsTrue(dbgAlloc.getCounter() == 0);
+	IsTrue(deleter1.getAllocator().getCounter() == 0);
 
-auto callback = NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>();
-NOU::NOU_MEM_MNGT::AllocationCallbackDeleter<int,
-        NOU::NOU_MEM_MNGT::DebugAllocationCallback<int>> deleter1(callback);
-
-int *iPtr1 = deleter1.getAllocator().allocate();
-
-deleter1(iPtr1); //delete using deleter
-
-IsTrue(deleter1.getAllocator().getCounter() == 0);
-
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(StringView)
 {
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('A'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('Z'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('a'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('z'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('A'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('Z'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('a'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isCharacter('z'));
 
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter(' '));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter('3'));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter('%'));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter('-'));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter(' '));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter('3'));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter('%'));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::isCharacter('-'));
 
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('1'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('2'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('3'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('4'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('5'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('6'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('7'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('8'));
-IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('9'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('1'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('2'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('3'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('4'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('5'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('6'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('7'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('8'));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::isDigit('9'));
 
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit(' '));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit('A'));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit('%'));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit('-'));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit(' '));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit('A'));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit('%'));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::isDigit('-'));
 
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToBoolean("true"));
 
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
-IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!?$%&"));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("false"));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("abcde"));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("12345"));
+	IsTrue(!NOU::NOU_DAT_ALG::StringView8::stringToBoolean("!?$%&"));
 
-NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
+	NOU::NOU_DAT_ALG::StringView8 sv = "Hello World!";
 
-IsTrue(sv[0] == 'H');
-IsTrue(sv[1] == 'e');
-IsTrue(sv[2] == 'l');
-IsTrue(sv[3] == 'l');
-IsTrue(sv[4] == 'o');
-IsTrue(sv[5] == ' ');
-IsTrue(sv[6] == 'W');
-IsTrue(sv[7] == 'o');
-IsTrue(sv[8] == 'r');
-IsTrue(sv[9] == 'l');
-IsTrue(sv[10] == 'd');
-IsTrue(sv[11] == '!');
+	IsTrue(sv[0] == 'H');
+	IsTrue(sv[1] == 'e');
+	IsTrue(sv[2] == 'l');
+	IsTrue(sv[3] == 'l');
+	IsTrue(sv[4] == 'o');
+	IsTrue(sv[5] == ' ');
+	IsTrue(sv[6] == 'W');
+	IsTrue(sv[7] == 'o');
+	IsTrue(sv[8] == 'r');
+	IsTrue(sv[9] == 'l');
+	IsTrue(sv[10] == 'd');
+	IsTrue(sv[11] == '!');
 
-IsTrue(sv.size() == 12);
+	IsTrue(sv.size() == 12);
 
-IsTrue(*sv.indexIterator(0) == 'H');
-IsTrue(*sv.indexIterator(1) == 'e');
-IsTrue(*sv.indexIterator(2) == 'l');
-IsTrue(*sv.indexIterator(3) == 'l');
-IsTrue(*sv.indexIterator(4) == 'o');
-IsTrue(*sv.indexIterator(5) == ' ');
-IsTrue(*sv.indexIterator(6) == 'W');
-IsTrue(*sv.indexIterator(7) == 'o');
-IsTrue(*sv.indexIterator(8) == 'r');
-IsTrue(*sv.indexIterator(9) == 'l');
-IsTrue(*sv.indexIterator(10) == 'd');
-IsTrue(*sv.indexIterator(11) == '!');
+	IsTrue(*sv.indexIterator(0) == 'H');
+	IsTrue(*sv.indexIterator(1) == 'e');
+	IsTrue(*sv.indexIterator(2) == 'l');
+	IsTrue(*sv.indexIterator(3) == 'l');
+	IsTrue(*sv.indexIterator(4) == 'o');
+	IsTrue(*sv.indexIterator(5) == ' ');
+	IsTrue(*sv.indexIterator(6) == 'W');
+	IsTrue(*sv.indexIterator(7) == 'o');
+	IsTrue(*sv.indexIterator(8) == 'r');
+	IsTrue(*sv.indexIterator(9) == 'l');
+	IsTrue(*sv.indexIterator(10) == 'd');
+	IsTrue(*sv.indexIterator(11) == '!');
 
-IsTrue(sv == "Hello World!");
+	IsTrue(sv == "Hello World!");
 
-IsTrue(sv.find('e') == 1);
-IsTrue(sv.find('e', 1) == 1);
+	IsTrue(sv.find('e') == 1);
+	IsTrue(sv.find('e', 1) == 1);
 
-IsTrue(sv.find('o') == 4);
-IsTrue(sv.find('o', 5) == 7);
-IsTrue(sv.find('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+	IsTrue(sv.find('o') == 4);
+	IsTrue(sv.find('o', 5) == 7);
+	IsTrue(sv.find('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-IsTrue(sv.find("ello") == 1);
-IsTrue(sv.find("o") == 4);
-IsTrue(sv.find("o", 5) == 7);
-IsTrue(sv.find("test") == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+	IsTrue(sv.find("ello") == 1);
+	IsTrue(sv.find("o") == 4);
+	IsTrue(sv.find("o", 5) == 7);
+	IsTrue(sv.find("test") == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-IsTrue(sv.firstIndexOf('H') == 0);
-IsTrue(sv.firstIndexOf('o') == 4);
-IsTrue(sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+	IsTrue(sv.firstIndexOf('H') == 0);
+	IsTrue(sv.firstIndexOf('o') == 4);
+	IsTrue(sv.firstIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-IsTrue(sv.lastIndexOf('H') == 0);
-IsTrue(sv.lastIndexOf('o') == 7);
-IsTrue(sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
+	IsTrue(sv.lastIndexOf('H') == 0);
+	IsTrue(sv.lastIndexOf('o') == 7);
+	IsTrue(sv.lastIndexOf('z') == NOU::NOU_DAT_ALG::StringView8::NULL_INDEX);
 
-IsTrue(sv.firstIndexOfNot('H') == 1);
-IsTrue(sv.firstIndexOfNot('o') == 0);
-IsTrue(sv.firstIndexOfNot('z') == 0);
+	IsTrue(sv.firstIndexOfNot('H') == 1);
+	IsTrue(sv.firstIndexOfNot('o') == 0);
+	IsTrue(sv.firstIndexOfNot('z') == 0);
 
-IsTrue(sv.lastIndexOfNot('H') == 11);
-IsTrue(sv.lastIndexOfNot('o') == 11);
-IsTrue(sv.lastIndexOfNot('z') == 11);
+	IsTrue(sv.lastIndexOfNot('H') == 11);
+	IsTrue(sv.lastIndexOfNot('o') == 11);
+	IsTrue(sv.lastIndexOfNot('z') == 11);
 
-IsTrue(sv.startsWith('H'));
-IsTrue(!sv.startsWith('g'));
+	IsTrue(sv.startsWith('H'));
+	IsTrue(!sv.startsWith('g'));
 
-IsTrue(sv.startsWith("Hell"));
-IsTrue(!sv.startsWith("World"));
+	IsTrue(sv.startsWith("Hell"));
+	IsTrue(!sv.startsWith("World"));
 
-IsTrue(sv.endsWith("rld!") == true);
-IsTrue(!sv.endsWith("World") == true);
+	IsTrue(sv.endsWith("rld!") == true);
+	IsTrue(!sv.endsWith("World") == true);
 
-IsTrue((sv.compareTo("Abc") > 0));
-IsTrue((sv.compareTo("Hello World!") == 0));
-IsTrue((sv.compareTo("Xyz") < 0));
+	IsTrue((sv.compareTo("Abc") > 0));
+	IsTrue((sv.compareTo("Hello World!") == 0));
+	IsTrue((sv.compareTo("Xyz") < 0));
 
-NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
+	NOU::NOU_DAT_ALG::StringView8 subStr = sv.logicalSubstring(6);
 
-IsTrue(subStr.size() == 6);
+	IsTrue(subStr.size() == 6);
 
-IsTrue(subStr[0] == 'W');
-IsTrue(subStr[1] == 'o');
-IsTrue(subStr[2] == 'r');
-IsTrue(subStr[3] == 'l');
-IsTrue(subStr[4] == 'd');
-IsTrue(subStr[5] == '!');
+	IsTrue(subStr[0] == 'W');
+	IsTrue(subStr[1] == 'o');
+	IsTrue(subStr[2] == 'r');
+	IsTrue(subStr[3] == 'l');
+	IsTrue(subStr[4] == 'd');
+	IsTrue(subStr[5] == '!');
 
-IsTrue(sv == "Hello World!");
-IsTrue(sv != "Hello z World!");
-IsTrue(sv < "xyz");
-IsTrue((sv > "abc"));
+	IsTrue(sv == "Hello World!");
+	IsTrue(sv != "Hello z World!");
+	IsTrue(sv < "xyz");
+	IsTrue((sv > "abc"));
 
-NOU::NOU_DAT_ALG::StringView8 sv1 = "Hello World!";
-NOU::NOU_DAT_ALG::StringView8 sv2 = "Bye World!";
+	NOU::NOU_DAT_ALG::StringView8 sv1 = "Hello World!";
+	NOU::NOU_DAT_ALG::StringView8 sv2 = "Bye World!";
 
-sv1 = sv2;
+	sv1 = sv2;
 
-IsTrue(sv1 == sv2);
+	IsTrue(sv1 == sv2);
 
 
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("123") == 123);
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("9999999") == 9999999);
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("0") == 0);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("123") == 123);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("9999999") == 9999999);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToUint32("0") == 0);
 
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("123") == 123);
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("9999999") == 9999999);
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("0") == 0);
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-123") == -123);
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-9999999") == -9999999);
-IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-0") == -0);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("123") == 123);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("9999999") == 9999999);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("0") == 0);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-123") == -123);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-9999999") == -9999999);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8::stringToInt32("-0") == -0);
 
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
-        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123"), 123.0f, 0.001f) == 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
-        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999"), 9999999.0f, 0.001f) == 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
-        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0"), 0.0f, 0.001f) == 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
-        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456"), 123.456f, 0.001f) == 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
-        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99"), 5.99f, 0.001f) == 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
-        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5"), 14.5f, 0.001f) == 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
-        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
-        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
-        NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+		NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123"), 123.0f, 0.001f) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+		NOU::NOU_DAT_ALG::StringView8::stringToFloat32("9999999"), 9999999.0f, 0.001f) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+		NOU::NOU_DAT_ALG::StringView8::stringToFloat32("0"), 0.0f, 0.001f) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+		NOU::NOU_DAT_ALG::StringView8::stringToFloat32("123.456"), 123.456f, 0.001f) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+		NOU::NOU_DAT_ALG::StringView8::stringToFloat32("5.99"), 5.99f, 0.001f) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+		NOU::NOU_DAT_ALG::StringView8::stringToFloat32("14.5"), 14.5f, 0.001f) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+		NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-123.456"), -123.456f, 0.001f) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+		NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-5.99"), -5.99f, 0.001f) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(
+		NOU::NOU_DAT_ALG::StringView8::stringToFloat32("-14.5"), -14.5f, 0.001f) == 0);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(DebugClass)
 {
-{
-NOU::DebugClass dbgCls0;
+	{
+		NOU::DebugClass dbgCls0;
 
-IsTrue(NOU::DebugClass::getCounter() == 1);
+		IsTrue(NOU::DebugClass::getCounter() == 1);
 
-{
-NOU::DebugClass dbgCls1 = dbgCls0;
+		{
+			NOU::DebugClass dbgCls1 = dbgCls0;
 
-IsTrue(NOU::DebugClass::getCounter() == 2);
-}
+			IsTrue(NOU::DebugClass::getCounter() == 2);
+		}
 
-IsTrue(NOU::DebugClass::getCounter() == 1);
+		IsTrue(NOU::DebugClass::getCounter() == 1);
 
-NOU::DebugClass dbgCls2 = NOU::NOU_CORE::move(dbgCls0);
+		NOU::DebugClass dbgCls2 = NOU::NOU_CORE::move(dbgCls0);
 
-IsTrue(NOU::DebugClass::getCounter() == 2);
-}
+		IsTrue(NOU::DebugClass::getCounter() == 2);
+	}
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
+	IsTrue(NOU::DebugClass::getCounter() == 0);
 
-NOU::DebugClass dbgCls0(1);
-NOU::DebugClass dbgCls1(3);
+	NOU::DebugClass dbgCls0(1);
+	NOU::DebugClass dbgCls1(3);
 
-IsTrue(dbgCls0 < dbgCls1);
-IsTrue(!(dbgCls0 > dbgCls1));
-IsTrue(dbgCls0 <= dbgCls1);
-IsTrue(!(dbgCls0 >= dbgCls1));
-IsTrue(!(dbgCls0 == dbgCls1));
-IsTrue(dbgCls0 != dbgCls1);
+	IsTrue(dbgCls0 < dbgCls1);
+	IsTrue(!(dbgCls0 > dbgCls1));
+	IsTrue(dbgCls0 <= dbgCls1);
+	IsTrue(!(dbgCls0 >= dbgCls1));
+	IsTrue(!(dbgCls0 == dbgCls1));
+	IsTrue(dbgCls0 != dbgCls1);
 
-NOU::DebugClass dbgCls2(1);
+	NOU::DebugClass dbgCls2(1);
 
-IsTrue(!(dbgCls0 < dbgCls2));
-IsTrue(!(dbgCls0 > dbgCls2));
-IsTrue(dbgCls0 <= dbgCls2);
-IsTrue(dbgCls0 >= dbgCls2);
-IsTrue(dbgCls0 == dbgCls2);
-IsTrue(!(dbgCls0 != dbgCls2));
+	IsTrue(!(dbgCls0 < dbgCls2));
+	IsTrue(!(dbgCls0 > dbgCls2));
+	IsTrue(dbgCls0 <= dbgCls2);
+	IsTrue(dbgCls0 >= dbgCls2);
+	IsTrue(dbgCls0 == dbgCls2);
+	IsTrue(!(dbgCls0 != dbgCls2));
 
-IsTrue(dbgCls0.get() == 1);
-IsTrue(dbgCls1.get() == 3);
-IsTrue(dbgCls2.get() == 1);
+	IsTrue(dbgCls0.get() == 1);
+	IsTrue(dbgCls1.get() == 3);
+	IsTrue(dbgCls2.get() == 1);
 
-NOU::DebugClass dbgCls3 = dbgCls0;
-NOU::DebugClass dbgCls4 = NOU::NOU_CORE::move(dbgCls1);
+	NOU::DebugClass dbgCls3 = dbgCls0;
+	NOU::DebugClass dbgCls4 = NOU::NOU_CORE::move(dbgCls1);
 
-IsTrue(dbgCls3.get() == 1);
-IsTrue(dbgCls4.get() == 3);
+	IsTrue(dbgCls3.get() == 1);
+	IsTrue(dbgCls4.get() == 3);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(IsDefaultConstructible)
 {
-struct NotDefaultConstructible
+	struct NotDefaultConstructible
+	{
+		NotDefaultConstructible(int)
+		{
+
+		}
+	};
+
+	IsTrue(NOU::NOU_CORE::IsDefaultConstructible<int>::value);
+	IsTrue(NOU::NOU_CORE::IsDefaultConstructible
+		<NOU::NOU_MEM_MNGT::GenericAllocationCallback<int>>::value);
+	IsTrue(!(NOU::NOU_CORE::IsDefaultConstructible<NotDefaultConstructible>::value));
+
+	NOU_CHECK_ERROR_HANDLER;
+}
+
+TEST_METHOD(Folder)
 {
-    NotDefaultConstructible(int)
-    {
+	using namespace NOU::NOU_FILE_MNGT;
 
-    }
-};
+	//Check exists()
+	IsTrue(Folder::exists("."));
+	IsTrue(Folder::exists(".."));
+	IsTrue(!Folder::exists("DoesNotExist"));
 
-IsTrue(NOU::NOU_CORE::IsDefaultConstructible<int>::value);
-IsTrue(NOU::NOU_CORE::IsDefaultConstructible
-       <NOU::NOU_MEM_MNGT::GenericAllocationCallback<int>>::value);
-IsTrue(!(NOU::NOU_CORE::IsDefaultConstructible<NotDefaultConstructible>::value));
+	//Check constructor
+	Folder f1("TestFolder");
+	IsTrue(f1.getPath() == "TestFolder");
 
-NOU_CHECK_ERROR_HANDLER;
+	//Check create()
+	f1.create();
+	IsTrue(f1.exists());
+
+	//Check remove()
+	f1.remove();
+	IsTrue(!f1.exists());
+
+	//More checks, w/ different paths
+	IsTrue(!Folder::exists("TestFolder"));
+	Folder::create("TestFolder");
+	IsTrue(Folder::exists("TestFolder"));
+
+	IsTrue(!Folder::exists("TestFolder/TestFolder2"));
+	Folder::create("TestFolder/TestFolder2");
+	IsTrue(Folder::exists("TestFolder/TestFolder2"));
+
+	
+	IsTrue(!Folder::exists("TestFolder/TestFolder2/TestFolder3"));
+	Folder::create("TestFolder/TestFolder2/TestFolder3");
+	IsTrue(Folder::exists("TestFolder/TestFolder2/TestFolder3"));
+
+	Folder::remove("TestFolder/TestFolder2/TestFolder3");
+	IsTrue(!Folder::exists("TestFolder/TestFolder2/TestFolder3"));
+
+
+	Folder::remove("TestFolder/TestFolder2");
+	IsTrue(!Folder::exists("TestFolder/TestFolder2"));
+
+	Folder::remove("TestFolder");
+	IsTrue(!Folder::exists("TestFolder"));
+
+	//Check listFiles() & listFolders()
+	Folder::create("TestFolder");
+
+	Folder folder("TestFolder");
+
+	//Check empty dir
+	auto folders1 = folder.listFolders();
+	IsTrue(folders1.size() == 2);
+
+	auto files1 = folder.listFiles();
+	IsTrue(files1.size() == 0);
+
+	Folder::create("TestFolder/Folder1");
+	Folder::create("TestFolder/Folder2");
+	Folder::create("TestFolder/Folder3");
+	File file1("TestFolder/file1");
+	file1.createFile();
+	File file2("TestFolder/file2");
+	file2.createFile();
+	File file3("TestFolder/file3");
+	file3.createFile();
+
+	auto folders = folder.listFolders();
+
+	IsTrue(folders.size() == 5);
+	//TODO Check if the folders are the correct ones, Vector::contains() is missing for that
+
+	auto files = folder.listFiles();
+
+	IsTrue(files.size() == 3);	
+	//TODO Check if the files are the correct ones, Vector::contains() is missing for that
+
+	file3.deleteFile();
+	file2.deleteFile();
+	file1.deleteFile();
+
+	Folder::remove("TestFolder/Folder3");
+	Folder::remove("TestFolder/Folder2");
+	Folder::remove("TestFolder/Folder1");
+	Folder::remove("TestFolder");
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(ErrorHandler)
 {
-NOU::NOU_CORE::ErrorHandler handler;
+	NOU::NOU_CORE::ErrorHandler handler;
 
-IsTrue(handler.getErrorCount() == 0);
+	IsTrue(handler.getErrorCount() == 0);
 
-NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of "
-                                                                        "bounds.");
+	NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "The index was out of "
+		"bounds.");
 
-IsTrue(handler.getErrorCount() == 1);
+	IsTrue(handler.getErrorCount() == 1);
 
-//validate that the error in the handler is the one that was supposed to be pushed
-IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
-IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFnName()) == NOU_FUNC_NAME);
-IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFile()) == __FILE__);
-IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) ==
-       "The index was out of bounds.");
-IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) ==
-       "INDEX_OUT_OF_BOUNDS");
+	//validate that the error in the handler is the one that was supposed to be pushed
+	IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFnName()) == NOU_FUNC_NAME);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getFile()) == __FILE__);
+	IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getMsg()) ==
+		"The index was out of bounds.");
+	IsTrue(NOU::NOU_DAT_ALG::StringView8(handler.peekError().getName()) ==
+		"INDEX_OUT_OF_BOUNDS");
 
-auto errorPeek = handler.peekError();
-auto errorPop = handler.popError();
+	auto errorPeek = handler.peekError();
+	auto errorPop = handler.popError();
 
-//validate that the popped error is the same one as the peeked error.
-IsTrue(errorPeek.getID() == errorPop.getID());
-IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getFnName()) == errorPop.getFnName());
-IsTrue(errorPeek.getLine() == errorPop.getLine());
-IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getFile()) == errorPop.getFile());
-IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getMsg()) == errorPop.getMsg());
-IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getName()) == errorPop.getName());
+	//validate that the popped error is the same one as the peeked error.
+	IsTrue(errorPeek.getID() == errorPop.getID());
+	IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getFnName()) == errorPop.getFnName());
+	IsTrue(errorPeek.getLine() == errorPop.getLine());
+	IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getFile()) == errorPop.getFile());
+	IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getMsg()) == errorPop.getMsg());
+	IsTrue(NOU::NOU_DAT_ALG::StringView8(errorPeek.getName()) == errorPop.getName());
 
-IsTrue(handler.getErrorCount() == 0);
+	IsTrue(handler.getErrorCount() == 0);
 
-NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR, "Some message");
-NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "Some other message");
+	NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR, "Some message");
+	NOU_PUSH_ERROR(handler, NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS, "Some other message");
 
-IsTrue(handler.getErrorCount() == 2);
+	IsTrue(handler.getErrorCount() == 2);
 
-//validate that the order in which the errors are popped is correct
-IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
-IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
+	//validate that the order in which the errors are popped is correct
+	IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
+	IsTrue(handler.popError().getID() == NOU::NOU_CORE::ErrorCodes::INDEX_OUT_OF_BOUNDS);
 
-IsTrue(handler.getErrorCount() == 0);
+	IsTrue(handler.getErrorCount() == 0);
 
-NOU::NOU_CORE::ErrorHandler::ErrorType error = 50000;
+	NOU::NOU_CORE::ErrorHandler::ErrorType error = 50000;
 
-//push some invalid error code
-NOU_PUSH_ERROR(handler, error, "Some invalid code");
+	//push some invalid error code
+	NOU_PUSH_ERROR(handler, error, "Some invalid code");
 
-IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
-IsTrue(handler.peekError().getActualID() == error);
+	IsTrue(handler.peekError().getID() == NOU::NOU_CORE::ErrorCodes::UNKNOWN_ERROR);
+	IsTrue(handler.peekError().getActualID() == error);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(EpsilonCompare)
 {
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) < 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(123.456, 123.457, 0.1) == 0);
-IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(122.456, 123.457, 0.1) < 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(123.456, 123.457, 0.1) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::epsilonCompare(124.456, 123.457, 0.1) > 0);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(InvokeResult)
 {
-IsTrue(NOU::NOU_CORE::AreSame<void, NOU::NOU_CORE::InvokeResult_t<
-                                    decltype(dummyFunc0), int>>::value);
-IsTrue(NOU::NOU_CORE::AreSame<int, NOU::NOU_CORE::InvokeResult_t<
-                                   decltype(dummyFunc1), int>>::value);
+	IsTrue(NOU::NOU_CORE::AreSame<void, NOU::NOU_CORE::InvokeResult_t<
+		decltype(dummyFunc0), int>>::value);
+	IsTrue(NOU::NOU_CORE::AreSame<int, NOU::NOU_CORE::InvokeResult_t<
+		decltype(dummyFunc1), int>>::value);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(Uninitialized)
 {
-{
-NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> ui;
+	{
+		NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> ui;
 
-IsTrue(!ui.isValid());
+		IsTrue(!ui.isValid());
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
+		IsTrue(NOU::DebugClass::getCounter() == 0);
 
-ui = NOU::DebugClass(5);
+		ui = NOU::DebugClass(5);
 
-IsTrue(ui.isValid());
+		IsTrue(ui.isValid());
 
-IsTrue(ui->get() == 5);
+		IsTrue(ui->get() == 5);
 
-IsTrue(NOU::DebugClass::getCounter() == 1);
+		IsTrue(NOU::DebugClass::getCounter() == 1);
 
-ui = NOU::DebugClass(10);
+		ui = NOU::DebugClass(10);
 
-IsTrue(ui.isValid());
+		IsTrue(ui.isValid());
 
-IsTrue(ui->get() == 10);
+		IsTrue(ui->get() == 10);
 
-IsTrue(NOU::DebugClass::getCounter() == 1);
-}
-IsTrue(NOU::DebugClass::getCounter() == 0);
+		IsTrue(NOU::DebugClass::getCounter() == 1);
+	}
+	IsTrue(NOU::DebugClass::getCounter() == 0);
 }
 
 TEST_METHOD(Quicksort)
-
 {
+	int arrFirst[5] = { 2,1,3,5,4 };
+	NOU::NOU_DAT_ALG::qsort(arrFirst, 0, 4);
+	IsTrue(arrFirst[0] == 1);
+	IsTrue(arrFirst[1] == 2);
+	IsTrue(arrFirst[2] == 3);
+	IsTrue(arrFirst[3] == 4);
+	IsTrue(arrFirst[4] == 5);
+
+	NOU::int32 arrSecond[5] = { 2,1,3,5,4 };
+	NOU::NOU_DAT_ALG::qsort(arrSecond, 0, 4, NOU::NOU_DAT_ALG::genericComparator<NOU::int32>);
+	IsTrue(arrSecond[0] == 1);
+	IsTrue(arrSecond[1] == 2);
+	IsTrue(arrSecond[2] == 3);
+	IsTrue(arrSecond[3] == 4);
+	IsTrue(arrSecond[4] == 5);
+
+
+	NoCopyClass arrTest[5] = { NoCopyClass(2), NoCopyClass(1), NoCopyClass(3), NoCopyClass(5), NoCopyClass(4) };
+	NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, noCopyClassComparator);
+
+
+	/*Test arrTest[5] = { Test(2),Test(1),Test(3),Test(5),Test(4) };
+	NOU::NOU_DAT_ALG::qsort(arrTest, 0, 4, NOU::NOU_DAT_ALG::genericComparator<NOU::uint32>);
+	IsTrue(arrTest[0].get() == 1);
+	IsTrue(arrTest[1].get() == 2);
+	IsTrue(arrTest[2].get() == 3);
+	IsTrue(arrTest[3].get() == 4);
+	IsTrue(arrTest[4].get() == 5);
+
 
 int arr[5] = {2,1,3,5,4};
-NOU::NOU_DAT_ALG::qsort(arr, 0, 4);
+NOU::NOU_DAT_ALG::qsort(arr, 0, 4, NOU::NOU_DAT_ALG::genericComparator<NOU::uint32>);
 IsTrue(arr[0] == 1);
 IsTrue(arr[1] == 2);
 IsTrue(arr[2] == 3);
 IsTrue(arr[3] == 4);
-IsTrue(arr[4] == 5);
+IsTrue(arr[4] == 5);*/
 
 
 
@@ -1037,329 +1176,345 @@ IsTrue(arr[4] == 5);
 
 TEST_METHOD(Random)
 {
-NOU::NOU_DAT_ALG::Random random;
+	NOU::NOU_DAT_ALG::Random random;
 
-for (NOU::uint32 i = 0; i < 100; i++)
-{
-typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(0, 10);
+	for (NOU::uint32 i = 0; i < 100; i++)
+	{
+		typename NOU::NOU_DAT_ALG::Random::Value rand = random.rand(3, 10);
 
-bool condition = rand >= 0 && rand <= 10;
-IsTrue(condition);
-}
+		bool condition = rand >= 3 && rand <= 10;
+		IsTrue(condition);
+	}
 }
 
 TEST_METHOD(PoolAllocator)
 {
-NOU::NOU_MEM_MNGT::PoolAllocator<NOU::DebugClass> pa;
+	NOU::NOU_MEM_MNGT::PoolAllocator<NOU::DebugClass> pa;
 
-NOU::NOU_DAT_ALG::Vector<NOU::DebugClass*> dbgCls;
+	NOU::NOU_DAT_ALG::Vector<NOU::DebugClass*> dbgCls;
 
-NOU::sizeType testValue = 1234;
+	NOU::sizeType testValue = 1234;
 
-const NOU::sizeType ALLOC_SIZE = 4321;
+	const NOU::sizeType ALLOC_SIZE = 4321;
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
+	IsTrue(NOU::DebugClass::getCounter() == 0);
 
-for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
-{
-dbgCls.push(pa.allocate(testValue));
-}
+	for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+	{
+		dbgCls.push(pa.allocate(testValue));
+	}
 
-for (NOU::DebugClass* value : dbgCls)
-{
-IsTrue(value->get() == testValue);
-}
+	for (NOU::DebugClass* value : dbgCls)
+	{
+		IsTrue(value->get() == testValue);
+	}
 
-IsTrue(NOU::DebugClass::getCounter() == ALLOC_SIZE);
+	IsTrue(NOU::DebugClass::getCounter() == ALLOC_SIZE);
 
-for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
-{
-pa.deallocate(dbgCls.pop());
-}
+	for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+	{
+		pa.deallocate(dbgCls.pop());
+	}
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
+	IsTrue(NOU::DebugClass::getCounter() == 0);
 
-IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+	IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 
-{
-NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> uninit;
+	{
+		NOU::NOU_DAT_ALG::Uninitialized<NOU::DebugClass> uninit;
 
-IsTrue(!uninit.isValid());
+		IsTrue(!uninit.isValid());
 
-uninit = NOU::DebugClass(1);
+		uninit = NOU::DebugClass(1);
 
-IsTrue(uninit.isValid());
+		IsTrue(uninit.isValid());
 
-uninit.destroy();
+		uninit.destroy();
 
-IsTrue(!uninit.isValid());
+		IsTrue(!uninit.isValid());
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
-}
+		IsTrue(NOU::DebugClass::getCounter() == 0);
+	}
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(GeneralPurposeAllocator)
 {
-using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::
-GeneralPurposeAllocatorPointer<NOU::DebugClass>;
+	using HandleType = NOU::NOU_MEM_MNGT::GeneralPurposeAllocator::
+		GeneralPurposeAllocatorPointer<NOU::DebugClass>;
 
-NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
-NOU::NOU_DAT_ALG::Vector<HandleType> dbgVec;
-NOU::sizeType testValue = 12345;
-const NOU::sizeType ALLOC_SIZE = 40;
+	NOU::NOU_MEM_MNGT::GeneralPurposeAllocator gpa;
+	NOU::NOU_DAT_ALG::Vector<HandleType> dbgVec;
+	NOU::sizeType testValue = 12345;
+	const NOU::sizeType ALLOC_SIZE = 40;
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
+	IsTrue(NOU::DebugClass::getCounter() == 0);
 
-IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+	IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 
-dbgVec.push(gpa.allocateObjects<NOU::DebugClass>(1, testValue));
-gpa.deallocateObjects(dbgVec.at(0));
-dbgVec.pop();
-gpa.deallocateObjects(dbgVec.at(0));
+	dbgVec.push(gpa.allocateObjects<NOU::DebugClass>(1, testValue));
+	gpa.deallocateObjects(dbgVec.at(0));
+	dbgVec.pop();
 
-IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
-NOU::NOU_CORE::getErrorHandler().popError();
+#ifdef NOU_DEBUG 
 
-for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
-{
-dbgVec.push(gpa.allocateObject<NOU::DebugClass>(testValue));
-}
+	gpa.deallocateObjects(dbgVec.at(0));
 
-for (HandleType &value : dbgVec)
-{
-IsTrue(value->get() == testValue);
-}
+	IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 2);
+	NOU::NOU_CORE::getErrorHandler().popError();
+	NOU::NOU_CORE::getErrorHandler().popError();
 
-for (int i = 0; i < dbgVec.size(); i++)
-{
-gpa.deallocateObjects(dbgVec.at(i));
-}
+#else
+	IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
+#endif
 
-IsTrue(NOU::DebugClass::getCounter() == 0);
+	for (NOU::sizeType i = 0; i < ALLOC_SIZE; i++)
+	{
+		dbgVec.push(gpa.allocateObject<NOU::DebugClass>(testValue));
+	}
 
-NOU_CHECK_ERROR_HANDLER;
+	for (HandleType &value : dbgVec)
+	{
+		IsTrue(value->get() == testValue);
+	}
+
+	for (NOU::uint32 i = 0; i < dbgVec.size(); i++)
+	{
+		gpa.deallocateObjects(dbgVec.at(i));
+	}
+
+	IsTrue(NOU::DebugClass::getCounter() == 0);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(String)
 {
-NOU::NOU_DAT_ALG::String<NOU::char8> str;
+	NOU::NOU_DAT_ALG::String8 str1;
+	NOU::NOU_DAT_ALG::String8 str2 ("Hello");
+	NOU::NOU_DAT_ALG::String8 str3 ('H');
+	NOU::NOU_DAT_ALG::String8 str4 = "Hello";
+	NOU::NOU_DAT_ALG::String8 str5 = 4;
+	NOU::NOU_DAT_ALG::String8 str6 = 5.5;
+	NOU::NOU_DAT_ALG::String8 str7 (5);
+	NOU::NOU_DAT_ALG::String8 str8 (5.5);
+	NOU::NOU_DAT_ALG::String8 str9 = "HelloHello";
 
-str.append('a');
-IsTrue(str[0] == 'a');
+	//str2 used
+	//AT
+	IsTrue(str2.at(0) == 'H');
+	IsTrue(str2.at(1) == 'e');
+	IsTrue(str2.at(2) == 'l');
+	IsTrue(str2.at(3) == 'l');
+	IsTrue(str2.at(4) == 'o');
+	
+	IsTrue(str2.size() == 5);
 
-str.append("Hallo");
-IsTrue(str[1] == 'H');
+	//str1 used
+	//INSERT
+	str1.insert(0,'c');
+	str1.insert(1, "Name");
+	IsTrue(str1 == "cName");
+	IsTrue(str1.size() == 5);
+	str1.insert(0, 3);
+	str1.insert(0, 5.0);
+	IsTrue(str1 == "5.03cName");
+	IsTrue(str1.size() == 9);
 
-str.insert(0, 'A');
-IsTrue(str[0] == 'A');
+	//str3 used
+	//APPEND
+	str3.append('e');
+	IsTrue(str3 == "He");
+	IsTrue(str3.size() == 2);
+	str3.append("llo");
+	IsTrue(str3 == "Hello");
+	IsTrue(str3.size() == 5);
+	str3.append(20);
+	IsTrue(str3 == "Hello20");
+	IsTrue(str3.size() == 7);
+	str3.append(5.5);
+	IsTrue(str3 == "Hello205.5");
+	IsTrue(str3.size() == 10);
 
-str.appendIf(1, 'T');
-IsTrue(str[str.size() - 1] == 'T');
+	//str4 and str9 used
+	//REPLACE
+	NOU::sizeType index = 0;
+	str4.replace(index, 'h');							//index , char
+	IsTrue(str4 == "hello");
+	IsTrue(str4.size() == 5);
+	str4.replace('l', 'L');							//char, char
+	IsTrue(str4 == "heLLo");
+	IsTrue(str4.size() == 5);
+	
+	str9.replace("ll", "aa");						//str == str
+	IsTrue(str9 == "HeaaoHeaao");
+	IsTrue(str9.size() == 10);
+	str9.replace("aa", "lll");						//str < str 
+	IsTrue(str9 == "HellloHelllo");
+	IsTrue(str9.size() == 12);
+	str9.replace("lll", "a");						//str > str
+	IsTrue(str9 == "HeaoHeao");
+	IsTrue(str9.size() == 8);
 
-str.append(1);
-IsTrue(str[str.size() - 1] == '1');
+	str9.replace(0, 4,"Hell");						// ==
+	IsTrue(str9 == "HellHeao");
+	IsTrue(str9.size() == 8);
+	str9.replace(0, 4, "H");						// >
+	IsTrue(str9 == "HHeao");
+	IsTrue(str9.size() == 5);
+	str9.replace(0, 4, "Hello");					// <
+	IsTrue(str9 == "Helloo");
+	IsTrue(str9.size() == 6);
+	str9.replace(0, str9.size(), "Hello");
+	IsTrue(str9 == "Hello");
+	IsTrue(str9.size() == 5);
 
-str.append(-1);
-IsTrue(str[str.size() - 2] == '-');
-IsTrue(str[str.size() - 1] == '1');
+	//str1 used
+	//CLEAR
+	str1.clear();
+	IsTrue(str1.size() == 0);
 
-NOU::sizeType i = 0; // becasue of NULLTERMINATOR
-str.clear();
-IsTrue(str.size() == i);
+	//str1 and str9 used
+	//COPYSUBSTRING -TO and -HERE
+	str1.copySubstringHere(str9, 0, str9.size(), 0);
+	IsTrue(str1 == "Hello");
+	IsTrue(str1.size() == 5);
 
-str.append("Hallo Welt");
-str.replace('l', 'V', 0, str.size() - 1);
-IsTrue(str[2] == 'V');
-IsTrue(str[3] == 'V');
-IsTrue(str[8] == 'V');
+	str1.copySubstringTo(str9, 0, str1.size(), 0);
+	IsTrue(str9 == "HelloHello");
+	IsTrue(str9.size() == 10);
 
-str.clear();
-str.append(17.025);
-IsTrue(str[0] == '1');
-IsTrue(str[1] == '7');
-IsTrue(str[2] == '.');
-IsTrue(str[3] == '0');
-IsTrue(str[4] == '2');
-IsTrue(str[5] == '5');
+	//str1 used
+	//FILL RANGE
+	str1.fillRange('a', 0, str1.size());
+	IsTrue(str1 == "aaaaa");
+	IsTrue(str1.size() == 5);
 
-str.remove(2, str.size());
-IsTrue(str[0] == '1');
-IsTrue(str[1] == '7');
+	//str1 used
+	//REMOVE
+	str1.remove(0, str1.size());
+	IsTrue(str1.size() == 0);
 
-NOU::NOU_DAT_ALG::String<NOU::char8> substr;
+	//str9 used
+	//PRESERVER
+	str9.preserve(1,6);
+	IsTrue(str9 == "elloH");
+	IsTrue(str9.size() == 5);
 
-substr.append(str.substring(0, 1));
-IsTrue(str[0] == '1');
+	//str9 used
+	//SUBSTRING
+	NOU::NOU_DAT_ALG::String8 strTMP;
+	strTMP = str9.substring(0, str9.size());
+	IsTrue(strTMP == "elloH");
+	IsTrue(strTMP.size() == 5);
 
-substr.clear();
-substr.append(str.copy());
-IsTrue(str[0] == '1');
-IsTrue(str[1] == '7');
-substr.clear();
-str.clear();
-substr.append("AAAAA");
-str.append("Hallo");
+	//str9 used
+	//TO -LOWER and -UPPERCASE
+	str9.toLowerCase();
+	IsTrue(str9 == "elloh");
+	IsTrue(str9.size() == 5);
 
-NOU::NOU_DAT_ALG::String<NOU::char8> str1;
-NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "Hallo";
+	str9.toUpperCase();
+	IsTrue(str9 == "ELLOH");
+	IsTrue(str9.size() == 5);
 
-str1 = str2;
-IsTrue(str1 == "Hallo");
+	//str9 used
+	//TRIM
+	str9.clear();
+	str9 = "   Hello       ";
+	str9.trim();
+	IsTrue(str9 == "Hello");
+	IsTrue(str9.size() == 5);
 
-str1 = "User";
-IsTrue(str1 == "User");
+	//new str used
+	//BUFFER
+	NOU::NOU_DAT_ALG::String8 strNEW(50,'a');
+	strNEW.append('a');
+	IsTrue(strNEW.getCapacity() == 50);
+	strNEW.removeRemainingBufferFromString();
+	IsTrue(strNEW.getCapacity() == 2);
 
-NOU::NOU_DAT_ALG::String<NOU::char8> str3 = str1.substring(0, 2);
-IsTrue(str3 == "Us");
-
-str1 = str3.fillRange('a', 0, 2);
-IsTrue(str1 == "aa");
-
-str1 = "NostraUtils";
-
-str3 = str1.preserve(6, 11);
-IsTrue(str3 == "Utils");
-
-str1 = "";
-
-str2 = str1.concat("Hallo");
-IsTrue(str2 == "Hallo");
-str1 = str2.concat(1);
-IsTrue(str1 == "Hallo1");
-str2 = str1.concat('a');
-IsTrue(str2 == "Hallo1a");
-str1 = str2.concat(1.3);
-IsTrue(str1 == "Hallo1a1.3");
-
-str1 = "User";
-str2 = "Hallo";
-
-str1.copySubstringTo(str2, 0,4,5);
-IsTrue(str2 == "HalloUser");
-
-str1 = "User";
-str1.copySubstringHere("Hallo",0,5,0);
-IsTrue(str1 == "HalloUser");
-
-str1.replace(0, 9, "wasgeht");
-IsTrue(str1 == "wasgeht");
-
-str1 = "ThisIsAString";
-str1.replace("String", "Integer");
-IsTrue(str1 == "ThisIsAInteger");
-
-str1 = "ThisIsAString";
-str1.replace("String", "Intege");
-IsTrue(str1 == "ThisIsAIntege");
-
-str1 = "ThisIsAString";
-str1.replace("AString", "Intege");
-IsTrue(str1 == "ThisIsIntege");
-
-
-str1 = "ThisIsAString";
-str1.replace(0, 7, "Integer");
-IsTrue(str1 == "IntegerString");
-
-str1 = "ThisIsAString";
-str1.replace(0,13, "Integer");
-IsTrue(str1 == "Integer");
-
-str1 = "ThisIsAString";
-str1.replace(0, 5, "Integer");
-IsTrue(str1 == "IntegersAString");
-
-NOU::NOU_DAT_ALG::String8 newstr(50, 'b');
-IsTrue(newstr.getCapacity() == 50);
-
-newstr.appendBuffer(10);
-IsTrue(newstr.getCapacity() == 60);
-
-newstr.removeRemainingBufferFromString();
-IsTrue(newstr.getCapacity() == 1);
-
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(BinaryHeap)
 {
-NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> b;
+	NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> b;
 
-b.enqueue(10, 1);
-b.enqueue(11, 2);
-b.enqueue(12, 3);
-b.enqueue(13, 4);
-b.enqueue(14, 1);
-b.enqueue(15, 4);
+	b.enqueue(10, 1);
+	b.enqueue(11, 2);
+	b.enqueue(12, 3);
+	b.enqueue(13, 4);
+	b.enqueue(14, 1);
+	b.enqueue(15, 4);
 
-IsTrue(b.at(0) == 1);
-IsTrue(b.at(1) == 2);
-IsTrue(b.at(2) == 3);
-IsTrue(b.at(3) == 4);
-IsTrue(b.at(4) == 1);
-IsTrue(b.at(5) == 4);
+	IsTrue(b.at(0) == 1);
+	IsTrue(b.at(1) == 2);
+	IsTrue(b.at(2) == 3);
+	IsTrue(b.at(3) == 4);
+	IsTrue(b.at(4) == 1);
+	IsTrue(b.at(5) == 4);
 
-b.dequeue();
+	b.dequeue();
 
-IsTrue(b.at(0) == 2);
-IsTrue(b.at(1) == 3);
-IsTrue(b.at(2) == 4);
-IsTrue(b.at(3) == 1);
-IsTrue(b.at(4) == 4);
+	IsTrue(b.at(0) == 2);
+	IsTrue(b.at(1) == 3);
+	IsTrue(b.at(2) == 4);
+	IsTrue(b.at(3) == 1);
+	IsTrue(b.at(4) == 4);
 
-b.decreaseKey(2, 2);
+	b.decreaseKey(2, 2);
 
-IsTrue(b.at(0) == 2);
-IsTrue(b.at(1) == 3);
-IsTrue(b.at(2) == 4);
-IsTrue(b.at(3) == 1);
-IsTrue(b.at(4) == 4);
+	IsTrue(b.at(0) == 2);
+	IsTrue(b.at(1) == 3);
+	IsTrue(b.at(2) == 4);
+	IsTrue(b.at(3) == 1);
+	IsTrue(b.at(4) == 4);
 
-NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> c(5);
+	NOU::NOU_DAT_ALG::BinaryHeap<NOU::int32> c(true, 5);
 
-c.enqueue(1, 11);
-c.enqueue(2, 5);
-c.enqueue(3, 17);
-c.enqueue(3, 176);
-c.enqueue(5, 188);
+	c.enqueue(1, 11);
+	c.enqueue(2, 5);
+	c.enqueue(3, 17);
+	c.enqueue(3, 176);
+	c.enqueue(5, 188);
 
-IsTrue(c.checkIfPresent(3) == true);
+	IsTrue(c.checkIfPresent(3) == true);
 
-c.deleteById(4);
+	c.deleteById(4);
 
-IsTrue(c.at(0) == 11);
-IsTrue(c.at(1) == 5);
-IsTrue(c.at(2) == 17);
-IsTrue(c.at(3) == 188);
+	IsTrue(c.at(0) == 11);
+	IsTrue(c.at(1) == 5);
+	IsTrue(c.at(2) == 17);
+	IsTrue(c.at(3) == 188);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 
 TEST_METHOD(Hashfunction)
 {
-NOU::int64 i1 = 243536768574;
-NOU::int64 i2 = 243536768574;
+	NOU::int64 i1 = 243536768574;
+	NOU::int64 i2 = 243536768574;
 
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, sizeof(NOU::int64), 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
+	NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
+	//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&i2, sizeof(NOU::int64), 20));
+	IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
 
-NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
-NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
+	NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
+	NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
 
-h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
-//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
+	h = NOU::NOU_DAT_ALG::hashObj(&str1, 1, 20);
+	//AreEqual(h, NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
+	IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, 1, 20));
 
-
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(HashMap)
 {
-	
+
 	{
 		//construction
 		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> map;
@@ -1411,7 +1566,7 @@ TEST_METHOD(HashMap)
 		//check if compiles
 		NOU::NOU_DAT_ALG::HashMap<NOU::int32, NOU::int32> mapMove = NOU::NOU_CORE::move(map);
 	}
-	
+
 	{
 		//construction
 		NOU::NOU_DAT_ALG::HashMap<NoCopyClass, NoCopyClass> map(50);
@@ -1458,7 +1613,7 @@ TEST_METHOD(HashMap)
 
 		IsTrue(entrySet.size() == 3);
 	}
-	
+
 
 	{
 		//construction
@@ -1507,258 +1662,246 @@ TEST_METHOD(HashMap)
 		IsTrue(entrySet.size() == 3);
 	}
 
-	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(BinarySearch)
 {
-NOU::NOU_DAT_ALG::Vector<NOU::sizeType> vec;
-vec.pushBack(1);
-vec.pushBack(5);
-vec.pushBack(13);
-vec.pushBack(18);
-vec.pushBack(21);
-vec.pushBack(43);
-vec.pushBack(92);
+	NOU::NOU_DAT_ALG::Vector<NOU::int64> vec;
+	vec.pushBack(1);
+	vec.pushBack(5);
+	vec.pushBack(13);
+	vec.pushBack(18);
+	vec.pushBack(21);
+	vec.pushBack(43);
+	vec.pushBack(92);
 
-NOU::sizeType search_vals[] = { 1, 5, 19, 21, 92, 43, 103, 0};
+	NOU::int64 search_vals[] = { 1, 5, 19, 21, 92, 43, 103, 0 };
 
 
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[0], 0, vec.size() - 1) == 0);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[1], 0, vec.size() - 1) == 1);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1) == -1);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[3], 0, vec.size() - 1) == 4);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[4], 0, vec.size() - 1) == 6);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[5], 0, vec.size() - 1) == 5);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1) == -1);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[0], 0, vec.size() - 1) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[1], 0, vec.size() - 1) == 1);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1) == -1);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[3], 0, vec.size() - 1) == 4);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[4], 0, vec.size() - 1) == 6);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[5], 0, vec.size() - 1) == 5);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1) == -1);
 
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[0], 0, -1) == 0);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[1], 0, -1) == 1);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[2], 0, -1) == -1);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[3], 0, -1) == 4);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[4], 0, -1) == 6);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[5], 0, -1) == 5);
-IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[6], 0, -1) == -1);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[0], 0, -1) == 0);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[1], 0, -1) == 1);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[2], 0, -1) == -1);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[3], 0, -1) == 4);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[4], 0, -1) == 6);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[5], 0, -1) == 5);
+	IsTrue(NOU::NOU_DAT_ALG::binarySearch(vec, search_vals[6], 0, -1) == -1);
 
-NOU::sizeType insertionIndex;
+	NOU::int64 insertionIndex;
 
-NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1, &insertionIndex);
-IsTrue(insertionIndex == 4);
-NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1, &insertionIndex);
-IsTrue(insertionIndex == 7);
-NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[7], 0, vec.size() - 1, &insertionIndex);
-IsTrue(insertionIndex == 0);
+	NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[2], 0, vec.size() - 1, &insertionIndex);
+	IsTrue(insertionIndex == 4);
+	NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[6], 0, vec.size() - 1, &insertionIndex);
+	IsTrue(insertionIndex == 7);
+	NOU::NOU_DAT_ALG::binarySearch(vec.data(), search_vals[7], 0, vec.size() - 1, &insertionIndex);
+	IsTrue(insertionIndex == 0);
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(VectorIterator)
 {
-NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec;
+	NOU::NOU_DAT_ALG::Vector<NOU::DebugClass> vec;
 
-vec.push(NOU::DebugClass(0));
-vec.push(NOU::DebugClass(1));
-vec.push(NOU::DebugClass(2));
-vec.push(NOU::DebugClass(3));
-vec.push(NOU::DebugClass(4));
-vec.push(NOU::DebugClass(5));
-
-
-//Iterator
-IsTrue(vec.begin() == vec.begin());
-IsTrue(vec.begin() + 3 == vec.begin() + 3);
-IsTrue(vec.end() == vec.end());
-
-IsTrue(vec.begin() != vec.end());
-IsTrue(vec.begin() + 3 != vec.begin() + 4);
+	vec.push(NOU::DebugClass(0));
+	vec.push(NOU::DebugClass(1));
+	vec.push(NOU::DebugClass(2));
+	vec.push(NOU::DebugClass(3));
+	vec.push(NOU::DebugClass(4));
+	vec.push(NOU::DebugClass(5));
 
 
+	//Iterator
+	IsTrue(vec.begin() == vec.begin());
+	IsTrue(vec.begin() + 3 == vec.begin() + 3);
+	IsTrue(vec.end() == vec.end());
 
-IsTrue(vec.begin()->get() == 0);
-IsTrue((++vec.begin())->get() == 1);
-IsTrue((vec.begin() + 1)->get() == 1);
-IsTrue((vec.begin() + 2)->get() == 2);
-IsTrue((vec.begin() + 3)->get() == 3);
-IsTrue((vec.begin() + 4)->get() == 4);
-IsTrue((vec.begin() + 5)->get() == 5);
-
-IsTrue((vec.end() - 1)->get() == 5);
-IsTrue((vec.end() - 2)->get() == 4);
-IsTrue((vec.end() - 3)->get() == 3);
-IsTrue((vec.end() - 4)->get() == 2);
-IsTrue((vec.end() - 5)->get() == 1);
-IsTrue((vec.end() - 6)->get() == 0);
-
-auto it = vec.begin();
-
-IsTrue(it->get() == 0);
-
-it += 1;
-IsTrue(it->get() == 1);
-
-it += 1;
-IsTrue(it->get() == 2);
-
-it += 1;
-IsTrue(it->get() == 3);
-
-it += 1;
-IsTrue(it->get() == 4);
-
-it += 1;
-IsTrue(it->get() == 5);
-
-it -= 1;
-IsTrue(it->get() == 4);
-
-it -= 1;
-IsTrue(it->get() == 3);
-
-it -= 1;
-IsTrue(it->get() == 2);
-
-it -= 1;
-IsTrue(it->get() == 1);
-
-it -= 1;
-IsTrue(it->get() == 0);
+	IsTrue(vec.begin() != vec.end());
+	IsTrue(vec.begin() + 3 != vec.begin() + 4);
 
 
 
+	IsTrue(vec.begin()->get() == 0);
+	IsTrue((++vec.begin())->get() == 1);
+	IsTrue((vec.begin() + 1)->get() == 1);
+	IsTrue((vec.begin() + 2)->get() == 2);
+	IsTrue((vec.begin() + 3)->get() == 3);
+	IsTrue((vec.begin() + 4)->get() == 4);
+	IsTrue((vec.begin() + 5)->get() == 5);
 
-//Reverse Iterator
-IsTrue(vec.rbegin() == vec.rbegin());
-IsTrue(vec.rbegin() + 3 == vec.rbegin() + 3);
-IsTrue(vec.end() == vec.end());
+	IsTrue((vec.end() - 1)->get() == 5);
+	IsTrue((vec.end() - 2)->get() == 4);
+	IsTrue((vec.end() - 3)->get() == 3);
+	IsTrue((vec.end() - 4)->get() == 2);
+	IsTrue((vec.end() - 5)->get() == 1);
+	IsTrue((vec.end() - 6)->get() == 0);
 
-IsTrue(vec.rbegin() != vec.rend());
-IsTrue(vec.rbegin() + 3 != vec.rbegin() + 4);
+	auto it = vec.begin();
+
+	IsTrue(it->get() == 0);
+
+	it += 1;
+	IsTrue(it->get() == 1);
+
+	it += 1;
+	IsTrue(it->get() == 2);
+
+	it += 1;
+	IsTrue(it->get() == 3);
+
+	it += 1;
+	IsTrue(it->get() == 4);
+
+	it += 1;
+	IsTrue(it->get() == 5);
+
+	it -= 1;
+	IsTrue(it->get() == 4);
+
+	it -= 1;
+	IsTrue(it->get() == 3);
+
+	it -= 1;
+	IsTrue(it->get() == 2);
+
+	it -= 1;
+	IsTrue(it->get() == 1);
+
+	it -= 1;
+	IsTrue(it->get() == 0);
 
 
 
-IsTrue(vec.rbegin()->get() == 5);
-IsTrue((++vec.rbegin())->get() == 4);
-IsTrue((vec.rbegin() + 1)->get() == 4);
-IsTrue((vec.rbegin() + 2)->get() == 3);
-IsTrue((vec.rbegin() + 3)->get() == 2);
-IsTrue((vec.rbegin() + 4)->get() == 1);
-IsTrue((vec.rbegin() + 5)->get() == 0);
 
-IsTrue((vec.rend() - 1)->get() == 0);
-IsTrue((vec.rend() - 2)->get() == 1);
-IsTrue((vec.rend() - 3)->get() == 2);
-IsTrue((vec.rend() - 4)->get() == 3);
-IsTrue((vec.rend() - 5)->get() == 4);
-IsTrue((vec.rend() - 6)->get() == 5);
+	//Reverse Iterator
+	IsTrue(vec.rbegin() == vec.rbegin());
+	IsTrue(vec.rbegin() + 3 == vec.rbegin() + 3);
+	IsTrue(vec.end() == vec.end());
 
-auto rit = vec.rbegin();
+	IsTrue(vec.rbegin() != vec.rend());
+	IsTrue(vec.rbegin() + 3 != vec.rbegin() + 4);
 
-IsTrue(rit->get() == 5);
 
-rit += 1;
-IsTrue(rit->get() == 4);
 
-rit += 1;
-IsTrue(rit->get() == 3);
+	IsTrue(vec.rbegin()->get() == 5);
+	IsTrue((++vec.rbegin())->get() == 4);
+	IsTrue((vec.rbegin() + 1)->get() == 4);
+	IsTrue((vec.rbegin() + 2)->get() == 3);
+	IsTrue((vec.rbegin() + 3)->get() == 2);
+	IsTrue((vec.rbegin() + 4)->get() == 1);
+	IsTrue((vec.rbegin() + 5)->get() == 0);
 
-rit += 1;
-IsTrue(rit->get() == 2);
+	IsTrue((vec.rend() - 1)->get() == 0);
+	IsTrue((vec.rend() - 2)->get() == 1);
+	IsTrue((vec.rend() - 3)->get() == 2);
+	IsTrue((vec.rend() - 4)->get() == 3);
+	IsTrue((vec.rend() - 5)->get() == 4);
+	IsTrue((vec.rend() - 6)->get() == 5);
 
-rit += 1;
-IsTrue(rit->get() == 1);
+	auto rit = vec.rbegin();
 
-rit += 1;
-IsTrue(rit->get() == 0);
+	IsTrue(rit->get() == 5);
 
-rit -= 1;
-IsTrue(rit->get() == 1);
+	rit += 1;
+	IsTrue(rit->get() == 4);
 
-rit -= 1;
-IsTrue(rit->get() == 2);
+	rit += 1;
+	IsTrue(rit->get() == 3);
 
-rit -= 1;
-IsTrue(rit->get() == 3);
+	rit += 1;
+	IsTrue(rit->get() == 2);
 
-rit -= 1;
-IsTrue(rit->get() == 4);
+	rit += 1;
+	IsTrue(rit->get() == 1);
 
-rit -= 1;
-IsTrue(rit->get() == 5);
+	rit += 1;
+	IsTrue(rit->get() == 0);
 
-NOU_CHECK_ERROR_HANDLER;
+	rit -= 1;
+	IsTrue(rit->get() == 1);
+
+	rit -= 1;
+	IsTrue(rit->get() == 2);
+
+	rit -= 1;
+	IsTrue(rit->get() == 3);
+
+	rit -= 1;
+	IsTrue(rit->get() == 4);
+
+	rit -= 1;
+	IsTrue(rit->get() == 5);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(ObjectPool)
 {
-NOU::NOU_DAT_ALG::ObjectPool<NOU::DebugClass> objPool(5);
+	NOU::NOU_DAT_ALG::ObjectPool<NOU::DebugClass> objPool(5);
 
-IsTrue(objPool.capacity() == 5);
-IsTrue(objPool.size() == 0);
-IsTrue(objPool.remainingObjects() == 0);
+	IsTrue(objPool.capacity() == 5);
+	IsTrue(objPool.size() == 0);
+	IsTrue(objPool.remainingObjects() == 0);
 
-objPool.pushObject(NOU::DebugClass(0));
+	objPool.pushObject(NOU::DebugClass(0));
 
-IsTrue(objPool.capacity() == 5);
-IsTrue(objPool.size() == 1);
-IsTrue(objPool.remainingObjects() == 1);
+	IsTrue(objPool.capacity() == 5);
+	IsTrue(objPool.size() == 1);
+	IsTrue(objPool.remainingObjects() == 1);
 
-objPool.pushObject(NOU::DebugClass(1));
-objPool.pushObject(NOU::DebugClass(2));
+	objPool.pushObject(NOU::DebugClass(1));
+	objPool.pushObject(NOU::DebugClass(2));
 
-IsTrue(objPool.capacity() == 5);
-IsTrue(objPool.size() == 3);
-IsTrue(objPool.remainingObjects() == 3);
+	IsTrue(objPool.capacity() == 5);
+	IsTrue(objPool.size() == 3);
+	IsTrue(objPool.remainingObjects() == 3);
 
-NOU::DebugClass &obj0 = objPool.get();
+	NOU::DebugClass &obj0 = objPool.get();
 
-IsTrue(objPool.capacity() == 5);
-IsTrue(objPool.size() == 3);
-IsTrue(objPool.remainingObjects() == 2);
+	IsTrue(objPool.capacity() == 5);
+	IsTrue(objPool.size() == 3);
+	IsTrue(objPool.remainingObjects() == 2);
 
-NOU::DebugClass &obj1 = objPool.get();
+	NOU::DebugClass &obj1 = objPool.get();
 
-IsTrue(objPool.capacity() == 5);
-IsTrue(objPool.size() == 3);
-IsTrue(objPool.remainingObjects() == 1);
+	IsTrue(objPool.capacity() == 5);
+	IsTrue(objPool.size() == 3);
+	IsTrue(objPool.remainingObjects() == 1);
 
-objPool.giveBack(obj0);
+	objPool.giveBack(obj0);
 
-IsTrue(objPool.capacity() == 5);
-IsTrue(objPool.size() == 3);
-IsTrue(objPool.remainingObjects() == 2);
-NOU::int64 i1 = 243536768574;
-NOU::int64 i2 = 243536768574;
-
-NOU::sizeType h = NOU::NOU_DAT_ALG::hashObj(&i1, 1, 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&i2, 1, 20));
-
-NOU::NOU_DAT_ALG::String<NOU::char8> str1 = "The quick onyx goblin jumps over the lazy dwarf";
-NOU::NOU_DAT_ALG::String<NOU::char8> str2 = "The quick onyx goblin jumps over the lazy dwarf";
-
-h = NOU::NOU_DAT_ALG::hashObj(&str1, str1.size(), 20);
-IsTrue(h == NOU::NOU_DAT_ALG::hashObj(&str2, str2.size(), 20));
+	IsTrue(objPool.capacity() == 5);
+	IsTrue(objPool.size() == 3);
+	IsTrue(objPool.remainingObjects() == 2);
 
 
 }
 
 static void taskTestFunction1(NOU::int32 i, NOU::int32 *out)
 {
-    *out = i;
+	*out = i;
 }
 
 static NOU::int32 taskTestFunction2(NOU::int32 i)
 {
-    return i;
+	return i;
 }
 
 class DummyClass
 {
-    //empty class
+	//empty class
 };
 
 static NOU::int32 taskTestFunction3(const DummyClass dc)
 {
-    return 1;
+	return 1;
 }
 
 static void taskTestFunction4(const DummyClass dc)
@@ -1768,43 +1911,46 @@ static void taskTestFunction4(const DummyClass dc)
 
 TEST_METHOD(Task)
 {
-NOU::int32 i1 = 5;
-NOU::int32 out;
+	NOU::int32 i1 = 5;
+	NOU::int32 out;
 
-auto task1 = NOU::NOU_THREAD::makeTask(&taskTestFunction1, i1, &out);
+	auto task1 = NOU::NOU_THREAD::makeTask(&taskTestFunction1, i1, &out);
 
-task1.execute();
+	task1.execute();
 
-IsTrue(out == i1);
-
-
-
-//just to make sure that INVALID_OBJECT is the first error in the handler later
-IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
-
-NOU::int32 i2 = 5;
-
-auto task2 = NOU::NOU_THREAD::makeTask(&taskTestFunction2, i2);
-
-task2.getResult();
-
-IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
-IsTrue(NOU::NOU_CORE::getErrorHandler().popError().getID() ==
-       NOU::NOU_CORE::ErrorCodes::INVALID_OBJECT);
-
-task2.execute();
-
-IsTrue(task2.getResult() == i2);
+	IsTrue(out == i1);
 
 
-//check if this compiles
-const DummyClass dc;
 
-auto task3 = NOU::NOU_THREAD::makeTask(&taskTestFunction3, dc);
+	//just to make sure that INVALID_OBJECT is the first error in the handler later
+	IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 0);
 
-auto task4 = NOU::NOU_THREAD::makeTask(&taskTestFunction4, dc);
+	NOU::int32 i2 = 5;
 
-NOU_CHECK_ERROR_HANDLER;
+	auto task2 = NOU::NOU_THREAD::makeTask(&taskTestFunction2, i2);
+
+	task2.getResult();
+
+	//error is only pushed in Debug
+#ifdef NOU_DEBUG
+	IsTrue(NOU::NOU_CORE::getErrorHandler().getErrorCount() == 1);
+	IsTrue(NOU::NOU_CORE::getErrorHandler().popError().getID() ==
+		NOU::NOU_CORE::ErrorCodes::INVALID_OBJECT);
+#endif
+
+	task2.execute();
+
+	IsTrue(task2.getResult() == i2);
+
+
+	//check if this compiles
+	const DummyClass dc;
+
+	auto task3 = NOU::NOU_THREAD::makeTask(&taskTestFunction3, dc);
+
+	auto task4 = NOU::NOU_THREAD::makeTask(&taskTestFunction4, dc);
+
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 //no more tests are possible, since the remaining methods of thread manager are either not reliable
@@ -1812,41 +1958,41 @@ NOU_CHECK_ERROR_HANDLER;
 //produced (like pushTask())
 TEST_METHOD(ThreadManager)
 {
-NOU::NOU_THREAD::ThreadManager &manager = NOU::NOU_THREAD::getThreadManager();
+	NOU::NOU_THREAD::ThreadManager &manager = NOU::NOU_THREAD::getThreadManager();
 
-IsTrue(manager.maximumAvailableThreads() >= NOU::NOU_THREAD::ThreadManager::DEFAULT_THREAD_COUNT);
+	IsTrue(manager.maximumAvailableThreads() >= NOU::NOU_THREAD::ThreadManager::DEFAULT_THREAD_COUNT);
 
-IsTrue(manager.maximumAvailableThreads() >= NOU::NOU_THREAD::ThreadManager::DEFAULT_THREAD_COUNT);
+	IsTrue(manager.maximumAvailableThreads() >= NOU::NOU_THREAD::ThreadManager::DEFAULT_THREAD_COUNT);
 
-if (NOU::NOU_THREAD::ThreadWrapper::maxThreads() > NOU::NOU_THREAD::ThreadManager::DEFAULT_THREAD_COUNT)
-{
-IsTrue(manager.maximumAvailableThreads() == NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
-}
+	if (NOU::NOU_THREAD::ThreadWrapper::maxThreads() > NOU::NOU_THREAD::ThreadManager::DEFAULT_THREAD_COUNT)
+	{
+		IsTrue(manager.maximumAvailableThreads() == NOU::NOU_THREAD::ThreadWrapper::maxThreads() - 1);
+	}
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(OffsetOf)
 {
-struct TestStruct
-{
-    NOU::int32 x;
-    NOU::int32 y;
-    NOU::int32 z;
-};
+	struct TestStruct
+	{
+		NOU::int32 x;
+		NOU::int32 y;
+		NOU::int32 z;
+	};
 
-IsTrue(NOU_OFFSET_OF(TestStruct, x) == offsetof(TestStruct, x));
-IsTrue(NOU_OFFSET_OF(TestStruct, y) == offsetof(TestStruct, y));
-IsTrue(NOU_OFFSET_OF(TestStruct, z) == offsetof(TestStruct, z));
+	IsTrue(NOU_OFFSET_OF(TestStruct, x) == offsetof(TestStruct, x));
+	IsTrue(NOU_OFFSET_OF(TestStruct, y) == offsetof(TestStruct, y));
+	IsTrue(NOU_OFFSET_OF(TestStruct, z) == offsetof(TestStruct, z));
 
-NOU_CHECK_ERROR_HANDLER;
+	NOU_CHECK_ERROR_HANDLER;
 }
 
 TEST_METHOD(Path)
 {
 #if NOU_OS == NOU_OS_WINDOWS
 
-NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
+	NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 	NOU::NOU_FILE_MNGT::Path p1 = "testdir\\testfile.test";
 	NOU::NOU_FILE_MNGT::Path p2 = "\\test.dir\\testfile.test";
 	NOU::NOU_FILE_MNGT::Path p3 = "test.dir\\testfile";
@@ -1912,9 +2058,13 @@ NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 	p15 = "Hallo";
 	IsTrue("\\Test\\TestUser\\TestDir2\\Hallo");
 
+	NOU::NOU_FILE_MNGT::Path pOp = p12 + "Testfile.txt";
+
+	IsTrue(pOp.getAbsolutePath() == "C:\\Users\\TestUser\\TestDir\\Testfile.txt");
+
 #elif NOU_OS == NOU_OS_LINUX || NOU_OS == NOU_OS_UNIX || NOU_OS == NOU_OS_MAC
 
-NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
+	NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 	NOU::NOU_FILE_MNGT::Path p1 = "testdir\\testfile.test";
 	NOU::NOU_FILE_MNGT::Path p2 = "\\test.dir\\testfile.test";
 	NOU::NOU_FILE_MNGT::Path p3 = "test.dir\\testfile";
@@ -1966,6 +2116,10 @@ NOU::NOU_FILE_MNGT::Path p = "\\testfile.exe";
 	IsTrue(p14.getParentPath() == "/Users");
 
 	IsTrue(p15.getRelativePath() == "Test/TestUser/TestDir2");
+
+	NOU::NOU_FILE_MNGT::Path pOp = p12 + "Testfile.txt";
+
+	IsTrue(pOp.getAbsolutePath() == "/Users/TestUser/TestDir/Testfile.txt");
 
 #endif
 
@@ -2129,6 +2283,26 @@ TEST_METHOD(Logging)
 		}
 	}
 
+	//Checks if a string is printed correctly if the String leaves its scope before the printing happens.
+	{
+		NOU_LOG_FATAL(NOU::NOU_DAT_ALG::String8("Unittest ") + "error.");
+		NOU::NOU_CORE::Event testEvent(NOU::NOU_CORE::EventLevelCodes::FATAL, "Unittest error.");
+
+		static NOU::NOU_DAT_ALG::String8 testOutput = NOU::NOU_CORE::Logger::print(testEvent);
+
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(500ms);
+
+		if (testOutput.size() == writeOutput.size()) //For better error message
+		{
+			IsTrue(testOutput == writeOutput);
+		}
+		else
+		{
+			IsTrue(false);
+		}
+	}
+
 	NOU_CHECK_ERROR_HANDLER;
 }
 
@@ -2187,9 +2361,9 @@ TEST_METHOD(INIFile)
 	parser.setInt("TEST_INT", 42);
 	IsTrue(parser.getInt("TEST_INT") == 42);
 
-	parser.setFloat("TEST_FLOAT", 13.37);
-	IsTrue(parser.getFloat("TEST_FLOAT") > 13.369);
-	IsTrue(parser.getFloat("TEST_FLOAT") < 13.381);
+	parser.setFloat("TEST_FLOAT", 13.37f);
+	IsTrue(parser.getFloat("TEST_FLOAT") > 13.369f);
+	IsTrue(parser.getFloat("TEST_FLOAT") < 13.381f);
 
 	parser.remove("TEST_STR");
 	IsTrue(parser.getString("TEST_STR").size() == 0);
@@ -2201,7 +2375,7 @@ TEST_METHOD(INIFile)
 
 	parser.remove("TEST_FLOAT");
 	IsTrue(parser.getFloat("TEST_FLOAT") < 0.1);
-	parser.setFloat("DEFAULT_TEST_FLOAT", 13.37);
+	parser.setFloat("DEFAULT_TEST_FLOAT", 13.37f);
 
 	parser.setString("TEST_STR", "Testing", "section");
 	IsTrue(parser.getString("TEST_STR", "section") == "Testing");
@@ -2209,9 +2383,9 @@ TEST_METHOD(INIFile)
 	parser.setInt("TEST_INT", 42, "section");
 	IsTrue(parser.getInt("TEST_INT", "section") == 42);
 
-	parser.setFloat("TEST_FLOAT", 13.37, "section");
-	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369);
-	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381);
+	parser.setFloat("TEST_FLOAT", 13.37f, "section");
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") > 13.369f);
+	IsTrue(parser.getFloat("TEST_FLOAT", "section") < 13.381f);
 
 	IsTrue(parser.write("unittest.ini"));
 	IsTrue(parser.read());
@@ -2221,7 +2395,7 @@ TEST_METHOD(INIFile)
 
 	parser2.setString("TEST_STR2", "Testing");
 	parser2.setInt("TEST_INT2", 42);
-	parser2.setFloat("TEST_FLOAT2", 13.37);
+	parser2.setFloat("TEST_FLOAT2", 13.37f);
 
 	IsTrue(parser2.getDataType("TEST_STR2") == parser2.INI_TYPE_NouString);
 	IsTrue(parser2.getDataType("TEST_INT2") == parser2.INI_TYPE_INT);
