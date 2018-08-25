@@ -35,132 +35,152 @@ namespace NOU::NOU_MATH
 	};
 
 	/**
-	\return \f$sin(a)\f$
+	\return \f$std::sin(a)\f$
 
-	\brief Returns \f$sin(a)\f$.
+	\brief Returns \f$std::sin(a)\f$.
 	*/
 	template<typename T>
 	T sin(const T &a);
 
 	/**
-	\return \f$cos(a)\f$
+	\return \f$std::cos(a)\f$
 
-	\brief Returns \f$cos(a)\f$.
+	\brief Returns \f$std::cos(a)\f$.
 	*/
 	template<typename T>
 	T cos(const T &a);
 
 	/**
-	\return \f$tan(a)\f$
+	\return \f$std::tan(a)\f$
 
-	\brief Returns \f$tan(a)\f$.
+	\brief Returns \f$std::tan(a)\f$.
 	*/
 	template<typename T>
 	T tan(const T &a);
 
 	/**
-	\return \f$asin(a)\f$
+	\return \f$std::asin(a)\f$
 
-	\brief Returns \f$asin(a)\f$.
+	\brief Returns \f$std::asin(a)\f$.
 	*/
 	template<typename T>
 	T asin(const T &a);
 
 	/**
-	\return \f$acos(a)\f$
+	\return \f$std::acos(a)\f$
 
-	\brief Returns \f$acos(a)\f$.
+	\brief Returns \f$std::acos(a)\f$.
 	*/
 	template<typename T>
 	T acos(const T &a);
 
 	/**
-	\return \f$atan(a)\f$
+	\return \f$std::atan(a)\f$
 
-	\brief Returns \f$atan(a)\f$.
+	\brief Returns \f$std::atan(a)\f$.
 	*/
 	template<typename T>
 	T atan(const T &a);
 
 	/**
-	\return \f$exp(a)\f$
+	\return \f$std::exp(a)\f$
 
-	\brief Returns \f$exp(a)\f$.
+	\brief Returns \f$std::exp(a)\f$.
 	*/
 	template<typename T>
 	T exp(const T &a);
 
 	/**
-	\return \f$pow(a)\f$
+	\return \f$std::pow(a)\f$
 
-	\brief Returns \f$pow(a)\f$.
+	\brief Returns \f$std::pow(a)\f$.
 	*/
 	template<typename T>
 	T pow(const T &a);
 
 	/**
-	\return \f$sqrt(a)\f$
+	\return \f$std::sqrt(a)\f$
 
-	\brief Returns \f$sqrt(a)\f$.
+	\brief Returns \f$std::sqrt(a)\f$.
 	*/
 	template<typename T>
 	T sqrt(const T &a);
 
 	/**
-	\return \f$cbrt(a)\f$
+	\return \f$std::cbrt(a)\f$
 
-	\brief Returns \f$cbrt(a)\f$.
+	\brief Returns \f$std::cbrt(a)\f$.
 	*/
 	template<typename T>
 	T cbrt(const T &a);
 
 	/**
-	\return \f$abs(a)\f$
+	\return \f$std::abs(a)\f$
 
-	\brief Returns \f$abs(a)\f$.
+	\brief Returns \f$std::abs(a)\f$.
 	*/
 	template<typename T>
 	T abs(const T &a);
 
 	/**
-	\return \f$log(a)\f$
+	\return \f$std::log(a)\f$
 
-	\brief Returns \f$log(a)\f$.
+	\brief Returns \f$std::log(a)\f$.
 	*/
 	template<typename T>
 	T log(const T &a);
 
 	/**
-	\return \f$ceil(a)\f$
+	\return \f$std::ceil(a)\f$
 
-	\brief Returns \f$ceil(a)\f$.
+	\brief Returns \f$std::ceil(a)\f$.
 	*/
 	template<typename T>
 	T ceil(const T &a);
 
 	/**
-	\return \f$floor(a)\f$
+	\return \f$std::floor(a)\f$
 
-	\brief Returns \f$floors(a)\f$.
+	\brief Returns \f$std::floors(a)\f$.
 	*/
 	template<typename T>
 	T floor(const T &a);
 
 	/**
-	\return \f$round(a)\f$
+	\return \f$std::round(a)\f$
 
-	\brief Returns \f$round(a)\f$.
+	\brief Returns \f$std::round(a)\f$.
 	*/
 	template<typename T>
 	T round(const T &a);
 
 	/**
-	\return \f$fmod(a)\f$
+	\return \f$std::fmod(a)\f$
 
-	\brief Returns \f$fmod(a)\f$.
+	\brief Returns \f$std::fmod(a)\f$.
 	*/
 	template<typename T>
 	T fmod(const T &a);
+
+	/**
+	\param a The radians value to convert.
+
+	\return The passed parameter in degrees.
+
+	\brief Converts from radians to degrees.
+	*/
+	template<typename T>
+	T deg(const T &a);
+
+	/**
+	\param a The degrees value to convert.
+
+	\return The passed parameter in radians.
+
+	\brief Converts from degrees to radians.
+	*/
+	template<typename T>
+	T rad(const T &a);
 
 
 
@@ -258,6 +278,18 @@ namespace NOU::NOU_MATH
 	T fmod(const T &a)
 	{
 		return std::fmod(a);
+	}
+
+	template<typename T>
+	T deg(const T &a)
+	{
+		return a * T(57.295779513); //1 radian = 57.295779513 degrees
+	}
+
+	template<typename T>
+	T rad(const T &a)
+	{
+		return a * T(0.01745329252); //1 degree = 0.01745329252 radians
 	}
 }
 

@@ -2416,6 +2416,22 @@ TEST_METHOD(INIFile)
 	NOU_CHECK_ERROR_HANDLER;
 }
 
+TEST_METHOD(MathUtils)
+{
+	using namespace NOU;
+	using namespace NOU::NOU_MATH;
+
+	IsTrue(NOU_DAT_ALG::epsilonCompare(deg(Constants::PI * 2), 360.0, 0.001) == 0);
+	IsTrue(NOU_DAT_ALG::epsilonCompare(deg(Constants::PI),     180.0, 0.001) == 0);
+	IsTrue(NOU_DAT_ALG::epsilonCompare(deg(Constants::PI / 2),  90.0, 0.001) == 0);
+	IsTrue(NOU_DAT_ALG::epsilonCompare(deg(Constants::PI / 4),  45.0, 0.001) == 0);
+
+	IsTrue(NOU_DAT_ALG::epsilonCompare(rad(360.0), Constants::PI * 2, 0.001) == 0);
+	IsTrue(NOU_DAT_ALG::epsilonCompare(rad(180.0), Constants::PI,     0.001) == 0);
+	IsTrue(NOU_DAT_ALG::epsilonCompare(rad( 90.0), Constants::PI / 2, 0.001) == 0);
+	IsTrue(NOU_DAT_ALG::epsilonCompare(rad( 45.0), Constants::PI / 4, 0.001) == 0);
+}
+
 TEST_METHOD(MathVec2)
 {
 	using namespace NOU::NOU_MATH;
