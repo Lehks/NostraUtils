@@ -852,133 +852,9 @@ namespace NOU::NOU_MATH
 
         boolean operator == (const Vector &other) const;
         boolean operator != (const Vector &other) const;
-/*
-		T getX();
-		T getY();
-		T getZ();
-		T getW();
-		Vector(Vector axis, T angle);
-
-		Vector<T, 4> nLerp(Vector<T, 4> dest, T lerpFactor, bool shortest);
-
-		Matrix<T, 4, 4> toRotationMatrix();
-
-		Vector getForward();
-		Vector getUp();
-		Vector getBack();
-		Vector getDown();
-		Vector getLeft();
-		Vector getRight();
-*/
     };
 
 	///endcond
-
-/*
-	template<typename T>
-	Vector<T, 4>::Vector<T, 4> (T x, T y, T z, T w)
-	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
-		this->w = w;
-	}
-
-	template<typename T>
-	Vector<T, 4> Vector<T, 4>::nLerp(Vector<T, 4> dest, T lerpFactor, bool shortest)
-	{
-		Vector<T, 4> correctedDest = dest;
-
-		if (shortest && dot(dest) < 0)
-			correctedDest = Vector<T, 4>(-dest.getX(), -det.getY(), -det.getZ(); -det.getW());
-
-		return correctedDest.sub().multiplyElements(lerpFactor).add().normalize();
-	}
-
-	template<typename T>
-	Matrix<T, 4, 4> Vector<T, 4>::toRotationMatrix()
-	{
-		Vector<T, 4> forward = Vector<T, 4>(2.0f *((x * z) - (w * y)), 2.0f * ((y * z) + (w * x)), 1.0f - 2.0f *((x * x) + (y * y));
-		Vector<T, 4> up = Vector<T, 4>(2.0f *((x * y) + (w * z)), 1.0f -2.0f * ((x * x) + (z * z)), 2.0f *((y * z) - (w * x));
-		Vector<T, 4> right = Vector<T, 4>(1.0f - 2.0f *((y * y) + (z * z)), 2.0f * ((x * y) - (w * z)), 2.0f *((x * z) + (w * y));
-
-		//return Matrix<T, 4, 4>.u
-	}
-
-	template<typename T>
-	Vector<T, 4>::Vector(Vector<T, 4> axis, T angle)
-	{
-		T sinHalfAngle = sin(angle / 2);
-		T cosHalfAngle = cos(angle / 2);
-
-		x = axis.getX() * sinHalfAngle;
-		y = axis.getY() * sinHalfAngle;
-		z = axis.getZ() * sinHalfAngle;
-		w = cosHalfAngle;
-	}
-
-	template<typename T>
-	Vector<T, 3> Vector<T, 3>::getForward()
-	{
-		return Vector<T, 3>(0, 0, 1).rotate(this);
-	}
-
-	template<typename T>
-	Vector<T, 3> Vector<T, 3>::getBack()
-	{
-		return Vector<T, 3>(0, 0, -1).rotate(this);
-	}
-
-	template<typename T>
-	Vector<T, 3> Vector<T, 3>::getUp()
-	{
-		return Vector<T, 3>(0, 1, 0).rotate(this);
-	}
-
-	template<typename T>
-	Vector<T, 3> Vector<T, 3>::getDown()
-	{
-		return Vector<T, 3>(0, -1, 0).rotate(this);
-	}
-
-	template<typename T>
-	Vector<T, 3> Vector<T, 3>::getRight()
-	{
-		return Vector<T, 3>(1, 0, 0).rotate(this);
-	}
-
-	template<typename T>
-	Vector<T, 3> Vector<T, 3>::getLeft()
-	{
-		return Vector<T, 3>(-1, 0, 0).rotate(this);
-	}
-
-	template<typename T>
-	Vector<T, 4>::getX()
-	{
-		return x;
-	}
-
-	template<typename T>
-	Vector<T, 4>::getY()
-	{
-		return y;
-	}
-
-	template<typename T>
-	Vector<T, 4>::getZ()
-	{
-		return z;
-	}
-
-	template<typename T>
-	Vector<T, 4>::getW()
-	{
-		return w;
-	}
-	*/
-	
-	
 
 	/**
 	\tparam N The amount of components in the vector.
@@ -1025,6 +901,16 @@ namespace NOU::NOU_MATH
 	\brief A vector that uses NOU::int32 as its component type and has a size of 4.
 	*/
     using Vec4i = Veci<4>;
+
+	/**
+	\brief A nicer name for a Vec2 when used in a 2D context.
+	*/
+	using Point2D = Vec2;
+
+	/**
+	\brief A nicer name for a Vec3 when used in a 3D context.
+	*/
+	using Point3D = Vec3;
 
 	///cond
 
