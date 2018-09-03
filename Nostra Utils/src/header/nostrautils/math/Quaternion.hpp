@@ -795,6 +795,342 @@ namespace NOU::NOU_MATH
 	*/
 	using Quaternioni = Quaternion<int32>;
 
+
+	template<typename T>
+	Quaternion<T>::Quaternion(const T &x, const T &y, const T &z, const T &w)
+	{
+
+	}
+
+	template<typename T>
+	Quaternion<T>::Quaternion(const Vector<T, 2> &vec, const T &z, const T &w)
+	{
+
+	}
+
+	template<typename T>
+	Quaternion<T>::Quaternion(const Vector<T, 3> &vec, const T &w)
+	{
+
+	}
+
+	template<typename T>
+	Quaternion<T>::Quaternion(const typename Base::InitializerList &values)
+	{
+
+	}
+
+	template<typename T>
+	Quaternion<T>::Quaternion(const Vector<T, 2> &vec, const typename Base::InitializerList &values)
+	{
+
+	}
+
+	template<typename T>
+	Quaternion<T>::Quaternion(const Vector<T, 3> &vec, const typename Base::InitializerList &values)
+	{
+
+	}
+
+	template<typename T>
+	Quaternion<T>::Quaternion(const Vector<T, 4> &vec)
+	{
+
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::add(const Quaternion<T> &other) const
+	{
+		return Vector<T, 4>(VectorBase<T, 4>::value(0) + other.value(0),
+			VectorBase<T, 4>::value(1) + other.value(1),
+			VectorBase<T, 4>::value(2) + other.value(2),
+			VectorBase<T, 4>::value(3) + other.value(3));
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::add(const Vector<T, 4> &other) const
+	{
+		return Vector<T, 4>(VectorBase<T, 4>::value(0) + other.value(0), 
+			VectorBase<T, 4>::value(1) + other.value(1), 
+			VectorBase<T, 4>::value(2) + other.value(2),
+			VectorBase<T, 4>::value(3) + other.value(3));
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::addAssign(const Quaternion<T> &other)
+	{
+		VectorBase<T, 4>::value(0) += other.value(0);
+		VectorBase<T, 4>::value(1) += other.value(1);
+		VectorBase<T, 4>::value(2) += other.value(2);
+		VectorBase<T, 4>::value(3) += other.value(3);
+
+		return *this;
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::addAssign(const Vector<T, 4> &other)
+	{
+		VectorBase<T, 4>::value(0) += other.value(0);
+		VectorBase<T, 4>::value(1) += other.value(1);
+		VectorBase<T, 4>::value(2) += other.value(2);
+		VectorBase<T, 4>::value(3) += other.value(3);
+
+		return *this;
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::sub(const Quaternion<T> &other) const
+	{
+		return Vector<T, 4>(VectorBase<T, 4>::value(0) - other.value(0),
+			VectorBase<T, 4>::value(1) - other.value(1),
+			VectorBase<T, 4>::value(2) - other.value(2),
+			VectorBase<T, 4>::value(3) - other.value(3));
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::sub(const Vector<T, 4> &other) const
+	{
+		return Vector<T, 4>(VectorBase<T, 4>::value(0) - other.value(0), 
+			VectorBase<T, 4>::value(1) - other.value(1), 
+			VectorBase<T, 4>::value(2) - other.value(2),
+			VectorBase<T, 4>::value(3) - other.value(3));
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::subAssign(const Quaternion<T> &other)
+	{
+		VectorBase<T, 4>::value(0) -= other.value(0);
+		VectorBase<T, 4>::value(1) -= other.value(1);
+		VectorBase<T, 4>::value(2) -= other.value(2);
+		VectorBase<T, 4>::value(3) -= other.value(3);
+
+		return *this;
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::subAssign(const Vector<T, 4> &other)
+	{
+		VectorBase<T, 4>::value(0) -= other.value(0);
+		VectorBase<T, 4>::value(1) -= other.value(1);
+		VectorBase<T, 4>::value(2) -= other.value(2);
+		VectorBase<T, 4>::value(3) -= other.value(3);
+
+		return *this;
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::multiplyElements(const Quaternion<T> &other) const
+	{
+		return Vector<T, 4>(VectorBase<T, 4>::value(0) * other.value(0),
+			VectorBase<T, 4>::value(1) * other.value(1),
+			VectorBase<T, 4>::value(2) * other.value(2),
+			VectorBase<T, 4>::value(3) * other.value(3));
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::multiplyElements(const Vector<T, 4> &other) const
+	{
+		return Vector<T, 4>(VectorBase<T, 4>::value(0) * other.value(0), 
+			VectorBase<T, 4>::value(1) * other.value(1), 
+			VectorBase<T, 4>::value(2) * other.value(2),
+			VectorBase<T, 4>::value(3) * other.value(3));
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::multiplyElementsAssign(const Quaternion<T> &other)
+	{
+		VectorBase<T, 4>::value(0) *= other.value(0);
+		VectorBase<T, 4>::value(1) *= other.value(1);
+		VectorBase<T, 4>::value(2) *= other.value(2);
+		VectorBase<T, 4>::value(3) *= other.value(3);
+
+		return *this;
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::multiplyElementsAssign(const Vector<T, 4> &other)
+	{
+		VectorBase<T, 4>::value(0) *= other.value(0);
+		VectorBase<T, 4>::value(1) *= other.value(1);
+		VectorBase<T, 4>::value(2) *= other.value(2);
+		VectorBase<T, 4>::value(3) *= other.value(3);
+
+		return *this;
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::divideElements(const Quaternion<T> &other) const
+	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+		NOU_ASSERT(other.value(2) != 0);
+		NOU_ASSERT(other.value(3) != 0);
+
+		return Vector<T, 4>(VectorBase<T, 4>::value(0) / other.value(0), 
+			VectorBase<T, 4>::value(1) / other.value(1), 
+			VectorBase<T, 4>::value(2) / other.value(2),
+			VectorBase<T, 4>::value(3) / other.value(3));
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::divideElements(const Vector<T, 4> &other) const
+	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+		NOU_ASSERT(other.value(2) != 0);
+		NOU_ASSERT(other.value(3) != 0);
+
+		return Vector<T, 4>(VectorBase<T, 4>::value(0) / other.value(0), 
+			VectorBase<T, 4>::value(1) / other.value(1), 
+			VectorBase<T, 4>::value(2) / other.value(2),
+			VectorBase<T, 4>::value(3) / other.value(3));
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::divideElementsAssign(const Quaternion<T> &other)
+	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+		NOU_ASSERT(other.value(2) != 0);
+		NOU_ASSERT(other.value(3) != 0);
+
+		VectorBase<T, 4>::value(0) /= other.value(0);
+		VectorBase<T, 4>::value(1) /= other.value(1);
+		VectorBase<T, 4>::value(2) /= other.value(2);
+		VectorBase<T, 4>::value(3) /= other.value(3);
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::divideElementsAssign(const Vector<T, 4> &other)
+	{
+		NOU_ASSERT(other.value(0) != 0);
+		NOU_ASSERT(other.value(1) != 0);
+		NOU_ASSERT(other.value(2) != 0);
+		NOU_ASSERT(other.value(3) != 0);
+
+		VectorBase<T, 4>::value(0) /= other.value(0);
+		VectorBase<T, 4>::value(1) /= other.value(1);
+		VectorBase<T, 4>::value(2) /= other.value(2);
+		VectorBase<T, 4>::value(3) /= other.value(3);
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::scale(float64 scale) const
+	{
+		return Vector<T, 4>(static_cast<T>(VectorBase<T, 4>::value(0) * scale),
+			static_cast<T>(VectorBase<T, 4>::value(1) * scale),
+			static_cast<T>(VectorBase<T, 4>::value(2) * scale),
+			static_cast<T>(VectorBase<T, 4>::value(3) * scale));
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::scaleAssign(float64 scale)
+	{
+		VectorBase<T, 4>::value(0) = static_cast<T>(VectorBase<T, 4>::value(0) * scale);
+		VectorBase<T, 4>::value(1) = static_cast<T>(VectorBase<T, 4>::value(1) * scale);
+		VectorBase<T, 4>::value(2) = static_cast<T>(VectorBase<T, 4>::value(2) * scale);
+		VectorBase<T, 4>::value(3) = static_cast<T>(VectorBase<T, 4>::value(3) * scale);
+
+		return *this;
+	}
+
+	template<typename T>
+	T Quaternion<T>::dotProduct(const Quaternion<T> &other) const
+	{
+		return VectorBase<T, 4>::value(0) * other.value(0) +
+			VectorBase<T, 4>::value(1) * other.value(1) +
+			VectorBase<T, 4>::value(2) * other.value(2) +
+			VectorBase<T, 4>::value(3) * other.value(3);
+	}
+
+	template<typename T>
+	T Quaternion<T>::dotProduct(const Vector<T, 4> &other) const
+	{
+		return VectorBase<T, 4>::value(0) * other.value(0) + 
+			VectorBase<T, 4>::value(1) * other.value(1) + 
+			VectorBase<T, 4>::value(2) * other.value(2) + 
+			VectorBase<T, 4>::value(3) * other.value(3);
+	}
+
+	template<typename T>
+	float32 Quaternion<T>::length() const
+	{
+		return NOU_MATH::sqrt<float32>(float32(*this * *this));
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::copy() const
+	{
+		return *this;
+	}
+
+	template<typename T>
+	Vector<T, 4> Quaternion<T>::toVector() const
+	{
+		return Vector<T, 4>(getX(), getY(), getZ(), getW());
+	}
+
+	template<typename T>
+	boolean Quaternion<T>::equal(const Quaternion<T> &other) const
+	{
+		return VectorBase<T, 4>::data() == other.data() ||
+			(VectorBase<T, 4>::value(0) == other.value(0) && VectorBase<T, 4>::value(1) == other.value(1) &&
+			VectorBase<T, 4>::value(2) == other.value(2) && VectorBase<T, 4>::value(3) == other.value(3));
+	}
+
+	template<typename T>
+	boolean Quaternion<T>::equal(const Vector<T, 4> &other) const
+	{
+		return 
+			VectorBase<T, 4>::value(0) == other.value(0) && VectorBase<T, 4>::value(1) == other.value(1) &&
+			VectorBase<T, 4>::value(2) == other.value(2) && VectorBase<T, 4>::value(3) == other.value(3);
+	}
+
+	template<typename T>
+	boolean Quaternion<T>::unequal(const Quaternion<T> &other) const
+	{
+		return !equal(other);
+	}
+
+	template<typename T>
+	boolean Quaternion<T>::unequal(const Vector<T, 4> &other) const
+	{
+		return !equal(other);
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::normalize()
+	{
+		*this *= 1 / length();
+
+		return *this;
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::invert() const
+	{
+		Vector<T, 4> ret;
+
+		ret.value(0) = -VectorBase<T, 4>::value(0);
+		ret.value(1) = -VectorBase<T, 4>::value(1);
+		ret.value(2) = -VectorBase<T, 4>::value(2);
+		ret.value(3) = -VectorBase<T, 4>::value(3);
+
+		return ret;
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::invertThis()
+	{
+		VectorBase<T, 4>::value(0) = -VectorBase<T, 4>::value(0);
+		VectorBase<T, 4>::value(1) = -VectorBase<T, 4>::value(1);
+		VectorBase<T, 4>::value(2) = -VectorBase<T, 4>::value(2);
+		VectorBase<T, 4>::value(3) = -VectorBase<T, 4>::value(3);
+
+		return *this;
+	}
+
+
 	template<typename T>
 	const T& Quaternion<T>::getX() const
 	{
@@ -841,6 +1177,114 @@ namespace NOU::NOU_MATH
 	T& Quaternion<T>::getW()
 	{
 		return Base::value(3);
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::operator + (const Quaternion<T> &other) const
+	{
+		return add(other);
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::operator + (const Vector<T, 4> &other) const
+	{
+		return add(other);
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::operator += (const Quaternion<T> &other)
+	{
+		return addAssign(other);
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::operator += (const Vector<T, 4> &other)
+	{
+		return addAssign(other);
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::operator - (const Quaternion<T> &other) const
+	{
+		return sub(other);
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::operator - (const Vector<T, 4> &other) const
+	{
+		return sub(other);
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::operator -= (const Quaternion<T> &other)
+	{
+		return subAssign(other);
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::operator -= (const Vector<T, 4> &other)
+	{
+		return subAssign(other);
+	}
+
+	template<typename T>
+	T Quaternion<T>::operator * (const Quaternion &other) const
+	{
+		return dotProduct(other);
+	}
+
+	template<typename T>
+	T Quaternion<T>::operator * (const Vector<T, 4> &other) const
+	{
+		return dotProduct(other);
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::operator * (NOU::float32 scale) const
+	{
+		return scale(scale);
+	}
+
+	template<typename T>
+	Quaternion<T>& Quaternion<T>::operator *= (NOU::float32 scale)
+	{
+		return scaleAssign(scale);
+	}
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::operator - () const
+	{
+		return invert();
+	}
+
+	template<typename T>
+	boolean Quaternion<T>::operator == (const Quaternion<T> &other) const
+	{
+		return equal(other);
+	}
+
+	template<typename T>
+	boolean Quaternion<T>::operator == (const Vector<T, 4> &other) const
+	{
+		return equal(other);
+	}
+
+	template<typename T>
+	boolean Quaternion<T>::operator != (const Quaternion<T> &other) const
+	{
+		return unequal(other);
+	}
+
+	template<typename T>
+	boolean Quaternion<T>::operator != (const Vector<T, 4> &other) const
+	{
+		return unequal(other);
+	}
+
+	template<typename T>
+	Quaternion<T>::operator Vector<T, 4>() const
+	{
+		return toVector();
 	}
 }
 
