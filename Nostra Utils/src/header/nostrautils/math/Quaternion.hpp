@@ -23,18 +23,69 @@ namespace NOU::NOU_MATH
 		*/
 		using Base = VectorBase<T, 4>;
 
+		static Quaternion fromEuler(const T &x, const T &y, const T &z);
+
 		/**
 		\brief Constructs a new instance without initializing any of its components.
 		*/
 		Quaternion() = default;
 
+		/**
+		\param x The x component.
+		\param y The y component.
+		\param z The z component.
+		\param w The w component.
+
+		\brief Constructs a new quaternion with the passed components.
+		*/
 		Quaternion(const T &x, const T &y, const T &z, const T &w);
 
+		/**
+		\param vec The first two components.
+		\param z The z component.
+		\param w The w component.
+
+		\brief Constructs a new quaternion with the passed components.
+		*/
 		Quaternion(const Vector<T, 2> &vec, const T &z, const T &w);
+
+		/**
+		\param vec The first three components.
+		\param w The w component.
+
+		\brief Constructs a new quaternion with the passed components.
+		*/
 		Quaternion(const Vector<T, 3> &vec, const T &w);
+
+		/**
+		\param values The four components. Must hold exactly four values.
+
+		\brief Constructs a new quaternion with the passed components.
+		*/
 		Quaternion(const typename Base::InitializerList &values);
+
+		/**
+		\param vec    The first two components.
+		\param values The remaining components. Must hold exactly two values.
+
+		\brief Constructs a new quaternion with the passed components.
+		*/
 		Quaternion(const Vector<T, 2> &vec, const typename Base::InitializerList &values);
+
+		/**
+		\param vec    The first three components.
+		\param values The remaining components. Must hold exactly one value.
+
+		\brief Constructs a new quaternion with the passed components.
+		*/
 		Quaternion(const Vector<T, 3> &vec, const typename Base::InitializerList &values);
+
+
+		/**
+		\param vec The vector to construct the instance from.
+
+		\brief Constructs a new quaternion from the passed vector.
+		*/
 		Quaternion(const Vector<T, 4> &vec);
 
 		/**
@@ -796,46 +847,81 @@ namespace NOU::NOU_MATH
 	using Quaternioni = Quaternion<int32>;
 
 
+
+	template<typename T>
+	Quaternion<T> Quaternion<T>::fromEuler(const T &x, const T &y, const T &z)
+	{
+		
+	}
+
 	template<typename T>
 	Quaternion<T>::Quaternion(const T &x, const T &y, const T &z, const T &w)
 	{
-
+		getX() = x;
+		getY() = y;
+		getZ() = z;
+		getW() = w;
 	}
 
 	template<typename T>
 	Quaternion<T>::Quaternion(const Vector<T, 2> &vec, const T &z, const T &w)
 	{
-
+		getX() = vec.value(0);
+		getY() = vec.value(1);
+		getZ() = z;
+		getW() = w;
 	}
 
 	template<typename T>
 	Quaternion<T>::Quaternion(const Vector<T, 3> &vec, const T &w)
 	{
-
+		getX() = vec.value(0);
+		getY() = vec.value(1);
+		getZ() = vec.value(2);
+		getW() = w;
 	}
 
 	template<typename T>
 	Quaternion<T>::Quaternion(const typename Base::InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == 4);
 
+		getX() = values[0];
+		getY() = values[1];
+		getZ() = values[2];
+		getW() = values[3];
 	}
 
 	template<typename T>
 	Quaternion<T>::Quaternion(const Vector<T, 2> &vec, const typename Base::InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == 2);
 
+		getX() = vec.value(0);
+		getY() = vec.value(1);
+		getZ() = values[2];
+		getW() = values[3];
 	}
 
 	template<typename T>
 	Quaternion<T>::Quaternion(const Vector<T, 3> &vec, const typename Base::InitializerList &values)
 	{
+		NOU_ASSERT(values.size() == 1);
+
+		getX() = vec.value(0);
+		getY() = vec.value(1);
+		getZ() = vec.value(2);
+		getW() = values[3];
 
 	}
 
 	template<typename T>
 	Quaternion<T>::Quaternion(const Vector<T, 4> &vec)
 	{
-
+		getX() = vec.value(0);
+		getY() = vec.value(1);
+		getZ() = vec.value(2);
+		getW() = vec.value(3);
 	}
 
 	template<typename T>
