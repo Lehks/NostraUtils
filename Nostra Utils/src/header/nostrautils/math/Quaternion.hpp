@@ -4,6 +4,7 @@
 #include "nostrautils/core/StdIncludes.hpp"
 #include "nostrautils/math/Vector.hpp"
 #include "nostrautils/math/Matrix.hpp"
+#include "nostrautils/math/Utils.hpp"
 
 /** \file math/Quaternion.hpp
 \author	 Lukas Reichmann
@@ -23,6 +24,15 @@ namespace NOU::NOU_MATH
 		*/
 		using Base = VectorBase<T, 4>;
 
+		/**
+		\param x The rotation around the x-axis.
+		\param y The rotation around the y-axis.
+		\param z The rotation around the z-axis.
+
+		\return The passed Euler angles as quaternion.
+
+		\brief Converts Euler angles into a quaternion.
+		*/
 		static Quaternion fromEuler(const T &x, const T &y, const T &z);
 
 		/**
@@ -87,6 +97,8 @@ namespace NOU::NOU_MATH
 		\brief Constructs a new quaternion from the passed vector.
 		*/
 		Quaternion(const Vector<T, 4> &vec);
+
+		Matrix<T, 3, 3> toRotationMatrix() const;
 
 		/**
 		\param other The quaternion to add.
@@ -851,7 +863,22 @@ namespace NOU::NOU_MATH
 	template<typename T>
 	Quaternion<T> Quaternion<T>::fromEuler(const T &x, const T &y, const T &z)
 	{
-		
+		T halfX = x / 2;
+		T halfY = y / 2;
+		T halfZ = z / 2;
+
+		T c1 = NOU_MATH::cos(halfX);
+		T c2 = NOU_MATH::cos(halfY);
+		T c3 = NOU_MATH::cos(halfZ);
+
+		T s1 = NOU_MATH::sin(halfX);
+		T s2 = NOU_MATH::sin(halfY);
+		T s3 = NOU_MATH::sin(halfZ);
+
+		return Quaternion<T>(c1 * c2 * c3 - s1 * s2 * s3,
+			                 s1 * s2 * c3 - c1 * c2 * s3,
+			                 s1 * c2 * c3 - c1 * s2 * s3,
+			                 c1 * s2 * c3 - s1 * c2 * s3);
 	}
 
 	template<typename T>
@@ -922,6 +949,24 @@ namespace NOU::NOU_MATH
 		getY() = vec.value(1);
 		getZ() = vec.value(2);
 		getW() = vec.value(3);
+	}
+
+	template<typename T>
+	Matrix<T, 3, 3> Quaternion<T>::toRotationMatrix() const
+	{
+		Matrix<T, 3, 3> ret;
+
+		ret.value(0, 0) = 1 - 2 * y * y - 2 * z * z;
+		ret.value(0, 1) =     2 * x * y - 2 * z * w;
+		ret.value(0, 2) =     2 * x * z + 2 * y * w;
+
+		ret.value(1, 0) =     2 * x * y + 2 * z * w;
+		ret.value(1, 1) = 1 - 2 * x * x - 2 * z * z;
+		ret.value(1, 2) =     2 * y * z - 2 * x * w;
+
+		ret.value(2, 0) =     2 * x * z - 2 * y * z;
+		ret.value(2, 1) =     2 * y * z - 2 * x * w;
+		ret.value(2, 2) = 1 - 2 * x * x - 2 * y * y;
 	}
 
 	template<typename T>
