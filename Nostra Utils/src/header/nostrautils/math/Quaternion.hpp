@@ -100,6 +100,8 @@ namespace NOU::NOU_MATH
 
 		Matrix<T, 3, 3> toRotationMatrix() const;
 
+		Vector<T, 3> toEulerAngles() const;
+
 		/**
 		\param other The quaternion to add.
 
@@ -875,10 +877,10 @@ namespace NOU::NOU_MATH
 		T s2 = NOU_MATH::sin(halfY);
 		T s3 = NOU_MATH::sin(halfZ);
 
-		return Quaternion<T>(c1 * c2 * c3 - s1 * s2 * s3,
-			                 s1 * s2 * c3 - c1 * c2 * s3,
+		return Quaternion<T>(s1 * s2 * c3 - c1 * c2 * s3,
 			                 s1 * c2 * c3 - c1 * s2 * s3,
-			                 c1 * s2 * c3 - s1 * c2 * s3);
+			                 c1 * s2 * c3 - s1 * c2 * s3,
+			                 c1 * c2 * c3 - s1 * s2 * s3);
 	}
 
 	template<typename T>
@@ -956,17 +958,33 @@ namespace NOU::NOU_MATH
 	{
 		Matrix<T, 3, 3> ret;
 
-		ret.value(0, 0) = 1 - 2 * y * y - 2 * z * z;
-		ret.value(0, 1) =     2 * x * y - 2 * z * w;
-		ret.value(0, 2) =     2 * x * z + 2 * y * w;
+		ret.value(0, 0) = 1 - 2 * getY() * getY() - 2 * getZ() * getZ();
+		ret.value(0, 1) =     2 * getX() * getY() - 2 * getZ() * getW();
+		ret.value(0, 2) =     2 * getX() * getZ() + 2 * getY() * getW();
 
-		ret.value(1, 0) =     2 * x * y + 2 * z * w;
-		ret.value(1, 1) = 1 - 2 * x * x - 2 * z * z;
-		ret.value(1, 2) =     2 * y * z - 2 * x * w;
+		ret.value(1, 0) =     2 * getX() * getY() + 2 * getZ() * getW();
+		ret.value(1, 1) = 1 - 2 * getX() * getX() - 2 * getZ() * getZ();
+		ret.value(1, 2) =     2 * getY() * getZ() - 2 * getX() * getW();
 
-		ret.value(2, 0) =     2 * x * z - 2 * y * z;
-		ret.value(2, 1) =     2 * y * z - 2 * x * w;
-		ret.value(2, 2) = 1 - 2 * x * x - 2 * y * y;
+		ret.value(2, 0) =     2 * getX() * getZ() - 2 * getY() * getZ();
+		ret.value(2, 1) =     2 * getY() * getZ() - 2 * getX() * getW();
+		ret.value(2, 2) = 1 - 2 * getX() * getX() - 2 * getY() * getY();
+
+		return ret;
+	}
+
+	template<typename T>
+	Vector<T, 3> Quaternion<T>::toEulerAngles() const
+	{
+		Vector<T, 3> ret;
+
+		ret.value(0) = std::atan2(2 * getY() * getW() - 2 * getX() * getZ(), 
+			1 - 2 * getY() * getY() - 2 * getZ() * getZ());
+		ret.value(1) = std::asin(2 * getX() * getY() + 2 * getZ() * getW());
+		ret.value(2) = std::atan2(2 * getX() * getW() - 2 * getY() * getZ(), 
+			1 - 2 * getX() * getX() - 2 * getZ() * getZ());
+
+		return ret;
 	}
 
 	template<typename T>
