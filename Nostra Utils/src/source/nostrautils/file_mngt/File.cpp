@@ -239,13 +239,13 @@ namespace NOU::NOU_FILE_MNGT
 			open();
 		}
 
-		sizeType oldPos = ftell(m_data);
+		NOU::int64 oldPos = ftell(m_data);
 
 		fseek(m_data, 0, SEEK_END);
 
 		sizeType ret = ftell(m_data);
 
-		fseek(m_data, oldPos, SEEK_SET);
+		fseek(m_data, static_cast<long>(oldPos), SEEK_SET);
 
 		if (!wasOpened)
 		{
